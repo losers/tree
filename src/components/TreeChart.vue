@@ -12,7 +12,7 @@
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
-          <div class="person" v-if="treeData.mate" @click="$emit('click-node', treeData.mate)">
+          <div class="person mate" v-if="treeData.mate" @click="$emit('click-node', treeData.mate)">
             <div class="avat">
               <img :src="treeData.mate.image_url" />
             </div>
@@ -91,7 +91,8 @@ td {
   bottom: 20px;
   width: 20px;
   height: 20px;
-  padding: 0 10px 3px 5px;
+  margin-left: 5px;
+  /* padding: 0 10px 3px 5px; */
   transform: translate3d(-15px, 0, 0);
   cursor: pointer;
 }
@@ -180,6 +181,9 @@ td {
   z-index: 2;
   width: 6em;
   overflow: hidden;
+}
+.node .mate .avat{
+  border: 10px solid green !important;
 }
 .node .person .avat {
   display: block;

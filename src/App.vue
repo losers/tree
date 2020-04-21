@@ -9,7 +9,15 @@
           <br />
           <table class="table table-borderless table-hover mt-5 table-data">
             <tbody>
-              <tr> <td>9515792944</td> </tr> <tr> <td>varunkumarmedam@gmail.com</td> </tr> <tr> <td>Super Saiyan Dev in Medam Family</td> </tr>
+              <tr>
+                <td>9515792944</td>
+              </tr>
+              <tr>
+                <td>varunkumarmedam@gmail.com</td>
+              </tr>
+              <tr>
+                <td>Super Saiyan Dev in Medam Family</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -30,6 +38,7 @@
 <script>
 import TreeChart from "@/components/TreeChart";
 import Drawer from "vue-simple-drawer";
+import data from "./data.js";
 
 export default {
   name: "app",
@@ -42,68 +51,18 @@ export default {
       landscape: [],
       open: false,
       nodeData: null,
-      data: {
-        name: "root",
-        mate: {
-          name: "mate",
-          image_url: "assets/logo.png"
-        },
-
-        image_url: "https://static.refined-x.com/static/avatar.jpg",
-        children: [
-          {
-            name: "children1",
-            image_url: "https://static.refined-x.com/static/avatar.jpg"
-          },
-          {
-            name: "children3",
-            image_url: "https://static.refined-x.com/static/avatar.jpg"
-          },
-          {
-            name: "children2",
-            image_url: "https://static.refined-x.com/static/avatar.jpg",
-            mate: {
-              name: "mate",
-              image_url: "https://static.refined-x.com/static/avatar.jpg"
-            },
-            children: [
-              {
-                name: "grandchild",
-                image_url: "https://static.refined-x.com/static/avatar.jpg"
-              },
-              {
-                name: "grandchild2",
-                image_url: "https://static.refined-x.com/static/avatar.jpg"
-              },
-              {
-                name: "grandchild3",
-                image_url: "https://static.refined-x.com/static/avatar.jpg",
-                children: [
-                  {
-                    name: "grandchild",
-                    image_url: "https://static.refined-x.com/static/avatar.jpg"
-                  },
-                  {
-                    name: "grandchild",
-                    image_url: "https://static.refined-x.com/static/avatar.jpg"
-                  },
-                  {
-                    name: "grandchild",
-                    image_url: "https://static.refined-x.com/static/avatar.jpg"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+      data: data
     };
+  },
+  mounted() {
+    console.log(`data2 : ${this.data}`);
   },
   methods: {
     clickNode: function(node) {
       // eslint-disable-next-line
       console.log(node);
       this.toggle();
+      print();
       this.nodeData = node;
     },
     toggle() {
@@ -132,12 +91,12 @@ export default {
 .foot {
   position: fixed;
   left: 0;
-  bottom: 0;
+  bottom: -20px;
   width: 100%;
   background: #333;
   padding: 10px;
   overflow: hidden;
-  color: #999;
+  color: white;
   font-size: 14px;
   text-align: center;
   z-index: 10;
@@ -149,7 +108,7 @@ export default {
 .nodeData {
   width: 300px !important;
 }
-.table-data{
-  color:white
+.table-data {
+  color: white;
 }
 </style>
