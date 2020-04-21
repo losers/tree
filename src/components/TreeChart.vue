@@ -36,8 +36,14 @@
 </template>
 
 <script>
+// import { KinesisContainer, KinesisElement } from "vue-kinesis";
+
 export default {
   name: "TreeChart",
+  components: {
+    // KinesisContainer,
+    // KinesisElement
+  },
   props: ["json"],
   data() {
     return {
@@ -182,8 +188,8 @@ td {
   width: 6em;
   overflow: hidden;
 }
-.node .mate .avat{
-  border: 10px solid green !important;
+.node .mate .avat {
+  border: 5px solid green !important;
 }
 .node .person .avat {
   display: block;

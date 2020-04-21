@@ -62,7 +62,6 @@ export default {
       // eslint-disable-next-line
       console.log(node);
       this.toggle();
-      print();
       this.nodeData = node;
     },
     toggle() {
