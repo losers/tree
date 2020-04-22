@@ -1,30 +1,6 @@
 <template>
   <div id="app">
-    <Drawer @close="toggle" align="right" :closeable="true">
-      <div v-if="open">
-        <div class="nodeData">
-          <h1>{{nodeData.name}}</h1>
-          <br />
-          <img :src="nodeData.image_url" width="250px" height="250px" />
-          <br />
-          <table class="table table-borderless table-hover mt-5 table-data">
-            <tbody>
-              <tr>
-                <td>9515792944</td>
-              </tr>
-              <tr>
-                <td>varunkumarmedam@gmail.com</td>
-              </tr>
-              <tr>
-                <td>Super Saiyan Dev in Medam Family</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <!-- <img :src="nodeData."> -->
-    </Drawer>
-
+    <router-view></router-view>
     <label>
       <input type="checkbox" v-model="landscape" />
     </label>
@@ -37,35 +13,29 @@
 
 <script>
 import TreeChart from "@/components/TreeChart";
-import Drawer from "vue-simple-drawer";
 import data from "../data.js";
 
 export default {
   name: "MainTree",
   components: {
-    TreeChart,
-    Drawer
+    TreeChart
   },
   data() {
     return {
       landscape: [],
       open: false,
       nodeData: null,
-      data: data
+      data: data,
+      treeName: this.$route.params.id
     };
   },
   mounted() {
-    console.log(`data2 : ${this.data}`);
+    console.log(`data2 : ${this.treeName}`);
   },
   methods: {
     clickNode: function(node) {
-      // eslint-disable-next-line
       console.log(node);
-      this.toggle();
-      this.nodeData = node;
-    },
-    toggle() {
-      this.open = !this.open;
+      this.$router.push({ name: "MemberData", params: { member: node.name } });
     }
   }
 };

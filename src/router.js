@@ -1,7 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "./views/Home";
-import MainTree from "./views/MainTree";
+import Home from "./views/Home.vue";
+import MainTree from "./views/MainTree.vue";
+import AddMember from "./modals/AddMember.vue";
+
 Vue.use(VueRouter);
 
 const myrouter = new VueRouter({
@@ -13,11 +15,24 @@ const myrouter = new VueRouter({
             component: Home,
         },
         {
-            path: "/medam",
-            name: "Surname",
-            component: MainTree
+            path: "/addmember",
+            name: "AddMember",
+            component: AddMember
+        },
 
-        }
+        {
+            path: "/:id",
+            name: "MainTree",
+            component: MainTree,
+            children: [
+                {
+                    path: ":member",
+                    name: "MemberData",
+                    component: () => import('./components/MemberData')
+                }
+            ]
+        },
+
     ]
 });
 
