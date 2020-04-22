@@ -1,10 +1,10 @@
 let data = {
-    name: "Chinna Mahanadiah (Late)",
-    mate: {
+    "name": "Chinna Mahanadiah (Late)",
+    "mate": {
         name: "Padmavathamma (Late)",
         image_url: "https://static.refined-x.com/static/avatar.jpg"
     },
-    image_url: "https://static.refined-x.com/static/avatar.jpg",
+    "image_url": "https://static.refined-x.com/static/avatar.jpg",
     children: [
         {
             name: "Pedda Guru Natham Shetty",
@@ -138,25 +138,25 @@ let data = {
     ]
 };
 
-// var x = function (data, name) {
-//     if (!data) {
-//         return;
-//     }
-//     if(data.name == name){
-//         return data;
-//     }
-//     // console.log(data.name);
-//     if (data.children) {
-//         for (let i = 0; i < data.children.length; i++) {
-//             let z =  x(data.children[i],name);
-//             if(z){
-//                 return z;
-//             }
-//         }
-//     }
-// }
+    // var x = function (data, name) {
+    //     if (!data) {
+    //         return;
+    //     }
+    //     if(data.name == name){
+    //         return data;
+    //     }
+    //     // console.log(data.name);
+    //     if (data.children) {
+    //         for (let i = 0; i < data.children.length; i++) {
+    //             let z =  x(data.children[i],name);
+    //             if(z){
+    //                 return z;
+    //             }
+    //         }
+    //     }
+    // }
 
-// let y = x(data, "Satyanarayana");
-// console.log(y);
+    // let y = x(data, "Satyanarayana");
+    // console.log(y);
 
 export default data;

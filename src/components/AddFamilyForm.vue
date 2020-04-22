@@ -76,7 +76,7 @@ export default {
     },
     goBack() {
       this.$emit("close");
-      this.$router.go(-1);
+    //   this.$router.go(-1);
     },
     goFamily() {
       this.$emit("close");

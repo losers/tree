@@ -1,19 +1,31 @@
 <template>
   <div id="app">
-    <router-view></router-view>
-    <label>
-      <input type="checkbox" v-model="landscape" />
-    </label>
-    <TreeChart :json="data" :class="{landscape: landscape.length}" @click-node="clickNode" />
-    <footer class="foot">
-      <p>Satyanarayana Family Dev's</p>
-    </footer>
+    <section v-if="errored">
+      <p>Something went wrong</p>
+    </section>
+
+    <section v-else>
+      <div v-if="loading">Loading...</div>
+      <div v-else>
+        <router-view></router-view>
+
+        <label>
+          <input type="checkbox" v-model="landscape" />
+        </label>
+
+        <TreeChart :json="tempData" :class="{landscape: landscape.length}" @click-node="clickNode" />
+        <footer class="foot">
+          <p>Satyanarayana Family Dev's</p>
+        </footer>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
 import TreeChart from "@/components/TreeChart";
 import data from "../data.js";
+import axios from "axios";
 
 export default {
   name: "MainTree",
@@ -26,11 +38,29 @@ export default {
       open: false,
       nodeData: null,
       data: data,
-      treeName: this.$route.params.id
+      treeName: this.$route.params.id,
+      loading: true,
+      tempData: null,
+      errored: null,
+      myData:{
+        "name" : "varun"
+      }
     };
   },
   mounted() {
-    console.log(`data2 : ${this.treeName}`);
+    axios
+      .get("http://localhost:5000/tree/" + this.treeName)
+      .then(data => {
+        this.tempData = data.data.tree;
+        console.log(data.data.tree);
+      })
+      .catch(function(err) {
+        this.errored = err;
+        console.log("Error : " + err.response);
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   },
   methods: {
     clickNode: function(node) {

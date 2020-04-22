@@ -15,12 +15,6 @@ const myrouter = new VueRouter({
             component: Home,
         },
         {
-            path: "/addmember",
-            name: "AddMember",
-            component: AddMember
-        },
-
-        {
             path: "/:id",
             name: "MainTree",
             component: MainTree,
@@ -28,7 +22,14 @@ const myrouter = new VueRouter({
                 {
                     path: ":member",
                     name: "MemberData",
-                    component: () => import('./components/MemberData')
+                    component: () => import('./components/MemberData'),
+                    children: [
+                        {
+                            path: ":type",
+                            name: "AddMember",
+                            component: AddMember
+                        }
+                    ]
                 }
             ]
         },

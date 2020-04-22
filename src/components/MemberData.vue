@@ -1,28 +1,32 @@
 <template>
-  <Drawer @close="toggle" align="right" :closeable="true">
-    <div v-if="open">
-      <div class="nodeData">
-        <h1>{{name}}</h1>
-        <br />
-        <!-- <img :src="nodeData.image_url" width="250px" height="250px" /> -->
-        <br />
-        <table class="table table-borderless table-hover mt-5 table-data">
-          <tbody>
-            <tr>
-              <td>9515792944</td>
-            </tr>
-            <tr>
-              <td>varunkumarmedam@gmail.com</td>
-            </tr>
-            <tr>
-              <td>Super Saiyan Dev in Medam Family</td>
-            </tr>
-          </tbody>
-          <!-- <button @click="showAlert">Update Data</button> -->
-        </table>
+  <div>
+    <router-view></router-view>
+    <Drawer @close="toggle" align="right" :closeable="true">
+      <div v-if="open">
+        <div class="nodeData">
+          <h1>{{name}}</h1>
+          <br />
+          <!-- <img :src="nodeData.image_url" width="250px" height="250px" /> -->
+          <br />
+          <table class="table table-borderless table-hover mt-5 table-data">
+            <tbody>
+              <tr>
+                <td>9515792944</td>
+              </tr>
+              <tr>
+                <td>varunkumarmedam@gmail.com</td>
+              </tr>
+              <tr>
+                <td>Super Saiyan Dev in Medam Family</td>
+              </tr>
+            </tbody>
+            <button @click="addMember(0)">Add Child</button>
+            <button @click="addMember(1)">Add Mate</button>
+          </table>
+        </div>
       </div>
-    </div>
-  </Drawer>
+    </Drawer>
+  </div>
 </template>
 
 <script>
@@ -35,16 +39,32 @@ export default {
   },
   data() {
     return {
-      open: true,
-      name: this.$route.params.member
+      open: null,
+      name: this.$route.params.member,
+      type: this.$route.params.type
     };
   },
   mounted() {
-    console.log(this.name);
+    this.$root.$on("canceled", () => {
+      // your code goes here
+      this.open = true;
+    });
+    if (this.type === undefined) {
+      this.open = true;
+    }
+    console.log(this.type);
   },
   methods: {
     toggle() {
-      this.$router.go(-1);
+      if (this.type === undefined) {
+        this.open = false;
+        this.$router.go(-1);
+      }
+    },
+    addMember(num) {
+      this.addingData = true;
+      this.open = false;
+      this.$router.push({ name: "AddMember", params: { type: num } });
     }
   }
 };
