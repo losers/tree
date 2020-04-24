@@ -6,13 +6,17 @@
         :class="{parentLevel: treeData.children, extend: treeData.children && treeData.extend}"
       >
         <div :class="{node: true, hasMate: treeData.mate}">
-          <div class="person" @click="$emit('click-node', treeData)">
+          <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
               <img :src="treeData.image_url" />
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
-          <div class="person mate" v-if="treeData.mate" @click="$emit('click-node',treeData.mate)">
+          <div
+            class="person mate"
+            v-if="treeData.mate"
+            @click="$emit('click-node',{data:treeData.mate, isMate:true})"
+          >
             <div class="avat">
               <img :src="treeData.mate.image_url" />
             </div>

@@ -18,19 +18,19 @@ export default {
       surname: this.$route.params.id
     };
   },
-  mounted() {
-    console.log("adding member");
-  },
   methods: {
     sendData(data) {
       data.type = 0;
       Axios.post("http://localhost:5000/tree/" + this.surname + "/person", data)
         .then(data => console.log(data))
         .catch(errr => console.log(errr))
-        .finally(() => this.goBack);
+        .finally(() => {
+          this.goBack();
+          this.$root.$emit("update-tree", "calling after adding root parent");
+        });
     },
     goBack() {
-      console.log("go");
+      console.log("goback called");
       this.$emit("close");
       this.$router.push({ name: "MainTree", params: { id: this.surname } });
     }

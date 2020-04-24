@@ -1,14 +1,16 @@
 <template>
   <div>
     <section v-if="errored">
-      <p>{{err}}</p>
+      <p>{{errored}}</p>
     </section>
     <section v-else>
       <div v-if="loading">Loading...</div>
       <div v-else>
-        <!-- <router-link :to="{ name: 'AddFamily'}">Add Family</router-link> -->
+        <!-- Adding Family Alert Box -->
         <button @click="callMe =! callMe">Click Me</button>
         <AddFamily v-if="callMe"></AddFamily>
+
+        <!-- List of Available Families -->
         <h1>Welcome to Losers Family</h1>
         <div v-for="data in info" :key="data.id">
           <div class="container jumbotron">
@@ -21,6 +23,8 @@
           </div>
         </div>
       </div>
+
+      <!-- Surname Tree -->
       <router-view></router-view>
     </section>
   </div>
@@ -35,7 +39,6 @@ export default {
       info: null,
       loading: true,
       errored: false,
-      err: null,
       callMe: false
     };
   },
@@ -54,9 +57,8 @@ export default {
         this.info = response.data;
       })
       .catch(error => {
-        this.err = error;
+        this.errored = error;
         console.log(error);
-        this.errored = true;
       })
       .finally(() => (this.loading = false));
   }

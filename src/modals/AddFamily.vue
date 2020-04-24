@@ -9,7 +9,7 @@ Vue.use(VModal, {
 
 export default {
   name: "AddFamily",
-  
+
   mounted() {
     this.$modal.show(
       AddFamily,
@@ -19,7 +19,8 @@ export default {
       {
         height: "auto",
         draggable: true,
-        clickToClose: false
+        clickToClose: false,
+        scrollable: true
       }
     );
   }
