@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "./views/Home.vue";
 import MainTree from "./views/MainTree.vue";
 import AddMember from "./modals/AddMember.vue";
+import AddRoot from "./modals/AddRoot.vue";
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,11 @@ const myrouter = new VueRouter({
             name: "MainTree",
             component: MainTree,
             children: [
+                {
+                    path:"addroot",
+                    name:"AddRoot",
+                    component: AddRoot
+                },
                 {
                     path: ":member",
                     name: "MemberData",

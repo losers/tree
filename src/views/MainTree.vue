@@ -1,18 +1,26 @@
 <template>
   <div id="app">
     <section v-if="errored">
-      <p>Something went wrong</p>
+      <p>{{errored}}</p>
     </section>
 
     <section v-else>
       <div v-if="loading">Loading...</div>
+
+      <!-- Called When No data in root -->
+      <div v-else-if="tempData==undefined">
+        Lets create the tree
+        <br />
+        <button @click="createRoot">Add Parent</button>
+        <router-view></router-view>
+      </div>
+
+      <!-- Displays Tree Map -->
       <div v-else>
         <router-view></router-view>
-
         <label>
           <input type="checkbox" v-model="landscape" />
         </label>
-
         <TreeChart :json="tempData" :class="{landscape: landscape.length}" @click-node="clickNode" />
         <footer class="foot">
           <p>Satyanarayana Family Dev's</p>
@@ -41,9 +49,9 @@ export default {
       treeName: this.$route.params.id,
       loading: true,
       tempData: null,
-      errored: null,
-      myData:{
-        "name" : "varun"
+      errored: false,
+      myData: {
+        name: "varun"
       }
     };
   },
@@ -54,9 +62,9 @@ export default {
         this.tempData = data.data.tree;
         console.log(data.data.tree);
       })
-      .catch(function(err) {
+      .catch(err => {
         this.errored = err;
-        console.log("Error : " + err.response);
+        console.log("Error : " + err);
       })
       .finally(() => {
         this.loading = false;
@@ -65,7 +73,16 @@ export default {
   methods: {
     clickNode: function(node) {
       console.log(node);
-      this.$router.push({ name: "MemberData", params: { member: node.name } });
+      this.$router.push({
+        name: "MemberData",
+        params: { member: node.id },
+        query: { hasMate: node.mate ? true : false }
+      });
+    },
+    createRoot: function() {
+      this.$router.push({
+        name: "AddRoot"
+      });
     }
   }
 };

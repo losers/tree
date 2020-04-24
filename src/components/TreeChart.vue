@@ -12,7 +12,7 @@
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
-          <div class="person mate" v-if="treeData.mate" @click="$emit('click-node', treeData.mate)">
+          <div class="person mate" v-if="treeData.mate" @click="$emit('click-node',treeData.mate)">
             <div class="avat">
               <img :src="treeData.mate.image_url" />
             </div>

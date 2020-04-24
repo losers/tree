@@ -1,7 +1,7 @@
 <template>
   <div class="FormData p-5">
     <h3>
-      Creatingdsa a Family Tree
+      Creating a Family Tree
       <span v-if="surname">for {{surname}}</span>
     </h3>
     <form v-on:submit.prevent="sendData" v-if="!created1">
