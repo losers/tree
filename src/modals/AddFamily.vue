@@ -1,3 +1,6 @@
+<template>
+  <div></div>
+</template>
 <script>
 import Vue from "vue";
 import VModal from "vue-js-modal";
@@ -9,7 +12,6 @@ Vue.use(VModal, {
 
 export default {
   name: "AddFamily",
-
   mounted() {
     this.$modal.show(
       AddFamily,
@@ -21,8 +23,16 @@ export default {
         draggable: true,
         clickToClose: false,
         scrollable: true
+      },
+      {
+        'before-close': this.beforeClose 
       }
     );
+  },
+  methods : {
+    beforeClose(){
+      this.$emit('close');
+    }
   }
 };
 </script>
