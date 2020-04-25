@@ -21,7 +21,8 @@ export default {
       {
         height: "auto",
         draggable: true,
-        clickToClose: false
+        clickToClose: false,
+        scrollable: true
       },
       {
         'before-close': this.beforeClose 

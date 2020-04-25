@@ -10,8 +10,8 @@ Vue.use(VModal, {
 
 export default {
   name: "AddRoot",
-  components:{
-      AddRootForm
+  components: {
+    AddRootForm
   },
   mounted() {
     console.log("add root form");
@@ -23,10 +23,10 @@ export default {
       {
         height: "auto",
         draggable: true,
-        clickToClose: false
+        clickToClose: false,
+        scrollable: true  
       }
     );
-  },
-  
+  }
 };
 </script>

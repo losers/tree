@@ -28,7 +28,7 @@
         <input type="date" class="form-control" v-model="data.dob" />
       </div>
       <div class="form-inline">
-        <toggle-button v-model="data.is_alive"/>
+        <toggle-button v-model="data.is_alive" />
         <span class="form-inline" v-show="data.is_alive">
           <input type="date" class="form-control" v-model="data.died_on" />
         </span>
@@ -62,9 +62,20 @@
           <label class="form-check-label ml-2">Female</label>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div v-if="form_saved">
+        <h4>Form Saved Successfully</h4>
+        <button @click="goHome">See tree</button>
+        <button type="reset" @click="form_saved=false;data={}">Add another child</button>
+        <button @click="goBack">GO Back</button>
+      </div>
+      <div v-else class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">
+          <span class="spinner-border spinner-border-sm" v-show="loading"></span>
+          Submit
+        </button>
+        <button @click="goBack" class="btn btn-danger">Cancel</button>
+      </div>
     </form>
-    <button @click="goBack" class="btn btn-danger">Cancel</button>
   </div>
 </template>
 
@@ -77,15 +88,32 @@ export default {
   },
   data() {
     return {
-      data: {}
+      data: {},
+      loading: false,
+      form_saved: false
     };
+  },
+  mounted() {
+    this.$root.$on("form-saved", () => {
+      this.form_saved = true;
+      this.loading = false;
+    });
   },
   methods: {
     sendData() {
+      this.loading = true;
       this.$emit("form-submit", this.data);
     },
     goBack() {
       this.$emit("form-cancel");
+    },
+    goHome() {
+      this.$emit("jst-close");
+      this.$router.push({
+        name: "MainTree",
+        params: { id: this.$route.params.id }
+      });
+      this.$root.$emit("update-tree", "new tree data");
     }
   }
 };

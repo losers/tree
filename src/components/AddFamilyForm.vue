@@ -42,47 +42,39 @@
         @click="goFamily"
       >Go..</button>
     </div>
-    <!-- <button class="btn btn-danger" >close</button> -->
+    <div v-else-if="errored">Error Code : {{errored}}</div>
   </div>
 </template>
 
 <script>
 import Axios from "axios";
-// import axios from "axios";
 export default {
   name: "AddFamilyForm",
   data() {
     return {
-      values: {},
       surname: null,
       title: null,
-      new: true,
-
-      created1: false,
-      loading: false,
+      created: false,
       errored: false
     };
   },
   methods: {
     sendData() {
-      this.new = false;
       Axios.post("http://localhost:5000/meta/add", {
         title: this.title,
         surname: this.surname
       })
         .then(data => {
-          this.created1 = true;
+          this.created = true;
           console.log(data);
         })
         .catch(function(err) {
+          this.errored = err;
           console.log(err.response);
-        })
-        .finally(() => (this.loading = false));
-      //   console.log(data);
+        });
     },
     goBack() {
       this.$emit("close");
-      //   this.$router.go(-1);
     },
     goFamily() {
       this.$emit("close");

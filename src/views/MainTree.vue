@@ -1,23 +1,24 @@
 <template>
   <div id="app">
+    <!-- All errors are handeled here -->
     <section v-if="errored">
-      <p>{{errored}}</p>
+      <p>{{errored.response.data}}</p>
     </section>
 
+    <!-- Loads when a tree is found -->
     <section v-else>
+      <router-view></router-view>
       <div v-if="loading">Loading...</div>
 
-      <!-- Called When No data in root -->
+      <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
         Lets create the tree
         <br />
         <button @click="createRoot">Add Parent</button>
-        <router-view></router-view>
       </div>
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <router-view></router-view>
         <label>
           <input type="checkbox" v-model="landscape" />
         </label>
@@ -32,7 +33,7 @@
 
 <script>
 import TreeChart from "@/components/TreeChart";
-import data from "../data.js";
+// import data from "../data.js";
 import axios from "axios";
 
 export default {
@@ -43,23 +44,19 @@ export default {
   data() {
     return {
       landscape: [],
-      open: false,
-      nodeData: null,
-      data: data,
-      treeName: this.$route.params.id,
+      // data: data,
+      surname: this.$route.params.id,
       loading: true,
       tempData: null,
-      errored: false,
-      myData: {
-        name: "varun"
-      }
+      errored: false
     };
   },
   mounted() {
     axios
-      .get("http://localhost:5000/tree/" + this.treeName)
+      .get("http://localhost:5000/tree/" + this.surname)
       .then(data => {
         this.tempData = data.data.tree;
+        console.log("got data");
         console.log(data.data.tree);
       })
       .catch(err => {
@@ -69,16 +66,33 @@ export default {
       .finally(() => {
         this.loading = false;
       });
+
+    //called after adding a new member
+    this.$root.$on("update-tree", data => {
+      this.$router.go();
+      console.log("tree is updatingooo" + data);
+    });
   },
   methods: {
+    // Called when a node is clicked
     clickNode: function(node) {
-      console.log(node);
-      this.$router.push({
-        name: "MemberData",
-        params: { member: node.id },
-        query: { hasMate: node.mate ? true : false }
-      });
+      if (node.data.mate || node.isMate) {
+        console.log("mat");
+        this.$router.push({
+          name: "MemberData",
+          params: { member: node.data.id },
+          query: { hasMate: true }
+        });
+      } else {
+        console.log("nomate");
+        this.$router.push({
+          name: "MemberData",
+          params: { member: node.data.id }
+        });
+      }
     },
+
+    // Called when tree is empty
     createRoot: function() {
       this.$router.push({
         name: "AddRoot"
@@ -120,9 +134,6 @@ export default {
 .foot a {
   color: #fff;
   margin: 0 0.5em;
-}
-.nodeData {
-  width: 300px !important;
 }
 .table-data {
   color: white;

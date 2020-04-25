@@ -1,7 +1,7 @@
 <template>
   <div>
     <section v-if="errored">
-      <p>{{err}}</p>
+      <p>{{errored}}</p>
     </section>
     <section v-else>
       <div v-if="loading" style="margin-top:240px">
@@ -39,6 +39,8 @@
           </center>
         </div>
       </div>
+
+      <!-- Surname Tree -->
       <router-view></router-view>
     </section>
   </div>
@@ -654,9 +656,7 @@ export default {
       info: null,
       loading: true,
       errored: false,
-      err: null,
-      callMe: false,
-      showModal: false
+      callMe: false
     };
   },
   components: {
@@ -689,9 +689,8 @@ export default {
         this.info = response.data;
       })
       .catch(error => {
-        this.err = error;
+        this.errored = error;
         console.log(error);
-        this.errored = true;
       })
       .finally(() => (this.loading = false));
   }
