@@ -16,13 +16,18 @@ const myrouter = new VueRouter({
             component: Home,
         },
         {
+            path: "/test",
+            name: "Test",
+            component: () => import("./components/LoaderDNA")
+        },
+        {
             path: "/:id",
             name: "MainTree",
             component: MainTree,
             children: [
                 {
-                    path:"addroot",
-                    name:"AddRoot",
+                    path: "addroot",
+                    name: "AddRoot",
                     component: AddRoot
                 },
                 {
