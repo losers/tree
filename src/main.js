@@ -6,7 +6,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 Vue.use(router);
 Vue.use(VueSweetalert2);
 Vue.config.productionTip = false
-Vue.use(require('vue-script2'))
+// Vue.use(require('vue-script2'))
 
 new Vue({
   router,

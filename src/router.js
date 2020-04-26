@@ -15,11 +15,11 @@ const myrouter = new VueRouter({
             name: "Home",
             component: Home,
         },
-        {
-            path: "/test",
-            name: "Test",
-            component: () => import("./components/LoaderDNA")
-        },
+        // {
+        //     path: "/test",
+        //     name: "Test",
+        //     component: () => import("./components/LoaderDNA")
+        // },
         {
             path: "/:id",
             name: "MainTree",
@@ -35,6 +35,11 @@ const myrouter = new VueRouter({
                     name: "MemberData",
                     component: () => import('./components/MemberData'),
                     children: [
+                        {
+                            path: "delete",
+                            name: "Delete",
+                            component: () => import("./modals/DeleteMember"),
+                        },
                         {
                             path: ":type",
                             name: "AddMember",

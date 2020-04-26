@@ -25,12 +25,14 @@
         />
       </div>
       <div class="form-inline">
-        <input type="date" class="form-control" v-model="data.dob" />
+        <label>DOB : </label>
+        <input type="date" class="form-control" v-model="data.dob" placeholder="Date of Birth" />
       </div>
       <div class="form-inline">
+        <label class="mr-3">Is Died </label>
         <toggle-button v-model="data.is_alive" />
         <span class="form-inline" v-show="data.is_alive">
-          <input type="date" class="form-control" v-model="data.died_on" />
+          <input type="date" class="form-control" v-model="data.died_on" placeholder="Died On" />
         </span>
       </div>
 

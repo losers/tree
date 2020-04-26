@@ -9,7 +9,7 @@
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
               <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url"/>
-              <img :src="'data:image/png;base64, '" v-else/>
+              <img src="../assets/logo.png" v-else/>
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -19,7 +19,8 @@
             @click="$emit('click-node',{data:treeData.mate, isMate:true})"
           >
             <div class="avat">
-              <img :src="treeData.mate.image_url" />
+              <img :src="'data:image/png;base64, '+treeData.mate.image_url" v-if="treeData.mate.image_url"/>
+              <img src="../assets/logo.png" v-else/>
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>
@@ -44,19 +45,26 @@
 var images1 = {};
 export default {
   name: "TreeChart",
-  components: {
-  },
+  components: {},
   props: ["json", "images"],
+
   data() {
     return {
-      treeData: {}
+      treeData: {},
+      num: 1,
+      img: this.images
     };
   },
   watch: {
     json: {
       handler: function(Props) {
         let extendKey = (jsonData) => {
-          jsonData.image_url = images1.all[jsonData.id];
+          if(images1.all){
+            jsonData.image_url = images1.all[jsonData.id];
+            if(jsonData.mate){
+              jsonData.mate.image_url = images1.all[jsonData.mate.id];
+            }
+          }
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
           if (Array.isArray(jsonData.children)) {
@@ -66,15 +74,15 @@ export default {
           }
           return jsonData;
         };
-
         if (Props) {
-          if(!images1.all){
+          if (!images1.all) {
             images1.all = this.images;
           }
           this.treeData = extendKey(Props);
         }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   methods: {
