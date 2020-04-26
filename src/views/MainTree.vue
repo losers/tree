@@ -22,7 +22,7 @@
         <label>
           <input type="checkbox" v-model="landscape" />
         </label>
-        <TreeChart :json="tempData" :images="images" :class="{landscape: landscape.length}" @click-node="clickNode" />
+        <center><TreeChart :json="tempData" :images="images" :class="{landscape: landscape.length}" @click-node="clickNode" /></center>
         <footer class="foot">
           <p>Satyanarayana Family Dev's</p>
         </footer>
@@ -66,34 +66,31 @@ export default {
           .catch(err => {
             this.errored = err;
             console.log("Error : " + err);
+          }).finally(() => {
+            this.loading = false;
           });
       })
       .catch(err => {
         this.errored = err;
         console.log("Error : " + err);
       })
-      .finally(() => {
-        this.loading = false;
-      });
 
     //called after adding a new member
     this.$root.$on("update-tree", data => {
+      console.log(data);
       this.$router.go();
-      console.log("tree is updatingooo" + data);
     });
   },
   methods: {
     // Called when a node is clicked
     clickNode: function(node) {
       if (node.data.mate || node.isMate) {
-        console.log("mat");
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id },
           query: { hasMate: true }
         });
       } else {
-        console.log("nomate");
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id }
