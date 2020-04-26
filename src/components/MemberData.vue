@@ -9,8 +9,19 @@
         <section v-else>
           <div v-if="loading">Loading...</div>
           <div v-else>
-            <!-- <img :src="nodeData.image_url" width="250px" height="250px" /> -->
-            {{data}}
+            <img :src="previewImage" style="border-radius: 50%;width: 150px;"/>
+            <button @click="uploadImage">Upload Image</button>
+            <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
+            <a class="btn" @click="show=true">Select Image</a>
+            <my-upload field="img"
+            @crop-success="cropSuccess"
+              :width="300"
+              :height="300"
+              url=""
+                  lang-type="en"
+              v-model="show"
+              img-format="jpg"></my-upload>
+            <!-- {{data}} -->
             <table class="table table-borderless table-hover mt-5 table-data">
               <tbody>
                 <tr>
@@ -39,19 +50,13 @@
 <script>
 import Drawer from "vue-simple-drawer";
 import axios from "axios";
-// import Vue from "vue";
-// import VModal from "vue-js-modal";
-// import Delete from "./DeleteMember";
-
-// Vue.use(VModal, {
-//   dynamic: true,
-//   injectModalsContainer: true
-// });
+const Compress = require('compress.js');
+import myUpload from 'vue-image-crop-upload/upload-2.vue';
 
 export default {
   name: "MemberData",
   components: {
-    Drawer
+    Drawer,'my-upload': myUpload
   },
   data() {
     return {
@@ -61,7 +66,11 @@ export default {
       open: null,
       surname: this.$route.params.id,
       id: this.$route.params.member,
-      type: this.$route.params.type
+      type: this.$route.params.type,
+      
+      previewImage: null,
+      imageData: "",
+      show:false,
     };
   },
   mounted() {
@@ -69,6 +78,7 @@ export default {
       .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         this.data = data.data;
+        // this.previewImage = "data:image/png;base64, "+this.data.image_data;
       })
       .catch(err => {
         this.errored = err;
@@ -76,6 +86,19 @@ export default {
       .finally(() => {
         this.loading = false;
       });
+    
+    axios
+      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id +"/image")
+      .then(data => {
+        this.data = data.data;
+        if(this.data.length != 0){
+          this.previewImage = "data:image/png;base64, " + this.data[0][this.id];
+        }
+      })
+      .catch(err => {
+        this.errored = err;
+      });
+    
     this.$root.$on("canceled", () => {
       this.open = true;
     });
@@ -84,6 +107,43 @@ export default {
     }
   },
   methods: {
+    uploadImage(){
+      let params = {};
+      params.image_data = this.imageData;
+      let url = "http://localhost:5000/tree/" + this.surname + "/person/" + this.id +"/image";
+      axios
+        .post(
+          url,params
+        ).then(function (data) {
+          console.log(data);
+        }).catch(function(err){
+          console.log(err);
+        });
+    },
+    cropSuccess(imgDataUrl){
+          var arr = imgDataUrl.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), 
+          n = bstr.length, 
+          u8arr = new Uint8Array(n);
+          while(n--){
+              u8arr[n] = bstr.charCodeAt(n);
+          }
+          
+          let x =  new File([u8arr], "Something", {type:mime});
+          const compress = new Compress()
+          compress.compress([x], {
+          size: 0.10, 
+          quality: .2,
+          maxWidth: 200,
+          maxHeight: 200,
+          resize: true,
+        }).then((data) => {
+          this.imageData = data[0].data;
+          // window.location.href = 'data:application/octet-stream;base64,' + this.imageData;
+          this.previewImage = "data:image/png;base64, " + this.imageData;
+        });
+		},
     toggle() {
       if (!this.$route.params.type) {
         this.open = false;

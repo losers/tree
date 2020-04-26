@@ -8,7 +8,8 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img src="../assets/logo.png" />
+              <img :src="'data:image/png;base64, '+images[treeData.id]" v-if="images"/>
+              <img :src="'data:image/png;base64, '" v-else/>
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -48,11 +49,14 @@ export default {
     // KinesisContainer,
     // KinesisElement
   },
-  props: ["json"],
+  props: ["json", "images"],
   data() {
     return {
       treeData: {}
     };
+  },
+  mounted(){
+    console.log(this.images);
   },
   watch: {
     json: {
