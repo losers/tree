@@ -656,7 +656,8 @@ export default {
       info: null,
       loading: true,
       errored: false,
-      callMe: false
+      callMe: false,
+      showModal : false
     };
   },
   components: {
@@ -682,10 +683,10 @@ export default {
     this.toggleBodyClass("removeClass", "j-stars");
   },
   mounted() {
-    this.toggleBodyClass("addClass", "j-stars");
     axios
       .get("http://localhost:5000/meta")
       .then(response => {
+        this.toggleBodyClass("addClass", "j-stars");
         this.info = response.data;
       })
       .catch(error => {

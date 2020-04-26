@@ -22,7 +22,7 @@
         <label>
           <input type="checkbox" v-model="landscape" />
         </label>
-        <TreeChart :json="tempData" :class="{landscape: landscape.length}" @click-node="clickNode" />
+        <TreeChart :json="tempData" :images="images" :class="{landscape: landscape.length}" @click-node="clickNode" />
         <footer class="foot">
           <p>Satyanarayana Family Dev's</p>
         </footer>
@@ -48,16 +48,25 @@ export default {
       surname: this.$route.params.id,
       loading: true,
       tempData: null,
-      errored: false
+      errored: false,
+
+      images : {},
     };
   },
   mounted() {
     axios
-      .get("http://localhost:5000/tree/" + this.surname)
+      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id +"/images")
       .then(data => {
-        this.tempData = data.data.tree;
-        console.log("got data");
-        console.log(data.data.tree);
+        this.images = data.data[0];
+        axios
+          .get("http://localhost:5000/tree/" + this.surname)
+          .then(data => {
+            this.tempData = data.data.tree;
+          })
+          .catch(err => {
+            this.errored = err;
+            console.log("Error : " + err);
+          });
       })
       .catch(err => {
         this.errored = err;
