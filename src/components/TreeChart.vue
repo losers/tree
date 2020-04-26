@@ -8,8 +8,8 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url"/>
-              <img src="../assets/logo.png" v-else/>
+              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" />
+              <img :src="'data:image/png;base64, '" v-else />
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -19,7 +19,11 @@
             @click="$emit('click-node',{data:treeData.mate, isMate:true})"
           >
             <div class="avat">
-              <img src="../assets/logo.png" />
+              <img
+                :src="'data:image/png;base64, '+treeData.mate.image_url"
+                v-if="treeData.mate.image_url"
+              />
+              <img src="../assets/logo.png" v-else />
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>
@@ -44,8 +48,8 @@
 var images1 = {};
 export default {
   name: "TreeChart",
-  components: {
-  },
+  components: {},
+  props: ["json", "images"],
 
   data() {
     return {
@@ -57,24 +61,19 @@ export default {
   watch: {
     json: {
       handler: function(Props) {
-        let extendKey = (jsonData) => {
+        let extendKey = jsonData => {
           jsonData.image_url = images1.all[jsonData.id];
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
-          jsonData.image_url = data[jsonData.id];
           if (Array.isArray(jsonData.children)) {
             jsonData.children.forEach(c => {
-              // c.image_url = data[c.id];
-
               extendKey(c);
-              console.log(c);
             });
           }
           return jsonData;
         };
-
         if (Props) {
-          if(!images1.all){
+          if (!images1.all) {
             images1.all = this.images;
           }
           this.treeData = extendKey(Props);
