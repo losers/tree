@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import images1 from '../store.js';
+var images1 = {};
 export default {
   name: "TreeChart",
   components: {
@@ -52,27 +52,6 @@ export default {
       treeData: {}
     };
   },
-  // mounted(){
-  //   let extendKey =function(jsonData) {
-  //     jsonData.image_url = images1.all[jsonData.id];
-  //     jsonData
-  //     jsonData.extend =
-  //     jsonData.extend === void 0 ? true : !!jsonData.extend;
-  //     if (jsonData.children) {
-  //       for(let i=0;i < jsonData.children;i++){
-  //         extendKey(jsonData.children(i));
-  //       }
-  //     }
-  //     return jsonData;
-  //   }
-
-  //   if (this.json) {
-  //     if(!images1.all){
-  //       images1.all = this.images;
-  //     }
-  //     this.treeData = extendKey(this.json);
-  //   }
-  // },
   watch: {
     json: {
       handler: function(Props) {
