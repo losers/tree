@@ -9,7 +9,7 @@
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
               <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url"/>
-              <img :src="'data:image/png;base64, '" v-else/>
+              <img src="../assets/logo.png" v-else/>
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -19,7 +19,8 @@
             @click="$emit('click-node',{data:treeData.mate, isMate:true})"
           >
             <div class="avat">
-              <img :src="treeData.mate.image_url" />
+              <img :src="'data:image/png;base64, '+treeData.mate.image_url" v-if="treeData.mate.image_url"/>
+              <img src="../assets/logo.png" v-else/>
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>
@@ -56,7 +57,12 @@ export default {
     json: {
       handler: function(Props) {
         let extendKey = (jsonData) => {
-          jsonData.image_url = images1.all[jsonData.id];
+          if(images1.all){
+            jsonData.image_url = images1.all[jsonData.id];
+            if(jsonData.mate){
+              jsonData.mate.image_url = images1.all[jsonData.mate.id];
+            }
+          }
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
           if (Array.isArray(jsonData.children)) {
