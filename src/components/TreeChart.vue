@@ -45,12 +45,14 @@
 var images1 = {};
 export default {
   name: "TreeChart",
-  components: {
-  },
+  components: {},
   props: ["json", "images"],
+
   data() {
     return {
-      treeData: {}
+      treeData: {},
+      num: 1,
+      img: this.images
     };
   },
   watch: {
@@ -72,15 +74,15 @@ export default {
           }
           return jsonData;
         };
-
         if (Props) {
-          if(!images1.all){
+          if (!images1.all) {
             images1.all = this.images;
           }
           this.treeData = extendKey(Props);
         }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   methods: {

@@ -619,6 +619,7 @@
 }
 #title span {
   background: -webkit-linear-gradient(white, #38495a);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -697,3 +698,4 @@ export default {
   }
 };
 </script>
+

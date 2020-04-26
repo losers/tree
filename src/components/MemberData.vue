@@ -38,7 +38,7 @@
               <span v-if="!$route.query.hasMate">
                 <button @click="addMember(1)">Add Mate</button>
               </span>
-              <button @click="deleteMe" class="btn btn-danger">Delete</button>
+              <button @click="deleteSwipe" class="btn btn-danger">Delete</button>
             </table>
           </div>
         </section>
@@ -163,14 +163,34 @@ export default {
         }
       });
     },
-    deleteMe() {
-      axios
-        .delete(
-          "http://localhost:5000/tree/" + this.surname + "/person/" + this.id
-        )
-        .then(data => console.log(`Deleted : ${data}`))
-        .catch(err => console.log("Error : " + err));
+    deleteSwipe() {
+      this.open = false;
+      this.$router.push({ name: "Delete" });
+      // this.open = false;
+      // this.$modal.show(
+      //   Delete,
+      //   {},
+      //   {
+      //     height: "auto",
+      //     // draggable: true,
+      //     clickToClose: false,
+      //     scrollable: true
+      //   }
+      // );
     }
+    // onActionConfirmed() {
+    //   setTimeout(() => {
+    //     this.$refs.swipeButton.reset();
+    //   }, 1000);
+    // },
   }
 };
 </script>
+
+<style scoped>
+.swipe-button {
+  width: 500px;
+  background-color: #17255a;
+  border: 1px solid #17255a;
+}
+</style>

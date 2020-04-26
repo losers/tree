@@ -3,7 +3,7 @@
     <h3 v-if="!created">
       <span>Creating a Family Tree</span>
       <span class="close-btn" @click="goBack">X</span>
-      <span v-if="surname"> for {{surname}}</span>
+      <span v-if="surname">for {{surname}}</span>
     </h3>
     <form v-on:submit.prevent="sendData" v-if="!created">
       <div class="form-inline row">
@@ -37,10 +37,7 @@
       <div style="margin-bottom:20px">
         <span style="color:green">&#9989;</span> Success! Family tree is created. Start Adding members to your family tree.
       </div>
-      <button
-        class="btn btn-success"
-        @click="goFamily"
-      >Go..</button>
+      <button class="btn btn-success" @click="goFamily">Go..</button>
     </div>
     <div v-else-if="errored">Error Code : {{errored}}</div>
   </div>
@@ -80,7 +77,7 @@ export default {
       this.$emit("close");
       this.$router.push({ name: "MainTree", params: { id: this.surname } });
     },
-    makeSmall(){
+    makeSmall() {
       this.surname = this.surname.toLowerCase();
       this.surname = this.surname.split(" ").join("");
     }
