@@ -8,7 +8,7 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+images[treeData.id]" v-if="images"/>
+              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url"/>
               <img :src="'data:image/png;base64, '" v-else/>
             </div>
             <div class="name">{{treeData.name}}</div>
@@ -41,13 +41,10 @@
 </template>
 
 <script>
-// import { KinesisContainer, KinesisElement } from "vue-kinesis";
-
+var images1 = {};
 export default {
   name: "TreeChart",
   components: {
-    // KinesisContainer,
-    // KinesisElement
   },
   props: ["json", "images"],
   data() {
@@ -55,13 +52,11 @@ export default {
       treeData: {}
     };
   },
-  mounted(){
-    console.log(this.images);
-  },
   watch: {
     json: {
       handler: function(Props) {
-        let extendKey = function(jsonData) {
+        let extendKey = (jsonData) => {
+          jsonData.image_url = images1.all[jsonData.id];
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
           if (Array.isArray(jsonData.children)) {
@@ -71,7 +66,11 @@ export default {
           }
           return jsonData;
         };
+
         if (Props) {
+          if(!images1.all){
+            images1.all = this.images;
+          }
           this.treeData = extendKey(Props);
         }
       },
