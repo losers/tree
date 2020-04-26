@@ -8,8 +8,8 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+images[treeData.id]" v-if="images"/>
-              <img :src="'data:image/png;base64, '" v-else/>
+              <img :src="'data:image/png;base64,'+treeData.image_url" />
+              <!-- <img src="../assets/logo.png" v-else /> -->
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -42,31 +42,38 @@
 
 <script>
 // import { KinesisContainer, KinesisElement } from "vue-kinesis";
-
+var data;
 export default {
   name: "TreeChart",
   components: {
     // KinesisContainer,
     // KinesisElement
   },
-  props: ["json", "images"],
+
   data() {
     return {
-      treeData: {}
+      treeData: {},
+      num: 1,
+      img: this.images
     };
   },
-  mounted(){
-    console.log(this.images);
-  },
+  props: ["json", "images"],
   watch: {
     json: {
-      handler: function(Props) {
-        let extendKey = function(jsonData) {
+      handler(Props) {
+        if (this.img) {
+          data = this.img;
+        }
+        let extendKey = jsonData => {
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
+          jsonData.image_url = data[jsonData.id];
           if (Array.isArray(jsonData.children)) {
             jsonData.children.forEach(c => {
+              // c.image_url = data[c.id];
+
               extendKey(c);
+              console.log(c);
             });
           }
           return jsonData;
@@ -75,7 +82,8 @@ export default {
           this.treeData = extendKey(Props);
         }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   methods: {

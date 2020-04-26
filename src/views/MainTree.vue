@@ -49,7 +49,12 @@
         <label>
           <input type="checkbox" v-model="landscape" />
         </label>
-        <TreeChart :json="tempData" :images="images" :class="{landscape: landscape.length}" @click-node="clickNode" />
+        <TreeChart
+          :json="tempData"
+          :images="images"
+          :class="{landscape: landscape.length}"
+          @click-node="clickNode"
+        />
         <footer class="foot">
           <p>Satyanarayana Family Dev's</p>
         </footer>
@@ -77,12 +82,18 @@ export default {
       tempData: null,
       errored: false,
 
-      images : {},
+      images: {}
     };
   },
   mounted() {
     axios
-      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id +"/images")
+      .get(
+        "http://localhost:5000/tree/" +
+          this.surname +
+          "/person/" +
+          this.id +
+          "/images"
+      )
       .then(data => {
         this.images = data.data[0];
         axios
@@ -93,14 +104,12 @@ export default {
           .catch(err => {
             this.errored = err;
             console.log("Error : " + err);
-          });
+          })
+          .finally(() => (this.loading = false));
       })
       .catch(err => {
         this.errored = err;
         console.log("Error : " + err);
-      })
-      .finally(() => {
-        this.loading = false;
       });
 
     //called after adding a new member
