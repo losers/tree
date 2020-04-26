@@ -1,11 +1,11 @@
 <template>
   <div class="FormData p-5">
-    <h3 v-if="!created1">
+    <h3 v-if="!created">
       <span>Creating a Family Tree</span>
       <span class="close-btn" @click="goBack">X</span>
       <span v-if="surname"> for {{surname}}</span>
     </h3>
-    <form v-on:submit.prevent="sendData" v-if="!created1">
+    <form v-on:submit.prevent="sendData" v-if="!created">
       <div class="form-inline row">
         <label class="col-sm">Display Title :</label>
         <input
@@ -33,7 +33,7 @@
         <button type="submit" class="btn btn-success">Create +</button>
       </center>
     </form>
-    <div v-if="created1">
+    <div v-if="created">
       <div style="margin-bottom:20px">
         <span style="color:green">&#9989;</span> Success! Family tree is created. Start Adding members to your family tree.
       </div>
