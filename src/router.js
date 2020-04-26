@@ -36,6 +36,11 @@ const myrouter = new VueRouter({
                     component: () => import('./components/MemberData'),
                     children: [
                         {
+                            path: "delete",
+                            name: "Delete",
+                            component: () => import("./modals/DeleteMember"),
+                        },
+                        {
                             path: ":type",
                             name: "AddMember",
                             component: AddMember

@@ -8,6 +8,8 @@
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
+      <router-link :to="{name:'Home'}" class="float-left">Back</router-link>
+
       <div v-if="loading">Loading...</div>
 
       <!-- Called When No data is found -->
@@ -48,7 +50,11 @@
           <input type="checkbox" v-model="landscape" />
         </label>
         <center>
-          <TreeChart :json="data" :class="{landscape: landscape.length}" @click-node="clickNode" />
+          <TreeChart
+            :json="tempData"
+            :class="{landscape: landscape.length}"
+            @click-node="clickNode"
+          />
         </center>
         <footer class="foot">
           <p>Satyanarayana Family Dev's</p>
@@ -165,7 +171,7 @@ export default {
 .table-data {
   color: white;
 }
-h3 {
+li > h3 {
   background-image: linear-gradient(#0039a9, #d9dee9);
   /* background: linear-gradient(right, #eee, #333); */
   background-clip: text;
@@ -269,7 +275,7 @@ h3 {
   animation-fill-mode: forwards;
   opacity: 0;
 }
-.my-super-cool-btn:hover span{
+.my-super-cool-btn:hover span {
   font-size: 1.5rem;
 }
 .my-super-cool-btn:hover .dot:nth-child(1) {

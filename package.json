@@ -21,6 +21,7 @@
     "vue-router": "^3.1.6",
     "vue-simple-drawer": "^1.0.6",
     "vue-sweetalert2": "^3.0.3",
+    "vue-swipe-button": "^0.1.1",
     "vue-touch-ripple": "^3.0.0",
     "vue-typer": "^1.2.0"
   },
