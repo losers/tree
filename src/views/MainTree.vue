@@ -19,10 +19,10 @@
             <div class="col-3"></div>
             <ul class="col-8">
               <li>
-                <h3 class="d-flex content-justify-left ml-2">
+                <div class="d-flex content-justify-left ml-2">
                   Add Members in a Top Down Manner
                   <br />E.g : Grand Father -> Father -> Child
-                </h3>
+                </div>
               </li>
               <li>
                 <h3
@@ -47,10 +47,7 @@
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <TreeTitle title="Medam Mega Family"></TreeTitle>
-        <!-- <label>
-          <input type="checkbox" v-model="landscape" />
-        </label>-->
+        <TreeTitle style="margin-bottom: 50px;font-size: 30px;box-shadow: -1px 3px 20px -10px rgba(0,0,0,0.75);padding: 10px;" title="Medam Mega Family"></TreeTitle>
         <center>
           <TreeChart
             :json="tempData"

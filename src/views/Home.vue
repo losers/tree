@@ -55,7 +55,11 @@
   margin-bottom: 40px;
   padding: 20px;
 }
+a:hover{
+  text-decoration: none !important;
+}
 .title {
+  
   font-size: 35px;
   font-weight: bold;
   color: white;
