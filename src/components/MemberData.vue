@@ -1,51 +1,53 @@
 <template>
   <div>
     <router-view></router-view>
-    <Drawer @close="toggle" align="right" :closeable="true">
-      <div v-if="open" class="draw">
-        <section v-if="errored">
-          <p>{{errored}}</p>
-        </section>
-        <section v-else>
-          <div v-if="loading">Loading...</div>
-          <div v-else>
-            <img :src="previewImage" style="border-radius: 50%;width: 150px;" />
-            <button @click="uploadImage">Upload Image</button>
-            <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
-            <a class="btn" @click="show=true">Select Image</a>
-            <my-upload
-              field="img"
-              @crop-success="cropSuccess"
-              :width="300"
-              :height="300"
-              url
-              lang-type="en"
-              v-model="show"
-              img-format="jpg"
-            ></my-upload>
-            <!-- {{data}} -->
-            <table class="table table-borderless table-hover mt-5 table-data">
-              <tbody>
-                <tr>
-                  <td>9515792944</td>
-                </tr>
-                <tr>
-                  <td>varunkumarmedam@gmail.com</td>
-                </tr>
-                <tr>
-                  <td>Super Saiyan Dev in Medam Family</td>
-                </tr>
-              </tbody>
-              <button @click="addMember(2)">Add Child</button>
-              <span v-if="!$route.query.hasMate">
-                <button @click="addMember(1)">Add Mate</button>
-              </span>
-              <button @click="deleteSwipe" class="btn btn-danger">Delete</button>
-            </table>
-          </div>
-        </section>
-      </div>
-    </Drawer>
+    <div @click="slideMe">
+      <Drawer @close="toggle" align="right" :closeable="true">
+        <div v-if="open" class="draw">
+          <section v-if="errored">
+            <p>{{errored}}</p>
+          </section>
+          <section v-else>
+            <div v-if="loading">Loading...</div>
+            <div v-else>
+              <img :src="previewImage" style="border-radius: 50%;width: 150px;" />
+              <button @click="uploadImage">Upload Image</button>
+              <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
+              <a class="btn" @click="show=true">Select Image</a>
+              <my-upload
+                field="img"
+                @crop-success="cropSuccess"
+                :width="300"
+                :height="300"
+                url
+                lang-type="en"
+                v-model="show"
+                img-format="jpg"
+              ></my-upload>
+              <!-- {{data}} -->
+              <table class="table table-borderless table-hover mt-5 table-data">
+                <tbody>
+                  <tr>
+                    <td>9515792944</td>
+                  </tr>
+                  <tr>
+                    <td>varunkumarmedam@gmail.com</td>
+                  </tr>
+                  <tr>
+                    <td>Super Saiyan Dev in Medam Family</td>
+                  </tr>
+                </tbody>
+                <button @click="addMember(2)">Add Child</button>
+                <span v-if="!$route.query.hasMate">
+                  <button @click="addMember(1)">Add Mate</button>
+                </span>
+                <button @click="deleteSwipe" class="btn btn-danger">Delete</button>
+              </table>
+            </div>
+          </section>
+        </div>
+      </Drawer>
+    </div>
   </div>
 </template>
 
@@ -198,6 +200,19 @@ export default {
         }
       );
       this.open = false;
+    },
+
+    slideMe() {
+      console.log();
+      if (this.$route.params.member) {
+        this.open = false;
+        setTimeout(() => {
+          this.$router.push({
+            name: "MainTree",
+            params: this.$route.params.id
+          });
+        }, 300);
+      }
     }
   }
 };

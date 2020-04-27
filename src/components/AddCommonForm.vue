@@ -25,11 +25,11 @@
         />
       </div>
       <div class="form-inline">
-        <label>DOB : </label>
+        <label>DOB :</label>
         <input type="date" class="form-control" v-model="data.dob" placeholder="Date of Birth" />
       </div>
       <div class="form-inline">
-        <label class="mr-3">Is Died </label>
+        <label class="mr-3">Is Died</label>
         <toggle-button v-model="data.is_alive" />
         <span class="form-inline" v-show="data.is_alive">
           <input type="date" class="form-control" v-model="data.died_on" placeholder="Died On" />
@@ -48,8 +48,9 @@
             type="radio"
             name="gender"
             v-model="data.gender"
-            checked
             value="1"
+            checked
+            required
           />
           <label class="form-check-label ml-2">Male</label>
         </div>
@@ -65,13 +66,17 @@
         </div>
       </div>
       <div v-if="form_saved">
-        <div class="d-flex content-justify-between"><h4>Form Saved Successfully</h4>
-        <tick></tick>
+        <tick class="float-right"></tick>
+        <h4 class="mb-3">Form Saved Successfully</h4>
+        <div class="d-flex justify-content-around form-btns">
+          <button @click="goHome" class="btn btn-success">See tree</button>
+          <button
+            type="reset"
+            @click="form_saved=false;data={}"
+            class="btn btn-warning"
+          >Add Another Child</button>
+          <button @click="goBack" class="btn btn-danger">Close</button>
         </div>
-        
-        <button @click="goHome">See tree</button>
-        <button type="reset" @click="form_saved=false;data={}">Add another child</button>
-        <button @click="goBack">GO Back</button>
       </div>
       <div v-else class="d-flex justify-content-between">
         <button type="submit" class="btn btn-primary">
@@ -127,6 +132,9 @@ export default {
 </script>
 
 <style scoped>
+.form-btns{
+  margin-left: -20px;
+}
 label {
   size: 22px;
   font-weight: bold;

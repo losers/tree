@@ -9,7 +9,6 @@
     <section v-else>
       <router-view></router-view>
       <router-link :to="{name:'Home'}" class="float-left">Back</router-link>
-
       <div v-if="loading">Loading...</div>
 
       <!-- Called When No data is found -->
@@ -44,17 +43,11 @@
             <span style="color:#0039A9">Add!</span>
           </button>
         </div>
-        <!-- <button @click="createRoot">Add Parent</button> -->
       </div>
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <!-- <div class="tree-title">
-     
-        </div>-->     <TreeTitle title="Medam Mega Family"></TreeTitle>
-        <div class="tree-title"></div>
-        
-
+        <TreeTitle title="Medam Mega Family"></TreeTitle>
         <!-- <label>
           <input type="checkbox" v-model="landscape" />
         </label>-->
@@ -154,19 +147,14 @@ export default {
       this.$router.push({
         name: "AddRoot"
       });
-    }
+    },
+
+    
   }
 };
 </script>
 
 <style>
-.tree-title {
-  background-color: red;
-  width: 100%;
-  -webkit-box-shadow: 0px 15px 29px -39px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 15px 29px -39px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 15px 29px -39px rgba(0, 0, 0, 0.75);
-}
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
