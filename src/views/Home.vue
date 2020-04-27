@@ -18,7 +18,9 @@
             <span style="font-weight: 500;">Family Tree</span>
             <br />
           </div>
-          <center><vue-typer :text='["Decode Your DNA !", "Find your Roots !", "Have Fun !"]'></vue-typer></center>
+          <center>
+            <vue-typer :text='["Decode Your DNA !", "Find your Roots !", "Have Fun !"]'></vue-typer>
+          </center>
           <center>
             <touch-ripple @click.native="showModal = true" class="button-box" :speed="1.1">
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
@@ -28,14 +30,14 @@
         <AddFamily v-if="showModal" v-on:close="showModal=false"></AddFamily>
         <div v-for="data in info" :key="data.id">
           <center>
-          <!-- <touch-ripple class="div-box container jumbotron" :speed="2" :opacity="0.3" color="#999" transition="cubic-bezier(0.18, 0.89, 0.32, 1.28)"> -->
-            <div class="container jumbotron div-box">
-                <router-link :to="{name:'MainTree', params:{id:data.surname}}">
-                  <div>{{data.title}}</div>
-                </router-link>
-                Surname : {{data.surname}}
+            <!-- <touch-ripple class="div-box container jumbotron" :speed="2" :opacity="0.3" color="#999" transition="cubic-bezier(0.18, 0.89, 0.32, 1.28)"> -->
+            <div class="container div-box">
+              <router-link :to="{name:'MainTree', params:{id:data.surname}}">
+                <div class="title">{{data.title}}</div>
+              </router-link>
+              <p class="surname">Surname : {{data.surname}}</p>
             </div>
-          <!-- </touch-ripple> -->
+            <!-- </touch-ripple> -->
           </center>
         </div>
       </div>
@@ -47,8 +49,21 @@
 </template>
 
 <style scoped>
-.div-box{
-  opacity: 0.8;
+.div-box {
+  border: 3px solid white;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  padding: 20px;
+}
+.title {
+  font-size: 35px;
+  font-weight: bold;
+  color: white;
+}
+.surname {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
 }
 .heade {
   margin-bottom: 60px;
@@ -648,7 +663,7 @@ import axios from "axios";
 import AddFamily from "../modals/AddFamily";
 
 import { touchRipple } from "vue-touch-ripple";
-import { VueTyper } from 'vue-typer';
+import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 
 export default {
@@ -658,7 +673,7 @@ export default {
       loading: true,
       errored: false,
       callMe: false,
-      showModal : false
+      showModal: false
     };
   },
   components: {

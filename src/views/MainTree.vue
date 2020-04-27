@@ -46,9 +46,10 @@
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <label>
+        <TreeTitle title="Medam Mega Family" class="titleMe"></TreeTitle>
+        <!-- <label>
           <input type="checkbox" v-model="landscape" />
-        </label>
+        </label> -->
         <center>
           <TreeChart
             :json="tempData"
@@ -69,11 +70,13 @@
 import TreeChart from "@/components/TreeChart";
 import data from "../data.js";
 import axios from "axios";
+import TreeTitle from "../components/TreeTite";
 
 export default {
   name: "MainTree",
   components: {
-    TreeChart
+    TreeChart,
+    TreeTitle
   },
   data() {
     return {
@@ -150,6 +153,10 @@ export default {
 </script>
 
 <style>
+.titleMe{
+  color: green!important;
+  width: 100%;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

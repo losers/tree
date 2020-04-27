@@ -9,18 +9,20 @@
         <section v-else>
           <div v-if="loading">Loading...</div>
           <div v-else>
-            <img :src="previewImage" style="border-radius: 50%;width: 150px;"/>
+            <img :src="previewImage" style="border-radius: 50%;width: 150px;" />
             <button @click="uploadImage">Upload Image</button>
             <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
             <a class="btn" @click="show=true">Select Image</a>
-            <my-upload field="img"
-            @crop-success="cropSuccess"
+            <my-upload
+              field="img"
+              @crop-success="cropSuccess"
               :width="300"
               :height="300"
-              url=""
-                  lang-type="en"
+              url
+              lang-type="en"
               v-model="show"
-              img-format="jpg"></my-upload>
+              img-format="jpg"
+            ></my-upload>
             <!-- {{data}} -->
             <table class="table table-borderless table-hover mt-5 table-data">
               <tbody>
@@ -50,13 +52,22 @@
 <script>
 import Drawer from "vue-simple-drawer";
 import axios from "axios";
-const Compress = require('compress.js');
-import myUpload from 'vue-image-crop-upload/upload-2.vue';
+const Compress = require("compress.js");
+import myUpload from "vue-image-crop-upload/upload-2.vue";
+import Vue from "vue";
+import VModal from "vue-js-modal";
+import Delete from "../components/DeleteMember";
+
+Vue.use(VModal, {
+  dynamic: true,
+  injectModalsContainer: true
+});
 
 export default {
   name: "MemberData",
   components: {
-    Drawer,'my-upload': myUpload
+    Drawer,
+    "my-upload": myUpload
   },
   data() {
     return {
@@ -67,10 +78,10 @@ export default {
       surname: this.$route.params.id,
       id: this.$route.params.member,
       type: this.$route.params.type,
-      
+
       previewImage: null,
       imageData: "",
-      show:false,
+      show: false
     };
   },
   mounted() {
@@ -86,19 +97,25 @@ export default {
       .finally(() => {
         this.loading = false;
       });
-    
+
     axios
-      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id +"/image")
+      .get(
+        "http://localhost:5000/tree/" +
+          this.surname +
+          "/person/" +
+          this.id +
+          "/image"
+      )
       .then(data => {
         this.data = data.data;
-        if(this.data.length != 0){
+        if (this.data.length != 0) {
           this.previewImage = "data:image/png;base64, " + this.data[0][this.id];
         }
       })
       .catch(err => {
         this.errored = err;
       });
-    
+
     this.$root.$on("canceled", () => {
       this.open = true;
     });
@@ -107,43 +124,50 @@ export default {
     }
   },
   methods: {
-    uploadImage(){
+    uploadImage() {
       let params = {};
       params.image_data = this.imageData;
-      let url = "http://localhost:5000/tree/" + this.surname + "/person/" + this.id +"/image";
+      let url =
+        "http://localhost:5000/tree/" +
+        this.surname +
+        "/person/" +
+        this.id +
+        "/image";
       axios
-        .post(
-          url,params
-        ).then(function (data) {
+        .post(url, params)
+        .then(function(data) {
           console.log(data);
-        }).catch(function(err){
+        })
+        .catch(function(err) {
           console.log(err);
         });
     },
-    cropSuccess(imgDataUrl){
-          var arr = imgDataUrl.split(','),
-          mime = arr[0].match(/:(.*?);/)[1],
-          bstr = atob(arr[1]), 
-          n = bstr.length, 
-          u8arr = new Uint8Array(n);
-          while(n--){
-              u8arr[n] = bstr.charCodeAt(n);
-          }
-          
-          let x =  new File([u8arr], "Something", {type:mime});
-          const compress = new Compress()
-          compress.compress([x], {
-          size: 0.10, 
-          quality: .2,
+    cropSuccess(imgDataUrl) {
+      var arr = imgDataUrl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      let x = new File([u8arr], "Something", { type: mime });
+      const compress = new Compress();
+      compress
+        .compress([x], {
+          size: 0.1,
+          quality: 0.2,
           maxWidth: 200,
           maxHeight: 200,
-          resize: true,
-        }).then((data) => {
+          resize: true
+        })
+        .then(data => {
           this.imageData = data[0].data;
           // window.location.href = 'data:application/octet-stream;base64,' + this.imageData;
           this.previewImage = "data:image/png;base64, " + this.imageData;
         });
-		},
+    },
     toggle() {
       if (!this.$route.params.type) {
         this.open = false;
@@ -164,25 +188,17 @@ export default {
       });
     },
     deleteSwipe() {
+      this.$modal.show(
+        Delete,
+        {},
+        {
+          height: "auto",
+          clickToClose: false,
+          scrollable: true
+        }
+      );
       this.open = false;
-      this.$router.push({ name: "Delete" });
-      // this.open = false;
-      // this.$modal.show(
-      //   Delete,
-      //   {},
-      //   {
-      //     height: "auto",
-      //     // draggable: true,
-      //     clickToClose: false,
-      //     scrollable: true
-      //   }
-      // );
     }
-    // onActionConfirmed() {
-    //   setTimeout(() => {
-    //     this.$refs.swipeButton.reset();
-    //   }, 1000);
-    // },
   }
 };
 </script>
