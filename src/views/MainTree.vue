@@ -20,7 +20,10 @@
             <div class="col-3"></div>
             <ul class="col-8">
               <li>
-                <h3 class="d-flex content-justify-left ml-2">Add your eldest member in your family</h3>
+                <h3 class="d-flex content-justify-left ml-2">
+                  Add Members in a Top Down Manner
+                  <br />E.g : Grand Father -> Father -> Child
+                </h3>
               </li>
               <li>
                 <h3
@@ -46,10 +49,15 @@
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <TreeTitle title="Medam Mega Family" class="titleMe"></TreeTitle>
+        <!-- <div class="tree-title">
+     
+        </div>-->     <TreeTitle title="Medam Mega Family"></TreeTitle>
+        <div class="tree-title"></div>
+        
+
         <!-- <label>
           <input type="checkbox" v-model="landscape" />
-        </label> -->
+        </label>-->
         <center>
           <TreeChart
             :json="tempData"
@@ -70,7 +78,7 @@
 import TreeChart from "@/components/TreeChart";
 import data from "../data.js";
 import axios from "axios";
-import TreeTitle from "../components/TreeTite";
+import TreeTitle from "../components/TreeTitle";
 
 export default {
   name: "MainTree",
@@ -86,7 +94,6 @@ export default {
       loading: true,
       tempData: null,
       errored: false,
-
       images: {}
     };
   },
@@ -153,17 +160,19 @@ export default {
 </script>
 
 <style>
-.titleMe{
-  color: green!important;
+.tree-title {
+  background-color: red;
   width: 100%;
+  -webkit-box-shadow: 0px 15px 29px -39px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 15px 29px -39px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 15px 29px -39px rgba(0, 0, 0, 0.75);
 }
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 #app .avat {
   border-radius: 2em;
@@ -171,6 +180,9 @@ export default {
 }
 #app .name {
   font-weight: 700;
+}
+h2 {
+  font-family: "Comfortaa", cursive;
 }
 .foot {
   position: fixed;
@@ -193,11 +205,13 @@ export default {
   color: white;
 }
 li > h3 {
-  background-image: linear-gradient(#0039a9, #d9dee9);
+  /* background-image: linear-gradient(#0039a9, #d9dee9); */
   /* background: linear-gradient(right, #eee, #333); */
+  color: #0039a9;
   background-clip: text;
   font-weight: 600;
-  -webkit-text-fill-color: transparent;
+  font-family: "Comfortaa", cursive;
+  /* -webkit-text-fill-color: transparent; */
 }
 #wrapper {
   width: 100vw;

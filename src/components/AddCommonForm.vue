@@ -65,7 +65,10 @@
         </div>
       </div>
       <div v-if="form_saved">
-        <h4>Form Saved Successfully</h4>
+        <div class="d-flex content-justify-between"><h4>Form Saved Successfully</h4>
+        <tick></tick>
+        </div>
+        
         <button @click="goHome">See tree</button>
         <button type="reset" @click="form_saved=false;data={}">Add another child</button>
         <button @click="goBack">GO Back</button>
@@ -83,10 +86,12 @@
 
 <script>
 import { ToggleButton } from "vue-js-toggle-button";
+import Tick from "./small/tick";
 
 export default {
   components: {
-    ToggleButton
+    ToggleButton,
+    Tick
   },
   data() {
     return {

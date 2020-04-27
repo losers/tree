@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app">
     <div v-if="show">
       <ParticleBtn
         :visible.sync="btnOps.visible"
@@ -35,8 +35,7 @@ export default {
   props: ["title"],
   data() {
     return {
-      titleText,
-      
+      titleText: null,
       show: true,
       btnOps: {
         type: "triangle",
@@ -45,7 +44,7 @@ export default {
         particlesAmountCoefficient: 10,
         oscillationCoefficient: 150,
         color: function() {
-          return Math.random() < 0.5 ? "#000000" : "#ffffff";
+          return Math.random() < 0.5 ? "#ffffff":"#000000";
         },
         onComplete: () => {
           console.log("complete");
@@ -93,9 +92,17 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  >
+.vue-particle-effect-button .particles-button{
+    background: black!important;
+    color: white!important;
+}
+.app {
+  margin-left: 0 !important;
+}
 h1 {
-  width: 1000px;
+  width: 100%;
+  font-family: "Comfortaa", cursive;
 }
 input[type="text"] {
   padding: 20px !important;
