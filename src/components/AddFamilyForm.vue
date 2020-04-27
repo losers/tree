@@ -35,9 +35,13 @@
     </form>
     <div v-if="created">
       <div style="margin-bottom:20px">
-        <span style="color:green">&#9989;</span> Success! Family tree is created. Start Adding members to your family tree.
+        <Tick></Tick>
+        <center>
+            <h1>Success!</h1>
+            <span style="font-size: 20px;">Family tree is created. Start Adding members to your family tree.</span>
+        </center>
       </div>
-      <button class="btn btn-success" @click="goFamily">Go..</button>
+      <center><button class="btn btn-success" @click="goFamily">Go..</button></center>
     </div>
     <div v-else-if="errored">Error Code : {{errored}}</div>
   </div>
@@ -45,8 +49,13 @@
 
 <script>
 import Axios from "axios";
+import Tick from "./small/tick.vue";
+
 export default {
   name: "AddFamilyForm",
+  components: {
+    Tick
+  },
   data() {
     return {
       surname: null,

@@ -23,6 +23,7 @@ export default {
 }
 
 .checkmark {
+  margin-bottom: 20px !important;
   width: 56px;
   height: 56px;
   border-radius: 50%;
