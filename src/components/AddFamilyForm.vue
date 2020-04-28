@@ -2,15 +2,17 @@
   <div class="FormData p-5">
     <h3 v-if="!created">
       <span>Creating a Family Tree</span>
-      <span class="close-btn" @click="goBack">X</span>
-      <span v-if="surname">for {{surname}}</span>
+      <span class="close-btn" @click="goBack">x</span>
+      <span v-if="surname"> for {{surname}}</span>
     </h3>
     <form v-on:submit.prevent="sendData" v-if="!created">
       <div class="form-inline row">
-        <label class="col-sm">Display Title :</label>
+        <label class="col" style="justify-content:left">
+            Display Title :
+        </label>
         <input
           type="text"
-          class="form-control col-sm"
+          class="form-control col-sm-8"
           id="title"
           placeholder="Display Title"
           required
@@ -18,24 +20,27 @@
         />
       </div>
       <div class="form-inline row">
-        <label for="nickname" class="col">Surname :</label>
+        <label for="nickname" class="col" style="justify-content:left">Surname :</label>
         <input
           v-model="surname"
           type="text"
-          class="form-control col"
+          class="form-control col-sm-8"
           id="surname"
           placeholder="Enter Surname"
           @input="makeSmall"
           required
         />
       </div>
-      <center style="margin-bottom: 20px;font-size: 20px;">
-        <button type="submit" class="btn btn-success">Create +</button>
-      </center>
+      <button type="submit" class="btn btn-success" style="margin-top: 30px;display: flex;align-items: center;">
+          <span class="spinner-border spinner-border-sm" v-show="loading" style="margin-right: 8px;"></span>
+          <span> Create </span>
+      </button>
     </form>
     <div v-if="created">
       <div style="margin-bottom:20px">
-        <Tick></Tick>
+        <center>
+            <Tick></Tick>
+        </center>
         <center>
             <h1>Success!</h1>
             <span style="font-size: 20px;">Family tree is created. Start Adding members to your family tree.</span>
@@ -61,7 +66,8 @@ export default {
       surname: null,
       title: null,
       created: false,
-      errored: false
+      errored: false,
+      loading : false
     };
   },
   methods: {
@@ -77,7 +83,7 @@ export default {
         .catch(function(err) {
           this.errored = err;
           console.log(err.response);
-        });
+        }).finally(() => this.loading = false);
     },
     goBack() {
       this.$emit("close");
@@ -100,12 +106,12 @@ input {
 }
 
 .close-btn {
-  float: right;
-  color: red;
-  font-weight: bolder;
-  font-size: 27px;
-  margin-top: -20px;
-  margin-right: -11px;
-  cursor: pointer;
+    float: right;
+    color: red;
+    font-weight: bolder;
+    font-size: 27px;
+    margin-top: -31px;
+    margin-right: -18px;
+    cursor: pointer;
 }
 </style>
