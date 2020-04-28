@@ -90,7 +90,7 @@ export default {
   mounted() {
     axios
       .get(
-        "https://familyapptree.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -99,7 +99,7 @@ export default {
       .then(data => {
         this.images = data.data[0];
         axios
-          .get("https://familyapptree.herokuapp.com/tree/" + this.surname)
+          .get("http://localhost:5000/tree/" + this.surname)
           .then(data => {
             this.tempData = data.data.tree;
           })
