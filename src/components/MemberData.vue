@@ -1,53 +1,63 @@
 <template>
   <div>
     <router-view></router-view>
-    <div @click="slideMe">
-      <Drawer @close="toggle" align="right" :closeable="true">
-        <div v-if="open" class="draw">
-          <section v-if="errored">
-            <p>{{errored}}</p>
-          </section>
-          <section v-else>
-            <div v-if="loading">Loading...</div>
-            <div v-else>
-              <img :src="previewImage" style="border-radius: 50%;width: 150px;" />
-              <button @click="uploadImage">Upload Image</button>
-              <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
-              <a class="btn" @click="show=true">Select Image</a>
-              <my-upload
-                field="img"
-                @crop-success="cropSuccess"
-                :width="300"
-                :height="300"
-                url
-                lang-type="en"
-                v-model="show"
-                img-format="jpg"
-              ></my-upload>
-              <!-- {{data}} -->
-              <table class="table table-borderless table-hover mt-5 table-data">
-                <tbody>
-                  <tr>
-                    <td>9515792944</td>
-                  </tr>
-                  <tr>
-                    <td>varunkumarmedam@gmail.com</td>
-                  </tr>
-                  <tr>
-                    <td>Super Saiyan Dev in Medam Family</td>
-                  </tr>
-                </tbody>
-                <button @click="addMember(2)">Add Child</button>
-                <span v-if="!$route.query.hasMate">
-                  <button @click="addMember(1)">Add Mate</button>
-                </span>
-                <button @click="deleteSwipe" class="btn btn-danger">Delete</button>
-              </table>
-            </div>
-          </section>
-        </div>
-      </Drawer>
-    </div>
+    <!-- <di class="row"> -->
+    <!-- <div class="col-12" style="z-index:1000; color:red; height:100%; background-color:red;">_</div> -->
+    <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
+      <div v-if="open" class="draw">
+        <section v-if="errored">
+          <p>{{errored}}</p>
+        </section>
+        <section v-else>
+          <div v-if="loading">Loading...</div>
+          <div v-else>
+            <img :src="previewImage" style="border-radius: 50%;width: 150px;" />
+            <button @click="uploadImage">Upload Image</button>
+            <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
+            <a class="btn" @click="show=true">Select Image</a>
+            <my-upload
+              field="img"
+              @crop-success="cropSuccess"
+              :width="300"
+              :height="300"
+              url
+              lang-type="en"
+              v-model="show"
+              img-format="jpg"
+            ></my-upload>
+            <!-- {{data}} -->
+            <table class="table table-borderless table-hover mt-5 table-data">
+              <tbody class="text-left">
+                <tr class="text-center">
+                  <td>{{data.short_name}}</td>
+                </tr>
+                <tr>
+                  <td>{{data.name}}</td>
+                </tr>
+                <tr v-if="data.mobile">
+                  <td><i class="icofont-address-book">&#xeea1;</i> {{data.mobile}}</td>
+                </tr>
+                <tr v-if="data.dob">
+                  <td>{{data.dob}}</td>
+                </tr>
+                <tr v-if="data.gender">
+                  <td>{{data.gender=="1"?"Male":"Female"}}</td>
+                </tr>
+                <tr>
+                  <td>Add some description here</td>
+                </tr>
+              </tbody>
+              <button @click="addMember(2)">Add Child</button>
+              <span v-if="!$route.query.hasMate">
+                <button @click="addMember(1)">Add Mate</button>
+              </span>
+              <button @click="deleteSwipe" class="btn btn-danger">Delete</button>
+            </table>
+          </div>
+        </section>
+      </div>
+    </Drawer>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -88,7 +98,7 @@ export default {
   },
   mounted() {
     axios
-      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
+      .get("https://familyapptree.herokuapp.com/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         this.data = data.data;
         // this.previewImage = "data:image/png;base64, "+this.data.image_data;
@@ -102,7 +112,7 @@ export default {
 
     axios
       .get(
-        "http://localhost:5000/tree/" +
+        "https://familyapptree.herokuapp.com/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -130,7 +140,7 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       let url =
-        "http://localhost:5000/tree/" +
+        "https://familyapptree.herokuapp.com/tree/" +
         this.surname +
         "/person/" +
         this.id +
@@ -203,7 +213,7 @@ export default {
     },
 
     slideMe() {
-      console.log();
+      console.log("Slideme");
       if (this.$route.params.member) {
         this.open = false;
         setTimeout(() => {
@@ -213,12 +223,19 @@ export default {
           });
         }, 300);
       }
+    },
+
+    disable() {
+      console.log("Disabled");
     }
   }
 };
 </script>
 
 <style scoped>
+.mask {
+  height: 0 !important;
+}
 .swipe-button {
   width: 500px;
   background-color: #17255a;

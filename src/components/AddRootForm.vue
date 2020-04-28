@@ -21,7 +21,7 @@ export default {
   methods: {
     sendData(data) {
       data.type = 0;
-      Axios.post("http://localhost:5000/tree/" + this.surname + "/person", data)
+      Axios.post("https://familyapptree.herokuapp.com/tree/" + this.surname + "/person", data)
         .then(data => console.log(data))
         .catch(errr => console.log(errr))
         .finally(() => {
