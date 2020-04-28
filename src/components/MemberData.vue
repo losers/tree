@@ -98,7 +98,7 @@ export default {
   },
   mounted() {
     axios
-      .get("https://familyapptree.herokuapp.com/tree/" + this.surname + "/person/" + this.id)
+      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         this.data = data.data;
         // this.previewImage = "data:image/png;base64, "+this.data.image_data;
@@ -112,7 +112,7 @@ export default {
 
     axios
       .get(
-        "https://familyapptree.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -140,7 +140,7 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       let url =
-        "https://familyapptree.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
         this.surname +
         "/person/" +
         this.id +

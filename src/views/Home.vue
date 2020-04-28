@@ -704,7 +704,7 @@ export default {
   },
   mounted() {
     axios
-      .get("https://familyapptree.herokuapp.com/meta")
+      .get("http://localhost:5000/meta")
       .then(response => {
         this.toggleBodyClass("addClass", "j-stars");
         this.info = response.data;

@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     sendData() {
-      Axios.post("https://familyapptree.herokuapp.com/meta/add", {
+      Axios.post("http://localhost:5000/meta/add", {
         title: this.title,
         surname: this.surname
       })
