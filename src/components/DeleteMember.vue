@@ -34,7 +34,7 @@ export default {
     deleteMe() {
       axios
         .delete(
-          "http://localhost:5000/tree/" +
+          "https://familyapptree.herokuapp.com/tree/" +
             this.$route.params.id +
             "/person/" +
             this.$route.params.member
