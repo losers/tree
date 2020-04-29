@@ -23,15 +23,12 @@ export default {
         draggable: true,
         clickToClose: false,
         scrollable: true
-      },
-      {
-        'before-close': this.beforeClose 
       }
     );
   },
-  methods : {
-    beforeClose(){
-      this.$emit('close');
+  methods: {
+    beforeClose() {
+      this.$emit("close");
     }
   }
 };

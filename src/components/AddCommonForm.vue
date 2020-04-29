@@ -2,49 +2,65 @@
   <div class="FormData p-5">
     <h3>Add Member</h3>
     <form v-on:submit.prevent="sendData">
-      <div class="form-inline">
-        <label for="nickname">Short Name :</label>
+      <div class="row">
+        <label class="col-4">Short Name:</label>
         <input
           type="text"
-          class="form-control"
-          id="nickname"
+          class="form-control col-7"
           placeholder="Enter Short Name"
           v-model="data.short_name"
           required
         />
       </div>
-      <small id="nickname" class="form-text text-muted">Nick Name will be shown in Family Tree</small>
-      <div class="form-inline">
-        <label>Name :</label>
+      <p class="info">Nick Name will be shown in Family Tree</p>
+      <div class="row">
+        <label class="col-4">Name :</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control col-7"
           v-model="data.name"
           placeholder="Enter Name"
           required
         />
       </div>
-      <div class="form-inline">
-        <label>DOB :</label>
-        <input type="date" class="form-control" v-model="data.dob" placeholder="Date of Birth" />
+      <div class="row">
+        <label class="col-4">DOB :</label>
+        <input
+          type="date"
+          class="form-control col-7"
+          v-model="data.dob"
+          placeholder="Date of Birth"
+        />
       </div>
-      <div class="form-inline">
-        <label class="mr-3">Is Died</label>
-        <toggle-button v-model="data.is_alive" />
+
+      <div class="row">
+        <label class="col-4">Is Died</label>
+        <toggle-button v-model="data.is_alive" class="mb-4" />
         <span class="form-inline" v-show="data.is_alive">
-          <input type="date" class="form-control" v-model="data.died_on" placeholder="Died On" />
+          <input
+            type="date"
+            class="form-control col-10 ml-5"
+            v-model="data.died_on"
+            placeholder="Died On"
+          />
         </span>
       </div>
 
-      <div class="form-inline">
-        <label for="mobile">Mobile :</label>
-        <input type="tel" class="form-control" v-model="data.mobile" placeholder="Mobile Number" />
+      <div class="row">
+        <label class="col-4">Mobile :</label>
+        <input
+          type="tel"
+          class="form-control col-7"
+          v-model="data.mobile"
+          placeholder="Mobile Number"
+        />
       </div>
+
       <!-- Gender Selection -->
-      <div class="form-inline">
-        <div class="form-check">
+      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
+        <div class="form-check col-3 ml-3">
           <input
-            class="form-check-input"
+            class="form-check-input col-2 mt-2"
             type="radio"
             name="gender"
             v-model="data.gender"
@@ -56,7 +72,7 @@
         </div>
         <div class="form-check">
           <input
-            class="form-check-input ml-5"
+            class="form-check-input col-3 mt-2"
             type="radio"
             name="gender"
             v-model="data.gender"
@@ -65,7 +81,8 @@
           <label class="form-check-label ml-2">Female</label>
         </div>
       </div>
-      <div v-if="form_saved">
+
+      <div v-if="form_saved" class="mt-5">
         <tick class="float-right"></tick>
         <h4 class="mb-3">Form Saved Successfully</h4>
         <div class="d-flex justify-content-around form-btns">
@@ -78,7 +95,7 @@
           <button @click="goBack" class="btn btn-danger">Close</button>
         </div>
       </div>
-      <div v-else class="d-flex justify-content-between">
+      <div v-else class="d-flex justify-content-between mt-5">
         <button type="submit" class="btn btn-primary">
           <span class="spinner-border spinner-border-sm" v-show="loading"></span>
           Submit
@@ -98,6 +115,7 @@ export default {
     ToggleButton,
     Tick
   },
+  props: ["memData"],
   data() {
     return {
       data: {},
@@ -106,18 +124,33 @@ export default {
     };
   },
   mounted() {
-    this.$root.$on("form-saved", () => {
-      this.form_saved = true;
-      this.loading = false;
-    });
+    this.data = this.memData;
+    // this.$root.$on("form-saved", () => {
+    //   this.form_saved = true;
+    //   this.loading = false;
+    // });
   },
   methods: {
     sendData() {
       this.loading = true;
+      if (this.$route.params.type == "a") {
+        this.data.gender = "1";
+        this.data.type = 1;
+      } else if (this.$route.params.type == "b") {
+        this.data.gender = "0";
+        this.data.type = 1;
+      } else if (this.$route.params.type == 1) {
+        this.data.type = 2;
+      }
       this.$emit("form-submit", this.data);
     },
     goBack() {
-      this.$emit("form-cancel");
+      if (this.memData) {
+        this.$emit("close");
+        this.$root.$emit("canceled");
+      } else {
+        this.$emit("form-cancel");
+      }
     },
     goHome() {
       this.$emit("jst-close");
@@ -132,15 +165,24 @@ export default {
 </script>
 
 <style scoped>
-.form-btns{
+.info {
+  margin-top: -10px;
+  font-size: 12px;
+  color: rgb(160, 160, 160);
+}
+.form-btns {
   margin-left: -20px;
 }
 label {
   size: 22px;
   font-weight: bold;
-  margin: 15px 0;
+  margin-top: 8px;
 }
 input {
-  margin-left: 20px;
+  margin-bottom: 15px;
+}
+input[type="radio"] {
+  width: 100%;
+  height: 1.2em;
 }
 </style>

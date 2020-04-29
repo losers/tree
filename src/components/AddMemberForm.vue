@@ -13,14 +13,12 @@ export default {
   },
   data() {
     return {
-      surname: this.$route.params.id,
-      type: this.$route.params.type
+      surname: this.$route.params.id
     };
   },
   methods: {
     sendData(data) {
       data.parent_id = this.$route.query.parent_id;
-      data.type = this.type;
       Axios.post("http://localhost:5000/tree/" + this.surname + "/person", data)
         .then(data => console.log(data))
         .catch(err => console.log(err))
@@ -31,7 +29,19 @@ export default {
     },
     goBack() {
       this.$emit("close");
-      this.$router.go(-1);
+      if (this.$route.query.hasMate) {
+        this.$router.push({
+          name: "MemberData",
+          params: { member: this.$route.params.member },
+          query: { hasMate: true }
+        });
+      } else {
+        this.$router.push({
+          name: "MemberData",
+          params: { member: this.$route.params.member }
+        });
+      }
+
       this.$root.$emit("canceled", this.id);
     },
     closeme() {

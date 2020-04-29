@@ -1,20 +1,57 @@
 <template>
   <div>
     <router-view></router-view>
-    <!-- <di class="row"> -->
-    <!-- <div class="col-12" style="z-index:1000; color:red; height:100%; background-color:red;">_</div> -->
     <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
-      <div v-if="open" class="draw">
+      <div v-if="open">
         <section v-if="errored">
           <p>{{errored}}</p>
         </section>
         <section v-else>
-          <div v-if="loading">Loading...</div>
+          <div v-if="loading" style="margin-top:240px">
+            <center>
+              <img src="@/assets/dna.gif" />
+            </center>
+          </div>
           <div v-else>
-            <img :src="previewImage" style="border-radius: 50%;width: 150px;" />
-            <button @click="uploadImage">Upload Image</button>
-            <!-- <input type="file" accept="image/*" @change="uploadImage"> -->
-            <a class="btn" @click="show=true">Select Image</a>
+            <div class="container_image mx-auto">
+              <div v-if="imageExists">
+                <img
+                  :src="previewImage"
+                  alt="Avatar"
+                  class="image mx-auto"
+                  style="border-radius: 50%;width: 150px;"
+                />
+              </div>
+              <div v-else>
+                <img
+                  src="../assets/profile.png"
+                  alt="Avatar"
+                  class="image mx-auto"
+                  style="border-radius: 50%;width: 150px;"
+                />
+              </div>
+
+              <div class="middle">
+                <div class="member-txt">
+                  <a class="btn" @click="show=true">
+                    <i class="icofont-edit"></i>
+                    Change
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <button @click="uploadImage" v-show="showUpload">
+              <span v-if="!doneUpload">
+                <span class="spinner-border spinner-border-sm" v-show="loadingUpload"></span>
+                Upload Image
+              </span>
+              <span v-else>
+                <i class="icofont-tick-mark"></i>
+                Successfully Uploaded
+              </span>
+            </button>
+
             <my-upload
               field="img"
               @crop-success="cropSuccess"
@@ -25,39 +62,72 @@
               v-model="show"
               img-format="jpg"
             ></my-upload>
-            <!-- {{data}} -->
             <table class="table table-borderless table-hover mt-5 table-data">
-              <tbody class="text-left">
+              <tbody class="text-left" style="color:black">
                 <tr class="text-center">
-                  <td>{{data.short_name}}</td>
+                  <td>
+                    {{data.short_name}}
+                    <i
+                      class="icofont-edit float-right"
+                      @click="showUpdateForm(data)"
+                      style="font-size:20px"
+                    ></i>
+                  </td>
                 </tr>
                 <tr>
-                  <td>{{data.name}}</td>
+                  <td style="border-left:3px solid red;">
+                    <i class="icofont-business-man"></i>
+                    {{data.name}}
+                  </td>
                 </tr>
                 <tr v-if="data.mobile">
-                  <td><i class="icofont-address-book">&#xeea1;</i> {{data.mobile}}</td>
+                  <td style="border-left:3px solid yellow;">
+                    <i class="icofont-smart-phone"></i>
+                    {{data.mobile}}
+                  </td>
                 </tr>
                 <tr v-if="data.dob">
-                  <td>{{data.dob}}</td>
+                  <td style="border-left:3px solid brown;">
+                    <i class="icofont-ui-calendar"></i>
+                    {{data.dob}}
+                  </td>
                 </tr>
                 <tr v-if="data.gender">
-                  <td>{{data.gender=="1"?"Male":"Female"}}</td>
+                  <td style="border-left:3px solid orange;">
+                    <span v-if="data.gender==1">
+                      <i class="icofont-male"></i>
+                    </span>
+                    <span v-else>
+                      <i class="icofont-female"></i>
+                    </span>
+                    {{data.gender=="1"?"Male":"Female"}}
+                  </td>
                 </tr>
                 <tr>
-                  <td>Add some description here</td>
+                  <td style="border-left:3px solid black;">
+                    <i class="icofont-listing-box"></i>
+                    Add some description here
+                  </td>
                 </tr>
               </tbody>
-              <button @click="addMember(2)">Add Child</button>
-              <span v-if="!$route.query.hasMate">
-                <button @click="addMember(1)">Add Mate</button>
-              </span>
-              <button @click="deleteSwipe" class="btn btn-danger">Delete</button>
+              <div class="mx-auto col-12">
+                <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
+
+                <button
+                  v-if="!$route.query.hasMate"
+                  @click="addMember('gender')"
+                  class="col-10 btn btn-primary mb-3"
+                >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
+
+                <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
+                  <i class="icofont-ui-delete"></i> Delete
+                </button>
+              </div>
             </table>
           </div>
         </section>
       </div>
     </Drawer>
-    <!-- </div> -->
   </div>
 </template>
 
@@ -69,6 +139,7 @@ import myUpload from "vue-image-crop-upload/upload-2.vue";
 import Vue from "vue";
 import VModal from "vue-js-modal";
 import Delete from "../components/DeleteMember";
+import CommonForm from "./AddCommonForm";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -90,18 +161,31 @@ export default {
       surname: this.$route.params.id,
       id: this.$route.params.member,
       type: this.$route.params.type,
-
       previewImage: null,
       imageData: "",
-      show: false
+      show: false,
+      url: null,
+      showUpload: false,
+      loadingUpload: false,
+      doneUpload: false,
+      imageExists: false
     };
+  },
+  watch: {
+    imageData: {
+      handler: function(val) {
+        console.log(val);
+        if (val) {
+          this.showUpload = true;
+        }
+      }
+    }
   },
   mounted() {
     axios
       .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         this.data = data.data;
-        // this.previewImage = "data:image/png;base64, "+this.data.image_data;
       })
       .catch(err => {
         this.errored = err;
@@ -121,13 +205,20 @@ export default {
       .then(data => {
         this.data = data.data;
         if (this.data.length != 0) {
-          this.previewImage = "data:image/png;base64, " + this.data[0][this.id];
+          this.previewImage = "data:image/png;base64," + this.data[0][this.id];
+          if (this.previewImage == "data:image/png;base64,undefined") {
+            this.imageExists = false;
+          } else {
+            this.imageExists = true;
+            console.log("exists no");
+          }
         }
       })
       .catch(err => {
         this.errored = err;
+        console.log("no");
+        this.imageExists = false;
       });
-
     this.$root.$on("canceled", () => {
       this.open = true;
     });
@@ -137,21 +228,28 @@ export default {
   },
   methods: {
     uploadImage() {
+      this.loadingUpload = true;
       let params = {};
       params.image_data = this.imageData;
-      let url =
+      this.url =
         "http://localhost:5000/tree/" +
         this.surname +
         "/person/" +
         this.id +
         "/image";
       axios
-        .post(url, params)
+        .post(this.url, params)
         .then(function(data) {
           console.log(data);
         })
         .catch(function(err) {
           console.log(err);
+        })
+        .finally(() => {
+          this.doneUpload = true;
+          setTimeout(() => {
+            this.showUpload = false;
+          }, 1000);
         });
     },
     cropSuccess(imgDataUrl) {
@@ -176,7 +274,6 @@ export default {
         })
         .then(data => {
           this.imageData = data[0].data;
-          // window.location.href = 'data:application/octet-stream;base64,' + this.imageData;
           this.previewImage = "data:image/png;base64, " + this.imageData;
         });
     },
@@ -189,7 +286,30 @@ export default {
         });
       }
     },
+    showUpdateForm(formd) {
+      console.log(formd);
+      this.open = false;
+      this.$modal.show(
+        CommonForm,
+        {
+          memData: formd
+        },
+        {
+          height: "auto",
+          draggable: true,
+          clickToClose: false,
+          scrollable: true
+        }
+      );
+    },
     addMember(num) {
+      if (num == "gender") {
+        if (this.data.gender == "1") {
+          num = "b";
+        } else {
+          num = "a";
+        }
+      }
       this.open = false;
       this.$router.push({
         name: "AddMember",
@@ -202,7 +322,9 @@ export default {
     deleteSwipe() {
       this.$modal.show(
         Delete,
-        {},
+        {
+          name: this.data.name
+        },
         {
           height: "auto",
           clickToClose: false,
@@ -232,13 +354,52 @@ export default {
 };
 </script>
 
-<style scoped>
-.mask {
-  height: 0 !important;
+<style>
+.vue-simple-drawer {
+  background: white !important;
+  box-shadow: 20px black;
+  -webkit-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
+  box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
 }
-.swipe-button {
-  width: 500px;
-  background-color: #17255a;
-  border: 1px solid #17255a;
+
+.container_image {
+  position: relative;
+}
+
+.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.container_image:hover .image {
+  opacity: 0.3;
+}
+
+.container_image:hover .middle {
+  opacity: 1;
+}
+
+.member-txt {
+  background-color: #4caf50;
+  border-radius: 5px;
+  color: white;
+  font-size: 10px;
+  /* padding: 2px 4px; */
 }
 </style>

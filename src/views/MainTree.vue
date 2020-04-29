@@ -8,8 +8,15 @@
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
-      <router-link :to="{name:'Home'}" class="float-left">Back</router-link>
-      <div v-if="loading">Loading...</div>
+      <router-link :to="{name:'Home'}" class="float-left mt-3 ml-1">
+        <i class="icofont-arrow-left"></i>
+        Back
+      </router-link>
+      <div v-if="loading" style="padding-top:240px">
+        <center>
+          <img src="@/assets/dna.gif" />
+        </center>
+      </div>
 
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
@@ -47,7 +54,7 @@
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <TreeTitle style="margin-bottom: 50px;font-size: 30px;box-shadow: -1px 3px 20px -10px rgba(0,0,0,0.75);padding: 10px;" title="Medam Mega Family"></TreeTitle>
+        <TreeTitle :meta="title[0]"></TreeTitle>
         <center>
           <TreeChart
             :json="tempData"
@@ -57,7 +64,12 @@
           />
         </center>
         <footer class="foot">
-          <p>Satyanarayana Family Dev's</p>
+          <p>
+            With
+            <i class="icofont-heart" style="color:red"></i>
+            by
+            <a href="/medam">Satyanarayana Family Dev's</a>
+          </p>
         </footer>
       </div>
     </section>
@@ -84,7 +96,8 @@ export default {
       loading: true,
       tempData: null,
       errored: false,
-      images: {}
+      images: {},
+      title: null
     };
   },
   mounted() {
@@ -102,6 +115,7 @@ export default {
           .get("http://localhost:5000/tree/" + this.surname)
           .then(data => {
             this.tempData = data.data.tree;
+            this.title = data.data.meta;
           })
           .catch(err => {
             this.errored = err;
@@ -144,14 +158,15 @@ export default {
       this.$router.push({
         name: "AddRoot"
       });
-    },
-
-    
+    }
   }
 };
 </script>
 
 <style>
+a:hover {
+  text-decoration: none !important;
+}
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

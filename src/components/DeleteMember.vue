@@ -1,7 +1,20 @@
 <template>
-  <div id="app">
-    <SwipeButton ref="swipeButton" class="swipe-button" @actionConfirmed="onActionConfirmed" />
-    <button @click="close" class="btn btn-danger">Cancel</button>
+  <div id="app-delete">
+    <h3 class="text-danger mx-auto mt-4">Delete {{name}} and its children</h3>
+    <div class="d-flex justify-content-space mt-4">
+      <i class="icofont-danger-zone mr-3" style="color:red; font-size:20px"></i>
+      <h5 class="text-danger">Deleting a Member will deletes all of its children</h5>
+    </div>
+    <div class="d-flex justify-content-space mt-3">
+      <i class="icofont-danger-zone mr-3 mb-5" style="color:red; font-size:20px"></i>
+      <h5 class="text-danger">No Backup, This can't be undo</h5>
+    </div>
+    <SwipeButton
+      ref="swipeButton"
+      class="swipe-button mx-auto"
+      @actionConfirmed="onActionConfirmed"
+    />
+    <button @click="close" class="btn btn-danger mb-3 mt-5">Cancel</button>
   </div>
 </template>
 
@@ -15,20 +28,29 @@ export default {
   components: {
     SwipeButton
   },
+  props: ["name", "isMate"],
   methods: {
     onActionConfirmed() {
-      setTimeout(() => {
-        this.$refs.swipeButton.reset();
-        this.deleteMe();
-      }, 1000);
+      this.deleteMe();
+      // setTimeout(() => {
+      //   this.$refs.swipeButton.reset();
+      // }, 1000);
       console.log("deleted");
     },
     close() {
       this.$emit("close");
-      this.$router.push({
-        name: "MemberData",
-        params: this.$route.params.member
-      });
+      if (this.$route.query.hasMate) {
+        this.$router.push({
+          name: "MemberData",
+          params: { member: this.$route.params.member },
+          query: { hasMate: true }
+        });
+      } else {
+        this.$router.push({
+          name: "MemberData",
+          params: { member: this.$route.params.member }
+        });
+      }
       this.$root.$emit("canceled", this.id);
     },
     deleteMe() {
@@ -54,10 +76,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+#app-delete {
+  padding-left: 20px;
+}
+.slide-button {
+  background-color: red !important;
+}
 .swipe-button {
   width: 500px;
-  background-color: #17255a;
-  border: 1px solid #17255a;
+  background-color: white;
+  -moz-box-shadow: inset 0 0 10px #000000;
+  -webkit-box-shadow: inset 0 0 10px #000000;
+  box-shadow: inset 0 0 10px #b6b6b6;
+  /* border: 1px solid #17255a; */
 }
 </style>
