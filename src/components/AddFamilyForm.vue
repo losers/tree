@@ -3,13 +3,11 @@
     <h3 v-if="!created">
       <span>Creating a Family Tree</span>
       <span class="close-btn" @click="goBack">x</span>
-      <span v-if="surname"> for {{surname}}</span>
+      <span v-if="surname">for {{surname}}</span>
     </h3>
     <form v-on:submit.prevent="sendData" v-if="!created">
       <div class="form-inline row">
-        <label class="col" style="justify-content:left">
-            Display Title :
-        </label>
+        <label class="col" style="justify-content:left">Display Title :</label>
         <input
           type="text"
           class="form-control col-sm-8"
@@ -26,27 +24,36 @@
           type="text"
           class="form-control col-sm-8"
           id="surname"
+          :disabled="metadata"
           placeholder="Enter Surname"
           @input="makeSmall"
           required
         />
       </div>
-      <button type="submit" class="btn btn-success" style="margin-top: 30px;display: flex;align-items: center;">
-          <span class="spinner-border spinner-border-sm" v-show="loading" style="margin-right: 8px;"></span>
-          <span> Create </span>
+      <button
+        type="submit"
+        class="btn btn-success"
+        style="margin-top: 30px;display: flex;align-items: center;"
+      >
+        <span class="spinner-border spinner-border-sm" v-show="loading" style="margin-right: 8px;"></span>
+        <span>{{metadata?"Update":"Create"}}</span>
       </button>
     </form>
     <div v-if="created">
       <div style="margin-bottom:20px">
         <center>
-            <Tick></Tick>
+          <Tick></Tick>
         </center>
         <center>
-            <h1>Success!</h1>
-            <span style="font-size: 20px;">Family tree is created. Start Adding members to your family tree.</span>
+          <h1>Success!</h1>
+          <span
+            style="font-size: 20px;"
+          >Family tree is created. Start Adding members to your family tree.</span>
         </center>
       </div>
-      <center><button class="btn btn-success" @click="goFamily">Go..</button></center>
+      <center>
+        <button class="btn btn-success" @click="goFamily">Go..</button>
+      </center>
     </div>
     <div v-else-if="errored">Error Code : {{errored}}</div>
   </div>
@@ -61,29 +68,48 @@ export default {
   components: {
     Tick
   },
+  props: ["metadata"],
   data() {
     return {
       surname: null,
       title: null,
       created: false,
       errored: false,
-      loading : false
+      loading: false
     };
+  },
+  mounted() {
+    (this.surname = this.metadata.surname), (this.title = this.metadata.title);
   },
   methods: {
     sendData() {
-      Axios.post("http://localhost:5000/meta/add", {
-        title: this.title,
-        surname: this.surname
-      })
-        .then(data => {
-          this.created = true;
-          console.log(data);
+      this.loading = true;
+      if (this.metadata) {
+        Axios.put("http://localhost:5000/meta/update", {
+          title: this.title,
+          _id: this.metadata._id,
+          created_at: this.metadata.created_at
         })
-        .catch(function(err) {
-          this.errored = err;
-          console.log(err.response);
-        }).finally(() => this.loading = false);
+          .catch(err => (this.errored = err))
+          .finally(() => {
+            this.loading = false;
+            this.$emit("close");
+          });
+      } else {
+        Axios.post("http://localhost:5000/meta/add", {
+          title: this.title,
+          surname: this.surname
+        })
+          .then(data => {
+            this.created = true;
+            console.log(data);
+          })
+          .catch(function(err) {
+            this.errored = err;
+            console.log(err.response);
+          })
+          .finally(() => (this.loading = false));
+      }
     },
     goBack() {
       this.$emit("close");
@@ -106,12 +132,12 @@ input {
 }
 
 .close-btn {
-    float: right;
-    color: red;
-    font-weight: bolder;
-    font-size: 27px;
-    margin-top: -31px;
-    margin-right: -18px;
-    cursor: pointer;
+  float: right;
+  color: red;
+  font-weight: bolder;
+  font-size: 27px;
+  margin-top: -31px;
+  margin-right: -18px;
+  cursor: pointer;
 }
 </style>
