@@ -23,7 +23,7 @@ const myrouter = new VueRouter({
         {
             path: "/error",
             name: "Error",
-            component: () => import("./views/Error")
+            component: () => import("./views/Error.vue")
         },
         {
             path: "/:id",
