@@ -31,7 +31,7 @@
                 />
               </div>
 
-              <div class="middle">
+              <div class="middle" v-show="cookeyStatus">
                 <div class="member-txt">
                   <a class="btn" @click="show=true">
                     <i class="icofont-edit"></i>
@@ -71,6 +71,7 @@
                       class="icofont-edit float-right"
                       @click="showUpdateForm(data)"
                       style="font-size:20px"
+                      v-show="cookeyStatus"
                     ></i>
                   </td>
                 </tr>
@@ -110,19 +111,40 @@
                   </td>
                 </tr>
               </tbody>
-              <div class="mx-auto col-12">
-                <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
+              <transition name="fade" mode="out-in">
+                <div class="mx-auto col-12" v-if="cookeyStatus">
+                  <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
-                <button
-                  v-if="!$route.query.hasMate"
-                  @click="addMember('gender')"
-                  class="col-10 btn btn-primary mb-3"
-                >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
+                  <button
+                    v-if="hasMate"
+                    @click="addMember('gender')"
+                    class="col-10 btn btn-primary mb-3"
+                  >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
 
-                <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
-                  <i class="icofont-ui-delete"></i> Delete
-                </button>
-              </div>
+                  <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
+                    <i class="icofont-ui-delete"></i> Delete
+                  </button>
+                </div>
+                <div v-else>
+                  <span class="col-4">
+                    <input
+                      class="form-control input-sm"
+                      placeholder="Enter Key to Edit"
+                      v-model="cookey"
+                      onkeypress="if(this.value.length==4) return false;"
+                      type="number"
+                    />
+                    <button
+                      v-show="cookey.length==4"
+                      @click="validate"
+                      class="btn btn-success mt-2"
+                    >
+                      <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+                      Validate
+                    </button>
+                  </span>
+                </div>
+              </transition>
             </table>
           </div>
         </section>
@@ -168,7 +190,11 @@ export default {
       showUpload: false,
       loadingUpload: false,
       doneUpload: false,
-      imageExists: false
+      imageExists: false,
+      cookey: "",
+      cookeyStatus: null,
+      vloading: false,
+      hasMate: false
     };
   },
   watch: {
@@ -182,6 +208,8 @@ export default {
     }
   },
   mounted() {
+    this.hasMate = !this.$route.query.hasMate;
+    this.cookeyStatus = null //Check version
     axios
       .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
@@ -219,7 +247,10 @@ export default {
         console.log("no");
         this.imageExists = false;
       });
-    this.$root.$on("canceled", () => {
+    this.$root.$on("canceled", addedMate => {
+      if (addedMate) {
+        this.hasMate = false;
+      }
       this.open = true;
     });
     if (this.type === undefined) {
@@ -251,6 +282,19 @@ export default {
             this.showUpload = false;
           }, 1000);
         });
+    },
+    validate() {
+      this.vloading = true;
+      if (this.cookey == 1999) {
+        setTimeout(() => {
+          this.cookeyStatus = true;
+          this.vloading = false;
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          this.vloading = false;
+        }, 2000);
+      }
     },
     cropSuccess(imgDataUrl) {
       var arr = imgDataUrl.split(","),
@@ -287,8 +331,8 @@ export default {
       }
     },
     showUpdateForm(formd) {
-      console.log(formd);
       this.open = false;
+      this.$router.push({ name: "MainTree", params: { id: this.surname } });
       this.$modal.show(
         CommonForm,
         {
@@ -355,6 +399,25 @@ export default {
 </script>
 
 <style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .vue-simple-drawer {
   background: white !important;
   box-shadow: 20px black;

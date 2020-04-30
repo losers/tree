@@ -24,10 +24,10 @@ export default {
         .catch(err => console.log(err))
         .finally(() => {
           console.log("add member from finally");
-          this.$root.$emit("form-saved");
+          this.$root.$emit("form-saved", data.type);
         });
     },
-    goBack() {
+    goBack(mateAdded) {
       this.$emit("close");
       if (this.$route.query.hasMate) {
         this.$router.push({
@@ -41,8 +41,7 @@ export default {
           params: { member: this.$route.params.member }
         });
       }
-
-      this.$root.$emit("canceled", this.id);
+      this.$root.$emit("canceled", mateAdded);
     },
     closeme() {
       this.$emit("close");

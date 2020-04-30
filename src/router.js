@@ -21,6 +21,11 @@ const myrouter = new VueRouter({
             component: () => import("./views/Test")
         },
         {
+            path: "/error",
+            name: "Error",
+            component: () => import("./views/Error")
+        },
+        {
             path: "/:id",
             name: "MainTree",
             component: MainTree,
@@ -28,18 +33,18 @@ const myrouter = new VueRouter({
                 {
                     path: "addroot",
                     name: "AddRoot",
-                    component: AddRoot
+                    component: AddRoot,
                 },
                 {
                     path: ":member",
                     name: "MemberData",
                     component: () => import('./components/MemberData'),
                     children: [
-
                         {
                             path: ":type",
                             name: "AddMember",
-                            component: AddMember
+                            component: AddMember,
+
                         }
                     ]
                 }

@@ -57,7 +57,10 @@
       </div>
 
       <!-- Gender Selection -->
-      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
+      <div
+        class="row"
+        v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b') && (newchild)"
+      >
         <div class="form-check col-3 ml-3">
           <input
             class="form-check-input col-2 mt-2"
@@ -89,7 +92,7 @@
           <button @click="goHome" class="btn btn-success">See tree</button>
           <button
             type="reset"
-            @click="form_saved=false;data={}"
+            @click="form_saved=false;data={};newchild=true;"
             class="btn btn-warning"
           >Add Another Child</button>
           <button @click="goBack" class="btn btn-danger">Close</button>
@@ -109,6 +112,7 @@
 <script>
 import { ToggleButton } from "vue-js-toggle-button";
 import Tick from "./small/tick";
+import Axios from "axios";
 
 export default {
   components: {
@@ -120,36 +124,61 @@ export default {
     return {
       data: {},
       loading: false,
-      form_saved: false
+      form_saved: false,
+      newchild: true,
+      mateAdded: false //this is used to close addmate btn in MemberData Route
     };
   },
   mounted() {
-    this.data = this.memData;
-    // this.$root.$on("form-saved", () => {
-    //   this.form_saved = true;
-    //   this.loading = false;
-    // });
+    //memdata comes from MemberData route for editing
+    if (this.memData) {
+      this.data = this.memData;
+    }
+
+    //this will listens when to stop spinning action
+    this.$root.$on("form-saved", tempType => {
+      if (tempType == 1) {
+        this.mateAdded = true;
+      }
+      this.form_saved = true;
+      this.loading = false;
+    });
   },
   methods: {
     sendData() {
       this.loading = true;
-      if (this.$route.params.type == "a") {
-        this.data.gender = "1";
-        this.data.type = 1;
-      } else if (this.$route.params.type == "b") {
-        this.data.gender = "0";
-        this.data.type = 1;
-      } else if (this.$route.params.type == 1) {
-        this.data.type = 2;
+      if (this.memData) {
+        Axios.put(
+          "http://localhost:5000/tree/" + this.$route.params.id + "/person",
+          this.data
+        )
+          .catch(errr => console.log(errr))
+          .finally(() => {
+            this.$emit("close");
+            this.$router.push({
+              name: "MemberData",
+              params: { member: this.memData._id }
+            });
+          });
+      } else {
+        if (this.$route.params.type == "a") {
+          this.data.gender = "1";
+          this.data.type = 1;
+        } else if (this.$route.params.type == "b") {
+          this.data.gender = "0";
+          this.data.type = 1;
+        } else if (this.$route.params.type == 1) {
+          this.data.type = 2;
+        }
+        this.$emit("form-submit", this.data);
       }
-      this.$emit("form-submit", this.data);
     },
     goBack() {
       if (this.memData) {
         this.$emit("close");
         this.$root.$emit("canceled");
       } else {
-        this.$emit("form-cancel");
+        this.$emit("form-cancel", this.mateAdded);
       }
     },
     goHome() {
