@@ -30,7 +30,6 @@ export default {
         });
     },
     goBack() {
-      console.log("goback called");
       this.$emit("close");
       this.$router.push({ name: "MainTree", params: { id: this.surname } });
     }

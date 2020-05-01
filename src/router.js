@@ -16,11 +16,6 @@ const myrouter = new VueRouter({
             component: Home,
         },
         {
-            path: "/test",
-            name: "Test",
-            component: () => import("./views/Test")
-        },
-        {
             path: "/error",
             name: "Error",
             component: () => import("./views/Error.vue")

@@ -1,3 +1,6 @@
+<template>
+  <div></div>
+</template>
 <script>
 import Vue from "vue";
 import VModal from "vue-js-modal";
@@ -8,7 +11,7 @@ Vue.use(VModal, {
 });
 
 export default {
-  name: "AddMemberModel",
+  name: "AddMember",
   mounted() {
     this.$modal.show(
       AddMember,
