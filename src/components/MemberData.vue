@@ -308,18 +308,6 @@ export default {
         .finally(() => {
           this.vloading = false;
         });
-
-
-      // if (this.cookey == 1999) {
-      //   setTimeout(() => {
-      //     this.cookeyStatus = true;
-      //     this.vloading = false;
-      //   }, 2000);
-      // } else {
-      //   setTimeout(() => {
-      //     this.vloading = false;
-      //   }, 2000);
-      // }
     },
     cropSuccess(imgDataUrl) {
       var arr = imgDataUrl.split(","),

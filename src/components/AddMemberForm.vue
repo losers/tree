@@ -23,7 +23,6 @@ export default {
         .then(data => console.log(data))
         .catch(err => console.log(err))
         .finally(() => {
-          console.log("add member from finally");
           this.$root.$emit("form-saved", data.type);
         });
     },
