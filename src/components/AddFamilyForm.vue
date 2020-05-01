@@ -3,7 +3,7 @@
     <h3 v-if="!created">
       <span>Creating a Family Tree</span>
       <span class="close-btn" @click="goBack">x</span>
-      <span v-if="surname">for {{surname}}</span>
+      <span v-if="surname"> for {{surname}}</span>
     </h3>
     <form v-on:submit.prevent="sendData" v-if="!created">
       <div class="form-inline row">
@@ -27,6 +27,18 @@
           :disabled="metadata"
           placeholder="Enter Surname"
           @input="makeSmall"
+          required
+        />
+      </div>
+      <div class="form-inline row">
+        <label for="pin" class="col" style="justify-content:left">PIN :</label>
+        <input
+          v-model="pin"
+          type="number"
+          class="form-control col-sm-8"
+          id="pin"
+          placeholder="Enter 4 Digit PIN"
+          onkeypress="if(this.value.length==4) return false;"
           required
         />
       </div>
@@ -75,11 +87,15 @@ export default {
       title: null,
       created: false,
       errored: false,
-      loading: false
+      loading: false,
+      pin: ""
     };
   },
   mounted() {
-    (this.surname = this.metadata.surname), (this.title = this.metadata.title);
+    if(this.metadata){
+        (this.surname = this.metadata.surname), (this.title = this.metadata.title);
+        this.pin = this.metadata.pin;
+    }
   },
   methods: {
     sendData() {
@@ -88,7 +104,8 @@ export default {
         Axios.put("http://localhost:5000/meta/update", {
           title: this.title,
           _id: this.metadata._id,
-          created_at: this.metadata.created_at
+          created_at: this.metadata.created_at,
+          pin: this.pin
         })
           .catch(err => (this.errored = err))
           .finally(() => {
@@ -98,7 +115,8 @@ export default {
       } else {
         Axios.post("http://localhost:5000/meta/add", {
           title: this.title,
-          surname: this.surname
+          surname: this.surname,
+          pin: this.pin
         })
           .then(data => {
             this.created = true;

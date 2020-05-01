@@ -217,6 +217,7 @@ export default {
           this.hasMate = true;
         }
         this.data = data.data;
+        this.cookeyStatus = this.data.has_session;
       })
       .catch(err => {
         this.errored = err;
@@ -283,21 +284,42 @@ export default {
           this.doneUpload = true;
           setTimeout(() => {
             this.showUpload = false;
-          }, 1000);
+          }, 2000);
         });
     },
     validate() {
       this.vloading = true;
-      if (this.cookey == 1999) {
-        setTimeout(() => {
+
+      let sessionUrl = "http://localhost:5000/sessions/";
+      let params = {};
+
+      params.pin = this.cookey;
+      params.surname = this.surname;
+
+      axios
+        .post(sessionUrl, params)
+        .then(() => {
           this.cookeyStatus = true;
           this.vloading = false;
-        }, 2000);
-      } else {
-        setTimeout(() => {
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+        .finally(() => {
           this.vloading = false;
-        }, 2000);
-      }
+        });
+
+
+      // if (this.cookey == 1999) {
+      //   setTimeout(() => {
+      //     this.cookeyStatus = true;
+      //     this.vloading = false;
+      //   }, 2000);
+      // } else {
+      //   setTimeout(() => {
+      //     this.vloading = false;
+      //   }, 2000);
+      // }
     },
     cropSuccess(imgDataUrl) {
       var arr = imgDataUrl.split(","),

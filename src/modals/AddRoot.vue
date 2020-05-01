@@ -1,3 +1,6 @@
+<template>
+  <div></div>
+</template>
 <script>
 import Vue from "vue";
 import VModal from "vue-js-modal";
@@ -10,11 +13,10 @@ Vue.use(VModal, {
 
 export default {
   name: "AddRoot",
-  components: {
-    AddRootForm
-  },
+  // components: {
+  //   AddRootForm
+  // },
   mounted() {
-    console.log("add root form");
     this.$modal.show(
       AddRootForm,
       {
