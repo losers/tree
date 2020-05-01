@@ -6,14 +6,29 @@
       @click="editmeta"
       style="font-size:20px"
     ></i>
+
+    <button @click="deleteMeta">Dlete</button>
   </div>
 </template>
 
 <script>
 import AddFamily from "./AddFamilyForm";
+import Axios from "axios";
+
 export default {
   props: ["meta"],
   methods: {
+    deleteMeta(){
+      let params = {};
+      params.surname = this.meta.surname;
+
+      Axios.delete("http://localhost:5000/meta", { data: params})
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+        .finally(() => {
+          
+        });
+    },
     editmeta() {
       this.$modal.show(
         AddFamily,
