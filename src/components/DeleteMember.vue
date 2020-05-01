@@ -9,12 +9,19 @@
       <i class="icofont-danger-zone mr-3 mb-5" style="color:red; font-size:20px"></i>
       <h5 class="text-danger">No Backup, This can't be undo</h5>
     </div>
-    <SwipeButton
+    <!-- <SwipeButton
       ref="swipeButton"
       class="swipe-button mx-auto"
       @actionConfirmed="onActionConfirmed"
-    />
-    <button @click="close" class="btn btn-danger mb-3 mt-5">Cancel</button>
+    />-->
+    <div class="d-flex justify-content-between">
+      <button @click="onActionConfirmed" class="btn btn-danger mb-3 mt-3">
+      <i class="icofont-ui-delete"></i>
+      Delete Permanently
+    </button>
+    <button @click="close" class="btn mt-3">Cancel</button>
+    </div>
+    
   </div>
 </template>
 
@@ -31,13 +38,11 @@ export default {
   props: ["name", "isMate"],
   methods: {
     onActionConfirmed() {
-      this.deleteMe();
-      // setTimeout(() => {
-      //   this.$refs.swipeButton.reset();
-      // }, 1000);
       console.log("deleted");
+      this.deleteMe();
     },
     close() {
+      console.log("closeeee");
       this.$emit("close");
       if (this.$route.query.hasMate) {
         this.$router.push({

@@ -19,7 +19,7 @@
             <br />
           </div>
           <center>
-            <vue-typer :text='["Decode Your DNA !", "Find your Roots !", "Have Fun !"]'></vue-typer>
+            <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
           <center>
             <touch-ripple @click.native="showModal = true" class="button-box" :speed="1.1">
@@ -32,7 +32,12 @@
           <center>
             <!-- <touch-ripple class="div-box container jumbotron" :speed="2" :opacity="0.3" color="#999" transition="cubic-bezier(0.18, 0.89, 0.32, 1.28)"> -->
             <div class="container div-box">
-              <i class="icofont-camera float-left" style="color:white; font-size:25px" data-toggle="tooltip" title="Celebrity Family"></i>
+              <i
+                class="icofont-camera float-left"
+                style="color:white; font-size:25px"
+                data-toggle="tooltip"
+                title="Celebrity Family"
+              ></i>
               <router-link :to="{name:'MainTree', params:{id:data.surname}}">
                 <div class="title">{{data.title}}</div>
               </router-link>
@@ -56,7 +61,7 @@
   margin-bottom: 40px;
   padding: 20px;
 }
-a:hover{
+a:hover {
   text-decoration: none !important;
 }
 .title {

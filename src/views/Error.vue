@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <h1 style="color:white">Something went wrong</h1>
+    <h1 class="msg mx-auto col-12">{{msg}}</h1>
+    <router-link :to="{name:'Home'}" class="back mr-5">
+      <i class="icofont-arrow-left"></i>
+      Home
+    </router-link>
     <vue-particles
+      style="z-index:200"
       color="#dedede"
       :particleOpacity="1"
       :particlesNumber="50"
@@ -21,12 +26,31 @@
   </div>
 </template>
 
+<script>
+export default {
+  props: ["msg"]
+};
+</script>
+
 <style scoped>
+.msg {
+  color: white;
+  top: 50%;
+  position: absolute;
+  align-content: center;
+}
 #app {
   background-image: url("../assets/error.jpg");
   background-repeat: no-repeat;
   background-size: 100%;
   width: 100%;
-  height: 100%;
+  height: 90% !important;
+}
+.back {
+  top: 5%;
+  left: 30px;
+  font-size: 30px;
+  color: white;
+  position: absolute;
 }
 </style>

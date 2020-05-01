@@ -116,7 +116,7 @@
                   <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
                   <button
-                    v-if="hasMate"
+                    v-show="!hasMate"
                     @click="addMember('gender')"
                     class="col-10 btn btn-primary mb-3"
                   >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
@@ -209,10 +209,13 @@ export default {
   },
   mounted() {
     this.hasMate = !this.$route.query.hasMate;
-    this.cookeyStatus = null //Check version
+    this.cookeyStatus = null; //Check version
     axios
       .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
+        if (data.data.is_mate) {
+          this.hasMate = true;
+        }
         this.data = data.data;
       })
       .catch(err => {

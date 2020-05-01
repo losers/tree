@@ -35,8 +35,8 @@
 
       <div class="row">
         <label class="col-4">Is Died</label>
-        <toggle-button v-model="data.is_alive" class="mb-4" />
-        <span class="form-inline" v-show="data.is_alive">
+        <toggle-button v-model="data.is_died" :isActive="is_died" class="mb-4" />
+        <span class="form-inline" v-show="data.is_died">
           <input
             type="date"
             class="form-control col-10 ml-5"
@@ -132,7 +132,18 @@ export default {
   mounted() {
     //memdata comes from MemberData route for editing
     if (this.memData) {
+      console.log("1");
       this.data = this.memData;
+      if (this.memData.is_died) {
+        console.log(this.memData.is_died);
+
+        this.data.is_died = true;
+        if (this.memData.died_on) {
+          console.log("3");
+
+          this.data.died_on = this.memData.died_on;
+        }
+      }
     }
 
     //this will listens when to stop spinning action
@@ -148,6 +159,7 @@ export default {
     sendData() {
       this.loading = true;
       if (this.memData) {
+        console.log(this.memData);
         Axios.put(
           "http://localhost:5000/tree/" + this.$route.params.id + "/person",
           this.data

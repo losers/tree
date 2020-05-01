@@ -2,7 +2,8 @@
   <div id="app">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <p>{{errored.response.data}}</p>
+      <!-- <p>{{errored.response.data}}</p> -->
+      <error :msg="errored.response.data"></error>
     </section>
 
     <!-- Loads when a tree is found -->
@@ -81,12 +82,14 @@ import TreeChart from "@/components/TreeChart";
 import data from "../data.js";
 import axios from "axios";
 import TreeTitle from "../components/TreeTitle";
+import Error from "./Error";
 
 export default {
   name: "MainTree",
   components: {
     TreeChart,
-    TreeTitle
+    TreeTitle,
+    Error
   },
   data() {
     return {
