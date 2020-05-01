@@ -9,11 +9,12 @@
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
-      <router-link :to="{name:'Home'}" class="float-left mt-3 ml-1">
-        <i class="icofont-arrow-left"></i>
-        Back
-      </router-link>
+
       <div v-if="loading" style="padding-top:240px">
+        <!-- <router-link :to="{name:'Home'}" class="float-left mt-3 ml-1">
+          <i class="icofont-arrow-left"></i>
+          Back
+        </router-link>-->
         <center>
           <img src="@/assets/dna.gif" />
         </center>
@@ -22,7 +23,7 @@
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
         <TreeTitle :meta="title[0]"></TreeTitle>
-        <img src="../assets/family_bg.jpg" class="col-7 mt-0" />
+        <img src="../assets/family_bg.jpg" class="col-7" style="margin-top:50px" />
         <center>
           <div class="row">
             <div class="col-3"></div>
@@ -63,6 +64,7 @@
             :images="images"
             :class="{landscape: landscape.length}"
             @click-node="clickNode"
+            style="padding-top:70px"
           />
         </center>
         <footer class="foot">

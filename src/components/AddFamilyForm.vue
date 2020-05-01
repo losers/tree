@@ -1,11 +1,31 @@
 <template>
   <div class="FormData p-5">
-    <h3 v-if="!created">
+    <h3 v-if="!created&&!isDelete">
       <span>Creating a Family Tree</span>
       <span class="close-btn" @click="goBack">x</span>
-      <span v-if="surname"> for {{surname}}</span>
+      <span v-if="surname">for {{surname}}</span>
     </h3>
-    <form v-on:submit.prevent="sendData" v-if="!created">
+
+    <!-- UI will be displayed after clking delete button -->
+    <div v-if="isDelete">
+      <h3>
+        Delete Family Permanently
+        <span class="close-btn" @click="goBack">x</span>
+      </h3>
+      <h6 class="mt-3">
+        Please enter
+        <code>{{surname}}</code> in the input box to delete this family tree permanently
+      </h6>
+      <input class="form-control input-sm" type="text" v-model="errSurname" />
+      <button
+        :disabled="errSurname != surname"
+        class="btn btn-danger"
+        @click="deleteFamily"
+      >Delete Permanently</button>
+    </div>
+
+    <!-- Displays for editing Meta Data -->
+    <form v-on:submit.prevent="sendData" v-else-if="!created">
       <div class="form-inline row">
         <label class="col" style="justify-content:left">Display Title :</label>
         <input
@@ -42,16 +62,25 @@
           required
         />
       </div>
-      <button
-        type="submit"
-        class="btn btn-success"
-        style="margin-top: 30px;display: flex;align-items: center;"
-      >
-        <span class="spinner-border spinner-border-sm" v-show="loading" style="margin-right: 8px;"></span>
-        <span>{{metadata?"Update":"Create"}}</span>
-      </button>
+      <div class="row col-12" style="margin-top: 30px;">
+        <button type="submit" class="btn btn-success">
+          <span
+            class="spinner-border spinner-border-sm"
+            v-show="loading"
+            style="margin-right: 8px;"
+          ></span>
+          <span>{{metadata?"Update":"Create"}}</span>
+        </button>
+        <button
+          v-show="metadata"
+          class="ml-3 btn btn-danger"
+          @click="isDelete=true;created=false;"
+        >Delete Family</button>
+      </div>
     </form>
-    <div v-if="created">
+
+    <!-- On creating a family tree -->
+    <div v-else-if="created">
       <div style="margin-bottom:20px">
         <center>
           <Tick></Tick>
@@ -67,6 +96,7 @@
         <button class="btn btn-success" @click="goFamily">Go..</button>
       </center>
     </div>
+
     <div v-else-if="errored">Error Code : {{errored}}</div>
   </div>
 </template>
@@ -88,13 +118,16 @@ export default {
       created: false,
       errored: false,
       loading: false,
-      pin: ""
+      pin: "",
+      isDelete: false,
+      errSurname: null
     };
   },
   mounted() {
-    if(this.metadata){
-        (this.surname = this.metadata.surname), (this.title = this.metadata.title);
-        this.pin = this.metadata.pin;
+    if (this.metadata) {
+      (this.surname = this.metadata.surname),
+        (this.title = this.metadata.title);
+      this.pin = this.metadata.pin;
     }
   },
   methods: {
