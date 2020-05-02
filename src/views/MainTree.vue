@@ -109,7 +109,7 @@ export default {
   mounted() {
     axios
       .get(
-        "http://localhost:5000/tree/" +
+        "https://blineapi.herokuapp.com/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -118,7 +118,7 @@ export default {
       .then(data => {
         this.images = data.data[0];
         axios
-          .get("http://localhost:5000/tree/" + this.surname)
+          .get("https://blineapi.herokuapp.com/tree/" + this.surname)
           .then(data => {
             this.tempData = data.data.tree;
             this.title = data.data.meta;

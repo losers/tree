@@ -225,7 +225,7 @@ export default {
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = null; //Check version
     axios
-      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
+      .get("https://blineapi.herokuapp.com/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
@@ -242,7 +242,7 @@ export default {
 
     axios
       .get(
-        "http://localhost:5000/tree/" +
+        "https://blineapi.herokuapp.com/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -281,7 +281,7 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       this.url =
-        "http://localhost:5000/tree/" +
+        "https://blineapi.herokuapp.com/tree/" +
         this.surname +
         "/person/" +
         this.id +
@@ -303,7 +303,7 @@ export default {
     },
     validate() {
       this.vloading = true;
-      let sessionUrl = "http://localhost:5000/sessions/";
+      let sessionUrl = "https://blineapi.herokuapp.com/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;
