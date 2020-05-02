@@ -13,7 +13,6 @@
 
 <script>
 import AddFamily from "./AddFamilyForm";
-import Axios from "axios";
 
 export default {
   props: ["meta"],

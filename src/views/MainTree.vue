@@ -145,6 +145,7 @@ export default {
   methods: {
     // Called when a node is clicked
     clickNode: function(node) {
+      console.log(node.data.mate + "" + node.isMate);
       if (node.data.mate || node.isMate) {
         this.$router.push({
           name: "MemberData",

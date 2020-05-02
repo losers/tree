@@ -15,27 +15,27 @@
       @actionConfirmed="onActionConfirmed"
     />-->
     <div class="d-flex justify-content-between">
-      <button @click="onActionConfirmed" class="btn btn-danger mb-3 mt-3">
-      <i class="icofont-ui-delete"></i>
-      Delete Permanently
-    </button>
-    <button @click="close" class="btn mt-3">Cancel</button>
+      <button @click="onActionConfirmed" type="button" class="btn btn-danger mb-3 mt-3">
+        <i class="icofont-ui-delete"></i>
+        Delete Permanently
+      </button>
+      <button @click="close" class="btn mt-3" type="button">Cancel</button>
     </div>
-    
+    <div v-show="err">{{err}}</div>
   </div>
 </template>
 
 <script>
-import SwipeButton from "vue-swipe-button";
-import "vue-swipe-button/dist/swipeButton.css";
 import axios from "axios";
 
 export default {
   name: "DeleteMember",
-  components: {
-    SwipeButton
-  },
   props: ["name", "isMate"],
+  data() {
+    return {
+      err: false
+    };
+  },
   methods: {
     onActionConfirmed() {
       console.log("deleted");
@@ -59,6 +59,7 @@ export default {
       this.$root.$emit("canceled", this.id);
     },
     deleteMe() {
+      console.log("ssas");
       axios
         .delete(
           "http://localhost:5000/tree/" +
@@ -66,16 +67,15 @@ export default {
             "/person/" +
             this.$route.params.member
         )
-        .then(data => console.log(`Deleted : ${data}`))
-        .catch(err => console.log("Error : " + err))
-        .finally(() => {
-          this.$emit("jst-close");
+        .then(() => {
+          this.$emit("close");
           this.$router.push({
             name: "MainTree",
-            params: { id: this.$route.params.id }
+            id: this.surname
           });
-          this.$root.$emit("update-tree", "new tree data");
-        });
+          this.$root.$emit("update-tree", "deleted a new member");
+        })
+        .catch(err => (this.err = err));
     }
   }
 };

@@ -1,103 +1,113 @@
 <template>
   <div class="FormData p-5">
     <h3 v-if="!created&&!isDelete">
-      <span>Creating a Family Tree</span>
+      <span>{{metadata?"Updating":"Creating"}} a Family Tree</span>
       <span class="close-btn" @click="goBack">x</span>
-      <span v-if="surname">for {{surname}}</span>
+      <span v-if="surname" class="ml-1"> for {{surname}}</span>
     </h3>
 
-    <!-- UI will be displayed after clking delete button -->
-    <div v-if="isDelete">
-      <h3>
-        Delete Family Permanently
-        <span class="close-btn" @click="goBack">x</span>
-      </h3>
-      <h6 class="mt-3">
-        Please enter
-        <code>{{surname}}</code> in the input box to delete this family tree permanently
-      </h6>
-      <input class="form-control input-sm" type="text" v-model="errSurname" />
-      <button
-        :disabled="errSurname != surname"
-        class="btn btn-danger"
-        @click="deleteFamily"
-      >Delete Permanently</button>
-    </div>
-
-    <!-- Displays for editing Meta Data -->
-    <form v-on:submit.prevent="sendData" v-else-if="!created">
-      <div class="form-inline row">
-        <label class="col" style="justify-content:left">Display Title :</label>
-        <input
-          type="text"
-          class="form-control col-sm-8"
-          id="title"
-          placeholder="Display Title"
-          required
-          v-model="title"
-        />
-      </div>
-      <div class="form-inline row">
-        <label for="nickname" class="col" style="justify-content:left">Surname :</label>
-        <input
-          v-model="surname"
-          type="text"
-          class="form-control col-sm-8"
-          id="surname"
-          :disabled="metadata"
-          placeholder="Enter Surname"
-          @input="makeSmall"
-          required
-        />
-      </div>
-      <div class="form-inline row">
-        <label for="pin" class="col" style="justify-content:left">PIN :</label>
-        <input
-          v-model="pin"
-          type="number"
-          class="form-control col-sm-8"
-          id="pin"
-          placeholder="Enter 4 Digit PIN"
-          onkeypress="if(this.value.length==4) return false;"
-          required
-        />
-      </div>
-      <div class="row col-12" style="margin-top: 30px;">
-        <button type="submit" class="btn btn-success">
+    <transition name="fade" mode="out-in">
+      <!-- UI will be displayed after clking delete button -->
+      <div v-if="isDelete&&!created">
+        <h3>
+          Delete Family Permanently
+          <span class="close-btn" @click="goBack">x</span>
+        </h3>
+        <h6 class="mt-3">
+          Please enter
+          <code>{{surname}}</code> in the input box to delete this family tree permanently
+        </h6>
+        <input class="form-control input-sm" type="text" v-model="errSurname" />
+        <button :disabled="errSurname != surname" class="btn btn-danger" @click="deleteFamily">
           <span
             class="spinner-border spinner-border-sm"
             v-show="loading"
             style="margin-right: 8px;"
-          ></span>
-          <span>{{metadata?"Update":"Create"}}</span>
+          ></span>Delete Permanently
         </button>
-        <button
-          v-show="metadata"
-          class="ml-3 btn btn-danger"
-          @click="isDelete=true;created=false;"
-        >Delete Family</button>
       </div>
-    </form>
 
-    <!-- On creating a family tree -->
-    <div v-else-if="created">
-      <div style="margin-bottom:20px">
+      <!-- Displays for editing and Creating Meta Data -->
+      <form v-on:submit.prevent="sendData" v-else-if="!created">
+        <section v-if="editFormErrored&&metadata">{{editFormErrored}}</section>
+        <section v-else>
+          <span v-if="editFormLoading&&metadata">loading...</span>
+          <span else>
+            <div class="form-inline row">
+              <label class="col" style="justify-content:left">Display Title :</label>
+              <input
+                type="text"
+                class="form-control col-sm-8"
+                id="title"
+                placeholder="Display Title"
+                required
+                v-model="title"
+              />
+            </div>
+            <div class="form-inline row">
+              <label for="nickname" class="col" style="justify-content:left">Surname :</label>
+              <input
+                v-model="surname"
+                type="text"
+                class="form-control col-sm-8"
+                id="surname"
+                :disabled="metadata"
+                placeholder="Enter Surname"
+                @input="makeSmall"
+                required
+              />
+            </div>
+            <div class="form-inline row">
+              <label for="pin" class="col" style="justify-content:left">PIN :</label>
+              <input
+                v-model="pin"
+                type="number"
+                class="form-control col-sm-8"
+                id="pin"
+                placeholder="Enter 4 Digit PIN"
+                onkeypress="if(this.value.length==4) return false;"
+                required
+              />
+            </div>
+            <div class="row col-12" style="margin-top: 30px;">
+              <button type="submit" class="btn btn-success">
+                <span
+                  class="spinner-border spinner-border-sm"
+                  v-show="loading"
+                  style="margin-right: 8px;"
+                ></span>
+                <span>{{metadata?"Update":"Create"}}</span>
+              </button>
+              <button
+                type="button"
+                v-show="metadata"
+                class="ml-3 btn btn-danger"
+                @click="isDelete=true;created=false;"
+              >Delete Family</button>
+            </div>
+          </span>
+        </section>
+      </form>
+
+      <!-- On creating a family tree -->
+      <div v-else-if="created">
+        <div style="margin-bottom:20px">
+          <center>
+            <Tick></Tick>
+          </center>
+          <center>
+            <h1>Success!</h1>
+            <span
+              style="font-size: 20px;"
+            >Family tree is created. Start Adding members to your family tree.</span>
+          </center>
+        </div>
         <center>
-          <Tick></Tick>
-        </center>
-        <center>
-          <h1>Success!</h1>
-          <span
-            style="font-size: 20px;"
-          >Family tree is created. Start Adding members to your family tree.</span>
+          <button class="btn btn-success" @click="goFamily">Go..</button>
         </center>
       </div>
-      <center>
-        <button class="btn btn-success" @click="goFamily">Go..</button>
-      </center>
-    </div>
-
-    <div v-else-if="errored">Error Code : {{errored}}</div>
+      <div v-else-if="errored">Error Code : {{errored}}</div>
+    </transition>
   </div>
 </template>
 
@@ -120,14 +130,27 @@ export default {
       loading: false,
       pin: "",
       isDelete: false,
-      errSurname: null
+      errSurname: null,
+      editFormLoading: null,
+      editFormErrored: null
     };
   },
   mounted() {
+    console.log("created");
     if (this.metadata) {
-      (this.surname = this.metadata.surname),
-        (this.title = this.metadata.title);
-      this.pin = this.metadata.pin;
+      this.title = this.metadata.title;
+      this.surname = this.metadata.surname;
+      this.editFormLoading = true;
+      Axios.get("http://localhost:5000/meta/get/" + this.metadata._id)
+        .then(data => {
+          console.log(data);
+          this.pin = data.data.pin;
+        })
+        .catch(err => (this.editFormErrored = err))
+        .finally(() => (this.editFormLoading = false));
+    } else {
+      this.editFormLoading = false;
+      this.editFormErrored = false;
     }
   },
   methods: {
@@ -162,6 +185,18 @@ export default {
           .finally(() => (this.loading = false));
       }
     },
+    deleteFamily() {
+      this.loading = true;
+      Axios.delete("http://localhost:5000/meta", {
+        data: { surname: this.errSurname }
+      })
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+        .finally(() => {
+          this.goBack();
+          this.$router.push({ name: "Home" });
+        });
+    },
     goBack() {
       this.$emit("close");
     },
@@ -178,6 +213,13 @@ export default {
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 input {
   margin: 10px;
 }

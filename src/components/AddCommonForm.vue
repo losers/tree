@@ -35,7 +35,7 @@
 
       <div class="row">
         <label class="col-4">Is Died</label>
-        <toggle-button v-model="data.is_died" :isActive="is_died" class="mb-4" />
+        <toggle-button v-model="data.is_died" :sync="true" class="mb-4" />
         <span class="form-inline" v-show="data.is_died">
           <input
             type="date"
@@ -57,10 +57,7 @@
       </div>
 
       <!-- Gender Selection -->
-      <div
-        class="row"
-        v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b') && (newchild)"
-      >
+      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
         <div class="form-check col-3 ml-3">
           <input
             class="form-check-input col-2 mt-2"
@@ -85,48 +82,33 @@
         </div>
       </div>
 
-      <div v-if="form_saved" class="mt-5">
-        <tick class="float-right"></tick>
-        <h4 class="mb-3">Form Saved Successfully</h4>
-        <div class="d-flex justify-content-around form-btns">
-          <button @click="goHome" class="btn btn-success">See tree</button>
-          <button
-            type="reset"
-            @click="form_saved=false;data={};newchild=true;"
-            class="btn btn-warning"
-          >Add Another Child</button>
-          <button @click="goBack" class="btn btn-danger">Close</button>
-        </div>
-      </div>
-      <div v-else class="d-flex justify-content-between mt-5">
-        <button type="submit" class="btn btn-primary">
+      <div class="d-flex justify-content-between mt-5">
+        <button type="submit" class="btn btn-primary" :disabled="loading">
           <span class="spinner-border spinner-border-sm" v-show="loading"></span>
           Submit
         </button>
-        <button @click="goBack" class="btn btn-danger">Cancel</button>
+        <button type="button" @click="goBack" class="btn btn-danger">Cancel</button>
       </div>
+      <div v-show="is_error" class="mt-3">{{is_error}}</div>
     </form>
   </div>
 </template>
 
 <script>
 import { ToggleButton } from "vue-js-toggle-button";
-import Tick from "./small/tick";
 import Axios from "axios";
 
 export default {
   components: {
-    ToggleButton,
-    Tick
+    ToggleButton
   },
   props: ["memData"],
   data() {
     return {
       data: {},
       loading: false,
-      form_saved: false,
-      newchild: true,
-      mateAdded: false //this is used to close addmate btn in MemberData Route
+      is_died: null,
+      is_error: false
     };
   },
   mounted() {
@@ -136,42 +118,33 @@ export default {
       this.data = this.memData;
       if (this.memData.is_died) {
         console.log(this.memData.is_died);
-
         this.data.is_died = true;
         if (this.memData.died_on) {
           console.log("3");
-
           this.data.died_on = this.memData.died_on;
         }
       }
     }
-
-    //this will listens when to stop spinning action
-    this.$root.$on("form-saved", tempType => {
-      if (tempType == 1) {
-        this.mateAdded = true;
-      }
-      this.form_saved = true;
-      this.loading = false;
-    });
   },
   methods: {
     sendData() {
       this.loading = true;
       if (this.memData) {
+        //calls while updating
         console.log(this.memData);
         Axios.put(
           "http://localhost:5000/tree/" + this.$route.params.id + "/person",
           this.data
         )
-          .catch(errr => console.log(errr))
-          .finally(() => {
+          .then(() => {
             this.$emit("close");
+            this.$root.$emit("canceled");
             this.$router.push({
               name: "MemberData",
               params: { member: this.memData._id }
             });
-          });
+          })
+          .catch(errr => console.log(errr));
       } else {
         if (this.$route.params.type == "a") {
           this.data.gender = "1";
@@ -181,25 +154,37 @@ export default {
           this.data.type = 1;
         } else if (this.$route.params.type == 1) {
           this.data.type = 2;
+        } else if (this.$route.params.type == 0) {
+          this.data.type = 0;
         }
+        console.log(this.data.type);
         this.$emit("form-submit", this.data);
       }
     },
     goBack() {
       if (this.memData) {
         this.$emit("close");
+        console.log("test");
         this.$root.$emit("canceled");
+        // if (this.$route.query.hasMate) {
+        //   console.log(this.$route.query.hasMate);
+        //   this.$router.push({
+        //     name: "MemberData",
+        //     params: { member: this.$route.params.member },
+        //     query: { hasMate: true }
+        //   });
+        //   this.$root.$emit("canceled", true);
+        // } else {
+        //   console.log("thusss....");
+        //   this.$router.push({
+        //     name: "MemberData",
+        //     params: { member: this.$route.params.member }
+        //   });
+        //   this.$root.$emit("canceled", false);
+        // }
       } else {
-        this.$emit("form-cancel", this.mateAdded);
+        this.$emit("form-cancel");
       }
-    },
-    goHome() {
-      this.$emit("jst-close");
-      this.$router.push({
-        name: "MainTree",
-        params: { id: this.$route.params.id }
-      });
-      this.$root.$emit("update-tree", "new tree data");
     }
   }
 };

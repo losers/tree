@@ -113,6 +113,11 @@
               </tbody>
               <transition name="fade" mode="out-in">
                 <div class="mx-auto col-12" v-if="cookeyStatus">
+                  <button
+                    @click="addMember(0)"
+                    class="col-10 btn btn-warning mb-3"
+                    v-show="!data.parent_id"
+                  >+ Add Parent</button>
                   <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
                   <button
@@ -137,10 +142,12 @@
                     <button
                       v-show="cookey.length==4"
                       @click="validate"
-                      class="btn btn-success mt-2"
+                      :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                      :disabled="loading"
                     >
+                      <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
                       <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                      Validate
+                      {{retry?"Retry":"Validate"}}
                     </button>
                   </span>
                 </div>
@@ -194,7 +201,8 @@ export default {
       cookey: "",
       cookeyStatus: null,
       vloading: false,
-      hasMate: false
+      hasMate: false,
+      retry: false //stores key status
     };
   },
   watch: {
@@ -208,7 +216,7 @@ export default {
     }
   },
   mounted() {
-    this.hasMate = !this.$route.query.hasMate;
+    this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = null; //Check version
     axios
       .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
@@ -244,6 +252,7 @@ export default {
             this.imageExists = true;
             console.log("exists no");
           }
+
         }
       })
       .catch(err => {
@@ -289,20 +298,18 @@ export default {
     },
     validate() {
       this.vloading = true;
-
       let sessionUrl = "http://localhost:5000/sessions/";
       let params = {};
-
       params.pin = this.cookey;
       params.surname = this.surname;
-
       axios
         .post(sessionUrl, params)
         .then(() => {
           this.cookeyStatus = true;
           this.vloading = false;
         })
-        .catch(function(err) {
+        .catch(err => {
+          this.retry = true;
           console.log(err);
         })
         .finally(() => {
@@ -331,6 +338,7 @@ export default {
         })
         .then(data => {
           this.imageData = data[0].data;
+          this.imageExists = true;
           this.previewImage = "data:image/png;base64, " + this.imageData;
         });
     },
@@ -345,7 +353,6 @@ export default {
     },
     showUpdateForm(formd) {
       this.open = false;
-      this.$router.push({ name: "MainTree", params: { id: this.surname } });
       this.$modal.show(
         CommonForm,
         {
@@ -368,13 +375,25 @@ export default {
         }
       }
       this.open = false;
-      this.$router.push({
-        name: "AddMember",
-        params: { type: num },
-        query: {
-          parent_id: this.data.is_mate ? this.data.parent_id : this.data._id
-        }
-      });
+      console.log(num);
+      if (this.$route.query.hasMate) {
+        this.$router.push({
+          name: "AddMember",
+          params: { type: num },
+          query: {
+            parent_id: this.data.is_mate ? this.data.parent_id : this.data._id,
+            hasMate: true
+          }
+        });
+      } else {
+        this.$router.push({
+          name: "AddMember",
+          params: { type: num },
+          query: {
+            parent_id: this.data.is_mate ? this.data.parent_id : this.data._id
+          }
+        });
+      }
     },
     deleteSwipe() {
       this.$modal.show(

@@ -1,6 +1,7 @@
 <template>
   <div>
     <AddCForm v-on:form-submit="sendData" v-on:form-cancel="goBack"></AddCForm>
+    <div v-show="err">{{err}}</div>
   </div>
 </template>
 
@@ -15,19 +16,23 @@ export default {
   },
   data() {
     return {
-      surname: this.$route.params.id
+      surname: this.$route.params.id,
+      err: false
     };
   },
   methods: {
     sendData(data) {
       data.type = 0;
       Axios.post("http://localhost:5000/tree/" + this.surname + "/person", data)
-        .then(data => console.log(data))
-        .catch(errr => console.log(errr))
-        .finally(() => {
-          this.goBack();
-          this.$root.$emit("update-tree", "calling after adding root parent");
-        });
+        .then(() => {
+          this.$emit("close");
+          this.$router.push({
+            name: "MainTree",
+            id: this.surname
+          });
+          this.$root.$emit("update-tree", "added a root member");
+        })
+        .catch(err => (this.err = err));
     },
     goBack() {
       this.$emit("close");
