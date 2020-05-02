@@ -4,7 +4,7 @@
       <i class="icofont-arrow-left"></i>
       Back
     </router-link>
-    <p class="title">
+    <p class="title mb-2">
       {{meta.title}}
       <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
     </p>
@@ -41,8 +41,8 @@ export default {
   width: 100%;
   z-index: 100;
   margin-bottom: 20px;
-  box-shadow: -1px 3px 20px -10px rgba(0, 0, 0, 0.75);
-  padding: 10px;
+  box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
+  padding: 5px;
   background-color: white;
   height: 50px;
 }

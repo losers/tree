@@ -8,8 +8,8 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url"/>
-              <img src="../assets/logo.png" v-else/>
+                <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" />
+                <img src="../assets/logo.png" v-else />
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -19,8 +19,11 @@
             @click="$emit('click-node',{data:treeData.mate, isMate:true})"
           >
             <div class="avat">
-              <img :src="'data:image/png;base64, '+treeData.mate.image_url" v-if="treeData.mate.image_url"/>
-              <img src="../assets/logo.png" v-else/>
+              <img
+                :src="'data:image/png;base64, '+treeData.mate.image_url"
+                v-if="treeData.mate.image_url"
+              />
+              <img src="../assets/logo.png" v-else />
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>
@@ -58,10 +61,10 @@ export default {
   watch: {
     json: {
       handler: function(Props) {
-        let extendKey = (jsonData) => {
-          if(images1.all){
+        let extendKey = jsonData => {
+          if (images1.all) {
             jsonData.image_url = images1.all[jsonData.id];
-            if(jsonData.mate){
+            if (jsonData.mate) {
               jsonData.mate.image_url = images1.all[jsonData.mate.id];
             }
           }

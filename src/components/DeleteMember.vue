@@ -1,6 +1,6 @@
 <template>
   <div id="app-delete">
-    <h3 class="text-danger mx-auto mt-4">Delete {{name}} and its children</h3>
+    <h3 class="text-danger mx-auto mt-4">Delete <span class="ml-3 mr-3">{{name}}</span> and its children</h3>
     <div class="d-flex justify-content-space mt-4">
       <i class="icofont-danger-zone mr-3" style="color:red; font-size:20px"></i>
       <h5 class="text-danger">Deleting a Member will deletes all of its children</h5>
@@ -9,14 +9,15 @@
       <i class="icofont-danger-zone mr-3 mb-5" style="color:red; font-size:20px"></i>
       <h5 class="text-danger">No Backup, This can't be undo</h5>
     </div>
-    <!-- <SwipeButton
-      ref="swipeButton"
-      class="swipe-button mx-auto"
-      @actionConfirmed="onActionConfirmed"
-    />-->
     <div class="d-flex justify-content-between">
-      <button @click="onActionConfirmed" type="button" class="btn btn-danger mb-3 mt-3">
-        <i class="icofont-ui-delete"></i>
+      <button
+        @click="onActionConfirmed"
+        type="button"
+        class="btn btn-danger mb-3 mt-3"
+        :disabled="loading"
+      >
+        <span class="spinner-border spinner-border-sm" v-if="loading"></span>
+        <i class="icofont-ui-delete" v-else></i>
         Delete Permanently
       </button>
       <button @click="close" class="btn mt-3" type="button">Cancel</button>
@@ -33,11 +34,13 @@ export default {
   props: ["name", "isMate"],
   data() {
     return {
-      err: false
+      err: false,
+      loading: false
     };
   },
   methods: {
     onActionConfirmed() {
+      this.loading = true;
       console.log("deleted");
       this.deleteMe();
     },
@@ -59,7 +62,6 @@ export default {
       this.$root.$emit("canceled", this.id);
     },
     deleteMe() {
-      console.log("ssas");
       axios
         .delete(
           "http://localhost:5000/tree/" +
@@ -75,7 +77,8 @@ export default {
           });
           this.$root.$emit("update-tree", "deleted a new member");
         })
-        .catch(err => (this.err = err));
+        .catch(err => (this.err = err))
+        .finally(() => (this.loading = false));
     }
   }
 };

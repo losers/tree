@@ -3,7 +3,7 @@
     <h3 v-if="!created&&!isDelete">
       <span>{{metadata?"Updating":"Creating"}} a Family Tree</span>
       <span class="close-btn" @click="goBack">x</span>
-      <span v-if="surname" class="ml-1"> for {{surname}}</span>
+      <span v-if="surname" class="ml-1">for {{surname}}</span>
     </h3>
 
     <transition name="fade" mode="out-in">
@@ -70,7 +70,7 @@
               />
             </div>
             <div class="row col-12" style="margin-top: 30px;">
-              <button type="submit" class="btn btn-success">
+              <button type="submit" class="btn btn-success" :disabled="pin.length!=4">
                 <span
                   class="spinner-border spinner-border-sm"
                   v-show="loading"

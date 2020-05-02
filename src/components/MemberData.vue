@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="left:70%!important;">
     <router-view></router-view>
     <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
       <div v-if="open">
@@ -41,9 +41,15 @@
               </div>
             </div>
 
-            <button @click="uploadImage" v-show="showUpload">
+            <button
+              @click="uploadImage"
+              v-show="showUpload"
+              class="btn btn-success mt-3"
+              :disabled="loadingUpload"
+            >
               <span v-if="!doneUpload">
-                <span class="spinner-border spinner-border-sm" v-show="loadingUpload"></span>
+                <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
+                <i class="icofont-cloud-upload" v-else></i>
                 Upload Image
               </span>
               <span v-else>
@@ -252,7 +258,6 @@ export default {
             this.imageExists = true;
             console.log("exists no");
           }
-
         }
       })
       .catch(err => {
@@ -404,7 +409,8 @@ export default {
         {
           height: "auto",
           clickToClose: false,
-          scrollable: true
+          scrollable: true,
+          draggable: true
         }
       );
       this.open = false;
@@ -431,6 +437,10 @@ export default {
 </script>
 
 <style>
+.vue-simple-drawer {
+  left: 70% !important;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;

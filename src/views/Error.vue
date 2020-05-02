@@ -5,6 +5,7 @@
       <i class="icofont-arrow-left"></i>
       Home
     </router-link>
+    <button @click="test">test</button>
     <vue-particles
       style="z-index:200"
       color="#dedede"
@@ -28,7 +29,12 @@
 
 <script>
 export default {
-  props: ["msg"]
+  props: ["msg"],
+  methods:{
+    test(){
+      this.$router.replace("/abcd");
+    }
+  }
 };
 </script>
 

@@ -1,9 +1,11 @@
 <template>
   <div class="FormData p-5">
-    <h3>Add Member</h3>
+    <h3 class="mb-3">{{memdata?"Edit":"Add"}} Member</h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
-        <label class="col-4">Short Name:</label>
+        <label class="col-4">
+          <span class="text-warning mr-1">*</span>Short Name:
+        </label>
         <input
           type="text"
           class="form-control col-7"
@@ -14,7 +16,9 @@
       </div>
       <p class="info">Nick Name will be shown in Family Tree</p>
       <div class="row">
-        <label class="col-4">Name :</label>
+        <label class="col-4">
+          <span class="text-warning mr-1">*</span>Name :
+        </label>
         <input
           type="text"
           class="form-control col-7"
@@ -23,6 +27,33 @@
           required
         />
       </div>
+
+      <!-- Gender Selection -->
+      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
+        <div class="form-check col-3 ml-3">
+          <input
+            class="form-check-input col-2 mt-2"
+            type="radio"
+            name="gender"
+            v-model="data.gender"
+            value="1"
+            checked
+            required
+          />
+          <label class="form-check-label ml-2">Male</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input col-3 mt-2"
+            type="radio"
+            name="gender"
+            v-model="data.gender"
+            value="0"
+          />
+          <label class="form-check-label ml-2">Female</label>
+        </div>
+      </div>
+      <hr class="mt-4 mb-4" style="background-color:#cccccc" />
       <div class="row">
         <label class="col-4">DOB :</label>
         <input
@@ -54,32 +85,6 @@
           v-model="data.mobile"
           placeholder="Mobile Number"
         />
-      </div>
-
-      <!-- Gender Selection -->
-      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
-        <div class="form-check col-3 ml-3">
-          <input
-            class="form-check-input col-2 mt-2"
-            type="radio"
-            name="gender"
-            v-model="data.gender"
-            value="1"
-            checked
-            required
-          />
-          <label class="form-check-label ml-2">Male</label>
-        </div>
-        <div class="form-check">
-          <input
-            class="form-check-input col-3 mt-2"
-            type="radio"
-            name="gender"
-            v-model="data.gender"
-            value="0"
-          />
-          <label class="form-check-label ml-2">Female</label>
-        </div>
       </div>
 
       <div class="d-flex justify-content-between mt-5">
