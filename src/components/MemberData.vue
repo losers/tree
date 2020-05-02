@@ -19,7 +19,7 @@
                   :src="previewImage"
                   alt="Avatar"
                   class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
+                  style="border-radius: 50%;width: 150px;" 
                 />
               </div>
               <div v-else>
