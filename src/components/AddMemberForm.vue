@@ -24,7 +24,7 @@ export default {
     sendData(data) {
       console.log(data.type);
       data.parent_id = this.$route.query.parent_id;
-      Axios.post("http://localhost:5000/tree/" + this.surname + "/person", data)
+      Axios.post("https://blineapi.herokuapp.com/tree/" + this.surname + "/person", data)
         .then(() => {
           this.$emit("close");
           this.$router.push({
