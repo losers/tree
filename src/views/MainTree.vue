@@ -29,10 +29,14 @@
             <div class="col-3"></div>
             <ul class="col-8">
               <li>
-                <div class="d-flex content-justify-left ml-2">
+                <h3 class="d-flex content-justify-left ml-2">
                   Add Members in a Top Down Manner
-                  <br />E.g : Grand Father -> Father -> Child
-                </div>
+                </h3>
+              </li>
+              <li>
+                <h5 class="d-flex content-justify-left ml-4 mb-4" style="color: #0039a9;">
+                  E.g : Grand Father -> Father -> Child
+                </h5>
               </li>
               <li>
                 <h3
@@ -147,18 +151,19 @@ export default {
   methods: {
     // Called when a node is clicked
     clickNode: function(node) {
-      console.log(node.data.mate + "" + node.isMate);
-      if (node.data.mate || node.isMate) {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: node.data.id },
-          query: { hasMate: true }
-        });
-      } else {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: node.data.id }
-        });
+      if (!this.$device.mobile) {
+        if (node.data.mate || node.isMate) {
+          this.$router.push({
+            name: "MemberData",
+            params: { member: node.data.id },
+            query: { hasMate: true }
+          });
+        } else {
+          this.$router.push({
+            name: "MemberData",
+            params: { member: node.data.id }
+          });
+        }
       }
     },
 

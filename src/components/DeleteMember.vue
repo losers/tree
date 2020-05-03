@@ -1,13 +1,13 @@
 <template>
   <div id="app-delete">
-    <h3 class="text-danger mx-auto mt-4">Delete <span class="ml-3 mr-3">{{name}}</span> and its children</h3>
+    <h3 class="text-danger mx-auto mt-4">Delete <span class="ml-3 mr-3">{{name}} ?</span></h3>
     <div class="d-flex justify-content-space mt-4">
-      <i class="icofont-danger-zone mr-3" style="color:red; font-size:20px"></i>
-      <h5 class="text-danger">Deleting a Member will deletes all of its children</h5>
+      <i class="mr-3" style="color:red; font-size:20px"></i>
+      <h5 class="text-danger">- It will delete all of his/her children</h5>
     </div>
     <div class="d-flex justify-content-space mt-3">
-      <i class="icofont-danger-zone mr-3 mb-5" style="color:red; font-size:20px"></i>
-      <h5 class="text-danger">No Backup, This can't be undo</h5>
+      <i class="mr-3 mb-5" style="color:red; font-size:20px"></i>
+      <h5 class="text-danger">- No Backup, This action can't be undone</h5>
     </div>
     <div class="d-flex justify-content-between">
       <button

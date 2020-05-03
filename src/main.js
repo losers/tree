@@ -5,6 +5,7 @@ import VueParticles from 'vue-particles';
 import axios from "axios";
 import 'typeface-comfortaa'
 import device from "vue-device-detector"
+
 Vue.use(device)
 
 Vue.use(VueParticles)
