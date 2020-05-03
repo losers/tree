@@ -249,9 +249,8 @@ export default {
           "/image"
       )
       .then(data => {
-        this.data = data.data;
-        if (this.data.length != 0) {
-          this.previewImage = "data:image/png;base64," + this.data[0][this.id];
+        if (data.data.length != 0) {
+          this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
             this.imageExists = false;
           } else {
