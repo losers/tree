@@ -6,7 +6,12 @@
     </router-link>
     <p class="title mb-2">
       {{meta.title}}
-      <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
+      <i
+        class="icofont-edit ml-2"
+        @click="editmeta"
+        style="font-size:20px"
+        v-show="!$device.mobile"
+      ></i>
     </p>
   </div>
 </template>

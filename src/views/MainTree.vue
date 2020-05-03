@@ -149,18 +149,19 @@ export default {
   methods: {
     // Called when a node is clicked
     clickNode: function(node) {
-      console.log(node.data.mate + "" + node.isMate);
-      if (node.data.mate || node.isMate) {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: node.data.id },
-          query: { hasMate: true }
-        });
-      } else {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: node.data.id }
-        });
+      if (!this.$device.mobile) {
+        if (node.data.mate || node.isMate) {
+          this.$router.push({
+            name: "MemberData",
+            params: { member: node.data.id },
+            query: { hasMate: true }
+          });
+        } else {
+          this.$router.push({
+            name: "MemberData",
+            params: { member: node.data.id }
+          });
+        }
       }
     },
 
