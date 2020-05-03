@@ -6,7 +6,9 @@
     </router-link>
     <p class="title mb-2">
       {{meta.title}}
-      <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
+      <span v-show="is_session && !this.$device.mobile">
+        <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
+      </span>
     </p>
   </div>
 </template>
@@ -15,7 +17,7 @@
 import AddFamily from "./AddFamilyForm";
 
 export default {
-  props: ["meta"],
+  props: ["meta", "is_session"],
   methods: {
     editmeta() {
       this.$modal.show(

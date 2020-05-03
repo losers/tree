@@ -707,7 +707,7 @@ export default {
   },
   mounted() {
     axios
-      .get("https://blineapi.herokuapp.com/meta")
+      .get("http://localhost:5000/meta")
       .then(response => {
         this.toggleBodyClass("addClass", "j-stars");
         this.info = response.data;

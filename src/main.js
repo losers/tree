@@ -4,9 +4,9 @@ import router from "./router";
 import VueParticles from 'vue-particles';
 import axios from "axios";
 import 'typeface-comfortaa'
-import Overdrive from 'vue-overdrive'
+import device from "vue-device-detector"
+Vue.use(device)
 
-Vue.use(Overdrive)
 Vue.use(VueParticles)
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true;

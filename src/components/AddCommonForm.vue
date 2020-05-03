@@ -1,6 +1,6 @@
 <template>
   <div class="FormData p-5">
-    <h3 class="mb-3">{{memdata?"Edit":"Add"}} Member</h3>
+    <h3 class="mb-3">{{memData?"Edit":"Add"}} Member</h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
         <label class="col-4">
@@ -138,7 +138,7 @@ export default {
         //calls while updating
         console.log(this.memData);
         Axios.put(
-          "https://blineapi.herokuapp.com/tree/" + this.$route.params.id + "/person",
+          "http://localhost:5000/tree/" + this.$route.params.id + "/person",
           this.data
         )
           .then(() => {

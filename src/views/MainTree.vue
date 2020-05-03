@@ -57,7 +57,7 @@
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <TreeTitle :meta="title[0]"></TreeTitle>
+        <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
         <center>
           <TreeChart
             :json="tempData"
@@ -103,13 +103,14 @@ export default {
       tempData: null,
       errored: false,
       images: {},
-      title: null
+      title: null,
+      is_session: null
     };
   },
   mounted() {
     axios
       .get(
-        "https://blineapi.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -118,10 +119,11 @@ export default {
       .then(data => {
         this.images = data.data[0];
         axios
-          .get("https://blineapi.herokuapp.com/tree/" + this.surname)
+          .get("http://localhost:5000/tree/" + this.surname)
           .then(data => {
             this.tempData = data.data.tree;
             this.title = data.data.meta;
+            this.is_session = data.data.has_session;
           })
           .catch(err => {
             this.errored = err;
