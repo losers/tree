@@ -64,7 +64,7 @@ export default {
     deleteMe() {
       axios
         .delete(
-          "http://localhost:5000/tree/" +
+          "https://blineapi.herokuapp.com/tree/" +
             this.$route.params.id +
             "/person/" +
             this.$route.params.member
