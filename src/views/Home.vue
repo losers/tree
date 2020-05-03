@@ -27,7 +27,6 @@
             </touch-ripple>
           </center>
         </div>
-        {{showModal}}
         <AddFamily v-if="showModal == true" v-on:closed="showModal=false"></AddFamily>
         <div v-for="data in info" :key="data.id">
           <center>
