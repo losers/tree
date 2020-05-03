@@ -7,6 +7,7 @@ import 'typeface-comfortaa'
 import device from "vue-device-detector"
 
 Vue.use(device)
+
 Vue.use(VueParticles)
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true;

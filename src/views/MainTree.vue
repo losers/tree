@@ -61,7 +61,7 @@
 
       <!-- Displays Tree Map -->
       <div v-else>
-        <TreeTitle :meta="title[0]"></TreeTitle>
+        <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
         <center>
           <TreeChart
             :json="tempData"
@@ -107,7 +107,8 @@ export default {
       tempData: null,
       errored: false,
       images: {},
-      title: null
+      title: null,
+      is_session: null
     };
   },
   mounted() {
@@ -126,6 +127,7 @@ export default {
           .then(data => {
             this.tempData = data.data.tree;
             this.title = data.data.meta;
+            this.is_session = data.data.has_session;
           })
           .catch(err => {
             this.errored = err;
