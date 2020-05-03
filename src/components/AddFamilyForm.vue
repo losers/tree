@@ -136,7 +136,6 @@ export default {
     };
   },
   mounted() {
-    console.log("created");
     if (this.metadata) {
       this.title = this.metadata.title;
       this.surname = this.metadata.surname;

@@ -23,14 +23,14 @@
           </center>
           <center>
             <touch-ripple @click.native="showModal = true" class="button-box" :speed="1.1">
-              <button class="btn btn-success my-btn" @click="showModal = true">+ Your Family Tree</button>
+              <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
         </div>
-        <AddFamily v-if="showModal == true" v-on:close="showModal=false "></AddFamily>
+        {{showModal}}
+        <AddFamily v-if="showModal == true" v-on:closed="showModal=false"></AddFamily>
         <div v-for="data in info" :key="data.id">
           <center>
-            <!-- <touch-ripple class="div-box container jumbotron" :speed="2" :opacity="0.3" color="#999" transition="cubic-bezier(0.18, 0.89, 0.32, 1.28)"> -->
             <div class="container div-box">
               <i
                 class="icofont-camera float-left"
@@ -43,7 +43,6 @@
               </router-link>
               <p class="surname">Surname : {{data.surname}}</p>
             </div>
-            <!-- </touch-ripple> -->
           </center>
         </div>
       </div>
