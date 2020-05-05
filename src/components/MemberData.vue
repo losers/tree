@@ -175,6 +175,7 @@ import Vue from "vue";
 import VModal from "vue-js-modal";
 import Delete from "../components/DeleteMember";
 import CommonForm from "./AddCommonForm";
+import ProdData from "../data.js";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -225,7 +226,7 @@ export default {
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = null; //Check version
     axios
-      .get("https://blineapi.herokuapp.com/tree/" + this.surname + "/person/" + this.id)
+      .get(ProdData.getHostURL()+"/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
@@ -242,7 +243,7 @@ export default {
 
     axios
       .get(
-        "https://blineapi.herokuapp.com/tree/" +
+        ProdData.getHostURL()+"/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -280,7 +281,7 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       this.url =
-        "https://blineapi.herokuapp.com/tree/" +
+        ProdData.getHostURL()+"/tree/" +
         this.surname +
         "/person/" +
         this.id +
@@ -302,7 +303,7 @@ export default {
     },
     validate() {
       this.vloading = true;
-      let sessionUrl = "https://blineapi.herokuapp.com/sessions/";
+      let sessionUrl = ProdData.getHostURL()+"/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;

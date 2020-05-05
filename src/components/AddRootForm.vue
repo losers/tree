@@ -9,6 +9,8 @@
 import AddCForm from "./AddCommonForm";
 import Axios from "axios";
 
+import ProdData from "../data.js";
+
 export default {
   name: "AddRootForm",
   components: {
@@ -23,7 +25,7 @@ export default {
   methods: {
     sendData(data) {
       data.type = 0;
-      Axios.post("https://blineapi.herokuapp.com/tree/" + this.surname + "/person", data)
+      Axios.post(ProdData.getHostURL()+"/tree/" + this.surname + "/person", data)
         .then(() => {
           this.$emit("close");
           this.$router.push({

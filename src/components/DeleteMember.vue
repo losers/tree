@@ -28,6 +28,7 @@
 
 <script>
 import axios from "axios";
+import ProdData from "../data.js";
 
 export default {
   name: "DeleteMember",
@@ -64,7 +65,7 @@ export default {
     deleteMe() {
       axios
         .delete(
-          "https://blineapi.herokuapp.com/tree/" +
+          ProdData.getHostURL()+"/tree/" +
             this.$route.params.id +
             "/person/" +
             this.$route.params.member
