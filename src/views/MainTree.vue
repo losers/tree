@@ -111,7 +111,6 @@ export default {
     };
   },
   mounted() {
-    console.log(ProdData.getHostURL());
     axios
       .get(
           ProdData.getHostURL() +"/tree/"+

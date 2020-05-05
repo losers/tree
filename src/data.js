@@ -1,4 +1,4 @@
-let data = {};
+var data = {};
 data.isProd = true;
 
 data.getHostURL = function(){
