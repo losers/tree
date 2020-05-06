@@ -22,7 +22,7 @@
             <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
           <center>
-            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
+            <touch-ripple @click.native="showModal = true" class="button-box" :speed="1.1" v-show="addFamilyBtn">
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
@@ -681,7 +681,7 @@ export default {
       errored: false,
       callMe: false,
       showModal: false,
-      cookieNo: null
+      addFamilyBtn: true
     };
   },
   components: {
@@ -710,7 +710,9 @@ export default {
     this.toggleBodyClass("removeClass", "j-stars");
   },
   mounted() {
-    console.log(navigator.cookieEnabled);
+    if (this.$device.mobile) {
+      this.addFamilyBtn = false
+    }
     axios
       .get("http://localhost:5000/meta")
       .then(response => {

@@ -207,7 +207,7 @@ td {
   overflow: hidden;
 }
 .node .mate .avat {
-  border: 5px solid green !important;
+  border: 2px solid green !important;
 }
 .node .person .avat {
   display: block;

@@ -38,22 +38,26 @@
             v-model="data.gender"
             value="1"
             checked
+            id="male"
             required
           />
-          <label class="form-check-label ml-2">Male</label>
+          <label for="male" class="form-check-label ml-2">
+            Male
+          </label>
         </div>
         <div class="form-check">
           <input
             class="form-check-input col-3 mt-2"
             type="radio"
             name="gender"
+            id="female"
             v-model="data.gender"
             value="0"
           />
-          <label class="form-check-label ml-2">Female</label>
+          <label for="female" class="form-check-label ml-2">Female</label>
         </div>
       </div>
-      <hr class="mt-4 mb-4" style="background-color:#cccccc" />
+      <hr class="mt-4 mb-4" style="background-color:white" />
       <div class="row">
         <label class="col-4">DOB :</label>
         <input
@@ -119,13 +123,10 @@ export default {
   mounted() {
     //memdata comes from MemberData route for editing
     if (this.memData) {
-      console.log("1");
       this.data = this.memData;
       if (this.memData.is_died) {
-        console.log(this.memData.is_died);
         this.data.is_died = true;
         if (this.memData.died_on) {
-          console.log("3");
           this.data.died_on = this.memData.died_on;
         }
       }
