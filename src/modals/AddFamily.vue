@@ -12,7 +12,6 @@ Vue.use(VModal, {
 
 export default {
   name: "AddFamily",
-
   mounted() {
     this.$modal.show(
       AddFamily,

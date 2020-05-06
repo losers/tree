@@ -1,7 +1,7 @@
 <template>
   <div style="left:70%!important;">
     <router-view></router-view>
-    <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
+    <Drawer @close="toggle" align="right" :closeable="true">
       <div v-if="open">
         <section v-if="errored">
           <p>{{errored}}</p>
@@ -225,7 +225,7 @@ export default {
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = null; //Check version
     axios
-      .get("https://blineapi.herokuapp.com/tree/" + this.surname + "/person/" + this.id)
+      .get("http://localhost:5000/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
@@ -242,7 +242,7 @@ export default {
 
     axios
       .get(
-        "https://blineapi.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -280,7 +280,7 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       this.url =
-        "https://blineapi.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
         this.surname +
         "/person/" +
         this.id +
@@ -302,7 +302,7 @@ export default {
     },
     validate() {
       this.vloading = true;
-      let sessionUrl = "https://blineapi.herokuapp.com/sessions/";
+      let sessionUrl = "http://localhost:5000/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;
@@ -350,7 +350,7 @@ export default {
       if (!this.$route.params.type) {
         this.open = false;
         this.$router.push({
-          name: "MainTree",
+          name: "Tree",
           params: { id: this.$route.params.id }
         });
       }

@@ -22,7 +22,7 @@
             <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
           <center>
-            <touch-ripple @click.native="showModal = true" class="button-box" :speed="1.1">
+            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
@@ -36,6 +36,7 @@
                 style="color:white; font-size:25px"
                 data-toggle="tooltip"
                 title="Celebrity Family"
+                v-show="data.celeb"
               ></i>
               <router-link :to="{name:'MainTree', params:{id:data.surname}}">
                 <div class="title">{{data.title}}</div>
@@ -668,7 +669,6 @@ a:hover {
 <script>
 import axios from "axios";
 import AddFamily from "../modals/AddFamily";
-
 import { touchRipple } from "vue-touch-ripple";
 import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
@@ -680,7 +680,8 @@ export default {
       loading: true,
       errored: false,
       callMe: false,
-      showModal: false
+      showModal: false,
+      cookieNo: null
     };
   },
   components: {
@@ -689,12 +690,15 @@ export default {
     VueTyper
   },
   methods: {
-    addFamily() {
-      console.log("adding family");
+    addFamilyBtn() {
+      if (navigator.cookieEnabled) {
+        this.showModal = true;
+      } else {
+        alert("Please enable cookies to Start creating a family");
+      }
     },
     toggleBodyClass(addRemoveClass, className) {
       const el = document.body;
-
       if (addRemoveClass === "addClass") {
         el.classList.add(className);
       } else {
@@ -706,8 +710,9 @@ export default {
     this.toggleBodyClass("removeClass", "j-stars");
   },
   mounted() {
+    console.log(navigator.cookieEnabled);
     axios
-      .get("https://blineapi.herokuapp.com/meta")
+      .get("http://localhost:5000/meta")
       .then(response => {
         this.toggleBodyClass("addClass", "j-stars");
         this.info = response.data;

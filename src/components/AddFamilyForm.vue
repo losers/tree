@@ -5,7 +5,6 @@
       <span class="close-btn" @click="goBack">x</span>
       <span v-if="surname" class="ml-1">for {{surname}}</span>
     </h3>
-
     <transition name="fade" mode="out-in">
       <!-- UI will be displayed after clking delete button -->
       <div v-if="isDelete&&!created">
@@ -140,7 +139,7 @@ export default {
       this.title = this.metadata.title;
       this.surname = this.metadata.surname;
       this.editFormLoading = true;
-      Axios.get("https://blineapi.herokuapp.com/meta/get/" + this.metadata._id)
+      Axios.get("http://localhost:5000/meta/get/" + this.metadata._id)
         .then(data => {
           console.log(data);
           this.pin = data.data.pin;
@@ -156,7 +155,7 @@ export default {
     sendData() {
       this.loading = true;
       if (this.metadata) {
-        Axios.put("https://blineapi.herokuapp.com/meta/update", {
+        Axios.put("http://localhost:5000/meta/update", {
           title: this.title,
           _id: this.metadata._id,
           created_at: this.metadata.created_at,
@@ -168,7 +167,7 @@ export default {
             this.$emit("close");
           });
       } else {
-        Axios.post("https://blineapi.herokuapp.com/meta/add", {
+        Axios.post("http://localhost:5000/meta/add", {
           title: this.title,
           surname: this.surname,
           pin: this.pin
@@ -186,7 +185,7 @@ export default {
     },
     deleteFamily() {
       this.loading = true;
-      Axios.delete("https://blineapi.herokuapp.com/meta", {
+      Axios.delete("http://localhost:5000/meta", {
         data: { surname: this.errSurname }
       })
         .then(data => console.log(data))

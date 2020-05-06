@@ -2,7 +2,6 @@
   <div id="app">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <!-- <p>{{errored.response.data}}</p> -->
       <error :msg="errored.response.data"></error>
     </section>
 
@@ -11,10 +10,6 @@
       <router-view></router-view>
 
       <div v-if="loading" style="padding-top:240px">
-        <!-- <router-link :to="{name:'Home'}" class="float-left mt-3 ml-1">
-          <i class="icofont-arrow-left"></i>
-          Back
-        </router-link>-->
         <center>
           <img src="@/assets/dna.gif" />
         </center>
@@ -42,7 +37,8 @@
             </ul>
           </div>
         </center>
-        <div id="wrapper">
+
+        <div id="wrapper" v-if="is_session">
           <button @click="createRoot" class="my-super-cool-btn">
             <div class="dots-container">
               <div class="dot"></div>
@@ -52,6 +48,27 @@
             </div>
             <span style="color:#0039A9">Add!</span>
           </button>
+        </div>
+        <div v-else>
+          <span class="col-4">
+            <input
+              class="form-control input-sm"
+              placeholder="Enter Key to Edit"
+              v-model="cookey"
+              onkeypress="if(this.value.length==4) return false;"
+              type="number"
+            />
+            <button
+              v-show="cookey.length==4"
+              @click="validate"
+              :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+              :disabled="loading"
+            >
+              <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
+              <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+              {{retry?"Retry":"Validate"}}
+            </button>
+          </span>
         </div>
       </div>
 
@@ -104,13 +121,17 @@ export default {
       errored: false,
       images: {},
       title: null,
-      is_session: null
+      is_session: null,
+      cookey: "",
+      cookeyStatus: null,
+      vloading: false,
+      retry: false
     };
   },
   mounted() {
     axios
       .get(
-        "https://blineapi.herokuapp.com/tree/" +
+        "http://localhost:5000/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -119,11 +140,12 @@ export default {
       .then(data => {
         this.images = data.data[0];
         axios
-          .get("https://blineapi.herokuapp.com/tree/" + this.surname)
+          .get("http://localhost:5000/tree/" + this.surname)
           .then(data => {
             this.tempData = data.data.tree;
             this.title = data.data.meta;
             this.is_session = data.data.has_session;
+            console.log(data.data.has_session);
           })
           .catch(err => {
             this.errored = err;
@@ -167,6 +189,29 @@ export default {
       this.$router.push({
         name: "AddRoot"
       });
+    },
+
+    //handling sessions
+    validate() {
+      this.vloading = true;
+      let sessionUrl = "http://localhost:5000/sessions/";
+      let params = {};
+      params.pin = this.cookey;
+      params.surname = this.surname;
+      axios
+        .post(sessionUrl, params)
+        .then(data => {
+          console.log(data);
+          this.is_session = true;
+          this.vloading = false;
+        })
+        .catch(err => {
+          this.retry = true;
+          console.log(err);
+        })
+        .finally(() => {
+          this.vloading = false;
+        });
     }
   }
 };

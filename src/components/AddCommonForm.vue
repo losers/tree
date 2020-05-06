@@ -138,7 +138,7 @@ export default {
         //calls while updating
         console.log(this.memData);
         Axios.put(
-          "https://blineapi.herokuapp.com/tree/" + this.$route.params.id + "/person",
+          "http://localhost:5000/tree/" + this.$route.params.id + "/person",
           this.data
         )
           .then(() => {
