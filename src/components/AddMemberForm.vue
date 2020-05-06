@@ -8,6 +8,7 @@
 <script>
 import AddCForm from "./AddCommonForm";
 import Axios from "axios";
+import ProdData from "../data.js";
 
 export default {
   name: "AddMemberForm",
@@ -24,7 +25,7 @@ export default {
     sendData(data) {
       console.log(data.type);
       data.parent_id = this.$route.query.parent_id;
-      Axios.post("http://localhost:5000/tree/" + this.surname + "/person", data)
+      Axios.post(ProdData.getHostURL()+"/tree/" + this.surname + "/person", data)
         .then(() => {
           this.$emit("close");
           this.$router.push({

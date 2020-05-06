@@ -14,7 +14,7 @@
           required
         />
       </div>
-      <p class="info">Nick Name will be shown in Family Tree</p>
+      <p class="info">Short Name will be shown in Family Tree</p>
       <div class="row">
         <label class="col-4">
           <span class="text-warning mr-1">*</span>Name :
@@ -107,6 +107,8 @@
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
 
+import ProdData from "../data.js";
+
 export default {
   components: {
     ToggleButton
@@ -139,7 +141,7 @@ export default {
         //calls while updating
         console.log(this.memData);
         Axios.put(
-          "http://localhost:5000/tree/" + this.$route.params.id + "/person",
+          ProdData.getHostURL()+"/tree/" + this.$route.params.id + "/person",
           this.data
         )
           .then(() => {

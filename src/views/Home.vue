@@ -673,6 +673,8 @@ import { touchRipple } from "vue-touch-ripple";
 import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 
+import ProdData from "../data.js";
+
 export default {
   data() {
     return {
@@ -714,7 +716,7 @@ export default {
       this.addFamilyBtn = false
     }
     axios
-      .get("http://localhost:5000/meta")
+      .get(ProdData.getHostURL()+"/meta")
       .then(response => {
         this.toggleBodyClass("addClass", "j-stars");
         this.info = response.data;

@@ -113,6 +113,7 @@
 <script>
 import Axios from "axios";
 import Tick from "./small/tick.vue";
+import ProdData from "../data.js";
 
 export default {
   name: "AddFamilyForm",
@@ -139,7 +140,7 @@ export default {
       this.title = this.metadata.title;
       this.surname = this.metadata.surname;
       this.editFormLoading = true;
-      Axios.get("http://localhost:5000/meta/get/" + this.metadata._id)
+      Axios.get(ProdData.getHostURL()+"/meta/get/" + this.metadata._id)
         .then(data => {
           console.log(data);
           this.pin = data.data.pin;
@@ -155,7 +156,7 @@ export default {
     sendData() {
       this.loading = true;
       if (this.metadata) {
-        Axios.put("http://localhost:5000/meta/update", {
+        Axios.put(ProdData.getHostURL()+"/meta/update", {
           title: this.title,
           _id: this.metadata._id,
           created_at: this.metadata.created_at,
@@ -167,7 +168,7 @@ export default {
             this.$emit("close");
           });
       } else {
-        Axios.post("http://localhost:5000/meta/add", {
+        Axios.post(ProdData.getHostURL()+"/meta/add", {
           title: this.title,
           surname: this.surname,
           pin: this.pin
@@ -185,7 +186,7 @@ export default {
     },
     deleteFamily() {
       this.loading = true;
-      Axios.delete("http://localhost:5000/meta", {
+      Axios.delete(ProdData.getHostURL()+"/meta", {
         data: { surname: this.errSurname }
       })
         .then(data => console.log(data))

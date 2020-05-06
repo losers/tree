@@ -103,7 +103,7 @@
 
 <script>
 import TreeChart from "@/components/TreeChart";
-import data from "../data.js";
+import ProdData from "../data.js";
 import axios from "axios";
 import TreeTitle from "../components/TreeTitle";
 import Error from "./Error";
@@ -118,7 +118,6 @@ export default {
   data() {
     return {
       landscape: [],
-      data: data,
       surname: this.$route.params.id,
       loading: true,
       tempData: null,
@@ -135,7 +134,7 @@ export default {
   mounted() {
     axios
       .get(
-        "http://localhost:5000/tree/" +
+          ProdData.getHostURL() +"/tree/"+
           this.surname +
           "/person/" +
           this.id +
@@ -144,7 +143,7 @@ export default {
       .then(data => {
         this.images = data.data[0];
         axios
-          .get("http://localhost:5000/tree/" + this.surname)
+          .get(ProdData.getHostURL() +"/tree/"+ this.surname)
           .then(data => {
             this.tempData = data.data.tree;
             this.title = data.data.meta;
