@@ -36,6 +36,7 @@
                 style="color:white; font-size:25px"
                 data-toggle="tooltip"
                 title="Celebrity Family"
+                v-if="data.celeb"
               ></i>
               <router-link :to="{name:'MainTree', params:{id:data.surname}}">
                 <div class="title">{{data.title}}</div>
