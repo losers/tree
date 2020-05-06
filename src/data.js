@@ -1,11 +1,11 @@
 var data = {};
-data.isProd = true;
+data.isProd = false;
 
-data.getHostURL = function(){
-    if(this.isProd){
+data.getHostURL = function () {
+    if (this.isProd) {
         return "https://blineapi.herokuapp.com";
     }
-    else{
+    else {
         return "http://localhost:5000";
     }
 }
