@@ -9,8 +9,12 @@
     <section v-else>
       <router-view></router-view>
 
-      <div v-if="loading" style="padding-top:240px">
-        <center>
+      <div v-if="loading">
+        <router-link :to="{name:'Home'}" class="float-left mt-2 ml-1">
+          <i class="icofont-arrow-left"></i>
+          Back
+        </router-link>
+        <center style="padding-top:240px">
           <img src="@/assets/dna.gif" />
         </center>
       </div>
@@ -24,14 +28,13 @@
             <div class="col-3"></div>
             <ul class="col-8">
               <li>
-                <h3 class="d-flex content-justify-left ml-2">
-                  Add Members in a Top Down Manner
-                </h3>
+                <h3 class="d-flex content-justify-left ml-2">Add Members in a Top Down Manner</h3>
               </li>
               <li>
-                <h5 class="d-flex content-justify-left ml-4 mb-4" style="color: #0039a9;">
-                  E.g : Grand Father -> Father -> Child
-                </h5>
+                <h5
+                  class="d-flex content-justify-left ml-4 mb-4"
+                  style="color: #0039a9;"
+                >E.g : Grand Father -> Father -> Child</h5>
               </li>
               <li>
                 <h3
@@ -134,7 +137,8 @@ export default {
   mounted() {
     axios
       .get(
-          ProdData.getHostURL() +"/tree/"+
+        ProdData.getHostURL() +
+          "/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -143,7 +147,7 @@ export default {
       .then(data => {
         this.images = data.data[0];
         axios
-          .get(ProdData.getHostURL() +"/tree/"+ this.surname)
+          .get(ProdData.getHostURL() + "/tree/" + this.surname)
           .then(data => {
             this.tempData = data.data.tree;
             this.title = data.data.meta;
@@ -185,6 +189,8 @@ export default {
             params: { member: node.data.id }
           });
         }
+      } else {
+        console.log("opening mobile view");
       }
     },
 

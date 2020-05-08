@@ -5,10 +5,16 @@ import VueParticles from 'vue-particles';
 import axios from "axios";
 import 'typeface-comfortaa'
 import device from "vue-device-detector"
-
-Vue.use(device)
+import VModal from "vue-js-modal";
 
 Vue.use(VueParticles)
+Vue.use(device)
+Vue.use(VModal, {
+  dynamic: true,
+  injectModalsContainer: true
+});
+
+
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true;
 

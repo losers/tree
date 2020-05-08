@@ -687,7 +687,8 @@ export default {
       loading: true,
       errored: false,
       callMe: false,
-      showModal: false
+      showModal: false,
+      addFBtn: true
     };
   },
   components: {
