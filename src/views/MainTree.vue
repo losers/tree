@@ -148,7 +148,6 @@ export default {
             this.tempData = data.data.tree;
             this.title = data.data.meta;
             this.is_session = data.data.has_session;
-            console.log(data.data.has_session);
           })
           .catch(err => {
             this.errored = err;

@@ -23,16 +23,23 @@ const myrouter = new VueRouter({
         {
             path: "/:id",
             name: "MainTree",
+            redirect: "/:id/",
             component: () => import('./views/Selections.vue'),
             children: [
                 {
                     path: "analytics",
                     name: "Analytics",
+                    redirect : "analytics/relation-finder",
                     component: () => import('./views/Analytics/Analytics'),
                     children: [
                         {
-                            path: ':find',
-                            name: "Relation",
+                            path: 'relation-finder',
+                            name: "RelationFinder",
+                            component: () => import('./views/Analytics/AnalyticsFrame')
+                        },
+                        {
+                            path: 'subtree',
+                            name: "Subtree",
                             component: () => import('./views/Analytics/AnalyticsFrame')
                         }
                     ]
