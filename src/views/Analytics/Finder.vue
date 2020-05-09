@@ -8,7 +8,11 @@
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img v-if="same" src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
+      <div v-if="same">
+        <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
+        <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
+        <h6>Hence Proved</h6>
+      </div>
       <TreeChart v-else :json="tree" :images="images" style="padding-top:70px" />
     </center>
   </div>
