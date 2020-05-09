@@ -116,6 +116,25 @@ var getAllGuys = function (tree, allMembers) {
     return allMembers;
 }
 
+function getSubTree(tree, id){
+    if (tree == null) {
+        return;
+    }
+
+    if(tree.id == id || (tree.mate && tree.mate.id == id)){
+        return tree;
+    }
+
+    if(tree.children){
+        for(let i=0;i<tree.children.length;i++){
+            let x = getSubTree(tree.children[i], id);
+            if(x){
+                return x;
+            }
+        }
+    }
+}
 
 module.exports.getAllGuys = getAllGuys;
 module.exports.getRelationTree = getRelationTree;
+module.exports.getSubTree = getSubTree;
