@@ -2,9 +2,9 @@
   <div id="app">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <error :msg="errored.response.data"></error>
+      <error :msg="errored.response.data">{{errored}}</error>
     </section>
-
+    
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
@@ -20,7 +20,7 @@
       </div>
 
       <!-- Called When No data is found -->
-      <div v-else-if="tempData==undefined">
+      <div v-else-if="tempData==undefined || images == undefined">
         <TreeTitle :meta="title[0]"></TreeTitle>
         <img src="../assets/family_bg.jpg" class="col-7" style="margin-top:50px" />
         <center>
@@ -106,10 +106,10 @@
 
 <script>
 import TreeChart from "@/components/TreeChart";
-import ProdData from "../data.js";
 import axios from "axios";
 import TreeTitle from "../components/TreeTitle";
 import Error from "./Error";
+import Store from "../store/index";
 
 export default {
   name: "MainTree",
@@ -122,49 +122,75 @@ export default {
     return {
       landscape: [],
       surname: this.$route.params.id,
-      loading: true,
-      tempData: null,
-      errored: false,
-      images: {},
-      title: null,
-      is_session: null,
       cookey: "",
       cookeyStatus: null,
       vloading: false,
       retry: false
     };
   },
+  computed: {
+    loading: {
+      get() {
+        return Store.state.loading;
+      }
+    },
+    images: {
+      get() {
+        return Store.state.images;
+      }
+    },
+    tempData: {
+      get() {
+        return Store.state.tree;
+      }
+    },
+    title: {
+      get() {
+        return Store.state.title;
+      }
+    },
+    is_session: {
+      get() {
+        return Store.state.is_session;
+      }
+    },
+    errored: {
+      get() {
+        return Store.state.error;
+      }
+    }
+  },
   mounted() {
-    axios
-      .get(
-        ProdData.getHostURL() +
-          "/tree/" +
-          this.surname +
-          "/person/" +
-          this.id +
-          "/images"
-      )
-      .then(data => {
-        this.images = data.data[0];
-        axios
-          .get(ProdData.getHostURL() + "/tree/" + this.surname)
-          .then(data => {
-            this.tempData = data.data.tree;
-            this.title = data.data.meta;
-            this.is_session = data.data.has_session;
-          })
-          .catch(err => {
-            this.errored = err;
-            console.log("Error : " + err);
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      })
-      .catch(err => {
-        this.errored = err;
-        console.log("Error : " + err);
-      });
+    // axios
+    //   .get(
+    //     ProdData.getHostURL() +
+    //       "/tree/" +
+    //       this.surname +
+    //       "/person/" +
+    //       this.id +
+    //       "/images"
+    //   )
+    //   .then(data => {
+    //     this.images = data.data[0];
+    //     axios
+    //       .get(ProdData.getHostURL() + "/tree/" + this.surname)
+    //       .then(data => {
+    //         this.tempData = data.data.tree;
+    //         this.title = data.data.meta;
+    //         this.is_session = data.data.has_session;
+    //       })
+    //       .catch(err => {
+    //         this.errored = err;
+    //         console.log("Error : " + err);
+    //       })
+    //       .finally(() => {
+    //         this.loading = false;
+    //       });
+    //   })
+    //   .catch(err => {
+    //     this.errored = err;
+    //     console.log("Error : " + err);
+    //   });
 
     //called after adding a new member
     this.$root.$on("update-tree", data => {
@@ -236,10 +262,6 @@ a:hover {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
-}
-#app .avat {
-  border-radius: 2em;
-  border-width: 2px;
 }
 #app .name {
   font-weight: 700;

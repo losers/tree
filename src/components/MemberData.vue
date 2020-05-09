@@ -8,23 +8,19 @@
           <p>{{errored}}</p>
         </section>
         <section v-else>
-          <!-- Memberdata while loading -->
           <div v-if="loading" style="margin-top:240px">
             <center>
               <img src="@/assets/dna.gif" />
             </center>
           </div>
-
-          <!-- Memberdata Content -->
           <div v-else>
             <div class="container_image mx-auto">
-              <!-- DP -->
               <div v-if="imageExists">
                 <img
                   :src="previewImage"
                   alt="Avatar"
                   class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
+                  style="border-radius: 50%;width: 150px;" 
                 />
               </div>
               <div v-else>
@@ -36,7 +32,6 @@
                 />
               </div>
 
-              <!-- DP Edit Button -->
               <div class="middle" v-show="cookeyStatus">
                 <div class="member-txt">
                   <a class="btn" @click="show=true">
@@ -47,7 +42,6 @@
               </div>
             </div>
 
-            <!-- Upload image button -->
             <button
               @click="uploadImage"
               v-show="showUpload"
@@ -65,7 +59,6 @@
               </span>
             </button>
 
-            <!-- Upload image alert box -->
             <my-upload
               field="img"
               @crop-success="cropSuccess"
@@ -76,8 +69,6 @@
               v-model="show"
               img-format="jpg"
             ></my-upload>
-
-            <!-- Memberdata -->
             <table class="table table-borderless table-hover mt-5 table-data">
               <tbody class="text-left" style="color:black">
                 <tr class="text-center">
@@ -120,41 +111,32 @@
                     {{data.gender=="1"?"Male":"Female"}}
                   </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                   <td style="border-left:3px solid black;">
                     <i class="icofont-listing-box"></i>
                     Add some description here
                   </td>
-                </tr>-->
+                </tr>
               </tbody>
-
-              <!-- Tree Edit buttons -->
               <transition name="fade" mode="out-in">
                 <div class="mx-auto col-12" v-if="cookeyStatus">
-                  <!-- Add Parent -->
                   <button
                     @click="addMember(0)"
                     class="col-10 btn btn-warning mb-3"
                     v-show="!data.parent_id"
                   >+ Add Parent</button>
-
-                  <!-- Add Child -->
                   <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
-                  <!-- Add Mate -->
                   <button
                     v-show="!hasMate"
                     @click="addMember('gender')"
                     class="col-10 btn btn-primary mb-3"
                   >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
 
-                  <!-- Delete Member -->
-                  <button @click="deleteMember" class="btn btn-danger col-10 mb-3">
+                  <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
                     <i class="icofont-ui-delete"></i> Delete
                   </button>
                 </div>
-
-                <!-- Auth Key Authentication -->
                 <div v-else>
                   <span class="col-4">
                     <input
@@ -170,6 +152,7 @@
                       :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
                       :disabled="loading"
                     >
+                      <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
                       <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
                       {{retry?"Retry":"Validate"}}
                     </button>
@@ -189,9 +172,16 @@ import Drawer from "vue-simple-drawer";
 import axios from "axios";
 const Compress = require("compress.js");
 import myUpload from "vue-image-crop-upload/upload-2.vue";
+import Vue from "vue";
+import VModal from "vue-js-modal";
 import Delete from "../components/DeleteMember";
 import CommonForm from "./AddCommonForm";
 import ProdData from "../data.js";
+
+Vue.use(VModal, {
+  dynamic: true,
+  injectModalsContainer: true
+});
 
 export default {
   name: "MemberData",
@@ -237,9 +227,7 @@ export default {
     this.cookeyStatus = null; //Check version
     //Person Data API
     axios
-      .get(
-        ProdData.getHostURL() + "/tree/" + this.surname + "/person/" + this.id
-      )
+      .get(ProdData.getHostURL()+"/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
@@ -257,8 +245,7 @@ export default {
     //Image data API
     axios
       .get(
-        ProdData.getHostURL() +
-          "/tree/" +
+        ProdData.getHostURL()+"/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -291,19 +278,16 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       this.url =
-        ProdData.getHostURL() +
-        "/tree/" +
+        ProdData.getHostURL()+"/tree/" +
         this.surname +
         "/person/" +
         this.id +
         "/image";
       axios
         .post(this.url, params)
-        .then(function(data) {
-          console.log(data);
+        .then(function() {
         })
-        .catch(function(err) {
-          console.log(err);
+        .catch(function() {
         })
         .finally(() => {
           this.doneUpload = true;
@@ -314,7 +298,7 @@ export default {
     },
     validate() {
       this.vloading = true;
-      let sessionUrl = ProdData.getHostURL() + "/sessions/";
+      let sessionUrl = ProdData.getHostURL()+"/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;
@@ -324,9 +308,8 @@ export default {
           this.cookeyStatus = true;
           this.vloading = false;
         })
-        .catch(err => {
+        .catch(() => {
           this.retry = true;
-          console.log(err);
         })
         .finally(() => {
           this.vloading = false;

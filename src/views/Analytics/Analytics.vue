@@ -25,7 +25,7 @@
       </div>
 
       <!-- Relations Data -->
-      <div class="col-9">
+      <div class="col-9" style="padding-top:100px">
         <router-view></router-view>
       </div>
     </div>

@@ -29,18 +29,18 @@ const myrouter = new VueRouter({
                 {
                     path: "analytics",
                     name: "Analytics",
-                    redirect : "analytics/relation-finder",
+                    redirect: "analytics/relation-finder",
                     component: () => import('./views/Analytics/Analytics'),
                     children: [
                         {
                             path: 'relation-finder',
                             name: "RelationFinder",
-                            component: () => import('./views/Analytics/AnalyticsFrame')
+                            component: () => import('./views/Analytics/Finder')
                         },
                         {
                             path: 'subtree',
                             name: "Subtree",
-                            component: () => import('./views/Analytics/AnalyticsFrame')
+                            component: () => import('./views/Analytics/SubTree')
                         }
                     ]
                 },
