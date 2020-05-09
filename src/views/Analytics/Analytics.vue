@@ -55,6 +55,7 @@ export default {
 }
 .router-link-active {
   color: black;
+  font-weight: bold;
 }
 .titlebar a{
   color: #007bff; 
