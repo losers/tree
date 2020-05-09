@@ -22,7 +22,12 @@
             <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
           <center>
-            <touch-ripple @click.native="showModal = true" class="button-box" :speed="1.1" v-show="addFamilyBtn">
+            <touch-ripple
+              @click.native="addFamilyBtn"
+              class="button-box"
+              :speed="1.1"
+              v-show="addFBtn"
+            >
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
@@ -36,11 +41,12 @@
                 style="color:white; font-size:25px"
                 data-toggle="tooltip"
                 title="Celebrity Family"
-                v-if="data.celeb"
+                v-show="data.celeb"
               ></i>
-              <router-link :to="{name:'MainTree', params:{id:data.surname}}">
+              <a :href="'/'+data.surname" class="title">{{data.title}}</a>
+              <!-- <router-link :to="{name:'MainTree', params:{id:data.surname}}">
                 <div class="title">{{data.title}}</div>
-              </router-link>
+              </router-link>-->
               <p class="surname">Surname : {{data.surname}}</p>
             </div>
           </center>
@@ -669,7 +675,6 @@ a:hover {
 <script>
 import axios from "axios";
 import AddFamily from "../modals/AddFamily";
-
 import { touchRipple } from "vue-touch-ripple";
 import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
@@ -684,7 +689,7 @@ export default {
       errored: false,
       callMe: false,
       showModal: false,
-      addFamilyBtn: true
+      addFBtn: true
     };
   },
   components: {
@@ -693,12 +698,15 @@ export default {
     VueTyper
   },
   methods: {
-    addFamily() {
-      console.log("adding family");
+    addFamilyBtn() {
+      if (navigator.cookieEnabled) {
+        this.showModal = true;
+      } else {
+        alert("Please enable cookies to Start creating a family");
+      }
     },
     toggleBodyClass(addRemoveClass, className) {
       const el = document.body;
-
       if (addRemoveClass === "addClass") {
         el.classList.add(className);
       } else {
@@ -711,10 +719,10 @@ export default {
   },
   mounted() {
     if (this.$device.mobile) {
-      this.addFamilyBtn = false
+      this.addFBtn = false;
     }
     axios
-      .get(ProdData.getHostURL()+"/meta")
+      .get(ProdData.getHostURL() + "/meta")
       .then(response => {
         this.toggleBodyClass("addClass", "j-stars");
         this.info = response.data;

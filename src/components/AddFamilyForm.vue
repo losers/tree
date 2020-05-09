@@ -5,7 +5,6 @@
       <span class="close-btn" @click="goBack">x</span>
       <span v-if="surname" class="ml-1">for {{surname}}</span>
     </h3>
-
     <transition name="fade" mode="out-in">
       <!-- UI will be displayed after clking delete button -->
       <div v-if="isDelete&&!created">

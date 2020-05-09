@@ -4,6 +4,7 @@
     <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
       <div v-if="open">
         <section v-if="errored">
+          err
           <p>{{errored}}</p>
         </section>
         <section v-else>
@@ -215,7 +216,6 @@ export default {
   watch: {
     imageData: {
       handler: function(val) {
-        console.log(val);
         if (val) {
           this.showUpload = true;
         }
@@ -225,6 +225,7 @@ export default {
   mounted() {
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = null; //Check version
+    //Person Data API
     axios
       .get(ProdData.getHostURL()+"/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
@@ -233,6 +234,7 @@ export default {
         }
         this.data = data.data;
         this.cookeyStatus = this.data.has_session;
+        console.log(this.data);
       })
       .catch(err => {
         this.errored = err;
@@ -240,7 +242,7 @@ export default {
       .finally(() => {
         this.loading = false;
       });
-
+    //Image data API
     axios
       .get(
         ProdData.getHostURL()+"/tree/" +
@@ -250,20 +252,15 @@ export default {
           "/image"
       )
       .then(data => {
+        console.log(data.data);
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
             this.imageExists = false;
           } else {
             this.imageExists = true;
-            console.log("exists no");
           }
         }
-      })
-      .catch(err => {
-        this.errored = err;
-        console.log("no");
-        this.imageExists = false;
       });
     this.$root.$on("canceled", addedMate => {
       if (addedMate) {
@@ -288,11 +285,9 @@ export default {
         "/image";
       axios
         .post(this.url, params)
-        .then(function(data) {
-          console.log(data);
+        .then(function() {
         })
-        .catch(function(err) {
-          console.log(err);
+        .catch(function() {
         })
         .finally(() => {
           this.doneUpload = true;
@@ -313,9 +308,8 @@ export default {
           this.cookeyStatus = true;
           this.vloading = false;
         })
-        .catch(err => {
+        .catch(() => {
           this.retry = true;
-          console.log(err);
         })
         .finally(() => {
           this.vloading = false;
@@ -330,7 +324,6 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-
       let x = new File([u8arr], "Something", { type: mime });
       const compress = new Compress();
       compress
@@ -414,23 +407,6 @@ export default {
         }
       );
       this.open = false;
-    },
-
-    slideMe() {
-      console.log("Slideme");
-      if (this.$route.params.member) {
-        this.open = false;
-        setTimeout(() => {
-          this.$router.push({
-            name: "MainTree",
-            params: this.$route.params.id
-          });
-        }, 300);
-      }
-    },
-
-    disable() {
-      console.log("Disabled");
     }
   }
 };
@@ -440,7 +416,6 @@ export default {
 .vue-simple-drawer {
   left: 70% !important;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
@@ -448,18 +423,15 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
 .vue-simple-drawer {
   background: white !important;
   box-shadow: 20px black;
@@ -467,11 +439,9 @@ input[type="number"] {
   -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
 }
-
 .container_image {
   position: relative;
 }
-
 .image {
   opacity: 1;
   display: block;
@@ -480,7 +450,6 @@ input[type="number"] {
   transition: 0.5s ease;
   backface-visibility: hidden;
 }
-
 .middle {
   transition: 0.5s ease;
   opacity: 0;
@@ -491,15 +460,12 @@ input[type="number"] {
   -ms-transform: translate(-50%, -50%);
   text-align: center;
 }
-
 .container_image:hover .image {
   opacity: 0.3;
 }
-
 .container_image:hover .middle {
   opacity: 1;
 }
-
 .member-txt {
   background-color: #4caf50;
   border-radius: 5px;

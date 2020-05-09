@@ -2,26 +2,25 @@
   <div id="app">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <!-- <p>{{errored.response.data}}</p> -->
-      <error :msg="errored.response.data"></error>
+      <error :msg="errored.response.data">{{errored}}</error>
     </section>
-
+    
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
 
-      <div v-if="loading" style="padding-top:240px">
-        <!-- <router-link :to="{name:'Home'}" class="float-left mt-3 ml-1">
+      <div v-if="loading">
+        <router-link :to="{name:'Home'}" class="float-left mt-2 ml-1">
           <i class="icofont-arrow-left"></i>
           Back
-        </router-link>-->
-        <center>
+        </router-link>
+        <center style="padding-top:240px">
           <img src="@/assets/dna.gif" />
         </center>
       </div>
 
       <!-- Called When No data is found -->
-      <div v-else-if="tempData==undefined">
+      <div v-else-if="tempData==undefined || images == undefined">
         <TreeTitle :meta="title[0]"></TreeTitle>
         <img src="../assets/family_bg.jpg" class="col-7" style="margin-top:50px" />
         <center>
@@ -29,14 +28,13 @@
             <div class="col-3"></div>
             <ul class="col-8">
               <li>
-                <h3 class="d-flex content-justify-left ml-2">
-                  Add Members in a Top Down Manner
-                </h3>
+                <h3 class="d-flex content-justify-left ml-2">Add Members in a Top Down Manner</h3>
               </li>
               <li>
-                <h5 class="d-flex content-justify-left ml-4 mb-4" style="color: #0039a9;">
-                  E.g : Grand Father -> Father -> Child
-                </h5>
+                <h5
+                  class="d-flex content-justify-left ml-4 mb-4"
+                  style="color: #0039a9;"
+                >E.g : Grand Father -> Father -> Child</h5>
               </li>
               <li>
                 <h3
@@ -46,7 +44,8 @@
             </ul>
           </div>
         </center>
-        <div id="wrapper">
+
+        <div id="wrapper" v-if="is_session">
           <button @click="createRoot" class="my-super-cool-btn">
             <div class="dots-container">
               <div class="dot"></div>
@@ -56,6 +55,27 @@
             </div>
             <span style="color:#0039A9">Add!</span>
           </button>
+        </div>
+        <div v-else>
+          <span class="col-4">
+            <input
+              class="form-control input-sm"
+              placeholder="Enter Key to Edit"
+              v-model="cookey"
+              onkeypress="if(this.value.length==4) return false;"
+              type="number"
+            />
+            <button
+              v-show="cookey.length==4"
+              @click="validate"
+              :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+              :disabled="loading"
+            >
+              <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
+              <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+              {{retry?"Retry":"Validate"}}
+            </button>
+          </span>
         </div>
       </div>
 
@@ -86,10 +106,10 @@
 
 <script>
 import TreeChart from "@/components/TreeChart";
-import ProdData from "../data.js";
 import axios from "axios";
 import TreeTitle from "../components/TreeTitle";
 import Error from "./Error";
+import Store from "../store/index";
 
 export default {
   name: "MainTree",
@@ -102,44 +122,75 @@ export default {
     return {
       landscape: [],
       surname: this.$route.params.id,
-      loading: true,
-      tempData: null,
-      errored: false,
-      images: {},
-      title: null,
-      is_session: null
+      cookey: "",
+      cookeyStatus: null,
+      vloading: false,
+      retry: false
     };
   },
+  computed: {
+    loading: {
+      get() {
+        return Store.state.loading;
+      }
+    },
+    images: {
+      get() {
+        return Store.state.images;
+      }
+    },
+    tempData: {
+      get() {
+        return Store.state.tree;
+      }
+    },
+    title: {
+      get() {
+        return Store.state.title;
+      }
+    },
+    is_session: {
+      get() {
+        return Store.state.is_session;
+      }
+    },
+    errored: {
+      get() {
+        return Store.state.error;
+      }
+    }
+  },
   mounted() {
-    axios
-      .get(
-          ProdData.getHostURL() +"/tree/"+
-          this.surname +
-          "/person/" +
-          this.id +
-          "/images"
-      )
-      .then(data => {
-        this.images = data.data[0];
-        axios
-          .get(ProdData.getHostURL() +"/tree/"+ this.surname)
-          .then(data => {
-            this.tempData = data.data.tree;
-            this.title = data.data.meta;
-            this.is_session = data.data.has_session;
-          })
-          .catch(err => {
-            this.errored = err;
-            console.log("Error : " + err);
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      })
-      .catch(err => {
-        this.errored = err;
-        console.log("Error : " + err);
-      });
+    // axios
+    //   .get(
+    //     ProdData.getHostURL() +
+    //       "/tree/" +
+    //       this.surname +
+    //       "/person/" +
+    //       this.id +
+    //       "/images"
+    //   )
+    //   .then(data => {
+    //     this.images = data.data[0];
+    //     axios
+    //       .get(ProdData.getHostURL() + "/tree/" + this.surname)
+    //       .then(data => {
+    //         this.tempData = data.data.tree;
+    //         this.title = data.data.meta;
+    //         this.is_session = data.data.has_session;
+    //       })
+    //       .catch(err => {
+    //         this.errored = err;
+    //         console.log("Error : " + err);
+    //       })
+    //       .finally(() => {
+    //         this.loading = false;
+    //       });
+    //   })
+    //   .catch(err => {
+    //     this.errored = err;
+    //     console.log("Error : " + err);
+    //   });
 
     //called after adding a new member
     this.$root.$on("update-tree", data => {
@@ -163,6 +214,8 @@ export default {
             params: { member: node.data.id }
           });
         }
+      } else {
+        console.log("opening mobile view");
       }
     },
 
@@ -171,6 +224,29 @@ export default {
       this.$router.push({
         name: "AddRoot"
       });
+    },
+
+    //handling sessions
+    validate() {
+      this.vloading = true;
+      let sessionUrl = "http://localhost:5000/sessions/";
+      let params = {};
+      params.pin = this.cookey;
+      params.surname = this.surname;
+      axios
+        .post(sessionUrl, params)
+        .then(data => {
+          console.log(data);
+          this.is_session = true;
+          this.vloading = false;
+        })
+        .catch(err => {
+          this.retry = true;
+          console.log(err);
+        })
+        .finally(() => {
+          this.vloading = false;
+        });
     }
   }
 };
@@ -186,10 +262,6 @@ a:hover {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
-}
-#app .avat {
-  border-radius: 2em;
-  border-width: 2px;
 }
 #app .name {
   font-weight: 700;

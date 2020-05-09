@@ -208,7 +208,9 @@ td {
 }
 .node .mate .avat {
   border: 2px solid green !important;
+  border-radius: 50%;
 }
+
 .node .person .avat {
   display: block;
   width: 4em;
@@ -218,6 +220,7 @@ td {
   background: #fff;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  border-radius: 50%;
 }
 .node .person .avat img {
   width: 100%;

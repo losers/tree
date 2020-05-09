@@ -2,13 +2,7 @@
   <div></div>
 </template>
 <script>
-import Vue from "vue";
-import VModal from "vue-js-modal";
 import AddMember from "../components/AddMemberForm.vue";
-Vue.use(VModal, {
-  dynamic: true,
-  injectModalsContainer: true
-});
 
 export default {
   name: "AddMember",

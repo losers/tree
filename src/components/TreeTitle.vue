@@ -9,6 +9,11 @@
       <span v-show="is_session && !this.$device.mobile">
         <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
       </span>
+      <span v-show="!this.$device.mobile" class="float-right mr-3 mb-2">
+        <router-link :to="{name:'Analytics'}">
+          <i class="icofont-unique-idea" style="font-size:30px"></i>
+        </router-link>
+      </span>
     </p>
   </div>
 </template>

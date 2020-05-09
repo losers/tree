@@ -23,30 +23,65 @@ const myrouter = new VueRouter({
         {
             path: "/:id",
             name: "MainTree",
-            component: MainTree,
+            redirect: "/:id/",
+            component: () => import('./views/Selections.vue'),
             children: [
                 {
-                    path: "addroot",
-                    name: "AddRoot",
-                    component: AddRoot,
-                },
-                {
-                    path: ":member",
-                    name: "MemberData",
-                    component: () => import('./components/MemberData'),
+                    path: "analytics",
+                    name: "Analytics",
+                    redirect: "analytics/relation-finder",
+                    component: () => import('./views/Analytics/Analytics'),
                     children: [
                         {
-                            path: ":type",
-                            name: "AddMember",
-                            component: AddMember,
-
+                            path: 'relation-finder',
+                            name: "RelationFinder",
+                            component: () => import('./views/Analytics/Finder')
+                        },
+                        {
+                            path: 'subtree',
+                            name: "Subtree",
+                            component: () => import('./views/Analytics/SubTree')
                         }
                     ]
-                }
+                },
+                {
+                    path: "",
+                    name: "Tree",
+                    component: MainTree,
+                    children: [
+                        {
+                            path: "addroot",
+                            name: "AddRoot",
+                            component: AddRoot,
+                        },
+                        {
+                            path: ":member",
+                            name: "MemberData",
+                            component: () => import('./components/MemberData'),
+                            children: [
+                                {
+                                    path: ":type",
+                                    name: "AddMember",
+                                    component: AddMember,
+
+                                }
+                            ]
+                        }
+                    ]
+                },
             ]
         },
 
     ]
 });
+
+// myrouter.beforeEach((to, from, next) => {
+//     if (to.name == 'MainTree') {
+//         next({ name: 'Tree' }); 
+//     }
+//     else {
+//         next();
+//     }
+// })
 
 export default myrouter;
