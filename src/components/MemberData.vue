@@ -1,9 +1,10 @@
 <template>
   <div style="left:70%!important;">
     <router-view></router-view>
-    <Drawer @close="toggle" align="right" :closeable="true">
+    <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
       <div v-if="open">
         <section v-if="errored">
+          err
           <p>{{errored}}</p>
         </section>
         <section v-else>
@@ -209,6 +210,7 @@ export default {
       type: this.$route.params.type,
       previewImage: null,
       imageData: "",
+      show: false,
       url: null,
       showUpload: false,
       loadingUpload: false,
@@ -216,7 +218,7 @@ export default {
       imageExists: false,
       cookey: "",
       cookeyStatus: null,
-      vloading: false, //auth key validator loading
+      vloading: false,
       hasMate: false,
       retry: false //stores key status
     };
@@ -232,7 +234,7 @@ export default {
   },
   mounted() {
     this.hasMate = this.$route.query.hasMate;
-
+    this.cookeyStatus = null; //Check version
     //Person Data API
     axios
       .get(
@@ -244,6 +246,7 @@ export default {
         }
         this.data = data.data;
         this.cookeyStatus = this.data.has_session;
+        console.log(this.data);
       })
       .catch(err => {
         this.errored = err;
@@ -251,7 +254,6 @@ export default {
       .finally(() => {
         this.loading = false;
       });
-
     //Image data API
     axios
       .get(
@@ -263,6 +265,7 @@ export default {
           "/image"
       )
       .then(data => {
+        console.log(data.data);
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
@@ -271,26 +274,17 @@ export default {
             this.imageExists = true;
           }
         }
-      })
-      .catch(err => {
-        this.errored = err;
-        this.imageExists = false;
       });
-
-    //Recieves emit when add member form is canceled
-    this.$root.$on("canceled", () => {
-      // if (addedMate) {
-      //   this.hasMate = false;
-      // }
+    this.$root.$on("canceled", addedMate => {
+      if (addedMate) {
+        this.hasMate = false;
+      }
       this.open = true;
     });
-
     if (this.type === undefined) {
       this.open = true;
-      this.errored = "Something went yummy fishyyy :)";
     }
   },
-
   methods: {
     uploadImage() {
       this.loadingUpload = true;
@@ -318,8 +312,6 @@ export default {
           }, 2000);
         });
     },
-
-    //Auth key validation
     validate() {
       this.vloading = true;
       let sessionUrl = ProdData.getHostURL() + "/sessions/";
@@ -349,7 +341,6 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-
       let x = new File([u8arr], "Something", { type: mime });
       const compress = new Compress();
       compress
@@ -370,13 +361,11 @@ export default {
       if (!this.$route.params.type) {
         this.open = false;
         this.$router.push({
-          name: "Tree",
+          name: "MainTree",
           params: { id: this.$route.params.id }
         });
       }
     },
-
-    //Memberdata Update Form Model
     showUpdateForm(formd) {
       this.open = false;
       this.$modal.show(
@@ -392,8 +381,6 @@ export default {
         }
       );
     },
-
-    //Add Member calling model
     addMember(num) {
       if (num == "gender") {
         if (this.data.gender == "1") {
@@ -403,6 +390,7 @@ export default {
         }
       }
       this.open = false;
+      console.log(num);
       if (this.$route.query.hasMate) {
         this.$router.push({
           name: "AddMember",
@@ -422,8 +410,7 @@ export default {
         });
       }
     },
-    deleteMember() {
-      this.open = false;
+    deleteSwipe() {
       this.$modal.show(
         Delete,
         {
@@ -436,7 +423,8 @@ export default {
           draggable: true
         }
       );
-    },
+      this.open = false;
+    }
   }
 };
 </script>
@@ -445,7 +433,6 @@ export default {
 .vue-simple-drawer {
   left: 70% !important;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
@@ -453,18 +440,15 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
 .vue-simple-drawer {
   background: white !important;
   box-shadow: 20px black;
@@ -472,11 +456,9 @@ input[type="number"] {
   -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
 }
-
 .container_image {
   position: relative;
 }
-
 .image {
   opacity: 1;
   display: block;
@@ -485,7 +467,6 @@ input[type="number"] {
   transition: 0.5s ease;
   backface-visibility: hidden;
 }
-
 .middle {
   transition: 0.5s ease;
   opacity: 0;
@@ -496,19 +477,17 @@ input[type="number"] {
   -ms-transform: translate(-50%, -50%);
   text-align: center;
 }
-
 .container_image:hover .image {
   opacity: 0.3;
 }
-
 .container_image:hover .middle {
   opacity: 1;
 }
-
 .member-txt {
   background-color: #4caf50;
   border-radius: 5px;
   color: white;
   font-size: 10px;
+  /* padding: 2px 4px; */
 }
 </style>

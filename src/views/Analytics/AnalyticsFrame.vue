@@ -4,7 +4,7 @@
     <div class="row">
       <vSelect :options="names" v-model="p1" class="col-3"></vSelect>
       <vSelect :options="names" v-model="p2" class="col-3"></vSelect>
-      <button class="btn btn-success" @click="submit">Search</button>
+      <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
       <span v-show="result">{{result}}</span>
     </div>
   </div>
