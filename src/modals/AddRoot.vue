@@ -2,7 +2,6 @@
   <div></div>
 </template>
 <script>
-import Vue from "vue";
 import AddRootForm from "../components/AddRootForm.vue";
 
 export default {

@@ -2,7 +2,6 @@
   <div></div>
 </template>
 <script>
-import Vue from "vue";
 import AddMember from "../components/AddMemberForm.vue";
 
 export default {

@@ -1,29 +1,25 @@
 <template>
   <div style="left:70%!important;">
     <router-view></router-view>
-    <Drawer @close="toggle" align="right" :closeable="true">
+    <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
       <div v-if="open">
         <section v-if="errored">
           <p>{{errored}}</p>
         </section>
         <section v-else>
-          <!-- Memberdata while loading -->
           <div v-if="loading" style="margin-top:240px">
             <center>
               <img src="@/assets/dna.gif" />
             </center>
           </div>
-
-          <!-- Memberdata Content -->
           <div v-else>
             <div class="container_image mx-auto">
-              <!-- DP -->
               <div v-if="imageExists">
                 <img
                   :src="previewImage"
                   alt="Avatar"
                   class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
+                  style="border-radius: 50%;width: 150px;" 
                 />
               </div>
               <div v-else>
@@ -35,7 +31,6 @@
                 />
               </div>
 
-              <!-- DP Edit Button -->
               <div class="middle" v-show="cookeyStatus">
                 <div class="member-txt">
                   <a class="btn" @click="show=true">
@@ -46,7 +41,6 @@
               </div>
             </div>
 
-            <!-- Upload image button -->
             <button
               @click="uploadImage"
               v-show="showUpload"
@@ -64,7 +58,6 @@
               </span>
             </button>
 
-            <!-- Upload image alert box -->
             <my-upload
               field="img"
               @crop-success="cropSuccess"
@@ -75,8 +68,6 @@
               v-model="show"
               img-format="jpg"
             ></my-upload>
-
-            <!-- Memberdata -->
             <table class="table table-borderless table-hover mt-5 table-data">
               <tbody class="text-left" style="color:black">
                 <tr class="text-center">
@@ -119,41 +110,32 @@
                     {{data.gender=="1"?"Male":"Female"}}
                   </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                   <td style="border-left:3px solid black;">
                     <i class="icofont-listing-box"></i>
                     Add some description here
                   </td>
-                </tr>-->
+                </tr>
               </tbody>
-
-              <!-- Tree Edit buttons -->
               <transition name="fade" mode="out-in">
                 <div class="mx-auto col-12" v-if="cookeyStatus">
-                  <!-- Add Parent -->
                   <button
                     @click="addMember(0)"
                     class="col-10 btn btn-warning mb-3"
                     v-show="!data.parent_id"
                   >+ Add Parent</button>
-
-                  <!-- Add Child -->
                   <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
-                  <!-- Add Mate -->
                   <button
                     v-show="!hasMate"
                     @click="addMember('gender')"
                     class="col-10 btn btn-primary mb-3"
                   >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
 
-                  <!-- Delete Member -->
-                  <button @click="deleteMember" class="btn btn-danger col-10 mb-3">
+                  <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
                     <i class="icofont-ui-delete"></i> Delete
                   </button>
                 </div>
-
-                <!-- Auth Key Authentication -->
                 <div v-else>
                   <span class="col-4">
                     <input
@@ -169,6 +151,7 @@
                       :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
                       :disabled="loading"
                     >
+                      <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
                       <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
                       {{retry?"Retry":"Validate"}}
                     </button>
@@ -188,9 +171,16 @@ import Drawer from "vue-simple-drawer";
 import axios from "axios";
 const Compress = require("compress.js");
 import myUpload from "vue-image-crop-upload/upload-2.vue";
+import Vue from "vue";
+import VModal from "vue-js-modal";
 import Delete from "../components/DeleteMember";
 import CommonForm from "./AddCommonForm";
 import ProdData from "../data.js";
+
+Vue.use(VModal, {
+  dynamic: true,
+  injectModalsContainer: true
+});
 
 export default {
   name: "MemberData",
@@ -209,6 +199,7 @@ export default {
       type: this.$route.params.type,
       previewImage: null,
       imageData: "",
+      show: false,
       url: null,
       showUpload: false,
       loadingUpload: false,
@@ -216,7 +207,7 @@ export default {
       imageExists: false,
       cookey: "",
       cookeyStatus: null,
-      vloading: false, //auth key validator loading
+      vloading: false,
       hasMate: false,
       retry: false //stores key status
     };
@@ -232,12 +223,9 @@ export default {
   },
   mounted() {
     this.hasMate = this.$route.query.hasMate;
-
-    //Person Data API
+    this.cookeyStatus = null; //Check version
     axios
-      .get(
-        ProdData.getHostURL() + "/tree/" + this.surname + "/person/" + this.id
-      )
+      .get(ProdData.getHostURL()+"/tree/" + this.surname + "/person/" + this.id)
       .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
@@ -252,11 +240,9 @@ export default {
         this.loading = false;
       });
 
-    //Image data API
     axios
       .get(
-        ProdData.getHostURL() +
-          "/tree/" +
+        ProdData.getHostURL()+"/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -276,40 +262,32 @@ export default {
         this.errored = err;
         this.imageExists = false;
       });
-
-    //Recieves emit when add member form is canceled
-    this.$root.$on("canceled", () => {
-      // if (addedMate) {
-      //   this.hasMate = false;
-      // }
+    this.$root.$on("canceled", addedMate => {
+      if (addedMate) {
+        this.hasMate = false;
+      }
       this.open = true;
     });
-
     if (this.type === undefined) {
       this.open = true;
-      this.errored = "Something went yummy fishyyy :)";
     }
   },
-
   methods: {
     uploadImage() {
       this.loadingUpload = true;
       let params = {};
       params.image_data = this.imageData;
       this.url =
-        ProdData.getHostURL() +
-        "/tree/" +
+        ProdData.getHostURL()+"/tree/" +
         this.surname +
         "/person/" +
         this.id +
         "/image";
       axios
         .post(this.url, params)
-        .then(function(data) {
-          console.log(data);
+        .then(function() {
         })
-        .catch(function(err) {
-          console.log(err);
+        .catch(function() {
         })
         .finally(() => {
           this.doneUpload = true;
@@ -318,11 +296,9 @@ export default {
           }, 2000);
         });
     },
-
-    //Auth key validation
     validate() {
       this.vloading = true;
-      let sessionUrl = ProdData.getHostURL() + "/sessions/";
+      let sessionUrl = ProdData.getHostURL()+"/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;
@@ -332,9 +308,8 @@ export default {
           this.cookeyStatus = true;
           this.vloading = false;
         })
-        .catch(err => {
+        .catch(() => {
           this.retry = true;
-          console.log(err);
         })
         .finally(() => {
           this.vloading = false;
@@ -370,13 +345,11 @@ export default {
       if (!this.$route.params.type) {
         this.open = false;
         this.$router.push({
-          name: "Tree",
+          name: "MainTree",
           params: { id: this.$route.params.id }
         });
       }
     },
-
-    //Memberdata Update Form Model
     showUpdateForm(formd) {
       this.open = false;
       this.$modal.show(
@@ -392,8 +365,6 @@ export default {
         }
       );
     },
-
-    //Add Member calling model
     addMember(num) {
       if (num == "gender") {
         if (this.data.gender == "1") {
@@ -422,8 +393,7 @@ export default {
         });
       }
     },
-    deleteMember() {
-      this.open = false;
+    deleteSwipe() {
       this.$modal.show(
         Delete,
         {
@@ -436,7 +406,20 @@ export default {
           draggable: true
         }
       );
+      this.open = false;
     },
+
+    slideMe() {
+      if (this.$route.params.member) {
+        this.open = false;
+        setTimeout(() => {
+          this.$router.push({
+            name: "MainTree",
+            params: this.$route.params.id
+          });
+        }, 300);
+      }
+    }
   }
 };
 </script>
@@ -510,5 +493,6 @@ input[type="number"] {
   border-radius: 5px;
   color: white;
   font-size: 10px;
+  /* padding: 2px 4px; */
 }
 </style>
