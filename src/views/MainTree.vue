@@ -20,7 +20,7 @@
       </div>
 
       <!-- Called When No data is found -->
-      <div v-else-if="tempData==undefined || images == undefined">
+      <div v-else-if="tempData==undefined">
         <TreeTitle :meta="title[0]"></TreeTitle>
         <img src="../assets/family_bg.jpg" class="col-7" style="margin-top:50px" />
         <center>
