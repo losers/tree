@@ -11,7 +11,7 @@
       </span>
       <span v-show="!this.$device.mobile" class="float-right mr-3 mb-2">
         <router-link :to="{name:'Analytics'}">
-          <i class="icofont-unique-idea" style="font-size:30px"></i>
+          <i class="icofont-chart-bar-graph" style="font-size:30px"></i>
         </router-link>
       </span>
     </p>

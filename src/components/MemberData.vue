@@ -20,7 +20,7 @@
                   :src="previewImage"
                   alt="Avatar"
                   class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;" 
+                  style="border-radius: 50%;width: 150px;"
                 />
               </div>
               <div v-else>
@@ -111,12 +111,12 @@
                     {{data.gender=="1"?"Male":"Female"}}
                   </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td style="border-left:3px solid black;">
                     <i class="icofont-listing-box"></i>
                     Add some description here
                   </td>
-                </tr>
+                </tr>-->
               </tbody>
               <transition name="fade" mode="out-in">
                 <div class="mx-auto col-12" v-if="cookeyStatus">
@@ -177,6 +177,7 @@ import VModal from "vue-js-modal";
 import Delete from "../components/DeleteMember";
 import CommonForm from "./AddCommonForm";
 import ProdData from "../data.js";
+import Store from "../store/index";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -227,7 +228,9 @@ export default {
     this.cookeyStatus = null; //Check version
     //Person Data API
     axios
-      .get(ProdData.getHostURL()+"/tree/" + this.surname + "/person/" + this.id)
+      .get(
+        ProdData.getHostURL() + "/tree/" + this.surname + "/person/" + this.id
+      )
       .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
@@ -245,7 +248,8 @@ export default {
     //Image data API
     axios
       .get(
-        ProdData.getHostURL()+"/tree/" +
+        ProdData.getHostURL() +
+          "/tree/" +
           this.surname +
           "/person/" +
           this.id +
@@ -278,17 +282,16 @@ export default {
       let params = {};
       params.image_data = this.imageData;
       this.url =
-        ProdData.getHostURL()+"/tree/" +
+        ProdData.getHostURL() +
+        "/tree/" +
         this.surname +
         "/person/" +
         this.id +
         "/image";
       axios
         .post(this.url, params)
-        .then(function() {
-        })
-        .catch(function() {
-        })
+        .then(function() {})
+        .catch(function() {})
         .finally(() => {
           this.doneUpload = true;
           setTimeout(() => {
@@ -298,7 +301,7 @@ export default {
     },
     validate() {
       this.vloading = true;
-      let sessionUrl = ProdData.getHostURL()+"/sessions/";
+      let sessionUrl = ProdData.getHostURL() + "/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;
@@ -307,6 +310,7 @@ export default {
         .then(() => {
           this.cookeyStatus = true;
           this.vloading = false;
+          Store.commit("setSession", true);
         })
         .catch(() => {
           this.retry = true;

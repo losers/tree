@@ -45,6 +45,11 @@ const myrouter = new VueRouter({
                     ]
                 },
                 {
+                    path: "timeline",
+                    name: "Timeline",
+                    component: () => import('./views/Timeline.vue')
+                },
+                {
                     path: "",
                     name: "Tree",
                     component: MainTree,
@@ -59,6 +64,7 @@ const myrouter = new VueRouter({
                             name: "MemberData",
                             component: () => import('./components/MemberData'),
                             children: [
+
                                 {
                                     path: ":type",
                                     name: "AddMember",
