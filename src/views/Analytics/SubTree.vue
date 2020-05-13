@@ -7,8 +7,8 @@
         <vSelect :options="names" v-model="p1" class="col-3"></vSelect>
         <button class="btn btn-success" @click="submit" :disabled="!p1">Search</button>
       </div>
-
-      <TreeChart :json="tree" :images="images" style="padding-top:70px" />
+      <img v-if="!selected" src="../../assets/tree_gen.jpg" class="mt-5" height="250px" width="200px" />
+      <TreeChart v-else :json="tree" :images="images" style="padding-top:70px" />
     </center>
   </div>
 </template>
@@ -24,7 +24,8 @@ export default {
   data() {
     return {
       p1: null,
-      tree: {}
+      tree: {},
+      selected: false
     };
   },
   components: {
@@ -45,6 +46,7 @@ export default {
   },
   methods: {
     submit() {
+      this.selected = true;
       this.tree = Algos.getSubTree(Store.getters.getTreeData, this.p1.value);
     }
   }

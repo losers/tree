@@ -4,7 +4,7 @@
     <section v-if="errored">
       <error :msg="errored.response.data">{{errored}}</error>
     </section>
-    
+
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
@@ -21,25 +21,22 @@
 
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
-        <TreeTitle :meta="title[0]"></TreeTitle>
-        <img src="../assets/family_bg.jpg" class="col-7" style="margin-top:50px" />
+        <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
+        <img src="../assets/stickman_family.jpg" class="col-7" style="margin-top:160px" />
         <center>
           <div class="row">
             <div class="col-3"></div>
             <ul class="col-8">
               <li>
-                <h3 class="d-flex content-justify-left ml-2">Add Members in a Top Down Manner</h3>
+                <h5 class="d-flex content-justify-left ml-2 mt-5">Add Members in a Top Down Manner</h5>
               </li>
+              <h6
+                class="d-flex content-justify-left ml-2 mb-4"
+              >E.g : Grand Father -> Father -> Child</h6>
               <li>
                 <h5
-                  class="d-flex content-justify-left ml-4 mb-4"
-                  style="color: #0039a9;"
-                >E.g : Grand Father -> Father -> Child</h5>
-              </li>
-              <li>
-                <h3
                   class="d-flex content-justify-left ml-2"
-                >Share your tree to your family members to collaborate</h3>
+                >Share your tree to your family members to collaborate</h5>
               </li>
             </ul>
           </div>
@@ -53,29 +50,31 @@
               <div class="dot"></div>
               <div class="dot"></div>
             </div>
-            <span style="color:#0039A9">Add!</span>
+            <span style="font-size:18px; font-weight:900">Add!</span>
           </button>
         </div>
         <div v-else>
-          <span class="col-4">
-            <input
-              class="form-control input-sm"
-              placeholder="Enter Key to Edit"
-              v-model="cookey"
-              onkeypress="if(this.value.length==4) return false;"
-              type="number"
-            />
-            <button
-              v-show="cookey.length==4"
-              @click="validate"
-              :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-              :disabled="loading"
-            >
-              <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
-              <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-              {{retry?"Retry":"Validate"}}
-            </button>
-          </span>
+          <center>
+            <div class="row col-4">
+              <input
+                class="form-control input-sm"
+                placeholder="Enter Key to Edit"
+                v-model="cookey"
+                onkeypress="if(this.value.length==4) return false;"
+                type="number"
+              />
+              <button
+                v-show="cookey.length==4"
+                @click="validate"
+                :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                :disabled="loading"
+              >
+                <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
+                <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+                {{retry?"Retry":"Validate"}}
+              </button>
+            </div>
+          </center>
         </div>
       </div>
 
@@ -125,7 +124,8 @@ export default {
       cookey: "",
       cookeyStatus: null,
       vloading: false,
-      retry: false
+      retry: false,
+      sess: null
     };
   },
   computed: {
@@ -237,7 +237,7 @@ export default {
         .post(sessionUrl, params)
         .then(data => {
           console.log(data);
-          this.is_session = true;
+          Store.commit("setSession", true);
           this.vloading = false;
         })
         .catch(err => {
@@ -289,15 +289,6 @@ h2 {
 .table-data {
   color: white;
 }
-li > h3 {
-  /* background-image: linear-gradient(#0039a9, #d9dee9); */
-  /* background: linear-gradient(right, #eee, #333); */
-  color: #0039a9;
-  background-clip: text;
-  font-weight: 600;
-  font-family: "Comfortaa", cursive;
-  /* -webkit-text-fill-color: transparent; */
-}
 #wrapper {
   width: 100vw;
   height: 120px;
@@ -317,6 +308,7 @@ li > h3 {
   letter-spacing: 1px;
   font-size: 2rem;
   box-sizing: border-box;
+  padding: 0 !important;
 }
 .my-super-cool-btn span {
   position: relative;
@@ -329,12 +321,12 @@ li > h3 {
 }
 .my-super-cool-btn span:before {
   content: "";
-  width: 75%;
-  height: 75%;
+  width: 55%;
+  height: 55%;
   display: block;
   position: absolute;
   border-radius: 100%;
-  border: 7px solid #0039a9;
+  border: 4px solid grey;
   box-sizing: border-box;
   transition: all 0.85s cubic-bezier(0.25, 1, 0.33, 1);
   -webkit-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
@@ -358,7 +350,7 @@ li > h3 {
   width: 8px;
   height: 8px;
   display: block;
-  background-color: #0039a9;
+  background-color: grey;
   border-radius: 100%;
   position: absolute;
   transition: all 0.85s cubic-bezier(0.25, 1, 0.33, 1);

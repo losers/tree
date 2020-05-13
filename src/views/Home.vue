@@ -6,7 +6,7 @@
     <section v-else>
       <div v-if="loading" style="margin-top:240px">
         <center>
-          <img src="@/assets/dna.gif" />
+          <img src="@/assets/dna.gif" alt="Family Tree Loading"/>
         </center>
       </div>
       <div v-else>
