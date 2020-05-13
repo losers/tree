@@ -10,7 +10,7 @@
         <section v-else>
           <div v-if="loading" style="margin-top:240px">
             <center>
-              <img src="@/assets/dna.gif" />
+              <img src="@/assets/dna.gif" alt="Family Tree Loading" />
             </center>
           </div>
           <div v-else>
@@ -26,7 +26,7 @@
               <div v-else>
                 <img
                   src="../assets/profile.png"
-                  alt="Avatar"
+                  alt="Family Tree Loading"
                   class="image mx-auto"
                   style="border-radius: 50%;width: 150px;"
                 />

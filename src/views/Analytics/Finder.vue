@@ -8,13 +8,7 @@
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img
-        v-if="!(p1&&p2)"
-        src="@/assets/finder.jpg"
-        style="margin-top:60px"
-        height="250px"
-        width="250px"
-      />
+      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:60px" height="250px" width="250px" />
       <div v-else-if="same">
         <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
@@ -56,7 +50,9 @@ export default {
   },
   methods: {
     submit() {
-      if (this.p1.value == this.p2.value) {
+      if (!(this.p1 && this.p2)) {
+        this.same = null;
+      } else if (this.p1.value == this.p2.value) {
         this.same = true;
       } else {
         this.same = false;
