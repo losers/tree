@@ -8,7 +8,7 @@ import device from "vue-device-detector"
 import VModal from "vue-js-modal";
 import store from './store'
 import '../node_modules/timeline-vuejs/dist/timeline-vuejs.css'
-
+ 
 Vue.use(VueParticles)
 Vue.use(device)
 Vue.use(VModal, {

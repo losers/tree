@@ -41,9 +41,7 @@
             id="male"
             required
           />
-          <label for="male" class="form-check-label ml-2">
-            Male
-          </label>
+          <label for="male" class="form-check-label ml-2">Male</label>
         </div>
         <div class="form-check">
           <input
@@ -69,9 +67,9 @@
       </div>
 
       <div class="row">
-        <label class="col-4">Is Died</label>
-        <toggle-button v-model="data.is_died" :sync="true" class="mb-4" />
-        <span class="form-inline" v-show="data.is_died">
+        <label class="col-4">Is Alive</label>
+        <toggle-button v-model="data.is_alive" :sync="true" class="mb-4" />
+        <span class="form-inline" v-show="!data.is_alive">
           <input
             type="date"
             class="form-control col-10 ml-5"
@@ -118,16 +116,17 @@ export default {
     return {
       data: {},
       loading: false,
-      is_died: null,
+      is_alive: true,
       is_error: false
     };
   },
   mounted() {
+    this.is_alive = true;
     //memdata comes from MemberData route for editing
     if (this.memData) {
       this.data = this.memData;
-      if (this.memData.is_died) {
-        this.data.is_died = true;
+      if (this.memData.is_alive) {
+        this.data.is_alive = true;
         if (this.memData.died_on) {
           this.data.died_on = this.memData.died_on;
         }
@@ -141,7 +140,7 @@ export default {
         //calls while updating
         console.log(this.memData);
         Axios.put(
-          ProdData.getHostURL()+"/tree/" + this.$route.params.id + "/person",
+          ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
           this.data
         )
           .then(() => {

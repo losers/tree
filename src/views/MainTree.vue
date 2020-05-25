@@ -67,7 +67,7 @@
                 v-show="cookey.length==4"
                 @click="validate"
                 :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-                :disabled="loading"
+                :disabled="vloading"
               >
                 <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
                 <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
@@ -89,6 +89,7 @@
             @click-node="clickNode"
             style="padding-top:70px"
           />
+          
         </center>
         <footer class="foot">
           <p>
@@ -109,13 +110,14 @@ import axios from "axios";
 import TreeTitle from "../components/TreeTitle";
 import Error from "./Error";
 import Store from "../store/index";
+import ProData from "../data.js";
 
 export default {
   name: "MainTree",
   components: {
     TreeChart,
     TreeTitle,
-    Error
+    Error,
   },
   data() {
     return {
@@ -229,7 +231,7 @@ export default {
     //handling sessions
     validate() {
       this.vloading = true;
-      let sessionUrl = "http://localhost:5000/sessions/";
+      let sessionUrl = ProData.getHostURL() + "/sessions/";
       let params = {};
       params.pin = this.cookey;
       params.surname = this.surname;
@@ -550,4 +552,5 @@ h2 {
     opacity: 0;
   }
 }
+
 </style>

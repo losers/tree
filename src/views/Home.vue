@@ -15,6 +15,7 @@
           <div id="stars2"></div>
           <div id="stars3"></div>
           <div id="title">
+            <img src="@/assets/logo.png" height="50px" class="float-left m-3" style="position:fixed;left:0">
             <span style="font-weight: 500;">Blood Line</span>
             <br />
           </div>
