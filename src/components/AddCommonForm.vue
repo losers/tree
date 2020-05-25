@@ -68,8 +68,8 @@
 
       <div class="row">
         <label class="col-4">Is Alive</label>
-        <toggle-button v-model="data.is_alive" :sync="true" class="mb-4" />
-        <span class="form-inline" v-show="!data.is_alive">
+        <toggle-button v-model="is_alive" value="true" :sync="true" class="mb-4" />
+        <span class="form-inline" v-show="!is_alive">
           <input
             type="date"
             class="form-control col-10 ml-5"
@@ -104,7 +104,6 @@
 <script>
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
-
 import ProdData from "../data.js";
 
 export default {
@@ -116,9 +115,14 @@ export default {
     return {
       data: {},
       loading: false,
-      is_alive: true,
-      is_error: false
+      is_error: false,
+      is_alive: true
     };
+  },
+  watch: {
+    is_alive() {
+      this.data.is_alive = this.is_alive;
+    }
   },
   mounted() {
     this.is_alive = true;
@@ -126,7 +130,7 @@ export default {
     if (this.memData) {
       this.data = this.memData;
       if (this.memData.is_alive) {
-        this.data.is_alive = true;
+        this.is_alive = true;
         if (this.memData.died_on) {
           this.data.died_on = this.memData.died_on;
         }
@@ -138,7 +142,6 @@ export default {
       this.loading = true;
       if (this.memData) {
         //calls while updating
-        console.log(this.memData);
         Axios.put(
           ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
           this.data
@@ -164,14 +167,12 @@ export default {
         } else if (this.$route.params.type == 0) {
           this.data.type = 0;
         }
-        console.log(this.data.type);
         this.$emit("form-submit", this.data);
       }
     },
     goBack() {
       if (this.memData) {
         this.$emit("close");
-        console.log("test");
         this.$root.$emit("canceled");
         // if (this.$route.query.hasMate) {
         //   console.log(this.$route.query.hasMate);

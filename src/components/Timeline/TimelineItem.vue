@@ -6,19 +6,16 @@
       <i
         class="icofont-ui-edit float-right"
         @click="findme(itemTimeline)"
-        v-show="show"
+        v-show="show && !itemTimeline.fixed"
         style="font-size:25px"
       ></i>
       <h4 class="title-item" v-html="itemTimeline.title" />
-      <p class="description-item mb-5" v-html="itemTimeline.content" v-linkified/>
+      <p class="description-item mb-5" v-html="itemTimeline.content" v-linkified />
     </div>
   </section>
 </template>
 
 <script>
-import linkify from 'vue-linkify'
- 
-Vue.directive('linkified', linkify)
 export default {
   name: "TimelineItem",
   props: {

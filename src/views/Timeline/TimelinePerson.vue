@@ -7,7 +7,16 @@
       <section v-else>
         <section v-if="loading">Loading...</section>
         <section v-else>
-          <h2 class="pt-4">{{user.name }}'s Timeline</h2>
+          <div class="titlebar">
+            <router-link
+              :to="{name:'MainTree', params:{id:$route.params.id}}"
+              class="float-left mt-2 ml-1"
+            >
+              <i class="icofont-arrow-left"></i>
+              Back
+            </router-link>
+            <p class="title pt-3">{{user.name }}'s Timeline</p>
+          </div>
           <transition name="fade">
             <div
               v-show="show_alert"
@@ -25,7 +34,7 @@
               </p>
             </div>
           </transition>
-          <div class="row">
+          <div class="row pt-5">
             <div class="col-6">
               <div v-if="dataTimeline.length!=0">
                 <!-- <select v-model="order">
@@ -125,10 +134,27 @@ export default {
         this.$route.params.member
     )
       .then(data => {
-        console.log(data.data[0]);
         this.user.fullname = data.data[0].name;
         this.user.name = data.data[0].short_name;
         this.dataTimeline = data.data[0].timeline;
+        if (data.data[0].dob) {
+          let udob = {
+            content: "Birthday Time",
+            date: new Date(data.data[0].dob),
+            fixed: true,
+            title: "Birthday"
+          };
+          this.dataTimeline.push(udob);
+        }
+        if (data.data[0].died_on) {
+          let udob = {
+            content: "Died",
+            date: new Date(data.data[0].died_on),
+            fixed: true,
+            title: "Died On"
+          };
+          this.dataTimeline.push(udob);
+        }
         this.loading = false;
       })
       .catch(err => {
@@ -143,7 +169,6 @@ export default {
   },
   methods: {
     sendData() {
-      console.log(this.line.date);
       if (this.line.date != null) {
         let eve = {
           date: this.line.date,
@@ -153,7 +178,6 @@ export default {
         if (this.edit) {
           //Updating an event
           eve.id = this.line.id;
-          console.log(eve);
           Axios.put(
             ProData.getHostURL() +
               "/timeline/" +
@@ -180,7 +204,6 @@ export default {
             eve
           )
             .then(data => {
-              console.log("id " + data.data);
               eve.id = data.data;
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);

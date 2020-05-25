@@ -237,8 +237,7 @@ export default {
       params.surname = this.surname;
       axios
         .post(sessionUrl, params)
-        .then(data => {
-          console.log(data);
+        .then(() => {
           Store.commit("setSession", true);
           this.vloading = false;
         })

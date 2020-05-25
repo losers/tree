@@ -141,8 +141,7 @@ export default {
       this.surname = this.metadata.surname;
       this.editFormLoading = true;
       Axios.get(ProdData.getHostURL()+"/meta/get/" + this.metadata._id)
-        .then(data => {
-          console.log(data);
+        .then((data) => {
           this.pin = data.data.pin;
         })
         .catch(err => (this.editFormErrored = err))
@@ -173,9 +172,8 @@ export default {
           surname: this.surname,
           pin: this.pin
         })
-          .then(data => {
+          .then(() => {
             this.created = true;
-            console.log(data);
           })
           .catch(function(err) {
             this.errored = err;

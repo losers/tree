@@ -88,18 +88,6 @@
                     {{data.name}}
                   </td>
                 </tr>
-                <tr v-if="data.mobile">
-                  <td style="border-left:3px solid yellow;">
-                    <i class="icofont-smart-phone"></i>
-                    {{data.mobile}}
-                  </td>
-                </tr>
-                <tr v-if="data.dob">
-                  <td style="border-left:3px solid brown;">
-                    <i class="icofont-ui-calendar"></i>
-                    {{data.dob}}
-                  </td>
-                </tr>
                 <tr v-if="data.gender">
                   <td style="border-left:3px solid orange;">
                     <span v-if="data.gender==1">
@@ -111,12 +99,6 @@
                     {{data.gender=="1"?"Male":"Female"}}
                   </td>
                 </tr>
-                <!-- <tr>
-                  <td style="border-left:3px solid black;">
-                    <i class="icofont-listing-box"></i>
-                    Add some description here
-                  </td>
-                </tr>-->
               </tbody>
 
               <!-- Tabbar -->
@@ -166,7 +148,7 @@
                   </transition>
                 </tab>
                 <tab name="More Info" :is-disabled="false">
-                  <MoreInfo :name="data.name" :id="id"></MoreInfo>
+                  <MoreInfo :id="id" :data="data"></MoreInfo>
                 </tab>
               </tabs>
             </table>
@@ -252,7 +234,6 @@ export default {
         }
         this.data = data.data;
         this.cookeyStatus = this.data.has_session;
-        console.log(this.data);
       })
       .catch(err => {
         this.errored = err;
@@ -271,7 +252,6 @@ export default {
           "/image"
       )
       .then(data => {
-        console.log(data.data);
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
