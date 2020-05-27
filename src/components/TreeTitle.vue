@@ -1,9 +1,6 @@
 <template>
   <div class="titlebar">
-    <router-link :to="{name:'Home'}" class="float-left mt-2 ml-1">
-      <i class="icofont-arrow-left"></i>
-      Back
-    </router-link>
+    <a :href="'/'" class="float-left mt-2 ml-1"><i class="icofont-arrow-left"></i> Back</a>
     <p class="title">
       {{meta.title}}
       <span v-show="is_session && !this.$device.mobile">
