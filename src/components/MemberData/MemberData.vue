@@ -1,7 +1,7 @@
 <template>
   <div style="left:70%!important;">
     <router-view></router-view>
-    <Drawer @close="toggle" align="right" :closeable="true" @click.stop="disable">
+    <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
       <div v-if="open">
         <section v-if="errored">
           err
@@ -25,7 +25,7 @@
               </div>
               <div v-else>
                 <img
-                  src="../assets/profile.png"
+                  src="../../assets/profile.png"
                   alt="Family Tree Loading"
                   class="image mx-auto"
                   style="border-radius: 50%;width: 150px;"
@@ -34,7 +34,7 @@
 
               <div class="middle" v-show="cookeyStatus">
                 <div class="member-txt">
-                  <a class="btn" @click="show=true">
+                  <a class="btn" @click="show=true" style="color: white!important;">
                     <i class="icofont-edit"></i>
                     Change
                   </a>
@@ -88,18 +88,6 @@
                     {{data.name}}
                   </td>
                 </tr>
-                <tr v-if="data.mobile">
-                  <td style="border-left:3px solid yellow;">
-                    <i class="icofont-smart-phone"></i>
-                    {{data.mobile}}
-                  </td>
-                </tr>
-                <tr v-if="data.dob">
-                  <td style="border-left:3px solid brown;">
-                    <i class="icofont-ui-calendar"></i>
-                    {{data.dob}}
-                  </td>
-                </tr>
                 <tr v-if="data.gender">
                   <td style="border-left:3px solid orange;">
                     <span v-if="data.gender==1">
@@ -111,54 +99,58 @@
                     {{data.gender=="1"?"Male":"Female"}}
                   </td>
                 </tr>
-                <!-- <tr>
-                  <td style="border-left:3px solid black;">
-                    <i class="icofont-listing-box"></i>
-                    Add some description here
-                  </td>
-                </tr>-->
               </tbody>
-              <transition name="fade" mode="out-in">
-                <div class="mx-auto col-12" v-if="cookeyStatus">
-                  <button
-                    @click="addMember(0)"
-                    class="col-10 btn btn-warning mb-3"
-                    v-show="!data.parent_id"
-                  >+ Add Parent</button>
-                  <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
-                  <button
-                    v-show="!hasMate"
-                    @click="addMember('gender')"
-                    class="col-10 btn btn-primary mb-3"
-                  >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
+              <!-- Tabbar -->
+              <tabs>
+                <tab name="Actions">
+                  <!-- Actions -->
+                  <transition name="fade" mode="out-in">
+                    <div class="mx-auto col-12" v-if="cookeyStatus">
+                      <button
+                        @click="addMember(0)"
+                        class="col-10 btn btn-warning mb-3"
+                        v-show="!data.parent_id"
+                      >+ Add Parent</button>
+                      <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
-                  <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
-                    <i class="icofont-ui-delete"></i> Delete
-                  </button>
-                </div>
-                <div v-else>
-                  <span class="col-4">
-                    <input
-                      class="form-control input-sm"
-                      placeholder="Enter Key to Edit"
-                      v-model="cookey"
-                      onkeypress="if(this.value.length==4) return false;"
-                      type="number"
-                    />
-                    <button
-                      v-show="cookey.length==4"
-                      @click="validate"
-                      :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-                      :disabled="loading"
-                    >
-                      <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
-                      <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                      {{retry?"Retry":"Validate"}}
-                    </button>
-                  </span>
-                </div>
-              </transition>
+                      <button
+                        v-show="!hasMate"
+                        @click="addMember('gender')"
+                        class="col-10 btn btn-primary mb-3"
+                      >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
+
+                      <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
+                        <i class="icofont-ui-delete"></i> Delete
+                      </button>
+                    </div>
+                    <div v-else>
+                      <span class="col-4">
+                        <input
+                          class="form-control input-sm"
+                          placeholder="Enter Key to Edit"
+                          v-model="cookey"
+                          onkeypress="if(this.value.length==4) return false;"
+                          type="number"
+                        />
+                        <button
+                          v-show="cookey.length==4"
+                          @click="validate"
+                          :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                          :disabled="loading"
+                        >
+                          <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
+                          <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+                          {{retry?"Retry":"Validate"}}
+                        </button>
+                      </span>
+                    </div>
+                  </transition>
+                </tab>
+                <tab name="More Info" :is-disabled="!cookeyStatus">
+                  <MoreInfo :id="id" :data="data"></MoreInfo>
+                </tab>
+              </tabs>
             </table>
           </div>
         </section>
@@ -174,10 +166,12 @@ const Compress = require("compress.js");
 import myUpload from "vue-image-crop-upload/upload-2.vue";
 import Vue from "vue";
 import VModal from "vue-js-modal";
-import Delete from "../components/DeleteMember";
-import CommonForm from "./AddCommonForm";
-import ProdData from "../data.js";
-import Store from "../store/index";
+import Delete from "@/components/DeleteMember";
+import CommonForm from "../AddCommonForm";
+import ProdData from "@/data.js";
+import Store from "@/store/index";
+import { Tabs, Tab } from "vue-tabs-component";
+import MoreInfo from "./MoreInfo";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -188,7 +182,10 @@ export default {
   name: "MemberData",
   components: {
     Drawer,
-    "my-upload": myUpload
+    "my-upload": myUpload,
+    Tabs,
+    Tab,
+    MoreInfo
   },
   data() {
     return {
@@ -208,7 +205,7 @@ export default {
       doneUpload: false,
       imageExists: false,
       cookey: "",
-      cookeyStatus: null,
+      cookeyStatus: false,
       vloading: false,
       hasMate: false,
       retry: false //stores key status
@@ -225,7 +222,7 @@ export default {
   },
   mounted() {
     this.hasMate = this.$route.query.hasMate;
-    this.cookeyStatus = null; //Check version
+    this.cookeyStatus = false; //Check version
     //Person Data API
     axios
       .get(
@@ -237,7 +234,6 @@ export default {
         }
         this.data = data.data;
         this.cookeyStatus = this.data.has_session;
-        console.log(this.data);
       })
       .catch(err => {
         this.errored = err;
@@ -256,7 +252,6 @@ export default {
           "/image"
       )
       .then(data => {
-        console.log(data.data);
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
@@ -473,8 +468,91 @@ input[type="number"] {
 .member-txt {
   background-color: #4caf50;
   border-radius: 5px;
-  color: white;
   font-size: 10px;
-  /* padding: 2px 4px; */
+}
+.tabs-component {
+  margin-top: 30px;
+}
+
+.tabs-component-tabs {
+  border: solid 1px #ddd;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
+@media (min-width: 700px) {
+  .tabs-component-tabs {
+    border: 0;
+    align-items: stretch;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: -1px;
+    padding-left: 0 !important;
+  }
+}
+
+.tabs-component-tab {
+  color: #999;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 0;
+  list-style: none;
+}
+
+.tabs-component-tab:not(:last-child) {
+  border-bottom: dotted 1px #ddd;
+}
+
+.tabs-component-tab:hover {
+  color: #666;
+}
+
+.tabs-component-tab.is-active {
+  color: #000;
+}
+
+.tabs-component-tab.is-disabled * {
+  color: #cdcdcd;
+  cursor: not-allowed !important;
+}
+
+@media (min-width: 700px) {
+  .tabs-component-tab {
+    background-color: #fff;
+    border: solid 1px #ddd;
+    border-radius: 3px 3px 0 0;
+    margin-right: 0.5em;
+    transform: translateY(2px);
+    transition: transform 0.3s ease;
+  }
+
+  .tabs-component-tab.is-active {
+    border-bottom: solid 1px #fff;
+    z-index: 2;
+    transform: translateY(0);
+  }
+}
+
+.tabs-component-tab-a {
+  align-items: center;
+  color: inherit;
+  display: flex;
+  padding: 0.75em 1em;
+
+  text-decoration: none;
+}
+
+.tabs-component-panels {
+  padding-top: 20px;
+  height: 200px;
+  color: black;
+}
+
+@media (min-width: 700px) {
+  .tabs-component-panels {
+    border-top-left-radius: 0;
+    background-color: #fff;
+    border-top: solid 1px #ddd;
+  }
 }
 </style>

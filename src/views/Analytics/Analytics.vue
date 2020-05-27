@@ -32,18 +32,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  components: {
-  },
-  data() {
-    return {
-      
-    };
-  }
-};
-</script>
-
 <style scoped>
 .finders {
   margin-top: 60px;
@@ -57,14 +45,10 @@ export default {
   color: black;
   font-weight: bold;
 }
-.titlebar a{
-  color: #007bff; 
-}
 .titlebar {
   position: fixed;
   width: 100%;
   z-index: 100;
-  margin-bottom: 20px;
   box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
   padding: 5px;
   background-color: white;

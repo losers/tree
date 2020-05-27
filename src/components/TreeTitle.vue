@@ -1,10 +1,7 @@
 <template>
   <div class="titlebar">
-    <router-link :to="{name:'Home'}" class="float-left mt-2 ml-1">
-      <i class="icofont-arrow-left"></i>
-      Back
-    </router-link>
-    <p class="title mb-2">
+    <a :href="'/'" class="float-left mt-2 ml-1"><i class="icofont-arrow-left"></i> Back</a>
+    <p class="title">
       {{meta.title}}
       <span v-show="is_session && !this.$device.mobile">
         <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
@@ -42,7 +39,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .titlebar {
   position: fixed;
   width: 100%;
