@@ -34,7 +34,7 @@
 
               <div class="middle" v-show="cookeyStatus">
                 <div class="member-txt">
-                  <a class="btn" @click="show=true">
+                  <a class="btn" @click="show=true" style="color: white!important;">
                     <i class="icofont-edit"></i>
                     Change
                   </a>
@@ -147,7 +147,7 @@
                     </div>
                   </transition>
                 </tab>
-                <tab name="More Info" :is-disabled="false">
+                <tab name="More Info" :is-disabled="!cookeyStatus">
                   <MoreInfo :id="id" :data="data"></MoreInfo>
                 </tab>
               </tabs>
@@ -205,7 +205,7 @@ export default {
       doneUpload: false,
       imageExists: false,
       cookey: "",
-      cookeyStatus: null,
+      cookeyStatus: false,
       vloading: false,
       hasMate: false,
       retry: false //stores key status
@@ -222,7 +222,7 @@ export default {
   },
   mounted() {
     this.hasMate = this.$route.query.hasMate;
-    this.cookeyStatus = null; //Check version
+    this.cookeyStatus = false; //Check version
     //Person Data API
     axios
       .get(
@@ -468,11 +468,8 @@ input[type="number"] {
 .member-txt {
   background-color: #4caf50;
   border-radius: 5px;
-  color: white;
   font-size: 10px;
-  /* padding: 2px 4px; */
 }
-
 .tabs-component {
   margin-top: 30px;
 }

@@ -284,7 +284,7 @@ h2 {
   z-index: 10;
 }
 .foot a {
-  color: #fff;
+  color: #fff!important;
   margin: 0 0.5em;
 }
 .table-data {

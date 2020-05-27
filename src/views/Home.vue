@@ -6,7 +6,7 @@
     <section v-else>
       <div v-if="loading" style="margin-top:240px">
         <center>
-          <img src="@/assets/dna.gif" alt="Family Tree Loading"/>
+          <img src="@/assets/dna.gif" alt="Family Tree Loading" />
         </center>
       </div>
       <div v-else>
@@ -15,8 +15,12 @@
           <div id="stars2"></div>
           <div id="stars3"></div>
           <div id="title">
-            <img src="@/assets/logo.png" height="50px" class="float-left m-3" style="position:fixed;left:0">
-            <span style="font-weight: 500;">Blood Line</span>
+            <img
+              src="@/assets/logo.png"
+              height="50px"
+              style="margin-top: -20px;border: 3px solid #d21b1b;border-radius: 50%;margin-right: 6px;padding: 4px;"
+            />
+            <span style="font-weight: 500;">lood Line</span>
             <br />
           </div>
           <center>

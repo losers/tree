@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .titlebar {
   position: fixed;
   width: 100%;
