@@ -17,12 +17,15 @@
       <div v-else class="mt-4">
         <p>
           {{p.p2.label}} is {{p.p1.label}}'s
-          <span class="ml-3 spinner-border spinner-border-sm" v-if="loading"></span>
+          <span
+            class="ml-3 spinner-border spinner-border-sm"
+            v-if="loading"
+          ></span>
           <span v-else class="ml-1 relationName">{{relationName}}</span>
           <button class="ml-3 btn btn-sm btn-primary">Change Language</button>
         </p>
         <div>
-          <input type="radio">Western
+          <input type="radio" />Western
         </div>
         <TreeChart :json="tree" :images="images" style="padding-top:40px" />
       </div>
@@ -94,7 +97,8 @@ export default {
                 this.tree,
                 response.data,
                 this.p1.value,
-                this.p2.value
+                this.p2.value,
+                "telugu"
               );
               console.log(this.relationName);
             })
