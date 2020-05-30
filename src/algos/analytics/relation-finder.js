@@ -173,7 +173,7 @@ function findLevel(tree, id, level) {
     }
     if (tree.id == id || (tree.mate && tree.mate.id == id)) {
         if (tree.mate && tree.mate.id == id) {
-            return { "level": level, "gender": tree.mate.gender , "is_mate":true};
+            return { "level": level, "gender": tree.mate.gender, "is_mate": true };
         }
         else {
             return { "level": level, "gender": tree.gender };
@@ -189,20 +189,20 @@ function findLevel(tree, id, level) {
     }
 }
 
-function checkForInvRelation(tree, toChange, isInv){
-    if(tree == null){
+function checkForInvRelation(tree, toChange, isInv) {
+    if (tree == null) {
         return isInv;
     }
-    if(toChange){
+    if (toChange) {
         toChange = false;
         isInv = !isInv;
     }
-    if(tree.gender == 0){
+    if (tree.gender == 0) {
         toChange = true;
     }
-    if(tree.children)
+    if (tree.children)
         return checkForInvRelation(tree.children[0], toChange, isInv);
-    else{
+    else {
         return isInv;
     }
 }
@@ -223,31 +223,31 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
     let isSameLane = false;
     isSameLane = (subTree.id == p1Id) || (subTree.id == p2Id) || ((subTree.mate) && subTree.mate.id == p1Id) || ((subTree.mate) && subTree.mate.id == p2Id);
 
-    let sameLane = isSameLane?"same":"other";
-    if(p1.level == 1 && p2.level == 1){
+    let sameLane = isSameLane ? "same" : "other";
+    if (p1.level == 1 && p2.level == 1) {
         sameLane = "same";
     }
 
     let relationLev = p1.level - p2.level;
-    if(relationLev < -3) relationLev = -3;
-    if(relationLev > 3) relationLev = 3;
+    if (relationLev < -3) relationLev = -3;
+    if (relationLev > 3) relationLev = 3;
 
-    if(relationLev == 0){
-        if(p1.is_mate || p2.is_mate){
+    if (relationLev == 0) {
+        if (p1.is_mate || p2.is_mate) {
             sameLane = "inv";
         }
-        if(p1.level == 0  && p2.level == 0){
+        if (p1.level == 0 && p2.level == 0) {
             sameLane = "spl";
         }
     }
-    else if((p2.is_mate && relationLev < 0) || (p1.is_mate && relationLev > 0)){
+    else if ((p2.is_mate && relationLev < 0) || (p1.is_mate && relationLev > 0)) {
         sameLane = "inv";
     }
 
-    if(relationType != "western" && subTree.children.length > 1){
-        let isInv1 = checkForInvRelation(subTree.children[0],false,false);
-        let isInv2 = checkForInvRelation(subTree.children[1],false, false);
-        if(isInv1 != isInv2){
+    if (relationType != "western" && subTree.children && subTree.children.length > 1) {
+        let isInv1 = checkForInvRelation(subTree.children[0], false, false);
+        let isInv2 = checkForInvRelation(subTree.children[1], false, false);
+        if (isInv1 != isInv2) {
             sameLane = "inv";
         }
     }
