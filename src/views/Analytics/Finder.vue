@@ -8,13 +8,22 @@
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:60px" height="250px" width="250px" />
+      <img
+        v-if="same==null"
+        src="@/assets/finder.jpg"
+        style="margin-top:60px"
+        height="350px"
+        width="350px"
+      />
       <div v-else-if="same">
         <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
         <h6>Hence Proved</h6>
       </div>
-      <TreeChart v-else :json="tree" :images="images" style="padding-top:70px" />
+      <div v-else>
+        <p>{{p2.label}} is {{p1.label}}'s _____(find)</p>
+        <TreeChart :json="tree" :images="images" style="padding-top:70px" />
+      </div>
     </center>
   </div>
 </template>
