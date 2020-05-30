@@ -77,7 +77,8 @@ export default {
         axios
           .post(ProData.getHostURL() + "/analytics/"+this.$route.params.id, this.allIds)
           .then(response => {
-            this.relationName = Algos.findRelationName(this.tree, response.data, this.p1.value, this.p2.value);
+            this.relationName = Algos.findRelationName(this.tree, response.data, this.p1.value, this.p2.value, "telugu");
+            console.log(this.relationName);
           })
           .catch(error => {
             console.log(error);

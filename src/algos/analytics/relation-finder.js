@@ -189,6 +189,24 @@ function findLevel(tree, id, level) {
     }
 }
 
+function checkForInvRelation(tree, toChange, isInv){
+    if(tree == null){
+        return isInv;
+    }
+    if(toChange){
+        toChange = false;
+        isInv = !isInv;
+    }
+    if(tree.gender == 0){
+        toChange = true;
+    }
+    if(tree.children)
+        return checkForInvRelation(tree.children[0], toChange, isInv);
+    else{
+        return isInv;
+    }
+}
+
 function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western") {
     let relations = ProData.relations[relationType];
 
@@ -224,6 +242,14 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
     }
     else if((p2.is_mate && relationLev < 0) || (p1.is_mate && relationLev > 0)){
         sameLane = "inv";
+    }
+
+    if(relationType != "western" && subTree.children.length > 1){
+        let isInv1 = checkForInvRelation(subTree.children[0],false,false);
+        let isInv2 = checkForInvRelation(subTree.children[1],false, false);
+        if(isInv1 != isInv2){
+            sameLane = "inv";
+        }
     }
     return relations[relationLev][sameLane][p2.gender];
 }
