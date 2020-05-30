@@ -1,5 +1,5 @@
 var data = {};
-data.isProd = true;
+data.isProd = false;
 
 data.getHostURL = function () {
     if (this.isProd) {
@@ -28,25 +28,25 @@ data.relations.western = {
         "inv": { "1": "Grand Father-in-law", "0": "Grand Mother-in-law" },
     },
     "-2": {
-        "same": {"1" : "Grand Son", "0": "Grand Daughter"},
-        "other": {"1" : "Grand Son", "0": "Grand Daughter"},
-        "inv": {"1" : "Grand Son-in-law", "0": "Grand Daughter-in-law"}
+        "same": { "1": "Grand Son", "0": "Grand Daughter" },
+        "other": { "1": "Grand Son", "0": "Grand Daughter" },
+        "inv": { "1": "Grand Son-in-law", "0": "Grand Daughter-in-law" }
     },
     "0": {
-        "same": {"1" : "Brother", "0": "Sister"},
-        "other": {"1" : "Brother [Cousin]", "0": "Sister [Cousin]"},
-        "inv": {"1" : "Brother-in-Law", "0": "Sister-in-Law"},
-        "spl": {"1" : "Husband", "0": "Wife"}
+        "same": { "1": "Brother", "0": "Sister" },
+        "other": { "1": "Brother [Cousin]", "0": "Sister [Cousin]" },
+        "inv": { "1": "Brother-in-Law", "0": "Sister-in-Law" },
+        "spl": { "1": "Husband", "0": "Wife" }
     },
     "1": {
-        "same": {"1" : "Father", "0": "Mother"},
-        "other": {"1" : "Uncle", "0": "Aunty"},
-        "inv": {"1" : "Father-in-law", "0": "Mother-in-law"},
+        "same": { "1": "Father", "0": "Mother" },
+        "other": { "1": "Uncle", "0": "Aunty" },
+        "inv": { "1": "Father-in-law", "0": "Mother-in-law" },
     },
     "-1": {
-        "same": {"1" : "Son", "0": "Daughter"},
-        "other": {"1" : "Nephew", "0": "Niece"},
-        "inv": {"1" : "Son-in-law", "0": "Daughter-in-law"},
+        "same": { "1": "Son", "0": "Daughter" },
+        "other": { "1": "Nephew", "0": "Niece" },
+        "inv": { "1": "Son-in-law", "0": "Daughter-in-law" },
     }
 };
 
