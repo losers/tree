@@ -8,7 +8,13 @@
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:60px" height="250px" width="250px" />
+      <img
+        v-if="same==null"
+        src="@/assets/finder.jpg"
+        style="margin-top:60px"
+        height="250px"
+        width="250px"
+      />
       <div v-else-if="same">
         <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
@@ -25,6 +31,8 @@ import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
 import Algos from "../../algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
+import axios from "axios";
+import ProData from "../../data";
 
 export default {
   data() {
@@ -33,7 +41,8 @@ export default {
       p2: null,
       tree: {},
       same: null,
-      disable: false
+      disable: false,
+      relationName : ""
     };
   },
   computed: {
@@ -61,9 +70,22 @@ export default {
           this.p1.value,
           this.p2.value
         );
+
+
+        this.allIds = [];
+        Algos.getAllIds(this.tree, this.allIds);
+        axios
+          .post(ProData.getHostURL() + "/analytics/"+this.$route.params.id, this.allIds)
+          .then(response => {
+            this.relationName = Algos.findRelationName(this.tree, response.data, this.p1.value, this.p2.value);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            
+          });
       }
-      // this.p1 = null;
-      // this.p2 = null;
     }
   },
   components: {
