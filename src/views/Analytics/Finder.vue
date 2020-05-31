@@ -2,19 +2,34 @@
   <div>
     <div class="row justify-content-center">
       <span class="mt-1">Person 1 :</span>
-      <vSelect :options="names" v-model="p1" class="col-3"></vSelect>
+      <vSelect :options="names" v-model="p1" class="col-3 myselect"></vSelect>
       <span class="mt-1">Person 2 :</span>
       <vSelect :options="names" v-model="p2" class="col-3"></vSelect>
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:60px" height="250px" width="250px" />
+      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:70px" height="350px" />
       <div v-else-if="same">
         <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
         <h6>Hence Proved</h6>
       </div>
-      <TreeChart v-else :json="tree" :images="images" style="padding-top:70px" />
+      <div v-else class="mt-4">
+        <p>
+          {{p.p2.label}} is {{p.p1.label}}'s
+          <span
+            class="ml-3 spinner-border spinner-border-sm"
+            v-if="loading"
+          ></span>
+          <span v-else class="ml-1 relationName">{{relationName}}</span>
+          <button class="ml-3 btn btn-sm btn-primary" @click="opts=!opts">Change Language</button>
+        </p>
+        <div v-show="opts">
+          <input type="radio" class="mr-2" v-model="lang" value="western" name="lang" />Western
+          <input type="radio" class="mr-2 ml-4" v-model="lang" value="telugu" name="lang" />Telugu
+        </div>
+        <TreeChart :json="tree" :images="images" style="padding-top:40px" />
+      </div>
     </center>
   </div>
 </template>
@@ -25,6 +40,8 @@ import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
 import Algos from "../../algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
+import axios from "axios";
+import ProData from "../../data";
 
 export default {
   data() {
@@ -33,8 +50,19 @@ export default {
       p2: null,
       tree: {},
       same: null,
-      disable: false
+      disable: false,
+      relationName: null,
+      loading: true,
+      p: {},
+      lang_selection: false,
+      lang: "western",
+      opts: false
     };
+  },
+  watch: {
+    lang() {
+      this.rName();
+    }
   },
   computed: {
     names: {
@@ -50,20 +78,49 @@ export default {
   },
   methods: {
     submit() {
-      if (!(this.p1 && this.p2)) {
-        this.same = null;
-      } else if (this.p1.value == this.p2.value) {
-        this.same = true;
-      } else {
-        this.same = false;
-        this.tree = Algos.getRelationTree(
-          Store.getters.getTreeData,
-          this.p1.value,
-          this.p2.value
-        );
+      if (this.p.p1 != this.p1 || this.p.p2 != this.p2) {
+        if (!(this.p1 && this.p2)) {
+          this.same = null;
+        } else if (this.p1.value == this.p2.value) {
+          this.same = true;
+        } else {
+          this.loading = true;
+          this.same = false;
+          this.p.p1 = this.p1;
+          this.p.p2 = this.p2;
+          this.tree = Algos.getRelationTree(
+            Store.getters.getTreeData,
+            this.p1.value,
+            this.p2.value
+          );
+          this.allIds = [];
+          Algos.getAllIds(this.tree, this.allIds);
+          axios
+            .post(
+              ProData.getHostURL() + "/analytics/" + this.$route.params.id,
+              this.allIds
+            )
+            .then(response => {
+              this.loading = false;
+              this.tree.response = response;
+              this.rName();
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            .finally(() => {});
+        }
       }
-      // this.p1 = null;
-      // this.p2 = null;
+    },
+    rName() {
+      console.log(this.lang);
+      this.relationName = Algos.findRelationName(
+        this.tree,
+        this.tree.response.data,
+        this.p1.value,
+        this.p2.value,
+        this.lang
+      );
     }
   },
   components: {
@@ -72,3 +129,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.relationName {
+  font-weight: bold;
+  font-size: 20px;
+}
+/* .myselect{
+  max-height: 10px;
+} */
+</style>

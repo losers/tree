@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="titlebar">
-      <router-link :to="{name:'Tree'}" class="float-left mt-2 ml-1">
+      <router-link :to="{name:'Tree'}" class="float-left mt-2 ml-1" style="color:#007bff;">
         <i class="icofont-arrow-left"></i>
         Back
       </router-link>
@@ -9,15 +9,16 @@
         <p class="title">Crazy Analytics</p>
       </center>
     </div>
-    <div class="row">
+    <div class="row" style="
+    width: 100%;">
       <!-- Finders list -->
       <div class="col-3 finders">
-        <router-link :to="{name:'RelationFinder'}">
+        <router-link :to="{name:'RelationFinder'}" class="alyt">
           <div class="pl-3">Relation Finder</div>
           <hr />
           <!-- <div class="hr"></div> -->
         </router-link>
-        <router-link :to="{name:'Subtree'}">
+        <router-link :to="{name:'Subtree'}" class="alyt">
           <div class="pl-3">Subtree</div>
           <hr />
           <!-- <div class="hr"></div> -->
@@ -33,16 +34,19 @@
 </template>
 
 <style scoped>
+.alyt {
+  color: black;
+}
 .finders {
   margin-top: 60px;
-  height: 50vmax;
+  height: 100%;
 }
 .hr {
   height: 0.1px;
   background-color: grey;
 }
 .router-link-active {
-  color: black;
+  color: #007bff;
   font-weight: bold;
 }
 .titlebar {
