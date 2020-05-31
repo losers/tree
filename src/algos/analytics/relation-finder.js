@@ -248,7 +248,7 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
         let isInv1 = checkForInvRelation(subTree.children[0],false,false);
         let isInv2 = checkForInvRelation(subTree.children[1],false, false);
 
-        if(p1.gender == 0 && p1.level < p2.level && !p1.is_mate){
+        if(p1.gender == 0 && p1.level < p2.level && !p2.is_mate){
             isInv1 = !isInv1;
         }
         else if(p2.gender == 0 && p2.level < p1.level && !p2.is_mate){
