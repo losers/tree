@@ -1,5 +1,5 @@
 var data = {};
-data.isProd = false;
+data.isProd = true;
 
 data.getHostURL = function () {
     if (this.isProd) {

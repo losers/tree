@@ -22,10 +22,11 @@
             v-if="loading"
           ></span>
           <span v-else class="ml-1 relationName">{{relationName}}</span>
-          <button class="ml-3 btn btn-sm btn-primary">Change Language</button>
+          <button class="ml-3 btn btn-sm btn-primary" @click="opts=!opts">Change Language</button>
         </p>
-        <div>
-          <input type="radio" />Western
+        <div v-show="opts">
+          <input type="radio" class="mr-2" v-model="lang" value="western" name="lang" />Western
+          <input type="radio" class="mr-2 ml-4" v-model="lang" value="telugu" name="lang" />Telugu
         </div>
         <TreeChart :json="tree" :images="images" style="padding-top:40px" />
       </div>
@@ -52,8 +53,16 @@ export default {
       disable: false,
       relationName: null,
       loading: true,
-      p: {}
+      p: {},
+      lang_selection: false,
+      lang: "western",
+      opts: false
     };
+  },
+  watch: {
+    lang() {
+      this.rName();
+    }
   },
   computed: {
     names: {
@@ -93,14 +102,8 @@ export default {
             )
             .then(response => {
               this.loading = false;
-              this.relationName = Algos.findRelationName(
-                this.tree,
-                response.data,
-                this.p1.value,
-                this.p2.value,
-                "telugu"
-              );
-              console.log(this.relationName);
+              this.tree.response = response;
+              this.rName();
             })
             .catch(error => {
               console.log(error);
@@ -108,6 +111,16 @@ export default {
             .finally(() => {});
         }
       }
+    },
+    rName() {
+      console.log(this.lang);
+      this.relationName = Algos.findRelationName(
+        this.tree,
+        this.tree.response.data,
+        this.p1.value,
+        this.p2.value,
+        this.lang
+      );
     }
   },
   components: {
