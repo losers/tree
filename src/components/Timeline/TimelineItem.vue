@@ -1,16 +1,36 @@
 <template>
   <section class="timeline-item">
     <div class="item" @mouseover="over" @mouseleave="leave">
+      <!-- Dot UI -->
       <span :style="getBackgroundColour(itemTimeline.color)" class="dot" />
+
+      <!-- Item Date -->
       <h3 class="date-item">{{ getFormattedDate(itemTimeline) }}</h3>
+
+      <!-- Edit button -->
       <i
         class="icofont-ui-edit float-right"
         @click="findme(itemTimeline)"
-        v-show="show && !itemTimeline.fixed"
+        v-show="show && !itemTimeline.fixed && !itemTimeline.shared_by"
         style="font-size:25px"
       ></i>
+
+      <!-- Title name -->
       <h4 class="title-item" v-html="itemTimeline.title" />
-      <p class="description-item mb-5" v-html="itemTimeline.content" v-linkified />
+
+      <!-- Item Description -->
+      <p class="description-item mb-2" v-html="itemTimeline.content" v-linkified />
+
+      <!-- Sharedby -->
+      <p class="person p-1" v-if="itemTimeline.shared_by">Shared By :{{namesMap[itemTimeline.shared_by]}}</p>
+
+      <!-- Sharing with -->
+      <div class="row" v-else-if="itemTimeline.shared_with">
+        Sharing With :
+        <div v-for="(person, index) in itemTimeline.shared_with" :key="index">
+          <p class="person p-1">{{namesMap[person]}}</p>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -30,11 +50,13 @@ export default {
     dateLocale: {
       type: String,
       default: ""
-    }
+    },
+    namesMap: {}
   },
   data() {
     return {
-      show: false
+      show: false,
+      showTimelineShare: false
     };
   },
   methods: {
@@ -73,7 +95,7 @@ export default {
   letter-spacing: 2px;
 }
 .timeline-item .title-item {
-  margin: 0;
+  margin: 15px;
   padding: 5px 0;
   font-size: 15px;
   font-weight: 500;
@@ -82,7 +104,7 @@ export default {
   white-space: pre-line;
   white-space: pre-wrap;
   font-weight: 100;
-  margin: 0;
+  margin: 15px;
 }
 .timeline-item .dot {
   display: block;
@@ -92,5 +114,11 @@ export default {
   border-radius: 50%;
   left: -10px;
   top: 26px;
+}
+.person {
+  border: solid #eaeaea 2px;
+  border-radius: 15%;
+  margin-right: 10px;
+  margin-left: 25px;
 }
 </style>

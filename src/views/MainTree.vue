@@ -15,14 +15,14 @@
           Back
         </router-link>
         <center style="padding-top:240px">
-          <img src="@/assets/dna.gif" />
+          <img src="@/assets/dna.gif" alt="Bloodline Loader"/>
         </center>
       </div>
 
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
         <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
-        <img src="../assets/stickman_family.jpg" class="col-7" style="margin-top:160px" />
+        <img src="../assets/stickman_family.jpg" class="col-7" style="margin-top:160px" alt="Blood Line Helper"/>
         <center>
           <div class="row">
             <div class="col-3"></div>

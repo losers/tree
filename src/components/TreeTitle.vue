@@ -1,17 +1,19 @@
 <template>
   <div class="titlebar">
-    <a :href="'/'" class="float-left mt-2 ml-1"><i class="icofont-arrow-left"></i> Back</a>
-    <p class="title">
+    <a :href="'/'">
+      <i class="icofont-arrow-left"></i> Back
+    </a>
+    <div class="title">
       {{meta.title}}
       <span v-show="is_session && !this.$device.mobile">
         <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
       </span>
-      <span v-show="!this.$device.mobile" class="float-right mr-3 mb-2">
-        <router-link :to="{name:'Analytics'}">
-          <i class="icofont-chart-bar-graph" style="font-size:30px"></i>
-        </router-link>
-      </span>
-    </p>
+    </div>
+    <div v-show="!this.$device.mobile">
+      <router-link :to="{name:'Analytics'}">
+        <i class="icofont-chart-bar-graph" style="font-size:30px"></i>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -44,15 +46,16 @@ export default {
   position: fixed;
   width: 100%;
   z-index: 100;
-  margin-bottom: 20px;
   box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
   padding: 5px;
   background-color: white;
-  height: 50px;
+  display: flex;
+  align-items: center;
 }
 .title {
   font-size: 30px;
   color: black;
   font-weight: bold;
+  flex: 1;
 }
 </style>

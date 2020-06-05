@@ -8,8 +8,8 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" />
-              <img src="../assets/dp.png" v-else />
+              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" alt="Blood Line User" />
+              <img src="../assets/dp.png" v-else alt="Blood Line User"/>
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -22,8 +22,10 @@
               <img
                 :src="'data:image/png;base64, '+treeData.mate.image_url"
                 v-if="treeData.mate.image_url"
+                alt="Blood Line User"
               />
-              <img src="../assets/dp.png" v-else />
+              <img src="../assets/dp.png" v-else 
+              alt="Blood Line User"/>
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>

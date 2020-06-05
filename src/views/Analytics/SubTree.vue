@@ -7,7 +7,7 @@
         <vSelect :options="names" v-model="p1" class="col-3"></vSelect>
         <button class="btn btn-success" @click="submit" :disabled="!p1">Search</button>
       </div>
-      <img v-if="!selected" src="../../assets/tree_gen.jpg" class="mt-5" height="250px" width="200px" />
+      <img v-if="!selected" src="../../assets/tree_gen.jpg" class="mt-5" height="250px" width="200px" alt="Blood Line Helper"/>
       <TreeChart v-else :json="tree" :images="images" style="padding-top:70px" />
     </center>
   </div>
@@ -19,7 +19,7 @@ import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
 import Algos from "../../algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
-
+  
 export default {
   data() {
     return {

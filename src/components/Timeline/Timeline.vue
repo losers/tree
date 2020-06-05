@@ -14,6 +14,7 @@
           :item-index="timelineIndex"
           :date-locale="dateLocale"
           :color-dots="colorDots"
+          :namesMap="namesMap"
         />
       </div>
     </div>
@@ -57,7 +58,8 @@ export default {
     dateLocale: {
       type: String,
       default: ""
-    }
+    },
+    namesMap:{}
   },
   computed: {
     hasItems() {
@@ -148,7 +150,6 @@ export default {
 .timeline .wrapper-item {
   display: grid;
   grid-template-columns: 100px 1fr;
-  margin-bottom: 20px;
 }
 .timeline .wrapper-item .section-year {
   display: flex;
