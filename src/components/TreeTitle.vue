@@ -6,12 +6,16 @@
     <div class="title">
       {{meta.title}}
       <span v-show="is_session && !this.$device.mobile">
-        <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px"></i>
+        <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px;cursor: pointer;"></i>
       </span>
     </div>
     <div v-show="!this.$device.mobile">
-      <router-link :to="{name:'Analytics'}">
-        <i class="icofont-chart-bar-graph" style="font-size:30px"></i>
+      <router-link
+        :to="{name:'Analytics'}"
+        style="display: flex;align-items: center;margin-right: 5px;"
+      >
+        <i class="icofont-gear" style="font-size: 21px;margin-right: 8px;"></i>
+        Analytics
       </router-link>
     </div>
   </div>

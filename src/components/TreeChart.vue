@@ -18,7 +18,7 @@
             v-if="treeData.mate"
             @click="$emit('click-node',{data:treeData.mate, isMate:true})"
           >
-            <div class="avat">
+            <div class="avat green-circle">
               <img
                 :src="'data:image/png;base64, '+treeData.mate.image_url"
                 v-if="treeData.mate.image_url"
@@ -100,6 +100,12 @@ export default {
 </script>
 
 <style scoped>
+.red-circle{
+  border:3px solid red !important;
+}
+.green-circle{
+  border: 2px solid green !important;
+}
 table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
@@ -209,7 +215,6 @@ td {
   overflow: hidden;
 }
 .node .mate .avat {
-  border: 2px solid green !important;
   border-radius: 50%;
 }
 
