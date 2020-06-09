@@ -67,30 +67,30 @@
                 alt="Blood Line Helper"
               />
             </div>
-            <div class="col-5 mt-5 timeline_add_box pt-5">
+            <div class="timeline_add_box">
               <form v-on:submit.prevent="sendData">
-                <h3 class="mb-3">{{edit?"Update":"Create"}} a Event</h3>
-                <div class="row mt-3">
-                  <label class="col-3 mt-2">Date</label>
+                <h3 class="mt-3" style="margin-bottom:40px;">{{edit?"Update":"Create"}} Event</h3>
+                <div class="row input-con">
+                  <label class="col-3 label">Date</label>
                   <md-datepicker
-                    class="col-7 p-1 ml-2"
+                    class="col-7"
                     v-model="line.date"
                     placeholder="Event Date"
                     required="true"
                   />
                 </div>
-                <div class="row">
-                  <label class="col-3 mt-2">Title:</label>
+                <div class="row input-con">
+                  <label class="col-3 label">Title</label>
                   <input
                     type="text"
                     class="form-control col-7"
-                    placeholder="Enter Short Name"
+                    placeholder="Enter Event Title"
                     v-model="line.title"
                     required="true"
                   />
                 </div>
-                <div class="row mt-3">
-                  <label class="col-3 mt-2">Desciption</label>
+                <div class="row input-con">
+                  <label class="col-3 label">Desciption</label>
                   <textarea
                     class="form-control col-7 rounded-2"
                     rows="3"
@@ -100,8 +100,8 @@
                     placeholder="Event description"
                   ></textarea>
                 </div>
-                <div class="row mt-3">
-                  <label class="col-3 mt-2">Share with</label>
+                <div class="row input-con">
+                  <label class="col-3 label">Share with</label>
                   <v-select
                     class="col-7"
                     style="height: 35px;"
@@ -111,18 +111,18 @@
                   ></v-select>
                 </div>
 
-                <div class="row justify-content-around">
-                  <button type="submit" class="btn btn-success btn mt-4" :disabled="reqload">
+                <div class="row justify-content-around mb-4">
+                  <button type="submit" class="btn btn-success btn" :disabled="reqload">
                     <span class="spinner-border spinner-border-sm" v-show="reqload"></span>
                     {{edit?"Update":"Create"}}
                   </button>
-                  <button class="btn btn-warning mt-4" type="reset" @click="cancelclk">Cancel</button>
+                  <button class="btn btn-cancel" type="reset" @click="cancelclk">Cancel</button>
                   <button
                     type="button"
                     @click="deleteItem()"
                     v-show="edit"
                     :disabled="del"
-                    class="btn btn-danger btn mt-4"
+                    class="btn btn-danger btn"
                   >
                     <span class="spinner-border spinner-border-sm" v-show="del"></span>
                     Delete Permanently
@@ -360,6 +360,27 @@ export default {
 </script>
 
 <style>
+.btn-cancel{
+  border: 1px solid black;
+}
+.input-con {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.input-con .label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px;
+}
+.input-con .md-field{
+  padding: 0px;
+  margin: 0px;
+}
+.input-con .v-select{
+  padding: 0px;
+}
 .titlebar {
   position: fixed;
   width: 100%;
@@ -375,9 +396,13 @@ export default {
   font-weight: bold;
 }
 .timeline_add_box {
-  height: 450px;
+  overflow: scroll;
+  max-height: 600px;
   position: fixed;
-  margin-left: 50%;
+  border-radius: 20px;
+  top: 20%;
+  right: 10%;
+  width: 650px;
   -webkit-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
   box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);

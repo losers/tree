@@ -12,23 +12,28 @@
         class="icofont-ui-edit float-right"
         @click="findme(itemTimeline)"
         v-show="show && !itemTimeline.fixed && !itemTimeline.shared_by"
-        style="font-size:25px"
+        style="font-size:18px;cursor: pointer;"
       ></i>
 
       <!-- Title name -->
       <h4 class="title-item" v-html="itemTimeline.title" />
 
       <!-- Item Description -->
-      <p class="description-item mb-2" v-html="itemTimeline.content" v-linkified />
+      <p class="description-item" v-html="itemTimeline.content" v-linkified />
 
       <!-- Sharedby -->
-      <p class="person p-1" v-if="itemTimeline.shared_by">Shared By :{{namesMap[itemTimeline.shared_by]}}</p>
+      <p class="shared-by" v-if="itemTimeline.shared_by">
+        <span class="key">Shared By :</span>
+        <span class="value">{{namesMap[itemTimeline.shared_by]}}</span>
+      </p>
 
       <!-- Sharing with -->
-      <div class="row" v-else-if="itemTimeline.shared_with">
-        Sharing With :
-        <div v-for="(person, index) in itemTimeline.shared_with" :key="index">
-          <p class="person p-1">{{namesMap[person]}}</p>
+      <div class="sharing-with" v-else-if="itemTimeline.shared_with">
+        <div class="key">Sharing With :</div>
+        <div class="val-con">
+          <div v-for="(person, index) in itemTimeline.shared_with" :key="index" class="values">
+            <p class="value">{{namesMap[person]}},</p>
+          </div>
         </div>
       </div>
     </div>
@@ -83,9 +88,50 @@ export default {
 </script>
 
 <style scoped>
+.sharing-with {
+  display: flex;
+  align-items: center;
+  margin: 15px;
+  margin-top: 40px;
+}
+.sharing-with .key {
+  font-weight: bold;
+  color: #9fa1a2;
+  margin-right: 10px;
+}
+.sharing-with .value {
+  margin: 0px;
+}
+.sharing-with .values {
+  margin-right: 5px;
+}
+.sharing-with .val-con {
+  margin-right: 5px;
+  display: flex;
+  max-width: 500px;
+  white-space: nowrap;
+}
+.shared-by {
+  margin: 15px;
+  margin-top: 40px;
+}
+.shared-by .key {
+  color: #9fa1a2;
+}
+.shared-by .value {
+  padding: 5px;
+  border: 1px solid orange;
+  background: palevioletred;
+  border-radius: 7px;
+  color: white;
+  font-weight: bold !important;
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+}
 .timeline-item .item {
   border-left: 5px solid #ccd5db;
-  padding: 20px 0 20px 15px;
+  padding: 20px 0 40px 15px;
   position: relative;
 }
 .timeline-item .date-item {
@@ -97,7 +143,7 @@ export default {
 .timeline-item .title-item {
   margin: 15px;
   padding: 5px 0;
-  font-size: 15px;
+  font-size: 22px;
   font-weight: 500;
 }
 .timeline-item .description-item {
@@ -105,6 +151,7 @@ export default {
   white-space: pre-wrap;
   font-weight: 100;
   margin: 15px;
+  font-size: 16px;
 }
 .timeline-item .dot {
   display: block;
