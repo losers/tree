@@ -33,7 +33,7 @@ data.relations.western = {
         "inv": { "1": "Grand Son-in-law", "0": "Grand Daughter-in-law" }
     },
     "0": {
-        "same": { "1": "Brother", "0": "Sister" },
+        "same": { "1": "Brother [Sibling]", "0": "Sister [Sibling]" },
         "other": { "1": "Brother [Cousin]", "0": "Sister [Cousin]" },
         "inv": { "1": "Brother-in-Law", "0": "Sister-in-Law" },
         "spl": { "1": "Husband", "0": "Wife" }
