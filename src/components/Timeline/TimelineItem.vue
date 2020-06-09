@@ -1,5 +1,5 @@
 <template>
-  <section class="timeline-item">
+  <section class="timeline-item" :class="{bgfade:(itemTimeline.fixed || itemTimeline.shared_by)}">
     <div class="item" @mouseover="over" @mouseleave="leave">
       <!-- Dot UI -->
       <span :style="getBackgroundColour(itemTimeline.color)" class="dot" />
@@ -22,13 +22,19 @@
       <p class="description-item" v-html="itemTimeline.content" v-linkified />
 
       <!-- Sharedby -->
-      <p class="shared-by" v-if="itemTimeline.shared_by">
+      <div class="shared-by" v-if="itemTimeline.shared_by">
         <span class="key">Shared By :</span>
-        <span class="value">{{namesMap[itemTimeline.shared_by]}}</span>
-      </p>
+        <router-link
+          class="value"
+          :to="{name:'TimelinePerson', params:{member:itemTimeline.shared_by}}"
+        >{{namesMap[itemTimeline.shared_by]}}</router-link>
+      </div>
 
       <!-- Sharing with -->
-      <div class="sharing-with" v-else-if="itemTimeline.shared_with">
+      <div
+        class="sharing-with"
+        v-else-if="itemTimeline.shared_with && itemTimeline.shared_with.length>0"
+      >
         <div class="key">Sharing With :</div>
         <div class="val-con">
           <div v-for="(person, index) in itemTimeline.shared_with" :key="index" class="values">
@@ -41,6 +47,7 @@
 </template>
 
 <script>
+var eventData;
 export default {
   name: "TimelineItem",
   props: {
@@ -72,7 +79,17 @@ export default {
       this.show = false;
     },
     findme(data) {
-      this.$root.$emit("edit-timeline", data);
+      let shared = [];
+      if (this.itemTimeline.shared_with) {
+        for (let i = 0; i < this.itemTimeline.shared_with.length; i++) {
+          shared.push({
+            label: this.namesMap[this.itemTimeline.shared_with[i]],
+            value: this.itemTimeline.shared_with[i]
+          });
+        }
+      }
+      eventData = data;
+      this.$root.$emit("edit-timeline", eventData, shared);
     },
     getBackgroundColour(color) {
       return color ? `background:${color}` : `background:${this.colorDots}`;
@@ -129,6 +146,9 @@ export default {
   margin-left: 10px;
   cursor: pointer;
 }
+.shared-by a:hover {
+  color: white !important;
+}
 .timeline-item .item {
   border-left: 5px solid #ccd5db;
   padding: 20px 0 40px 15px;
@@ -167,5 +187,9 @@ export default {
   border-radius: 15%;
   margin-right: 10px;
   margin-left: 25px;
+}
+
+.bgfade {
+  background-color: #f7f7f7;
 }
 </style>

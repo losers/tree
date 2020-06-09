@@ -67,6 +67,7 @@
                 alt="Blood Line Helper"
               />
             </div>
+
             <div class="timeline_add_box">
               <form v-on:submit.prevent="sendData">
                 <h3 class="mt-3" style="margin-bottom:40px;">{{edit?"Update":"Create"}} Event</h3>
@@ -151,6 +152,8 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
 
+// var emitData;
+
 Vue.use(VueMaterial);
 import ProData from "../../data.js";
 
@@ -172,8 +175,10 @@ export default {
       this.getTimelineData();
     }
     //Emit for listening edit timeline
-    this.$root.$on("edit-timeline", data => {
-      this.line = data;
+    this.$root.$on("edit-timeline", (data, shared) => {
+      this.line = Object.assign({}, data); //for form
+
+      this.shared_with = shared;
       this.edit = true;
     });
   },
@@ -228,13 +233,14 @@ export default {
     sendData() {
       if (this.line.date != null) {
         this.reqload = true;
+        //eve is the final obj
         let eve = {
           date: this.line.date,
           title: this.line.title,
           content: this.line.content
         };
         eve.shared_with = [];
-        if (this.shared_with.length != 0) {
+        if (this.shared_with.length > 0) {
           for (var i = 0; i < this.shared_with.length; i++) {
             eve.shared_with.push(this.shared_with[i].value);
           }
@@ -251,6 +257,11 @@ export default {
             eve
           )
             .then(() => {
+              for (let i = 0; i < this.dataTimeline.length; i++) {
+                if (this.dataTimeline[i]["id"] == this.line.id) {
+                  this.$set(this.dataTimeline, i, eve);
+                }
+              }
               this.cancelclk();
               this.alertStatus(true, "Updated an event");
             })
@@ -273,7 +284,7 @@ export default {
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);
               this.line = {};
-              this.shared_with = null;
+              this.shared_with = [];
             })
             .catch(err => {
               this.alertStatus(false, err);
@@ -299,7 +310,7 @@ export default {
     cancelclk() {
       this.line = {};
       this.edit = false;
-      this.shared_with = null;
+      this.shared_with = [];
     },
 
     //Delete Btn Function
@@ -343,7 +354,8 @@ export default {
     shared_with: [],
     reqload: false,
     del: false,
-    namesMap: {}
+    namesMap: {},
+    emitData: {}
   }),
   computed: {
     names: {
@@ -360,7 +372,7 @@ export default {
 </script>
 
 <style>
-.btn-cancel{
+.btn-cancel {
   border: 1px solid black;
 }
 .input-con {
@@ -368,17 +380,17 @@ export default {
   align-items: center;
   margin-bottom: 30px;
 }
-.input-con .label{
+.input-con .label {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0px;
 }
-.input-con .md-field{
+.input-con .md-field {
   padding: 0px;
   margin: 0px;
 }
-.input-con .v-select{
+.input-con .v-select {
   padding: 0px;
 }
 .titlebar {
