@@ -19,8 +19,8 @@
 
               src="@/assets/logo.png"
               alt="Blood Line"
-              height="50px"
-              style="margin-top: -20px;border: 3px solid #d21b1b;border-radius: 50%;margin-right: 6px;padding: 4px;"
+              height="60px"
+              style="margin-top: -20px;border: 2px solid #d21b1b;border-radius: 50%;margin-right: 6px;padding: 4px;"
             />
             <span style="font-weight: 500;">lood Line</span>
             <br />

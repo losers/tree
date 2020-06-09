@@ -91,7 +91,6 @@ var getRelationTree = function (tree, p1, p2) {
             temp = temp.children[temp.children.length - 1];
         }
     }
-
     return newTree;
 }
 

@@ -112,7 +112,7 @@
                   ></v-select>
                 </div>
 
-                <div class="row justify-content-around mb-4">
+                <div class="row input-con justify-content-around mb-4">
                   <button type="submit" class="btn btn-success btn" :disabled="reqload">
                     <span class="spinner-border spinner-border-sm" v-show="reqload"></span>
                     {{edit?"Update":"Create"}}
@@ -378,7 +378,8 @@ export default {
 .input-con {
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin: 0px;
+  margin-bottom: 30px !important;
 }
 .input-con .label {
   display: flex;
