@@ -17,7 +17,7 @@
       </tbody>
     </table>
     <router-link :to="{name:'TimelinePerson', params:{member:id}}">View Timeline</router-link><br>
-    <router-link :to="{name:'Profile', params:{member:id}}">See Profile</router-link>
+    <!-- <router-link :to="{name:'Profile', params:{member:id}}">See Profile</router-link> -->
   </div>
 </template>
 

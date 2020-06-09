@@ -69,7 +69,7 @@
               v-model="show"
               img-format="jpg"
             ></my-upload>
-            <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress>
+            <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
             <table class="table table-borderless table-hover mt-3 table-data">
               <tbody class="text-left" style="color:black">
                 <tr class="text-center">
@@ -173,7 +173,7 @@ import ProdData from "@/data.js";
 import Store from "@/store/index";
 import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
-import KProgress from "k-progress";
+// import KProgress from "k-progress";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -188,7 +188,7 @@ export default {
     Tabs,
     Tab,
     MoreInfo,
-    KProgress
+    // KProgress
   },
   data() {
     return {

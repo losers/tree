@@ -153,6 +153,8 @@ export default {
   border-left: 5px solid #ccd5db;
   padding: 20px 0 40px 15px;
   position: relative;
+  width: 100%;
+  word-break: break-word;
 }
 .timeline-item .date-item {
   margin: 0;
