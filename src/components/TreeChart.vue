@@ -8,8 +8,8 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" />
-              <img src="../assets/dp.png" v-else />
+              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" alt="Blood Line User" />
+              <img src="../assets/dp.png" v-else alt="Blood Line User"/>
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -18,12 +18,14 @@
             v-if="treeData.mate"
             @click="$emit('click-node',{data:treeData.mate, isMate:true})"
           >
-            <div class="avat">
+            <div class="avat green-circle">
               <img
                 :src="'data:image/png;base64, '+treeData.mate.image_url"
                 v-if="treeData.mate.image_url"
+                alt="Blood Line User"
               />
-              <img src="../assets/dp.png" v-else />
+              <img src="../assets/dp.png" v-else 
+              alt="Blood Line User"/>
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>
@@ -98,6 +100,12 @@ export default {
 </script>
 
 <style scoped>
+.red-circle{
+  border:3px solid red !important;
+}
+.green-circle{
+  border: 2px solid green !important;
+}
 table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
@@ -207,7 +215,6 @@ td {
   overflow: hidden;
 }
 .node .mate .avat {
-  border: 2px solid green !important;
   border-radius: 50%;
 }
 

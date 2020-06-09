@@ -69,7 +69,8 @@
               v-model="show"
               img-format="jpg"
             ></my-upload>
-            <table class="table table-borderless table-hover mt-5 table-data">
+            <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress>
+            <table class="table table-borderless table-hover mt-3 table-data">
               <tbody class="text-left" style="color:black">
                 <tr class="text-center">
                   <td>
@@ -172,6 +173,7 @@ import ProdData from "@/data.js";
 import Store from "@/store/index";
 import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
+import KProgress from "k-progress";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -185,7 +187,8 @@ export default {
     "my-upload": myUpload,
     Tabs,
     Tab,
-    MoreInfo
+    MoreInfo,
+    KProgress
   },
   data() {
     return {
@@ -208,7 +211,8 @@ export default {
       cookeyStatus: false,
       vloading: false,
       hasMate: false,
-      retry: false //stores key status
+      retry: false, //stores key status
+      count: 0
     };
   },
   watch: {
@@ -233,6 +237,8 @@ export default {
           this.hasMate = true;
         }
         this.data = data.data;
+        console.log(Object.keys(this.data))
+        this.count = Object.keys(this.data).length - 6; //decremented 1 for image status
         this.cookeyStatus = this.data.has_session;
       })
       .catch(err => {
@@ -257,6 +263,7 @@ export default {
           if (this.previewImage == "data:image/png;base64,undefined") {
             this.imageExists = false;
           } else {
+            this.count++;
             this.imageExists = true;
           }
         }

@@ -91,7 +91,6 @@ var getRelationTree = function (tree, p1, p2) {
             temp = temp.children[temp.children.length - 1];
         }
     }
-
     return newTree;
 }
 
@@ -200,9 +199,6 @@ function checkForInvRelation(tree, toChange, isInv) {
     if (tree.gender == 0) {
         toChange = true;
     }
-    if (tree.gender == 0 && tree.mate) {
-        isInv = !isInv;
-    }
     if (tree.children)
         return checkForInvRelation(tree.children[0], toChange, isInv);
     else {
@@ -260,9 +256,6 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
 
         if(isInv1 != isInv2){
             sameLane = "inv";
-        }
-        else if(isInv1 == isInv2 && sameLane == "inv"){
-            sameLane = "other";
         }
     }
     return relations[relationLev][sameLane][p2.gender];

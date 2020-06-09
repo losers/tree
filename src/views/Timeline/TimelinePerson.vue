@@ -48,10 +48,12 @@
 
                 <!-- TImeline Componet -->
                 <Timeline
+                  class="mt-4"
                   :timeline-items="dataTimeline"
                   :unique-year="false"
                   :show-day-and-month="true"
                   :order="order"
+                  :namesMap="namesMap"
                 />
               </div>
 
@@ -62,32 +64,34 @@
                 height="350px"
                 width="200px"
                 class="mt-5"
+                alt="Blood Line Helper"
               />
             </div>
-            <div class="col-5 mt-5 timeline_add_box pt-5">
+
+            <div class="timeline_add_box">
               <form v-on:submit.prevent="sendData">
-                <h3 class="mb-3">{{edit?"Update":"Create"}} a Event</h3>
-                <div class="row mt-3">
-                  <label class="col-3 mt-2">Date</label>
+                <h3 class="mt-3" style="margin-bottom:40px;">{{edit?"Update":"Create"}} Event</h3>
+                <div class="row input-con">
+                  <label class="col-3 label">Date</label>
                   <md-datepicker
-                    class="col-7 p-1 ml-2"
+                    class="col-7"
                     v-model="line.date"
                     placeholder="Event Date"
                     required="true"
                   />
                 </div>
-                <div class="row">
-                  <label class="col-3 mt-2">Title:</label>
+                <div class="row input-con">
+                  <label class="col-3 label">Title</label>
                   <input
                     type="text"
                     class="form-control col-7"
-                    placeholder="Enter Short Name"
+                    placeholder="Enter Event Title"
                     v-model="line.title"
                     required="true"
                   />
                 </div>
-                <div class="row mt-3">
-                  <label class="col-3 mt-2">Desciption</label>
+                <div class="row input-con">
+                  <label class="col-3 label">Desciption</label>
                   <textarea
                     class="form-control col-7 rounded-2"
                     rows="3"
@@ -97,16 +101,33 @@
                     placeholder="Event description"
                   ></textarea>
                 </div>
+                <div class="row input-con">
+                  <label class="col-3 label">Share with</label>
+                  <v-select
+                    class="col-7"
+                    style="height: 35px;"
+                    multiple
+                    :options="names"
+                    v-model="shared_with"
+                  ></v-select>
+                </div>
 
-                <div class="row justify-content-around">
-                  <button type="submit" class="btn btn-success btn mt-4">{{edit?"Update":"Create"}}</button>
-                  <button class="btn btn-warning mt-4" type="reset" @click="cancelclk">Cancel</button>
+                <div class="row input-con justify-content-around mb-4">
+                  <button type="submit" class="btn btn-success btn" :disabled="reqload">
+                    <span class="spinner-border spinner-border-sm" v-show="reqload"></span>
+                    {{edit?"Update":"Create"}}
+                  </button>
+                  <button class="btn btn-cancel" type="reset" @click="cancelclk">Cancel</button>
                   <button
                     type="button"
                     @click="deleteItem()"
                     v-show="edit"
-                    class="btn btn-danger btn mt-4"
-                  >Delete Permanently</button>
+                    :disabled="del"
+                    class="btn btn-danger btn"
+                  >
+                    <span class="spinner-border spinner-border-sm" v-show="del"></span>
+                    Delete Permanently
+                  </button>
                 </div>
               </form>
             </div>
@@ -127,6 +148,11 @@ import Axios from "axios";
 import Vue from "vue";
 import "vue-material/dist/vue-material.min.css";
 import "vue-material/dist/theme/default.css";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+import Store from "../../store/index";
+
+// var emitData;
 
 Vue.use(VueMaterial);
 import ProData from "../../data.js";
@@ -134,62 +160,91 @@ import ProData from "../../data.js";
 export default {
   name: "App",
   components: {
-    Timeline
+    Timeline,
+    vSelect
+  },
+  watch: {
+    names() {
+      if (this.names.length > 1) {
+        this.getTimelineData();
+      }
+    }
   },
   mounted() {
-    Axios.get(
-      ProData.getHostURL() +
-        "/timeline/" +
-        this.$route.params.id +
-        "/" +
-        this.$route.params.member
-    )
-      .then(data => {
-        this.user.fullname = data.data[0].name;
-        this.user.name = data.data[0].short_name;
-        if (!data.data[0].timeline) {
-          data.data[0].timeline = [];
-        }
-        this.dataTimeline = data.data[0].timeline;
-
-        if (data.data[0].dob) {
-          let udob = {
-            content: "Birthday Time",
-            date: new Date(data.data[0].dob),
-            fixed: true,
-            title: "Birthday"
-          };
-          this.dataTimeline.push(udob);
-        }
-        if (data.data[0].died_on) {
-          let udob = {
-            content: "Died",
-            date: new Date(data.data[0].died_on),
-            fixed: true,
-            title: "Died On"
-          };
-          this.dataTimeline.push(udob);
-        }
-        this.loading = false;
-      })
-      .catch(err => {
-        this.error = err;
-      });
-
+    if (this.names.length > 1) {
+      this.getTimelineData();
+    }
     //Emit for listening edit timeline
-    this.$root.$on("edit-timeline", data => {
-      this.line = data;
+    this.$root.$on("edit-timeline", (data, shared) => {
+      this.line = Object.assign({}, data); //for form
+
+      this.shared_with = shared;
       this.edit = true;
     });
   },
   methods: {
+    getTimelineData() {
+      Axios.get(
+        ProData.getHostURL() +
+          "/timeline/" +
+          this.$route.params.id +
+          "/" +
+          this.$route.params.member
+      )
+        .then(data => {
+          //Timeline Meta Data
+          this.user.fullname = data.data[0].name;
+          this.user.name = data.data[0].short_name;
+          if (!data.data[0].timeline) {
+            data.data[0].timeline = [];
+          }
+          this.dataTimeline = data.data[0].timeline;
+
+          //Adding Birhday to Timeline
+          if (data.data[0].dob) {
+            let udob = {
+              content: "Birthday Time",
+              date: new Date(data.data[0].dob),
+              fixed: true,
+              title: "Birthday"
+            };
+            this.dataTimeline.push(udob);
+          }
+
+          //Adding Death date to Timline if exists
+          if (data.data[0].died_on) {
+            let udob = {
+              content: "Died",
+              date: new Date(data.data[0].died_on),
+              fixed: true,
+              title: "Died On"
+            };
+            this.dataTimeline.push(udob);
+          }
+          for (let i = 0; i < this.names.length; i++) {
+            this.namesMap[this.names[i].value] = this.names[i].label;
+          }
+          this.loading = false;
+        })
+        .catch(err => {
+          this.error = err;
+        });
+    },
     sendData() {
       if (this.line.date != null) {
+        this.reqload = true;
+        //eve is the final obj
         let eve = {
           date: this.line.date,
           title: this.line.title,
           content: this.line.content
         };
+        eve.shared_with = [];
+        if (this.shared_with.length > 0) {
+          for (var i = 0; i < this.shared_with.length; i++) {
+            eve.shared_with.push(this.shared_with[i].value);
+          }
+        }
         if (this.edit) {
           //Updating an event
           eve.id = this.line.id;
@@ -202,12 +257,18 @@ export default {
             eve
           )
             .then(() => {
+              for (let i = 0; i < this.dataTimeline.length; i++) {
+                if (this.dataTimeline[i]["id"] == this.line.id) {
+                  this.$set(this.dataTimeline, i, eve);
+                }
+              }
               this.cancelclk();
               this.alertStatus(true, "Updated an event");
             })
             .catch(err => {
               this.alertStatus(false, err);
-            });
+            })
+            .finally(() => (this.reqload = false));
         } else {
           //creating an event and pushing event to array locally
           Axios.post(
@@ -223,10 +284,12 @@ export default {
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);
               this.line = {};
+              this.shared_with = [];
             })
             .catch(err => {
               this.alertStatus(false, err);
-            });
+            })
+            .finally(() => (this.reqload = false));
         }
       } else {
         this.alertStatus(false, "Please select a date");
@@ -247,10 +310,12 @@ export default {
     cancelclk() {
       this.line = {};
       this.edit = false;
+      this.shared_with = [];
     },
 
     //Delete Btn Function
     deleteItem() {
+      this.del = true;
       Axios.delete(
         ProData.getHostURL() +
           "/timeline/" +
@@ -270,7 +335,8 @@ export default {
         })
         .catch(err => {
           this.alertStatus(false, err);
-        });
+        })
+        .finally(() => (this.del = false));
     }
   },
   data: () => ({
@@ -284,13 +350,51 @@ export default {
     order: "asc",
     edit: false,
     itemIndex: null,
-    dataTimeline: []
-  })
+    dataTimeline: [],
+    shared_with: [],
+    reqload: false,
+    del: false,
+    namesMap: {},
+    emitData: {}
+  }),
+  computed: {
+    names: {
+      get() {
+        var name = Store.getters.getAllMembers;
+        name = name.filter(obj => {
+          return obj.value !== this.$route.params.member;
+        });
+        return name;
+      }
+    }
+  }
 };
 </script>
 
 <style>
-.titlebar { 
+.btn-cancel {
+  border: 1px solid black;
+}
+.input-con {
+  display: flex;
+  align-items: center;
+  margin: 0px;
+  margin-bottom: 30px !important;
+}
+.input-con .label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px;
+}
+.input-con .md-field {
+  padding: 0px;
+  margin: 0px;
+}
+.input-con .v-select {
+  padding: 0px;
+}
+.titlebar {
   position: fixed;
   width: 100%;
   z-index: 100;
@@ -305,9 +409,13 @@ export default {
   font-weight: bold;
 }
 .timeline_add_box {
-  height: 450px;
+  overflow: scroll;
+  max-height: 600px;
   position: fixed;
-  margin-left: 50%;
+  border-radius: 20px;
+  top: 20%;
+  right: 10%;
+  width: 650px;
   -webkit-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
   box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
@@ -319,5 +427,4 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
 </style>

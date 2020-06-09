@@ -16,9 +16,11 @@
           <div id="stars3"></div>
           <div id="title">
             <img
+
               src="@/assets/logo.png"
-              height="50px"
-              style="margin-top: -20px;border: 3px solid #d21b1b;border-radius: 50%;margin-right: 6px;padding: 4px;"
+              alt="Blood Line"
+              height="60px"
+              style="margin-top: -20px;border: 2px solid #d21b1b;border-radius: 50%;margin-right: 6px;padding: 4px;"
             />
             <span style="font-weight: 500;">lood Line</span>
             <br />

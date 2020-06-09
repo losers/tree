@@ -8,9 +8,9 @@
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:70px" height="350px" />
+      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:70px" height="350px" alt="Blood Line Helper"/>
       <div v-else-if="same">
-        <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" />
+        <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" alt="Blood Line Helper"/>
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
         <h6>Hence Proved</h6>
       </div>
@@ -113,10 +113,9 @@ export default {
       }
     },
     rName() {
-      console.log(this.lang);
       this.relationName = Algos.findRelationName(
-        this.tree,
-        this.tree.response.data,
+        this.tree, //Entire tree data
+        this.tree.response.data, //gender with ids
         this.p1.value,
         this.p2.value,
         this.lang

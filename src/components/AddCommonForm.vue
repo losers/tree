@@ -68,7 +68,7 @@
 
       <div class="row">
         <label class="col-4">Is Alive</label>
-        <toggle-button v-model="is_alive" value="true" :sync="true" class="mb-4" />
+        <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="mb-4" />
         <span class="form-inline" v-show="!is_alive">
           <input
             type="date"
@@ -121,16 +121,17 @@ export default {
   },
   watch: {
     is_alive() {
-      this.data.is_alive = this.is_alive;
+      this.data.is_died = !this.is_alive;
     }
   },
   mounted() {
     this.is_alive = true;
     //memdata comes from MemberData route for editing
     if (this.memData) {
+      console.log(this.memData);
       this.data = this.memData;
-      if (this.memData.is_alive) {
-        this.is_alive = true;
+      if (this.memData.is_died) {
+        this.is_alive = false;
         if (this.memData.died_on) {
           this.data.died_on = this.memData.died_on;
         }

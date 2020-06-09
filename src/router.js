@@ -27,6 +27,18 @@ const myrouter = new VueRouter({
             component: () => import('./views/Selections.vue'),
             children: [
                 {
+                    path: "profile",
+                    name: "ProfileFrame",
+                    component: () => import('./views/Profile'),
+                    children: [
+                        {
+                            path: ":member",
+                            name: "Profile",
+                            component: () => import('./views/Profile'),
+                        }
+                    ]
+                },
+                {
                     path: "analytics",
                     name: "Analytics",
                     redirect: "analytics/relation-finder",

@@ -1,6 +1,7 @@
 <template>
   <section class="timeline">
     <div v-if="hasItems" class="wrapper-timeline">
+      <!-- <transition-group name="list" tag="p"> -->
       <div
         v-for="(timelineContent, timelineIndex) in dataTimeline"
         :key="timelineIndex"
@@ -14,8 +15,10 @@
           :item-index="timelineIndex"
           :date-locale="dateLocale"
           :color-dots="colorDots"
+          :namesMap="namesMap"
         />
       </div>
+      <!-- </transition-group> -->
     </div>
     <p v-else>{{ messageWhenNoItems }}</p>
   </section>
@@ -31,8 +34,7 @@ export default {
   },
   props: {
     timelineItems: {
-      type: Array,
-      default: () => []
+      type: Array
     },
     messageWhenNoItems: {
       type: String,
@@ -57,7 +59,8 @@ export default {
     dateLocale: {
       type: String,
       default: ""
-    }
+    },
+    namesMap: {}
   },
   computed: {
     hasItems() {
@@ -69,6 +72,11 @@ export default {
       if (this.order === "asc")
         return this.orderItems(this.timelineItems, "asc");
       return this.timelineItems;
+    }
+  },
+  watch: {
+    timelineItems() {
+      console.log("changed");
     }
   },
   methods: {
@@ -105,9 +113,7 @@ export default {
       return new Date(date.date).getFullYear();
     },
     hasYear(dataTimeline) {
-      return (
-        dataTimeline && dataTimeline.date != undefined
-      );
+      return dataTimeline && dataTimeline.date != undefined;
     },
     getTimelineItemsAssembled(items) {
       const itemsGroupByYear = [];
@@ -148,7 +154,6 @@ export default {
 .timeline .wrapper-item {
   display: grid;
   grid-template-columns: 100px 1fr;
-  margin-bottom: 20px;
 }
 .timeline .wrapper-item .section-year {
   display: flex;
@@ -165,4 +170,16 @@ export default {
 .timeline .wrapper-item.unique-timeline {
   margin-bottom: 0;
 }
+
+/* .list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translate(0px);
+} */
 </style>

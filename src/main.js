@@ -18,7 +18,6 @@ Vue.use(VModal, {
   injectModalsContainer: true
 });
 
-
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true;
 
