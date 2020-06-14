@@ -9,6 +9,7 @@
 import AddCForm from "./AddCommonForm";
 import Axios from "axios";
 import ProdData from "../data.js";
+import Store from "./../store/index";
 
 export default {
   name: "AddMemberForm",
@@ -25,14 +26,19 @@ export default {
     sendData(data) {
       console.log(data.type);
       data.parent_id = this.$route.query.parent_id;
-      Axios.post(ProdData.getHostURL()+"/tree/" + this.surname + "/person", data)
-        .then(() => {
+      Axios.post(
+        ProdData.getHostURL() + "/tree/" + this.surname + "/person",
+        data
+      )
+        .then(treeData => {
+          console.log(treeData.data)
           this.$emit("close");
           this.$router.push({
             name: "MainTree",
             id: this.surname
           });
-          this.$root.$emit("update-tree", "added a new member");
+          Store.dispatch("treeOnlySetup", treeData.data).then(
+          );
         })
         .catch(err => (this.err = err));
     },

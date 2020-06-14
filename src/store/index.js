@@ -25,7 +25,7 @@ export default new Vuex.Store({
       state.title = treeData.data.meta;
       state.is_session = treeData.data.has_session;
     },
-    setSession(state, status){
+    setSession(state, status) {
       state.is_session = status;
     },
     setLoading(state, status) {
@@ -36,6 +36,10 @@ export default new Vuex.Store({
     },
     error(state, err) {
       state.error = err;
+    },
+    setTreeOnlyData(state, tree) {
+      state.tree = tree;
+      console.log(tree);
     }
   },
   actions: {
@@ -53,12 +57,16 @@ export default new Vuex.Store({
         state.commit('error', err)
       }
     },
-
+    async treeOnlySetup(state, tree) {
+      state.commit('setTreeOnlyData', tree);
+    },
     async allMembersSet(state, tree) {
       let allMembers = [];
       Algos.getAllGuys(tree, allMembers);
       state.commit('setAllMembers', allMembers);
-    }
+    },
+
+
   },
   getters: {
     getIsLoading: (state) => {
