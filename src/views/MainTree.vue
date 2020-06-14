@@ -96,7 +96,7 @@
             With
             <i class="icofont-heart" style="color:red"></i>
             by
-            <a href="/medam">Satyanarayana Family Dev's</a>
+            <a href="/medam">Satyanarayana Dev's</a>
           </p>
         </footer>
       </div>

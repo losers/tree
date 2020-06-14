@@ -1,6 +1,9 @@
 <template>
   <div id="app-delete">
-    <h3 class="text-danger mx-auto mt-4">Delete <span class="ml-3 mr-3">{{name}} ?</span></h3>
+    <h3 class="text-danger mx-auto mt-4">
+      Delete
+      <span class="ml-3 mr-3">{{name}} ?</span>
+    </h3>
     <div class="d-flex justify-content-space mt-4">
       <i class="mr-3" style="color:red; font-size:20px"></i>
       <h5 class="text-danger">- It will delete all of his/her children</h5>
@@ -22,13 +25,16 @@
       </button>
       <button @click="close" class="btn mt-3" type="button">Cancel</button>
     </div>
-    <div v-show="err">{{err}}</div>
+    <div v-show="err" class="mt-1" style="color:red">
+      <strong>{{err}}</strong>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import ProdData from "../data.js";
+import Store from "./../store/index";
 
 export default {
   name: "DeleteMember",
@@ -65,18 +71,19 @@ export default {
     deleteMe() {
       axios
         .delete(
-          ProdData.getHostURL()+"/tree/" +
+          ProdData.getHostURL() +
+            "/tree/" +
             this.$route.params.id +
             "/person/" +
             this.$route.params.member
         )
-        .then(() => {
+        .then(treeData => {
           this.$emit("close");
           this.$router.push({
             name: "MainTree",
             id: this.surname
           });
-          this.$root.$emit("update-tree", "deleted a new member");
+          Store.dispatch("treeOnlySetup", treeData.data).then();
         })
         .catch(err => (this.err = err))
         .finally(() => (this.loading = false));
