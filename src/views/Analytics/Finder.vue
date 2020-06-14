@@ -8,9 +8,21 @@
       <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
     </div>
     <center>
-      <img v-if="same==null" src="@/assets/finder.jpg" style="margin-top:70px" height="350px" alt="Blood Line Helper"/>
+      <img
+        v-if="same==null"
+        src="@/assets/finder.jpg"
+        style="margin-top:70px"
+        height="350px"
+        alt="Blood Line Helper"
+      />
       <div v-else-if="same">
-        <img src="../../assets/same.jpg" height="300px" width="200px" class="mt-5 pt-5" alt="Blood Line Helper"/>
+        <img
+          src="../../assets/same.jpg"
+          height="300px"
+          width="200px"
+          class="mt-5 pt-5"
+          alt="Blood Line Helper"
+        />
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
         <h6>Hence Proved</h6>
       </div>
@@ -27,6 +39,7 @@
         <div v-show="opts">
           <input type="radio" class="mr-2" v-model="lang" value="western" name="lang" />Western
           <input type="radio" class="mr-2 ml-4" v-model="lang" value="telugu" name="lang" />Telugu
+          <input type="radio" class="mr-2 ml-4" v-model="lang" value="kannada" name="lang" />Kannada
         </div>
         <TreeChart :json="tree" :images="images" style="padding-top:40px" />
       </div>
