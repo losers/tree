@@ -89,4 +89,43 @@ data.relations.telugu = {
     }
 };
 
+data.relations.kannada = {
+    "3": {
+        "same": { "1": "ಮುತ್ತಜ್ಜ [Muthhatha]", "0": "ಮುತ್ತಜ್ಜಿ [Muthhajji]" },
+        "other": { "1": "ಮುತ್ತಜ್ಜ [Muthhatha]", "0": "ಮುತ್ತಜ್ಜಿ [Muthhajji]" },
+        "inv": { "1": "ಮುತ್ತಜ್ಜ [Muthhatha]", "0": "ಮುತ್ತಜ್ಜಿ [Muthhajji]" },
+    },
+    "-3": {
+        "same": { "1": "ಮರಿ ಮೊಮ್ಮಗ [Mari Mommaga]", "0": "ಮರಿ ಮೊಮ್ಮಗಳು[Mari Mommagalu]" },
+        "other": { "1": "ಮರಿ ಮೊಮ್ಮಗ [Mari Mommaga]", "0": "ಮರಿ ಮೊಮ್ಮಗಳು[Mari Mommagalu]" },
+        "inv": { "1": "ಮರಿ ಮೊಮ್ಮಗ [Mari Mommaga]", "0": "ಮರಿ ಮೊಮ್ಮಗಳು[Mari Mommagalu]" }
+    },
+    "2": {
+        "same": { "1": "ಅಜ್ಜ [Ajja]", "0": "ಅಜ್ಜಿ [Ajji]" },
+        "other": { "1": "ಅಜ್ಜ [Ajja]", "0": "ಅಜ್ಜಿ [Ajji]" },
+        "inv": { "1": "ತಾತ [Taata]", "0": "ಅಜ್ಜಿ [Ajji]" },
+    },
+    "-2": {
+        "same": {"1" : "ಮೊಮ್ಮಗ [Mommaga]", "0": "ಮೊಮ್ಮಗಳು [Mommagalu]"},
+        "other": {"1" : "ಮೊಮ್ಮಗ [Mommaga]", "0": "ಮೊಮ್ಮಗಳು [Mommagalu]"},
+        "inv": {"1" : "ಮೊಮ್ಮಗ [Mommaga]", "0": "ಮೊಮ್ಮಗಳು [Mommagalu]"},
+    },
+    "0": {
+        "same": {"1" : "ಅಣ್ಣ/ತಮ್ಮ [Anna/Tamma]", "0": "ಅಕ್ಕ/ತಂಗಿ [Akka/Tangi]"},
+        "other": {"1" : "ಅಣ್ಣ/ತಮ್ಮ [Anna/Tamma]", "0": "ಅಕ್ಕ/ತಂಗಿ [Akka/Tangi]"},
+        "inv": {"1" : "ಭಾವ/ಬಾಮೈದ [Bhaava/Baamaida]", "0": "ಅತ್ತಿಗೆ/ನಾದಿನಿ [Attige/Naadini]"},
+        "spl": {"1" : "ಗಂಡ [Ganda]", "0": "ಹೆಂಡತಿ [Hendathi]"}
+    },
+    "1": {
+        "same": {"1" : "ಅಪ್ಪ [Appa]", "0": "ಅಮ್ಮ [Amma]"},
+        "other": {"1" : "ದೊಡ್ಡಪ್ಪ/ಚಿಕ್ಕಪ್ಪ [Doddappa/Chikkappa]", "0": "ದೊಡ್ಡಮ್ಮ/ಚಿಕ್ಕಮ್ಮ [Doddamma/Chikkamma]"},
+        "inv": {"1" : "ಮಾವ [Maava]", "0": "ಅತ್ತೆ [Atte]"},
+    },
+    "-1": {
+        "same": {"1" : "ಮಗ [Maga]", "0": "ಮಗಳು [Magalu]"},
+        "other": {"1" : "ಮಗ ವರಸೆಗೆ [Maga Varse]", "0": "ಮಗಳು ವರಸೆಗೆ [Magalu Varse]"},
+        "inv": {"1" : "ಅಳಿಯ [Aliya]", "0": "ಸೊಸೆ [Sose]"},
+    }
+};
+
 export default data;
