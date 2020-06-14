@@ -95,7 +95,7 @@
                   <textarea
                     class="form-control col-7 rounded-2"
                     rows="3"
-                    maxlength="150"
+                    maxlength="1000"
                     v-model="line.content"
                     required="true"
                     placeholder="Event description"
