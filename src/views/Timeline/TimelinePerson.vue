@@ -165,13 +165,13 @@ export default {
   },
   watch: {
     names() {
-      if (this.names.length > 1) {
+      if (this.names.length > 0) {
         this.getTimelineData();
       }
     }
   },
   mounted() {
-    if (this.names.length > 1) {
+    if (this.names.length > 0) {
       this.getTimelineData();
     }
     //Emit for listening edit timeline
