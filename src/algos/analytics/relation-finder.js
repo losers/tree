@@ -253,6 +253,9 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
         else if(p2.gender == 0 && p2.level < p1.level && !p2.is_mate){
             isInv2 = !isInv2;
         }
+        else if(p2.gender == 1 && p2.level < p1.level && p2.is_mate){
+            isInv2 = !isInv2;
+        }
 
         if(isInv1 != isInv2){
             sameLane = "inv";
