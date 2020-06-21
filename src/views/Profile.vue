@@ -65,7 +65,9 @@ var testLayout = [
 ];
 export default {
   methods: {
-    getRelation() {},
+    getRelation() {
+
+    },
     test() {
       var allIds = [];
       (this.tree = Store.getters.getTreeData),
@@ -84,7 +86,8 @@ export default {
       previewImage: null,
       imageExists: false,
       tree: null,
-      layout: testLayout
+      layout: testLayout,
+      language:"western"
     };
   },
   mounted() {

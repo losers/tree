@@ -16,7 +16,6 @@
           <div id="stars3"></div>
           <div id="title">
             <img
-
               src="@/assets/logo.png"
               alt="Blood Line"
               height="60px"
@@ -25,7 +24,7 @@
             <span style="font-weight: 500;">lood Line</span>
             <br />
           </div>
-          <center>
+          <center v-show="addFBtn">
             <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
           <center>
@@ -44,7 +43,7 @@
           <center>
             <div class="container div-box">
               <i
-                class="icofont-camera float-left"
+                class="icofont-star float-left"
                 style="color:white; font-size:25px"
                 data-toggle="tooltip"
                 title="Celebrity Family"
@@ -645,6 +644,8 @@ a:hover {
 #title {
   left: 0;
   right: 0;
+  top: 30px;
+  margin-top: 30px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
