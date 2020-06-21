@@ -237,7 +237,6 @@ export default {
           this.hasMate = true;
         }
         this.data = data.data;
-        console.log(Object.keys(this.data))
         this.count = Object.keys(this.data).length - 6; //decremented 1 for image status
         this.cookeyStatus = this.data.has_session;
       })
@@ -379,7 +378,6 @@ export default {
         }
       }
       this.open = false;
-      console.log(num);
       if (this.$route.query.hasMate) {
         this.$router.push({
           name: "AddMember",
