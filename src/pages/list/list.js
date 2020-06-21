@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from "./router";
+import router from "../../router";
 import VueParticles from 'vue-particles';
 import axios from "axios";
 import 'typeface-comfortaa'
 import device from "vue-device-detector"
 import VModal from "vue-js-modal";
-import store from './store'
-import '../node_modules/timeline-vuejs/dist/timeline-vuejs.css'
+import store from '../../store'
+import '../../..//node_modules/timeline-vuejs/dist/timeline-vuejs.css'
 import linkify from "vue-linkify";
 
 Vue.directive("linkified", linkify);

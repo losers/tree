@@ -50,7 +50,7 @@
                 title="Celebrity Family"
                 v-show="data.celeb"
               ></i>
-              <a :href="'/'+data.surname" class="title">{{data.title}}</a>
+              <a :href="data.surname" class="title">{{data.title}}</a>
               <!-- <router-link :to="{name:'MainTree', params:{id:data.surname}}">
                 <div class="title">{{data.title}}</div>
               </router-link>-->

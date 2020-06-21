@@ -16,7 +16,7 @@
               <i class="icofont-arrow-left"></i>
               Back
             </router-link>
-            <p class="title pt-3">{{user.name }}'s Timeline</p>
+            <p class="title">{{user.name }}'s Timeline</p>
           </div>
 
           <!-- Alert Modals -->
@@ -147,7 +147,6 @@ import VueMaterial from "vue-material";
 import Axios from "axios";
 import Vue from "vue";
 import "vue-material/dist/vue-material.min.css";
-import "vue-material/dist/theme/default.css";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
@@ -372,6 +371,28 @@ export default {
 </script>
 
 <style>
+.md-datepicker-year-selector, .md-datepicker-month, .md-datepicker-body-footer, .md-datepicker-body-content{
+  background-color: white;
+}
+.md-datepicker{
+    display: flex;
+    align-items: center;
+}
+.md-clear{
+  margin-top: -6px !important;
+}
+.md-datepicker-header{
+  background-color: rgb(24, 121, 206);
+  color: white;
+}
+.md-datepicker-selected{
+  background-color: rgb(24, 121, 206);
+  color: white;
+}
+.md-datepicker{
+  border-bottom: 1px solid rgb(24, 121, 206);
+}
+
 .btn-cancel {
   border: 1px solid black;
 }
