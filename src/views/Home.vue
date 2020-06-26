@@ -38,7 +38,7 @@
             </touch-ripple>
           </center>
         </div>
-        <DualPage reference="AddFamilyForm" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
+        <DualPage :reference="0" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
         <div v-for="data in info" :key="data.id">
           <center>
             <div class="container div-box">

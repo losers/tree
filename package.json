@@ -24,11 +24,11 @@
     "vue-router": "^3.1.6",
     "vue-select": "^3.10.3",
     "vue-simple-drawer": "^1.0.6",
-    "vue-swipeable-bottom-sheet": "0.0.5",
     "vue-tabs-component": "^1.5.0",
     "vue-touch-ripple": "^3.0.0",
     "vue-typer": "^1.2.0",
-    "vuex": "^3.3.0"
+    "vuex": "^3.3.0",
+    "hammerjs": "*"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

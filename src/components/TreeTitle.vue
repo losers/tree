@@ -1,6 +1,6 @@
 <template>
   <div class="tree-titlebar">
-    <a :href="'/app'">
+    <a :href="'/app/'">
       <i class="icofont-arrow-left"></i> Back
     </a>
     <div class="tree-title">

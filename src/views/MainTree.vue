@@ -17,7 +17,7 @@
         <center style="padding-top:240px">
           <img src="@/assets/dna.gif" alt="Bloodline Loader" />
         </center>
-      </div>
+      </div>  
 
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
@@ -29,7 +29,7 @@
           alt="Blood Line Helper"
         />
         <center>
-          <DualPage reference="AddRootForm"></DualPage>
+          <DualPage :reference="1"></DualPage>
           <div class="row">
             <div class="col-3"></div>
             <ul class="col-8">
@@ -123,7 +123,8 @@ export default {
   components: {
     TreeChart,
     TreeTitle,
-    Error
+    Error,
+    DualPage
   },
   data() {
     return {

@@ -1,165 +1,162 @@
 <template>
-  <div :class="{'mobile-member-drawer':$device.mobile}">
-    <!-- <router-view></router-view> -->
-    <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
-      <div v-if="open">
-        <section v-if="errored">
-          err
-          <p>{{errored}}</p>
-        </section>
-        <section v-else>
-          <div v-if="loading" class="container_image mx-auto">
-            <center>
-              <img src="@/assets/dna.gif" alt="Family Tree Loading" />
-            </center>
-          </div>
-          <div v-else>
-            <div class="container_image mx-auto">
-              <div v-if="imageExists">
-                <img
-                  :src="previewImage"
-                  alt="Avatar"
-                  class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
-                />
-              </div>
-              <div v-else>
-                <img
-                  src="../../assets/profile.png"
-                  alt="Family Tree Loading"
-                  class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
-                />
-              </div>
-
-              <div class="middle" v-show="cookeyStatus">
-                <div class="member-txt">
-                  <a class="btn" @click="show=true" style="color: white!important;">
-                    <i class="icofont-edit"></i>
-                    Change
-                  </a>
-                </div>
-              </div>
+  <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
+    <div v-if="open">
+      <section v-if="errored">
+        err
+        <p>{{errored}}</p>
+      </section>
+      <section v-else>
+        <div v-if="loading" class="container_image mx-auto">
+          <center>
+            <img src="@/assets/dna.gif" alt="Family Tree Loading" />
+          </center>
+        </div>
+        <div v-else>
+          <div class="container_image mx-auto">
+            <div v-if="imageExists">
+              <img
+                :src="previewImage"
+                alt="Avatar"
+                class="image mx-auto"
+                style="border-radius: 50%;width: 150px;"
+              />
+            </div>
+            <div v-else>
+              <img
+                src="../../assets/profile.png"
+                alt="Family Tree Loading"
+                class="image mx-auto"
+                style="border-radius: 50%;width: 150px;"
+              />
             </div>
 
-            <button
-              @click="uploadImage"
-              v-show="showUpload"
-              class="btn btn-success mt-3"
-              :disabled="loadingUpload"
-            >
-              <span v-if="!doneUpload">
-                <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
-                <i class="icofont-cloud-upload" v-else></i>
-                Upload Image
-              </span>
-              <span v-else>
-                <i class="icofont-tick-mark"></i>
-                Successfully Uploaded
-              </span>
-            </button>
-
-            <my-upload
-              field="img"
-              @crop-success="cropSuccess"
-              :width="300"
-              :height="300"
-              url
-              lang-type="en"
-              v-model="show"
-              img-format="jpg"
-            ></my-upload>
-            <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
-            <table class="table table-borderless table-hover mt-3 table-data">
-              <tbody class="text-left" style="color:black">
-                <tr class="text-center">
-                  <td>
-                    {{data.short_name}}
-                    <i
-                      class="icofont-edit float-right"
-                      @click="showUpdateForm(data)"
-                      style="font-size:20px"
-                      v-show="cookeyStatus"
-                    ></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="border-left:3px solid red;">
-                    <i class="icofont-business-man"></i>
-                    {{data.name}}
-                  </td>
-                </tr>
-                <tr v-if="data.gender">
-                  <td style="border-left:3px solid orange;">
-                    <span v-if="data.gender==1">
-                      <i class="icofont-male"></i>
-                    </span>
-                    <span v-else>
-                      <i class="icofont-female"></i>
-                    </span>
-                    {{data.gender=="1"?"Male":"Female"}}
-                  </td>
-                </tr>
-              </tbody>
-
-              <!-- Tabbar -->
-              <tabs>
-                <tab name="Actions">
-                  <!-- Actions -->
-                  <transition name="fade" mode="out-in">
-                    <div class="mx-auto col-12" v-if="cookeyStatus">
-                      <button
-                        @click="addMember(0)"
-                        class="col-10 btn btn-warning mb-3"
-                        v-show="!data.parent_id"
-                      >+ Add Parent</button>
-
-                      <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
-
-                      <button
-                        v-show="!hasMate"
-                        @click="addMember('gender')"
-                        class="col-10 btn btn-primary mb-3"
-                      >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
-
-                      <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
-                        <i class="icofont-ui-delete"></i> Delete
-                      </button>
-                    </div>
-                    <div v-else>
-                      <span class="col-4">
-                        <input
-                          class="form-control input-sm"
-                          placeholder="Enter Key to Edit"
-                          v-model="cookey"
-                          onkeypress="if(this.value.length==4) return false;"
-                          type="number"
-                        />
-                        <button
-                          v-show="cookey.length==4"
-                          @click="validate"
-                          :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-                          :disabled="loading"
-                        >
-                          <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
-                          <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                          {{retry?"Retry":"Validate"}}
-                        </button>
-                      </span>
-                    </div>
-                  </transition>
-                </tab>
-                <tab name="More Info" :is-disabled="!cookeyStatus">
-                  <MoreInfo :id="id" :data="data"></MoreInfo>
-                </tab>
-              </tabs>
-            </table>
+            <div class="middle" v-show="cookeyStatus">
+              <div class="member-txt">
+                <a class="btn" @click="show=true" style="color: white!important;">
+                  <i class="icofont-edit"></i>
+                  Change
+                </a>
+              </div>
+            </div>
           </div>
-        </section>
-      </div>
-    </Drawer>
+
+          <button
+            @click="uploadImage"
+            v-show="showUpload"
+            class="btn btn-success mt-3"
+            :disabled="loadingUpload"
+          >
+            <span v-if="!doneUpload">
+              <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
+              <i class="icofont-cloud-upload" v-else></i>
+              Upload Image
+            </span>
+            <span v-else>
+              <i class="icofont-tick-mark"></i>
+              Successfully Uploaded
+            </span>
+          </button>
+
+          <my-upload
+            field="img"
+            @crop-success="cropSuccess"
+            :width="300"
+            :height="300"
+            url
+            lang-type="en"
+            v-model="show"
+            img-format="jpg"
+          ></my-upload>
+          <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
+          <table class="table table-borderless table-hover mt-3 table-data">
+            <tbody class="text-left" style="color:black">
+              <tr class="text-center">
+                <td>
+                  {{data.short_name}}
+                  <i
+                    class="icofont-edit float-right"
+                    @click="showUpdateForm(data)"
+                    style="font-size:20px"
+                    v-show="cookeyStatus"
+                  ></i>
+                </td>
+              </tr>
+              <tr>
+                <td style="border-left:3px solid red;">
+                  <i class="icofont-business-man"></i>
+                  {{data.name}}
+                </td>
+              </tr>
+              <tr v-if="data.gender">
+                <td style="border-left:3px solid orange;">
+                  <span v-if="data.gender==1">
+                    <i class="icofont-male"></i>
+                  </span>
+                  <span v-else>
+                    <i class="icofont-female"></i>
+                  </span>
+                  {{data.gender=="1"?"Male":"Female"}}
+                </td>
+              </tr>
+            </tbody>
+
+            <!-- Tabbar -->
+            <tabs>
+              <tab name="Actions">
+                <!-- Actions -->
+                <transition name="fade" mode="out-in">
+                  <div class="mx-auto col-12" v-if="cookeyStatus">
+                    <button
+                      @click="addMember(0)"
+                      class="col-10 btn btn-warning mb-3"
+                      v-show="!data.parent_id"
+                    >+ Add Parent</button>
+
+                    <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
+
+                    <button
+                      v-show="!hasMate"
+                      @click="addMember('gender')"
+                      class="col-10 btn btn-primary mb-3"
+                    >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
+
+                    <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
+                      <i class="icofont-ui-delete"></i> Delete
+                    </button>
+                  </div>
+                  <div v-else>
+                    <span class="col-4">
+                      <input
+                        class="form-control input-sm"
+                        placeholder="Enter Key to Edit"
+                        v-model="cookey"
+                        onkeypress="if(this.value.length==4) return false;"
+                        type="number"
+                      />
+                      <button
+                        v-show="cookey.length==4"
+                        @click="validate"
+                        :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                        :disabled="loading"
+                      >
+                        <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
+                        <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+                        {{retry?"Retry":"Validate"}}
+                      </button>
+                    </span>
+                  </div>
+                </transition>
+              </tab>
+              <tab name="More Info" :is-disabled="!cookeyStatus">
+                <MoreInfo :id="id" :data="data"></MoreInfo>
+              </tab>
+            </tabs>
+          </table>
+        </div>
+      </section>
+    </div>
     <DualPage
-      reference="AddMemberForm"
+      :reference="2"
       style="z-index:102!important"
       v-if="callForm"
       :gender="data.gender==1?'female':'male'"
@@ -167,7 +164,8 @@
       :parent_id="parent_id"
       v-on:closed="addMemberCancel"
     ></DualPage>
-  </div>
+  </Drawer>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -241,6 +239,10 @@ export default {
     this.open = true;
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = false; //Check version
+    if (this.$device.mobile) {
+      this.toggleBodyClass("addClass", "mem-spec");
+    }
+
     //Person Data API
     axios
       .get(
@@ -415,7 +417,18 @@ export default {
     },
     addMemberCancel() {
       this.callForm = false;
+    },
+    toggleBodyClass(addRemoveClass, className) {
+      const el = document.body;
+      if (addRemoveClass === "addClass") {
+        el.classList.add(className);
+      } else {
+        el.classList.remove(className);
+      }
     }
+  },
+  destroyed() {
+    this.toggleBodyClass("removeClass", "mem-spec");
   }
 };
 </script>
@@ -572,6 +585,9 @@ input[type="number"] {
 @media (min-width: 120px) {
   .vue-simple-drawer.right {
     left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
   }
 }
 

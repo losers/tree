@@ -1,33 +1,38 @@
 <template>
-  <MobileAddMemberForm v-show="$device.mobile" ref="m"></MobileAddMemberForm>
+  <!-- <MobileAddMemberForm v-show="$device.mobile" ref="m"></MobileAddMemberForm> -->
+  <div>
+    <swipeable-bottom-sheet v-if="$device.mobile" ref="swipeableBottomSheet" style="z-index:2000" v-on:close="beforeClose()">
+      <component v-bind:is="selectedComponent"></component>
+    </swipeable-bottom-sheet>
+  </div>
 </template>
 
 <script>
-import AddMemberForm from "../components/AddMemberForm";
-import AddRoot from "../components/AddRootForm";
 import AddFamily from "../components/AddFamilyForm.vue";
-import MobileAddMemberForm from "../components/MemberData/mobile/MemberData";
+import AddRoot from "../components/AddRootForm";
+import AddMemberForm from "../components/AddMemberForm";
+import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 
 export default {
   props: ["reference", "gender", "type", "parent_id"],
   components: {
-    MobileAddMemberForm
+    SwipeableBottomSheet,
+    // AddFamily,
   },
   data() {
     return {
-      selectedComponent: ""
+      component: [AddFamily, AddRoot, AddMemberForm],
+      selectedComponent : ""
     };
   },
   mounted() {
-    this.selectedComponent = this.switcher(this.reference);
+    this.selectedComponent = this.component[this.reference];
     if (this.$device.mobile) {
-      this.selectedComponent;
-      this.$refs.m.opensheet();
+      this.$refs.swipeableBottomSheet.setState("open");
     } else {
       this.$modal.show(
         this.selectedComponent,
         {
-          text: "Satyanarayana",
           gender: this.gender,
           type: this.type,
           parent_id: this.parent_id
@@ -47,18 +52,6 @@ export default {
   methods: {
     beforeClose() {
       this.$emit("closed");
-    },
-    switcher(key) {
-      switch (key) {
-        case "AddMemberForm":
-          return this.$device.mobile ? MobileAddMemberForm : AddMemberForm;
-        case "AddRootForm":
-          return AddRoot;
-        case "AddFamilyForm":
-          return AddFamily;
-        default:
-          break;
-      }
     }
   }
 };
