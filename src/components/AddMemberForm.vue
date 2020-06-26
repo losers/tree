@@ -1,7 +1,13 @@
 <template>
   <div>
-    <AddCForm v-on:form-submit="sendData" v-on:form-cancel="goBack" v-on:jst-close="closeme"></AddCForm>
-    <div v-show="err">{{err}}</div>
+    <AddCForm
+      v-on:form-submit="sendData"
+      v-on:form-cancel="goBack"
+      :type="type"
+      :parent_id="parent_id"
+      :gender="gender"
+    ></AddCForm>
+    <div v-show="err" class="mt-2">{{err}}</div>
   </div>
 </template>
 
@@ -16,6 +22,7 @@ export default {
   components: {
     AddCForm
   },
+  props: ["type", "gender", "parent_id"],
   data() {
     return {
       surname: this.$route.params.id,
@@ -24,41 +31,19 @@ export default {
   },
   methods: {
     sendData(data) {
-      console.log(data.type);
-      data.parent_id = this.$route.query.parent_id;
+      // data.parent_id = this.$route.query.parent_id;
       Axios.post(
-        ProdData.getHostURL() + "/tree/" + this.surname + "/person",
-        data
-      )
-        .then(treeData => {
-          console.log(treeData.data)
+        ProdData.getHostURL() + "/tree/" + this.surname + "/person", data ) .then(treeData => { 
           this.$emit("close");
           this.$router.push({
             name: "MainTree",
             id: this.surname
           });
-          Store.dispatch("treeOnlySetup", treeData.data).then(
-          );
+          Store.dispatch("treeOnlySetup", treeData.data).then();
         })
         .catch(err => (this.err = err));
     },
-    goBack(mateAdded) {
-      this.$emit("close");
-      if (this.$route.query.hasMate) {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: this.$route.params.member },
-          query: { hasMate: true }
-        });
-      } else {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: this.$route.params.member }
-        });
-      }
-      this.$root.$emit("canceled", mateAdded);
-    },
-    closeme() {
+    goBack() {
       this.$emit("close");
     }
   }

@@ -1,9 +1,9 @@
 <template>
-  <div class="titlebar">
-    <a :href="'/'">
+  <div class="tree-titlebar">
+    <a :href="'/app'">
       <i class="icofont-arrow-left"></i> Back
     </a>
-    <div class="title">
+    <div class="tree-title">
       {{meta.title}}
       <span v-show="is_session && !this.$device.mobile">
         <i class="icofont-edit ml-2" @click="editmeta" style="font-size:20px;cursor: pointer;"></i>
@@ -46,17 +46,17 @@ export default {
 </script>
 
 <style scoped>
-.titlebar {
+.tree-titlebar {
   position: fixed;
   width: 100%;
-  z-index: 100;
+  z-index: 10;
   box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
-  padding: 5px;
+  padding: 5px!important;
   background-color: white;
   display: flex;
   align-items: center;
 }
-.title {
+.tree-title {
   font-size: 30px;
   color: black;
   font-weight: bold;

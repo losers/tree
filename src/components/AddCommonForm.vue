@@ -29,7 +29,8 @@
       </div>
 
       <!-- Gender Selection -->
-      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
+      <div v-if="type_data=='gender'"></div>
+      <div class="row" v-else>
         <div class="form-check col-3 ml-3">
           <input
             class="form-check-input col-2 mt-2"
@@ -110,10 +111,11 @@ export default {
   components: {
     ToggleButton
   },
-  props: ["memData"],
+  props: ["memData", "gender", "type", "parent_id"],
   data() {
     return {
       data: {},
+      type_data: this.type,
       loading: false,
       is_error: false,
       is_alive: true
@@ -125,6 +127,8 @@ export default {
     }
   },
   mounted() {
+    console.log("gender" + this.gender);
+    console.log("type" + this.type);
     this.is_alive = true;
     //memdata comes from MemberData route for editing
     if (this.memData) {
@@ -157,17 +161,19 @@ export default {
           })
           .catch(errr => console.log(errr));
       } else {
-        if (this.$route.params.type == "a") {
-          this.data.gender = "1";
+        if (this.type == "gender") {
           this.data.type = 1;
-        } else if (this.$route.params.type == "b") {
-          this.data.gender = "0";
-          this.data.type = 1;
-        } else if (this.$route.params.type == 1) {
+          if (this.gender == "female") {
+            this.data.gender = "1";
+          } else {
+            this.data.gender = "0";
+          }
+        } else if (this.type == 1) {
           this.data.type = 2;
-        } else if (this.$route.params.type == 0) {
+        } else if (this.type == 0) {
           this.data.type = 0;
         }
+        this.data.parent_id = this.parent_id;
         this.$emit("form-submit", this.data);
       }
     },
@@ -175,22 +181,21 @@ export default {
       if (this.memData) {
         this.$emit("close");
         this.$root.$emit("canceled");
-        // if (this.$route.query.hasMate) {
-        //   console.log(this.$route.query.hasMate);
-        //   this.$router.push({
-        //     name: "MemberData",
-        //     params: { member: this.$route.params.member },
-        //     query: { hasMate: true }
-        //   });
-        //   this.$root.$emit("canceled", true);
-        // } else {
-        //   console.log("thusss....");
-        //   this.$router.push({
-        //     name: "MemberData",
-        //     params: { member: this.$route.params.member }
-        //   });
-        //   this.$root.$emit("canceled", false);
-        // }
+        if (this.$route.query.hasMate) {
+          console.log(this.$route.query.hasMate);
+          this.$router.push({
+            name: "MemberData",
+            params: { member: this.$route.params.member },
+            query: { hasMate: true }
+          });
+          this.$root.$emit("canceled", true);
+        } else {
+          this.$router.push({
+            name: "MemberData",
+            params: { member: this.$route.params.member }
+          });
+          this.$root.$emit("canceled", false);
+        }
       } else {
         this.$emit("form-cancel");
       }

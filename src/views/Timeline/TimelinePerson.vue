@@ -8,7 +8,7 @@
         <section v-if="loading">Loading...</section>
         <section v-else>
           <!-- Titlebar -->
-          <div class="titlebar">
+          <div class="timeline-titlebar">
             <router-link
               :to="{name:'MainTree', params:{id:$route.params.id}}"
               class="float-left mt-2 ml-1"
@@ -16,7 +16,7 @@
               <i class="icofont-arrow-left"></i>
               Back
             </router-link>
-            <p class="title">{{user.name }}'s Timeline</p>
+            <b class="timeline-title">{{user.name }}'s Timeline</b>
           </div>
 
           <!-- Alert Modals -->
@@ -38,8 +38,8 @@
             </div>
           </transition>
 
-          <div class="row pt-5">
-            <div class="col-6">
+          <div class="row pt-5" style="margin:0">
+            <div class="col-md-6 col-sm-12">
               <div v-if="dataTimeline.length!=0">
                 <!-- <select v-model="order">
                   <option value="asc">Ascending</option>
@@ -68,7 +68,7 @@
               />
             </div>
 
-            <div class="timeline_add_box">
+            <div class="timeline_add_box" v-show="!$device.mobile">
               <form v-on:submit.prevent="sendData">
                 <h3 class="mt-3" style="margin-bottom:40px;">{{edit?"Update":"Create"}} Event</h3>
                 <div class="row input-con">
@@ -371,25 +371,28 @@ export default {
 </script>
 
 <style>
-.md-datepicker-year-selector, .md-datepicker-month, .md-datepicker-body-footer, .md-datepicker-body-content{
+.md-datepicker-year-selector,
+.md-datepicker-month,
+.md-datepicker-body-footer,
+.md-datepicker-body-content {
   background-color: white;
 }
-.md-datepicker{
-    display: flex;
-    align-items: center;
+.md-datepicker {
+  display: flex;
+  align-items: center;
 }
-.md-clear{
+.md-clear {
   margin-top: -6px !important;
 }
-.md-datepicker-header{
+.md-datepicker-header {
   background-color: rgb(24, 121, 206);
   color: white;
 }
-.md-datepicker-selected{
+.md-datepicker-selected {
   background-color: rgb(24, 121, 206);
   color: white;
 }
-.md-datepicker{
+.md-datepicker {
   border-bottom: 1px solid rgb(24, 121, 206);
 }
 
@@ -415,19 +418,22 @@ export default {
 .input-con .v-select {
   padding: 0px;
 }
-.titlebar {
+.timeline-titlebar {
   position: fixed;
   width: 100%;
   z-index: 100;
   box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
   padding: 5px;
   background-color: white;
-  height: 50px;
+  display: flex;
+  align-items: center;
 }
-.title {
+.timeline-title {
   font-size: 30px;
   color: black;
   font-weight: bold;
+  flex: 1;
+  margin: 10px;
 }
 .timeline_add_box {
   overflow: scroll;

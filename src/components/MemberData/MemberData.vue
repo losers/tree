@@ -1,6 +1,6 @@
 <template>
-  <div style="left:70%!important;">
-    <router-view></router-view>
+  <div :class="{'mobile-member-drawer':$device.mobile}">
+    <!-- <router-view></router-view> -->
     <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
       <div v-if="open">
         <section v-if="errored">
@@ -8,7 +8,7 @@
           <p>{{errored}}</p>
         </section>
         <section v-else>
-          <div v-if="loading" style="margin-top:240px">
+          <div v-if="loading" class="container_image mx-auto">
             <center>
               <img src="@/assets/dna.gif" alt="Family Tree Loading" />
             </center>
@@ -113,6 +113,7 @@
                         class="col-10 btn btn-warning mb-3"
                         v-show="!data.parent_id"
                       >+ Add Parent</button>
+
                       <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
                       <button
@@ -157,6 +158,15 @@
         </section>
       </div>
     </Drawer>
+    <DualPage
+      reference="AddMemberForm"
+      style="z-index:102!important"
+      v-if="callForm"
+      :gender="data.gender==1?'female':'male'"
+      :type="type"
+      :parent_id="parent_id"
+      v-on:closed="addMemberCancel"
+    ></DualPage>
   </div>
 </template>
 
@@ -173,7 +183,7 @@ import ProdData from "@/data.js";
 import Store from "@/store/index";
 import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
-// import KProgress from "k-progress";
+import DualPage from "../../modals/DualPage";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -188,7 +198,7 @@ export default {
     Tabs,
     Tab,
     MoreInfo,
-    // KProgress
+    DualPage
   },
   data() {
     return {
@@ -198,7 +208,7 @@ export default {
       open: null,
       surname: this.$route.params.id,
       id: this.$route.params.member,
-      type: this.$route.params.type,
+      type: "",
       previewImage: null,
       imageData: "",
       show: false,
@@ -212,7 +222,9 @@ export default {
       vloading: false,
       hasMate: false,
       retry: false, //stores key status
-      count: 0
+      count: 0,
+      callForm: false,
+      parent_id: ""
     };
   },
   watch: {
@@ -225,6 +237,8 @@ export default {
     }
   },
   mounted() {
+    this.callForm = false;
+    this.open = true;
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = false; //Check version
     //Person Data API
@@ -267,15 +281,6 @@ export default {
           }
         }
       });
-    this.$root.$on("canceled", addedMate => {
-      if (addedMate) {
-        this.hasMate = false;
-      }
-      this.open = true;
-    });
-    if (this.type === undefined) {
-      this.open = true;
-    }
   },
   methods: {
     uploadImage() {
@@ -346,16 +351,13 @@ export default {
         });
     },
     toggle() {
-      if (!this.$route.params.type) {
-        this.open = false;
-        this.$router.push({
-          name: "MainTree",
-          params: { id: this.$route.params.id }
-        });
-      }
+      this.open = false;
+      this.$router.push({
+        name: "MainTree",
+        params: { id: this.$route.params.id }
+      });
     },
     showUpdateForm(formd) {
-      this.open = false;
       this.$modal.show(
         CommonForm,
         {
@@ -370,32 +372,31 @@ export default {
       );
     },
     addMember(num) {
-      if (num == "gender") {
-        if (this.data.gender == "1") {
-          num = "b";
-        } else {
-          num = "a";
-        }
-      }
-      this.open = false;
-      if (this.$route.query.hasMate) {
-        this.$router.push({
-          name: "AddMember",
-          params: { type: num },
-          query: {
-            parent_id: this.data.is_mate ? this.data.parent_id : this.data._id,
-            hasMate: true
-          }
-        });
+      this.type = num;
+      this.callForm = true;
+      if (this.data.is_mate) {
+        this.parent_id = this.data.parent_id;
       } else {
-        this.$router.push({
-          name: "AddMember",
-          params: { type: num },
-          query: {
-            parent_id: this.data.is_mate ? this.data.parent_id : this.data._id
-          }
-        });
+        this.parent_id = this.id;
       }
+      // if (this.$route.query.hasMate) {
+      //   this.$router.push({
+      //     name: "AddMember",
+      //     params: { type: num },
+      //     query: {
+      //       parent_id: this.data.is_mate ? this.data.parent_id : this.data._id,
+      //       hasMate: true
+      //     }
+      //   });
+      // } else {
+      //   this.$router.push({
+      //     name: "AddMember",
+      //     params: { type: num },
+      //     query: {
+      //       parent_id: this.data.is_mate ? this.data.parent_id : this.data._id
+      //     }
+      //   });
+      // }
     },
     deleteSwipe() {
       this.$modal.show(
@@ -411,15 +412,15 @@ export default {
         }
       );
       this.open = false;
+    },
+    addMemberCancel() {
+      this.callForm = false;
     }
   }
 };
 </script>
 
 <style>
-.vue-simple-drawer {
-  left: 70% !important;
-}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
@@ -436,7 +437,9 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
 .vue-simple-drawer {
+  position: absolute;
   background: white !important;
   box-shadow: 20px black;
   -webkit-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
@@ -553,7 +556,30 @@ input[type="number"] {
   color: black;
 }
 
-@media (min-width: 700px) {
+.mobile-member-drawer {
+  left: 0% !important;
+  width: 100%;
+  top: 0%;
+  height: 100%;
+}
+
+.mask {
+  z-index: 10 !important;
+}
+.vue-simple-drawer {
+  z-index: 101 !important;
+}
+@media (min-width: 120px) {
+  .vue-simple-drawer.right {
+    left: 0;
+  }
+}
+
+@media (min-width: 720px) {
+  .vue-simple-drawer {
+    left: 70% !important;
+    position: fixed;
+  }
   .tabs-component-panels {
     border-top-left-radius: 0;
     background-color: #fff;

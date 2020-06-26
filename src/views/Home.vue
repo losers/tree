@@ -38,7 +38,7 @@
             </touch-ripple>
           </center>
         </div>
-        <AddFamily v-if="showModal == true" v-on:closed="showModal=false"></AddFamily>
+        <DualPage reference="AddFamilyForm" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
         <div v-for="data in info" :key="data.id">
           <center>
             <div class="container div-box">
@@ -652,7 +652,6 @@ a:hover {
   font-weight: 300;
   font-size: 50px;
   letter-spacing: 10px;
-  padding-left: 10px;
 }
 #title span {
   background: -webkit-linear-gradient(white, #38495a);
@@ -682,7 +681,7 @@ a:hover {
 
 <script>
 import axios from "axios";
-import AddFamily from "../modals/AddFamily";
+import DualPage from "../modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
@@ -701,7 +700,7 @@ export default {
     };
   },
   components: {
-    AddFamily,
+    DualPage,
     touchRipple,
     VueTyper
   },

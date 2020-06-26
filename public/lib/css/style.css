@@ -2,18 +2,32 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700);
 @import url(http://fonts.googleapis.com/css?family=Glegoo);
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+@media screen and (max-width: 600px) {
+  .support_bot {
+    visibility: hidden;
+    clear: both;
+    float: left;
+    margin: 10px auto 5px 20px;
+    width: 28%;
+    display: none;
+  }
+  .socialbtns ul{
+    margin: 30px;
+  }
+}
 
 body {
   font-family: "Roboto", sans-serif;
   height: 100%;
   background: #ffffff;
-
+  width: 100%;
 }
 
 html {
   min-height: 100% !important;
   height: 100%;
   scroll-behavior: smooth;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -82,37 +96,6 @@ a:hover {
   background: #007bff;
   padding: 4px 10px;
   display: inline-block;
-}
-
-.fancybox-close {
-  background: url("../images/icons/close.png") no-repeat scroll 0 0 transparent;
-  height: 50px;
-  right: 0;
-  top: 0;
-  width: 50px;
-}
-
-.fancybox-next span {
-  background: url("../images/icons/right.png") no-repeat scroll center center #009ee3;
-  height: 50px;
-  width: 50px;
-  right: 0;
-}
-
-.fancybox-prev span {
-  background: url("../images/icons/left.png") no-repeat scroll center center #009ee3;
-  height: 50px;
-  width: 50px;
-  left: 0;
-}
-
-.fancybox-title {
-  padding: 15px 8px;
-}
-
-.fancybox-title h3 {
-  font-size: 15px;
-  margin: 0;
 }
 
 .global-page-header {

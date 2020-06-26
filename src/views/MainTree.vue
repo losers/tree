@@ -15,15 +15,21 @@
           Back
         </router-link>
         <center style="padding-top:240px">
-          <img src="@/assets/dna.gif" alt="Bloodline Loader"/>
+          <img src="@/assets/dna.gif" alt="Bloodline Loader" />
         </center>
       </div>
 
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
         <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
-        <img src="../assets/stickman_family.jpg" class="col-7" style="margin-top:160px" alt="Blood Line Helper"/>
+        <img
+          src="../assets/stickman_family.jpg"
+          class="col-7"
+          style="margin-top:160px"
+          alt="Blood Line Helper"
+        />
         <center>
+          <DualPage reference="AddRootForm"></DualPage>
           <div class="row">
             <div class="col-3"></div>
             <ul class="col-8">
@@ -89,14 +95,13 @@
             @click-node="clickNode"
             style="padding-top:70px"
           />
-          
         </center>
         <footer class="foot">
           <p>
             With
             <i class="icofont-heart" style="color:red"></i>
             by
-            <a href="/medam">Satyanarayana's Family Devs</a>
+            <a href="/app/medam">Satyanarayana's Family Devs</a>
           </p>
         </footer>
       </div>
@@ -111,13 +116,14 @@ import TreeTitle from "../components/TreeTitle";
 import Error from "./Error";
 import Store from "../store/index";
 import ProData from "../data.js";
+import DualPage from "../modals/DualPage";
 
 export default {
   name: "MainTree",
   components: {
     TreeChart,
     TreeTitle,
-    Error,
+    Error
   },
   data() {
     return {
@@ -163,36 +169,6 @@ export default {
     }
   },
   mounted() {
-    // axios
-    //   .get(
-    //     ProdData.getHostURL() +
-    //       "/tree/" +
-    //       this.surname +
-    //       "/person/" +
-    //       this.id +
-    //       "/images"
-    //   )
-    //   .then(data => {
-    //     this.images = data.data[0];
-    //     axios
-    //       .get(ProdData.getHostURL() + "/tree/" + this.surname)
-    //       .then(data => {
-    //         this.tempData = data.data.tree;
-    //         this.title = data.data.meta;
-    //         this.is_session = data.data.has_session;
-    //       })
-    //       .catch(err => {
-    //         this.errored = err;
-    //         console.log("Error : " + err);
-    //       })
-    //       .finally(() => {
-    //         this.loading = false;
-    //       });
-    //   })
-    //   .catch(err => {
-    //     this.errored = err;
-    //     console.log("Error : " + err);
-    //   });
 
     //called after adding a new member
     this.$root.$on("update-tree", data => {
@@ -203,21 +179,17 @@ export default {
   methods: {
     // Called when a node is clicked
     clickNode: function(node) {
-      if (!this.$device.mobile) {
-        if (node.data.mate || node.isMate) {
-          this.$router.push({
-            name: "MemberData",
-            params: { member: node.data.id },
-            query: { hasMate: true }
-          });
-        } else {
-          this.$router.push({
-            name: "MemberData",
-            params: { member: node.data.id }
-          });
-        }
+      if (node.data.mate || node.isMate) {
+        this.$router.push({
+          name: "MemberData",
+          params: { member: node.data.id },
+          query: { hasMate: true }
+        });
       } else {
-        console.log("opening mobile view");
+        this.$router.push({
+          name: "MemberData",
+          params: { member: node.data.id }
+        });
       }
     },
 
@@ -284,7 +256,7 @@ h2 {
   z-index: 10;
 }
 .foot a {
-  color: #fff!important;
+  color: #fff !important;
   margin: 0 0.5em;
 }
 .table-data {
@@ -551,5 +523,4 @@ h2 {
     opacity: 0;
   }
 }
-
 </style>
