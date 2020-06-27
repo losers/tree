@@ -3,12 +3,12 @@
     <h3 class="mb-3">{{memData?"Edit":"Add"}} Member</h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
-        <label class="col-4">
+        <label class="d-none d-sm-block col-md-4">
           <span class="text-warning mr-1">*</span>Short Name:
         </label>
         <input
           type="text"
-          class="form-control col-7"
+          class="form-control col-md-7 col-sm-12"
           placeholder="Enter Short Name"
           v-model="data.short_name"
           required
@@ -16,12 +16,12 @@
       </div>
       <p class="info">Short Name will be shown in Family Tree</p>
       <div class="row">
-        <label class="col-4">
+        <label class="d-none d-sm-block col-md-4">
           <span class="text-warning mr-1">*</span>Name :
         </label>
         <input
           type="text"
-          class="form-control col-7"
+          class="form-control col-md-7 col-sm-12"
           v-model="data.name"
           placeholder="Enter Name"
           required
@@ -58,33 +58,27 @@
       </div>
       <hr class="mt-4 mb-4" style="background-color:white" />
       <div class="row">
-        <label class="col-4">DOB :</label>
-        <input
-          type="date"
-          class="form-control col-7"
-          v-model="data.dob"
-          placeholder="Date of Birth"
-        />
+        <label class="col-md-4 d-none d-sm-block flexy">DOB :</label>
+        <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" required="true">
+          <label>Date of Birth</label>
+        </md-datepicker>
+      </div>
+
+      <div class="row mb-2">
+        <label class="col-4 flexy">Is Alive :</label>
+        <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
+        <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
+          <md-datepicker v-model="data.died_on" required="true" class="cus">
+            <label>Date of Demise</label>
+          </md-datepicker>
+        </div>
       </div>
 
       <div class="row">
-        <label class="col-4">Is Alive</label>
-        <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="mb-4" />
-        <span class="form-inline" v-show="!is_alive">
-          <input
-            type="date"
-            class="form-control col-10 ml-5"
-            v-model="data.died_on"
-            placeholder="Died On"
-          />
-        </span>
-      </div>
-
-      <div class="row">
-        <label class="col-4">Mobile :</label>
+        <label class="d-none d-sm-flex col-md-4">Mobile :</label>
         <input
           type="tel"
-          class="form-control col-7"
+          class="form-control col-md-7 col-sm-12"
           v-model="data.mobile"
           placeholder="Mobile Number"
         />
@@ -106,6 +100,14 @@
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
 import ProdData from "../data.js";
+
+import Vue from "vue";
+import VueMaterial from "vue-material";
+import "vue-material/dist/vue-material.min.css";
+
+// var emitData;
+
+Vue.use(VueMaterial);
 
 export default {
   components: {
@@ -205,6 +207,18 @@ export default {
 </script>
 
 <style scoped>
+/* .cus.md-field{
+  min-height: auto;
+  padding-top: 0px;
+}
+.cus.md-field label{
+  top: 5px;
+  margin-bottom: 0px;
+} */
+.flexy{
+  display: flex;
+  align-items: center;
+}
 .info {
   margin-top: -10px;
   font-size: 12px;

@@ -455,6 +455,7 @@ input[type="number"] {
   position: absolute;
   background: white !important;
   box-shadow: 20px black;
+  color: black;
   -webkit-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);

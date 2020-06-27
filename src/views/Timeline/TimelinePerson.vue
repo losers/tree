@@ -371,31 +371,6 @@ export default {
 </script>
 
 <style>
-.md-datepicker-year-selector,
-.md-datepicker-month,
-.md-datepicker-body-footer,
-.md-datepicker-body-content {
-  background-color: white;
-}
-.md-datepicker {
-  display: flex;
-  align-items: center;
-}
-.md-clear {
-  margin-top: -6px !important;
-}
-.md-datepicker-header {
-  background-color: rgb(24, 121, 206);
-  color: white;
-}
-.md-datepicker-selected {
-  background-color: rgb(24, 121, 206);
-  color: white;
-}
-.md-datepicker {
-  border-bottom: 1px solid rgb(24, 121, 206);
-}
-
 .btn-cancel {
   border: 1px solid black;
 }
