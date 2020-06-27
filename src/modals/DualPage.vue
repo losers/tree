@@ -1,8 +1,19 @@
 <template>
   <!-- <MobileAddMemberForm v-show="$device.mobile" ref="m"></MobileAddMemberForm> -->
   <div>
-    <swipeable-bottom-sheet v-if="$device.mobile" ref="swipeableBottomSheet" style="z-index:2000" v-on:close="beforeClose()">
-      <component v-bind:is="selectedComponent"></component>
+    <swipeable-bottom-sheet
+      v-if="$device.mobile"
+      ref="swipeableBottomSheet"
+      style="z-index:2000"
+      v-on:close="beforeClose()"
+    >
+      <component
+        v-bind:is="selectedComponent"
+        :gender="gender"
+        :type="this.type"
+        :parent_id="this.parent_id"
+        :memData="this.memData"
+      ></component>
     </swipeable-bottom-sheet>
   </div>
 </template>
@@ -14,15 +25,15 @@ import AddMemberForm from "../components/AddMemberForm";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 
 export default {
-  props: ["reference", "gender", "type", "parent_id"],
+  props: ["reference", "gender", "type", "parent_id", "memData"],
   components: {
-    SwipeableBottomSheet,
+    SwipeableBottomSheet
     // AddFamily,
   },
   data() {
     return {
       component: [AddFamily, AddRoot, AddMemberForm],
-      selectedComponent : ""
+      selectedComponent: ""
     };
   },
   mounted() {
@@ -35,7 +46,8 @@ export default {
         {
           gender: this.gender,
           type: this.type,
-          parent_id: this.parent_id
+          parent_id: this.parent_id,
+          memData: this.memData
         },
         {
           height: "auto",

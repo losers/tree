@@ -6,6 +6,7 @@
       :type="type"
       :parent_id="parent_id"
       :gender="gender"
+      :memData="memData"
     ></AddCForm>
     <div v-show="err" class="mt-2">{{err}}</div>
   </div>
@@ -22,7 +23,7 @@ export default {
   components: {
     AddCForm
   },
-  props: ["type", "gender", "parent_id"],
+  props: ["type", "gender", "parent_id","memData"],
   data() {
     return {
       surname: this.$route.params.id,

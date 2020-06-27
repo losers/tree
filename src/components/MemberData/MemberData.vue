@@ -75,7 +75,7 @@
                   {{data.short_name}}
                   <i
                     class="icofont-edit float-right"
-                    @click="showUpdateForm(data)"
+                    @click="addMember(2,data)"
                     style="font-size:20px"
                     v-show="cookeyStatus"
                   ></i>
@@ -100,52 +100,89 @@
               </tr>
             </tbody>
 
+            <!-- Accordian for Mobile -->
+            <div v-if="$device.mobile" class="mt-3">
+              <div id="accordion">
+                <!-- Actions Card -->
+                <div class="mb-1">
+                  <!-- Actions Heading -->
+                  <button
+                    class="btn p-0"
+                    style="color: #007bff;width:100%"
+                    data-toggle="collapse"
+                    data-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    <div class="card-header" id="headingOne">Actions</div>
+                  </button>
+
+                  <!-- Actions Body -->
+                  <div
+                    id="collapseOne"
+                    class="collapse show"
+                    aria-labelledby="headingOne"
+                    data-parent="#accordion"
+                  >
+                    <div class="card-body">
+                      <Actions
+                        :cookeyStatus="cookeyStatus"
+                        :data="data"
+                        :hasMate="hasMate"
+                        :cookey="cookey"
+                        v-on:callform="callForm=true"
+                        v-on:actionsAddMember="addMember"
+                        v-on:actionsDeleteSwipe="deleteSwipe"
+                        v-on:keyTrue="cookeyStatus=true"
+                      ></Actions>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- More Info Card -->
+                <div>
+                  <!-- INfo HEading -->
+                  <button
+                    class="btn p-0 collapsed"
+                    style="color: #007bff;width:100%"
+                    :disabled="!cookeyStatus"
+                    data-toggle="collapse"
+                    data-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    <div class="card-header" id="headingTwo">More Info</div>
+                  </button>
+
+                  <!-- Info Body -->
+                  <div
+                    id="collapseTwo"
+                    class="collapse"
+                    aria-labelledby="headingTwo"
+                    data-parent="#accordion"
+                  >
+                    <div class="card-body">
+                      <MoreInfo :id="id" :data="data"></MoreInfo>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Tabbar -->
-            <tabs>
+            <tabs v-else>
               <tab name="Actions">
                 <!-- Actions -->
-                <transition name="fade" mode="out-in">
-                  <div class="mx-auto col-12" v-if="cookeyStatus">
-                    <button
-                      @click="addMember(0)"
-                      class="col-10 btn btn-warning mb-3"
-                      v-show="!data.parent_id"
-                    >+ Add Parent</button>
-
-                    <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
-
-                    <button
-                      v-show="!hasMate"
-                      @click="addMember('gender')"
-                      class="col-10 btn btn-primary mb-3"
-                    >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
-
-                    <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
-                      <i class="icofont-ui-delete"></i> Delete
-                    </button>
-                  </div>
-                  <div v-else>
-                    <span class="col-4">
-                      <input
-                        class="form-control input-sm"
-                        placeholder="Enter Key to Edit"
-                        v-model="cookey"
-                        onkeypress="if(this.value.length==4) return false;"
-                        type="number"
-                      />
-                      <button
-                        v-show="cookey.length==4"
-                        @click="validate"
-                        :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-                        :disabled="loading"
-                      >
-                        <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
-                        <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                        {{retry?"Retry":"Validate"}}
-                      </button>
-                    </span>
-                  </div>
-                </transition>
+                <Actions
+                  :cookeyStatus="cookeyStatus"
+                  :data="data"
+                  :hasMate="hasMate"
+                  :cookey="cookey"
+                  v-on:callform="callForm=true"
+                  v-on:actionsAddMember="addMember"
+                  v-on:actionsDeleteSwipe="deleteSwipe"
+                  v-on:keyTrue="cookeyStatus=true"
+                ></Actions>
               </tab>
               <tab name="More Info" :is-disabled="!cookeyStatus">
                 <MoreInfo :id="id" :data="data"></MoreInfo>
@@ -157,9 +194,10 @@
     </div>
     <DualPage
       :reference="2"
+      :memData="currentUserData"
       style="z-index:102!important"
       v-if="callForm"
-      :gender="data.gender==1?'female':'male'"
+      :gender="data.gender==0?'male':'female'"
       :type="type"
       :parent_id="parent_id"
       v-on:closed="addMemberCancel"
@@ -176,12 +214,12 @@ import myUpload from "vue-image-crop-upload/upload-2.vue";
 import Vue from "vue";
 import VModal from "vue-js-modal";
 import Delete from "@/components/DeleteMember";
-import CommonForm from "../AddCommonForm";
+// import CommonForm from "../AddCommonForm";
 import ProdData from "@/data.js";
-import Store from "@/store/index";
 import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
 import DualPage from "../../modals/DualPage";
+import Actions from "./Actions";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -196,7 +234,8 @@ export default {
     Tabs,
     Tab,
     MoreInfo,
-    DualPage
+    DualPage,
+    Actions
   },
   data() {
     return {
@@ -222,7 +261,8 @@ export default {
       retry: false, //stores key status
       count: 0,
       callForm: false,
-      parent_id: ""
+      parent_id: "",
+      currentUserData: ""
     };
   },
   watch: {
@@ -307,26 +347,6 @@ export default {
           }, 2000);
         });
     },
-    validate() {
-      this.vloading = true;
-      let sessionUrl = ProdData.getHostURL() + "/sessions/";
-      let params = {};
-      params.pin = this.cookey;
-      params.surname = this.surname;
-      axios
-        .post(sessionUrl, params)
-        .then(() => {
-          this.cookeyStatus = true;
-          this.vloading = false;
-          Store.commit("setSession", true);
-        })
-        .catch(() => {
-          this.retry = true;
-        })
-        .finally(() => {
-          this.vloading = false;
-        });
-    },
     cropSuccess(imgDataUrl) {
       var arr = imgDataUrl.split(","),
         mime = arr[0].match(/:(.*?);/)[1],
@@ -359,46 +379,29 @@ export default {
         params: { id: this.$route.params.id }
       });
     },
-    showUpdateForm(formd) {
-      this.$modal.show(
-        CommonForm,
-        {
-          memData: formd
-        },
-        {
-          height: "auto",
-          draggable: true,
-          clickToClose: false,
-          scrollable: true
-        }
-      );
-    },
-    addMember(num) {
+    // showUpdateForm(formd) {
+    //   this.$modal.show(
+    //     CommonForm,
+    //     {
+    //       memData: formd
+    //     },
+    //     {
+    //       height: "auto",
+    //       draggable: true,
+    //       clickToClose: false,
+    //       scrollable: true
+    //     }
+    //   );
+    // },
+    addMember(num, memData) {
       this.type = num;
+      this.currentUserData = memData;
       this.callForm = true;
       if (this.data.is_mate) {
         this.parent_id = this.data.parent_id;
       } else {
         this.parent_id = this.id;
       }
-      // if (this.$route.query.hasMate) {
-      //   this.$router.push({
-      //     name: "AddMember",
-      //     params: { type: num },
-      //     query: {
-      //       parent_id: this.data.is_mate ? this.data.parent_id : this.data._id,
-      //       hasMate: true
-      //     }
-      //   });
-      // } else {
-      //   this.$router.push({
-      //     name: "AddMember",
-      //     params: { type: num },
-      //     query: {
-      //       parent_id: this.data.is_mate ? this.data.parent_id : this.data._id
-      //     }
-      //   });
-      // }
     },
     deleteSwipe() {
       this.$modal.show(

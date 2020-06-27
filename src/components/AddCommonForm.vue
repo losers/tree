@@ -113,7 +113,7 @@ export default {
   components: {
     ToggleButton
   },
-  props: ["memData", "gender", "type", "parent_id"],
+  props: ["gender", "type", "parent_id", "memData"],
   data() {
     return {
       data: {},
@@ -132,6 +132,7 @@ export default {
     console.log("gender" + this.gender);
     console.log("type" + this.type);
     this.is_alive = true;
+    console.log(this.memData);
     //memdata comes from MemberData route for editing
     if (this.memData) {
       console.log(this.memData);
@@ -165,7 +166,7 @@ export default {
       } else {
         if (this.type == "gender") {
           this.data.type = 1;
-          if (this.gender == "female") {
+          if (this.gender == "male") {
             this.data.gender = "1";
           } else {
             this.data.gender = "0";
