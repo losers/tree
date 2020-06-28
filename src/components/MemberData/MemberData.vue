@@ -192,12 +192,9 @@
     </div>
     <DualPage
       :reference="dualPage.ref"
-      :memData="currentUserData"
+      :payload="payload"
       style="z-index:102!important"
       v-if="dualPage.callForm"
-      :gender="data.gender==0?'male':'female'"
-      :type="type"
-      :parent_id="parent_id"
       v-on:closed="addMemberCancel"
     ></DualPage>
   </Drawer>
@@ -257,11 +254,11 @@ export default {
       retry: false, //stores key status
       count: 0,
       parent_id: "",
-      currentUserData: "",
-      dualPage:{
-        callForm : false,
-        ref : 2
+      dualPage: {
+        callForm: false,
+        ref: 2
       },
+      payload: {}
     };
   },
   watch: {
@@ -392,19 +389,19 @@ export default {
     //   );
     // },
     addMember(num, memData) {
-      this.type = num;
-      this.currentUserData = memData;
+      this.payload.memData = memData;
+      this.payload.gender = this.data.gender == 0 ? "male" : "female";
+      this.payload.type = num;
       this.dualPage.callForm = true;
       this.dualPage.ref = 2;
       if (this.data.is_mate) {
-        this.parent_id = this.data.parent_id;
+        this.payload.parent_id = this.data.parent_id;
       } else {
-        this.parent_id = this.id;
+        this.payload.parent_id = this.id;
       }
     },
     deleteSwipe() {
-
-      this.dualPage.callForm = true; 
+      this.dualPage.callForm = true;
       this.dualPage.ref = 3;
       // this.$modal.show(
       //   Delete,

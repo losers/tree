@@ -13,6 +13,7 @@
         :type="this.type"
         :parent_id="this.parent_id"
         :memData="this.memData"
+        :payload="this.payload"
         :name="this.componentParams"
         v-on:close="swiperClose()"
       ></component>
@@ -28,7 +29,15 @@ import DeleteMember from "../components/DeleteMember";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 
 export default {
-  props: ["reference", "gender", "type", "parent_id", "memData", "componentParams"],
+  props: [
+    "reference",
+    "payload",
+    "gender",
+    "type",
+    "parent_id",
+    "memData",
+    "componentParams"
+  ],
   components: {
     SwipeableBottomSheet
   },
@@ -43,7 +52,7 @@ export default {
     if (this.$device.mobile) {
       setTimeout(() => {
         this.$refs.swipeableBottomSheet.setState("open");
-      },200);
+      }, 200);
     } else {
       this.$modal.show(
         this.selectedComponent,
@@ -52,7 +61,7 @@ export default {
           type: this.type,
           parent_id: this.parent_id,
           memData: this.memData,
-          name : this.componentParams
+          name: this.componentParams
         },
         {
           height: "auto",
@@ -70,11 +79,11 @@ export default {
     beforeClose() {
       this.$emit("closed");
     },
-    swiperClose(){
+    swiperClose() {
       this.$refs.swipeableBottomSheet.setState("close");
       setTimeout(() => {
         this.beforeClose();
-      },500);
+      }, 500);
     }
   }
 };

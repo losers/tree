@@ -1,6 +1,6 @@
 <template>
   <div class="FormData p-5">
-    <h3 class="mb-3">{{memData?"Edit":"Add"}} Member</h3>
+    <h3 class="mb-3">{{payload.memData?"Edit":"Add"}} Member</h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
         <label class="d-none d-sm-block col-md-4">
@@ -28,7 +28,7 @@
         />
       </div>
 
-      <!-- Gender Selection -->
+      <!-- payload.gender Selection -->
       <div v-if="type_data=='gender'"></div>
       <div class="row" v-else>
         <div class="form-check col-3 ml-3">
@@ -48,7 +48,6 @@
           <input
             class="form-check-input col-3 mt-2"
             type="radio"
-            name="gender"
             id="female"
             v-model="data.gender"
             value="0"
@@ -113,11 +112,11 @@ export default {
   components: {
     ToggleButton
   },
-  props: ["memData", "gender", "type", "parent_id"],
+  props: ["payload","memData", "gender", "type", "parent_id"],
   data() {
     return {
       data: {},
-      type_data: this.type,
+      type_data: this.payload.type,
       loading: false,
       is_error: false,
       is_alive: true
@@ -130,13 +129,13 @@ export default {
   },
   mounted() {
     this.is_alive = true;
-    //memdata comes from MemberData route for editing
-    if (this.memData) {
-      this.data = this.memData;
-      if (this.memData.is_died) {
+    //payload.memData comes from MemberData route for editing
+    if (this.payload.memData) {
+      this.data = this.payload.memData;
+      if (this.payload.memData.is_died) {
         this.is_alive = false;
-        if (this.memData.died_on) {
-          this.data.died_on = this.memData.died_on;
+        if (this.payload.memData.died_on) {
+          this.data.died_on = this.payload.memData.died_on;
         }
       }
     }
@@ -144,7 +143,7 @@ export default {
   methods: {
     sendData() {
       this.loading = true;
-      if (this.memData) {
+      if (this.payload.memData) {
         //calls while updating
         Axios.put(
           ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
@@ -155,29 +154,29 @@ export default {
             this.$root.$emit("canceled");
             this.$router.push({
               name: "MemberData",
-              params: { member: this.memData._id }
+              params: { member: this.payload.memData._id }
             });
           })
           .catch(errr => console.log(errr));
       } else {
-        if (this.type == "gender") {
+        if (this.payload.type == "gender") {
           this.data.type = 1;
-          if (this.gender == "female") {
+          if (this.payload.gender == "female") {
             this.data.gender = "1";
           } else {
             this.data.gender = "0";
           }
-        } else if (this.type == 1) {
+        } else if (this.payload.type == 1) {
           this.data.type = 2;
-        } else if (this.type == 0) {
+        } else if (this.payload.type == 0) {
           this.data.type = 0;
         }
-        this.data.parent_id = this.parent_id;
+        this.data.parent_id = this.payload.parent_id;
         this.$emit("form-submit", this.data);
       }
     },
     goBack() {
-      // if (this.memData) {
+      // if (this.payload.memData) {
       //   this.$emit("close");
       //   this.$root.$emit("canceled");
       //   if (this.$route.query.hasMate) {

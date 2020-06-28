@@ -3,6 +3,7 @@
     <AddCForm
       v-on:form-submit="sendData"
       v-on:form-cancel="goBack"
+      :payload="payload"
       :type="type"
       :parent_id="parent_id"
       :gender="gender"
@@ -23,7 +24,7 @@ export default {
   components: {
     AddCForm
   },
-  props: ["type", "gender", "parent_id","memData"],
+  props: ["payload","type", "gender", "parent_id","memData"],
   data() {
     return {
       surname: this.$route.params.id,
