@@ -2,7 +2,7 @@
   <div id="app-delete">
     <h3 class="text-danger mx-auto mt-4">
       Delete
-      <span class="ml-3 mr-3">{{name}} ?</span>
+      <span class="ml-3 mr-3">{{payload.name}} ?</span>
     </h3>
     <div class="d-flex justify-content-space mt-4">
       <i class="mr-3" style="color:red; font-size:20px"></i>
@@ -38,7 +38,7 @@ import Store from "./../store/index";
 
 export default {
   name: "DeleteMember",
-  props: ["name", "isMate"],
+  props: ["payload"],
   data() {
     return {
       err: false,
@@ -48,13 +48,6 @@ export default {
   methods: {
     onActionConfirmed() {
       this.loading = true;
-      console.log("deleted");
-      this.deleteMe();
-    },
-    close() {
-      this.$emit("close");
-    },
-    deleteMe() {
       axios
         .delete(
           ProdData.getHostURL() +
@@ -65,14 +58,19 @@ export default {
         )
         .then(treeData => {
           this.$emit("close");
-          this.$router.push({
-            name: "MainTree",
-            id: this.surname
+          console.log(treeData);
+          Store.dispatch("treeOnlySetup", treeData.data).then(() => {
+            this.$router.push({
+              name: "MainTree",
+              id: this.surname
+            });
           });
-          Store.dispatch("treeOnlySetup", treeData.data).then();
         })
         .catch(err => (this.err = err))
         .finally(() => (this.loading = false));
+    },
+    close() {
+      this.$emit("close");
     }
   }
 };

@@ -1,14 +1,6 @@
 <template>
   <div>
-    <AddCForm
-      v-on:form-submit="sendData"
-      v-on:form-cancel="goBack"
-      :payload="payload"
-      :type="type"
-      :parent_id="parent_id"
-      :gender="gender"
-      :memData="memData"
-    ></AddCForm>
+    <AddCForm v-on:form-submit="sendData" v-on:form-cancel="goBack" :payload="this.payload"></AddCForm>
     <div v-show="err" class="mt-2">{{err}}</div>
   </div>
 </template>
@@ -24,7 +16,7 @@ export default {
   components: {
     AddCForm
   },
-  props: ["payload","type", "gender", "parent_id","memData"],
+  props: ["payload"],
   data() {
     return {
       surname: this.$route.params.id,
@@ -33,9 +25,11 @@ export default {
   },
   methods: {
     sendData(data) {
-      // data.parent_id = this.$route.query.parent_id;
       Axios.post(
-        ProdData.getHostURL() + "/tree/" + this.surname + "/person", data ) .then(treeData => { 
+        ProdData.getHostURL() + "/tree/" + this.surname + "/person",
+        data
+      )
+        .then(treeData => {
           this.$emit("close");
           this.$router.push({
             name: "MainTree",

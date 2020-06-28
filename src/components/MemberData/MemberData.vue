@@ -374,20 +374,6 @@ export default {
         params: { id: this.$route.params.id }
       });
     },
-    // showUpdateForm(formd) {
-    //   this.$modal.show(
-    //     CommonForm,
-    //     {
-    //       memData: formd
-    //     },
-    //     {
-    //       height: "auto",
-    //       draggable: true,
-    //       clickToClose: false,
-    //       scrollable: true
-    //     }
-    //   );
-    // },
     addMember(num, memData) {
       this.payload.memData = memData;
       this.payload.gender = this.data.gender == 0 ? "male" : "female";
@@ -403,19 +389,7 @@ export default {
     deleteSwipe() {
       this.dualPage.callForm = true;
       this.dualPage.ref = 3;
-      // this.$modal.show(
-      //   Delete,
-      //   {
-      //     name: this.data.name
-      //   },
-      //   {
-      //     height: "auto",
-      //     clickToClose: false,
-      //     scrollable: true,
-      //     draggable: true
-      //   }
-      // );
-      // this.open = false;
+      this.payload.name = this.data.name;
     },
     addMemberCancel() {
       this.dualPage.callForm = false;

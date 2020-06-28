@@ -7,16 +7,7 @@
       style="z-index:2000"
       v-on:close="beforeClose()"
     >
-      <component
-        v-bind:is="selectedComponent"
-        :gender="gender"
-        :type="this.type"
-        :parent_id="this.parent_id"
-        :memData="this.memData"
-        :payload="this.payload"
-        :name="this.componentParams"
-        v-on:close="swiperClose()"
-      ></component>
+      <component v-bind:is="selectedComponent" :payload="this.payload" v-on:close="swiperClose()"></component>
     </swipeable-bottom-sheet>
   </div>
 </template>
@@ -29,15 +20,7 @@ import DeleteMember from "../components/DeleteMember";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 
 export default {
-  props: [
-    "reference",
-    "payload",
-    "gender",
-    "type",
-    "parent_id",
-    "memData",
-    "componentParams"
-  ],
+  props: ["reference", "payload"],
   components: {
     SwipeableBottomSheet
   },
@@ -57,11 +40,7 @@ export default {
       this.$modal.show(
         this.selectedComponent,
         {
-          gender: this.gender,
-          type: this.type,
-          parent_id: this.parent_id,
-          memData: this.memData,
-          name: this.componentParams
+          payload: this.payload
         },
         {
           height: "auto",

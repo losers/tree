@@ -17,7 +17,7 @@
         <center style="padding-top:240px">
           <img src="@/assets/dna.gif" alt="Bloodline Loader" />
         </center>
-      </div>  
+      </div>
 
       <!-- Called When No data is found -->
       <div v-else-if="tempData==undefined">
@@ -29,7 +29,10 @@
           alt="Blood Line Helper"
         />
         <center>
-          <DualPage :reference="1"></DualPage>
+          <!-- Loading Dual Page -->
+          <DualPage :reference="1" v-if="showDualPage" v-on:closed="showDualPage=false"></DualPage>
+
+          <!-- Page Content -->
           <div class="row">
             <div class="col-3"></div>
             <ul class="col-8">
@@ -49,7 +52,7 @@
         </center>
 
         <div id="wrapper" v-if="is_session">
-          <button @click="createRoot" class="my-super-cool-btn">
+          <button @click="showDualPage = true;" class="my-super-cool-btn">
             <div class="dots-container">
               <div class="dot"></div>
               <div class="dot"></div>
@@ -134,7 +137,8 @@ export default {
       cookeyStatus: null,
       vloading: false,
       retry: false,
-      sess: null
+      sess: null,
+      showDualPage: false,
     };
   },
   computed: {
@@ -170,7 +174,6 @@ export default {
     }
   },
   mounted() {
-
     //called after adding a new member
     this.$root.$on("update-tree", data => {
       console.log(data);
@@ -195,11 +198,7 @@ export default {
     },
 
     // Called when tree is empty
-    createRoot: function() {
-      this.$router.push({
-        name: "AddRoot"
-      });
-    },
+    createRoot: function() {},
 
     //handling sessions
     validate() {

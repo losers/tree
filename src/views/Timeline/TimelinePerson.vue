@@ -152,7 +152,6 @@ import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
 
 // var emitData;
-
 Vue.use(VueMaterial);
 import ProData from "../../data.js";
 
@@ -164,19 +163,19 @@ export default {
   },
   watch: {
     names() {
-      if (this.names.length > 0) {
+      if (this.names.length >= 0) {
         this.getTimelineData();
       }
     }
   },
   mounted() {
-    if (this.names.length > 0) {
+    console.log(this.names);
+    if (this.names.length >= 0) {
       this.getTimelineData();
     }
     //Emit for listening edit timeline
     this.$root.$on("edit-timeline", (data, shared) => {
       this.line = Object.assign({}, data); //for form
-
       this.shared_with = shared;
       this.edit = true;
     });

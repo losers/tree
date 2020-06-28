@@ -48,6 +48,7 @@
           <input
             class="form-check-input col-3 mt-2"
             type="radio"
+            name="gender"
             id="female"
             v-model="data.gender"
             value="0"
@@ -99,7 +100,6 @@
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
 import ProdData from "../data.js";
-
 import Vue from "vue";
 import VueMaterial from "vue-material";
 import "@/assets/css/vue-material.min.css";
@@ -112,7 +112,7 @@ export default {
   components: {
     ToggleButton
   },
-  props: ["payload","memData", "gender", "type", "parent_id"],
+  props: ["payload"],
   data() {
     return {
       data: {},
@@ -150,12 +150,7 @@ export default {
           this.data
         )
           .then(() => {
-            this.$emit("close");
-            this.$root.$emit("canceled");
-            this.$router.push({
-              name: "MemberData",
-              params: { member: this.payload.memData._id }
-            });
+            this.goBack();
           })
           .catch(errr => console.log(errr));
       } else {
@@ -176,27 +171,7 @@ export default {
       }
     },
     goBack() {
-      // if (this.payload.memData) {
-      //   this.$emit("close");
-      //   this.$root.$emit("canceled");
-      //   if (this.$route.query.hasMate) {
-      //     console.log(this.$route.query.hasMate);
-      //     this.$router.push({
-      //       name: "MemberData",
-      //       params: { member: this.$route.params.member },
-      //       query: { hasMate: true }
-      //     });
-      //     this.$root.$emit("canceled", true);
-      //   } else {
-      //     this.$router.push({
-      //       name: "MemberData",
-      //       params: { member: this.$route.params.member }
-      //     });
-      //     this.$root.$emit("canceled", false);
-      //   }
-      // } else {
-        this.$emit("form-cancel");
-      // }
+      this.$emit("form-cancel");
     }
   }
 };
@@ -211,7 +186,7 @@ export default {
   top: 5px;
   margin-bottom: 0px;
 } */
-.flexy{
+.flexy {
   display: flex;
   align-items: center;
 }
