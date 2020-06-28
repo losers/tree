@@ -51,6 +51,7 @@
           </div>
         </center>
 
+        <!-- Add Root Button -->
         <div id="wrapper" v-if="is_session">
           <button @click="showDualPage = true;" class="my-super-cool-btn">
             <div class="dots-container">
@@ -78,7 +79,6 @@
                 :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
                 :disabled="vloading"
               >
-                <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
                 <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
                 {{retry?"Retry":"Validate"}}
               </button>
@@ -138,7 +138,7 @@ export default {
       vloading: false,
       retry: false,
       sess: null,
-      showDualPage: false,
+      showDualPage: false
     };
   },
   computed: {

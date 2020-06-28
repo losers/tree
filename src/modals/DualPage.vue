@@ -7,7 +7,12 @@
       style="z-index:2000"
       v-on:close="beforeClose()"
     >
-      <component v-bind:is="selectedComponent" :payload="this.payload" v-on:close="swiperClose()"></component>
+      <component
+        v-bind:is="selectedComponent"
+        :payload="this.payload"
+        v-on:crudops="crudops"
+        v-on:close="swiperClose()"
+      ></component>
     </swipeable-bottom-sheet>
   </div>
 </template>
@@ -18,6 +23,7 @@ import AddRoot from "../components/AddRootForm";
 import AddMemberForm from "../components/AddMemberForm";
 import DeleteMember from "../components/DeleteMember";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
+import TimelineForm from "../components/TimelineForm";
 
 export default {
   props: ["reference", "payload"],
@@ -26,13 +32,23 @@ export default {
   },
   data() {
     return {
-      component: [AddFamily, AddRoot, AddMemberForm, DeleteMember],
+      component: [
+        AddFamily,
+        AddRoot,
+        AddMemberForm,
+        DeleteMember,
+        TimelineForm
+      ],
       selectedComponent: ""
     };
   },
   mounted() {
     this.selectedComponent = this.component[this.reference];
-    if (this.$device.mobile) {
+    if (this.payload.onlySwiper) {
+      setTimeout(() => {
+        this.$refs.swipeableBottomSheet.setState("open");
+      }, 200);
+    } else if (this.$device.mobile) {
       setTimeout(() => {
         this.$refs.swipeableBottomSheet.setState("open");
       }, 200);
@@ -55,6 +71,9 @@ export default {
     }
   },
   methods: {
+    crudops(num) {
+      this.$emit("crudops", num);
+    },
     beforeClose() {
       this.$emit("closed");
     },
