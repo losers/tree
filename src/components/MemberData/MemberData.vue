@@ -130,7 +130,6 @@
                         :data="data"
                         :hasMate="hasMate"
                         :cookey="cookey"
-                        v-on:callform="callForm=true"
                         v-on:actionsAddMember="addMember"
                         v-on:actionsDeleteSwipe="deleteSwipe"
                         v-on:keyTrue="cookeyStatus=true"
@@ -178,7 +177,6 @@
                   :data="data"
                   :hasMate="hasMate"
                   :cookey="cookey"
-                  v-on:callform="callForm=true"
                   v-on:actionsAddMember="addMember"
                   v-on:actionsDeleteSwipe="deleteSwipe"
                   v-on:keyTrue="cookeyStatus=true"
@@ -193,10 +191,10 @@
       </section>
     </div>
     <DualPage
-      :reference="2"
+      :reference="dualPage.ref"
       :memData="currentUserData"
       style="z-index:102!important"
-      v-if="callForm"
+      v-if="dualPage.callForm"
       :gender="data.gender==0?'male':'female'"
       :type="type"
       :parent_id="parent_id"
@@ -213,8 +211,6 @@ const Compress = require("compress.js");
 import myUpload from "vue-image-crop-upload/upload-2.vue";
 import Vue from "vue";
 import VModal from "vue-js-modal";
-import Delete from "@/components/DeleteMember";
-// import CommonForm from "../AddCommonForm";
 import ProdData from "@/data.js";
 import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
@@ -260,9 +256,12 @@ export default {
       hasMate: false,
       retry: false, //stores key status
       count: 0,
-      callForm: false,
       parent_id: "",
-      currentUserData: ""
+      currentUserData: "",
+      dualPage:{
+        callForm : false,
+        ref : 2
+      },
     };
   },
   watch: {
@@ -275,7 +274,6 @@ export default {
     }
   },
   mounted() {
-    this.callForm = false;
     this.open = true;
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = false; //Check version
@@ -396,7 +394,8 @@ export default {
     addMember(num, memData) {
       this.type = num;
       this.currentUserData = memData;
-      this.callForm = true;
+      this.dualPage.callForm = true;
+      this.dualPage.ref = 2;
       if (this.data.is_mate) {
         this.parent_id = this.data.parent_id;
       } else {
@@ -404,22 +403,25 @@ export default {
       }
     },
     deleteSwipe() {
-      this.$modal.show(
-        Delete,
-        {
-          name: this.data.name
-        },
-        {
-          height: "auto",
-          clickToClose: false,
-          scrollable: true,
-          draggable: true
-        }
-      );
-      this.open = false;
+
+      this.dualPage.callForm = true; 
+      this.dualPage.ref = 3;
+      // this.$modal.show(
+      //   Delete,
+      //   {
+      //     name: this.data.name
+      //   },
+      //   {
+      //     height: "auto",
+      //     clickToClose: false,
+      //     scrollable: true,
+      //     draggable: true
+      //   }
+      // );
+      // this.open = false;
     },
     addMemberCancel() {
-      this.callForm = false;
+      this.dualPage.callForm = false;
     },
     toggleBodyClass(addRemoveClass, className) {
       const el = document.body;

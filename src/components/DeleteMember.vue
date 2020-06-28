@@ -52,21 +52,7 @@ export default {
       this.deleteMe();
     },
     close() {
-      console.log("closeeee");
       this.$emit("close");
-      if (this.$route.query.hasMate) {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: this.$route.params.member },
-          query: { hasMate: true }
-        });
-      } else {
-        this.$router.push({
-          name: "MemberData",
-          params: { member: this.$route.params.member }
-        });
-      }
-      this.$root.$emit("canceled", this.id);
     },
     deleteMe() {
       axios

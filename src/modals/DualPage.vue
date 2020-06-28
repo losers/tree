@@ -13,6 +13,8 @@
         :type="this.type"
         :parent_id="this.parent_id"
         :memData="this.memData"
+        :name="this.componentParams"
+        v-on:close="swiperClose()"
       ></component>
     </swipeable-bottom-sheet>
   </div>
@@ -22,24 +24,26 @@
 import AddFamily from "../components/AddFamilyForm.vue";
 import AddRoot from "../components/AddRootForm";
 import AddMemberForm from "../components/AddMemberForm";
+import DeleteMember from "../components/DeleteMember";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 
 export default {
-  props: ["reference", "gender", "type", "parent_id", "memData"],
+  props: ["reference", "gender", "type", "parent_id", "memData", "componentParams"],
   components: {
     SwipeableBottomSheet
-    // AddFamily,
   },
   data() {
     return {
-      component: [AddFamily, AddRoot, AddMemberForm],
+      component: [AddFamily, AddRoot, AddMemberForm, DeleteMember],
       selectedComponent: ""
     };
   },
   mounted() {
     this.selectedComponent = this.component[this.reference];
     if (this.$device.mobile) {
-      this.$refs.swipeableBottomSheet.setState("open");
+      setTimeout(() => {
+        this.$refs.swipeableBottomSheet.setState("open");
+      },200);
     } else {
       this.$modal.show(
         this.selectedComponent,
@@ -47,7 +51,8 @@ export default {
           gender: this.gender,
           type: this.type,
           parent_id: this.parent_id,
-          memData: this.memData
+          memData: this.memData,
+          name : this.componentParams
         },
         {
           height: "auto",
@@ -64,6 +69,12 @@ export default {
   methods: {
     beforeClose() {
       this.$emit("closed");
+    },
+    swiperClose(){
+      this.$refs.swipeableBottomSheet.setState("close");
+      setTimeout(() => {
+        this.beforeClose();
+      },500);
     }
   }
 };

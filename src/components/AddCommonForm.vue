@@ -58,7 +58,7 @@
       </div>
       <hr class="mt-4 mb-4" style="background-color:white" />
       <div class="row">
-        <label class="col-md-4 d-none d-sm-block flexy">DOB :</label>
+        <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
         <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" required="true">
           <label>Date of Birth</label>
         </md-datepicker>
@@ -113,7 +113,7 @@ export default {
   components: {
     ToggleButton
   },
-  props: ["gender", "type", "parent_id", "memData"],
+  props: ["memData", "gender", "type", "parent_id"],
   data() {
     return {
       data: {},
@@ -129,13 +129,9 @@ export default {
     }
   },
   mounted() {
-    console.log("gender" + this.gender);
-    console.log("type" + this.type);
     this.is_alive = true;
-    console.log(this.memData);
     //memdata comes from MemberData route for editing
     if (this.memData) {
-      console.log(this.memData);
       this.data = this.memData;
       if (this.memData.is_died) {
         this.is_alive = false;
@@ -166,7 +162,7 @@ export default {
       } else {
         if (this.type == "gender") {
           this.data.type = 1;
-          if (this.gender == "male") {
+          if (this.gender == "female") {
             this.data.gender = "1";
           } else {
             this.data.gender = "0";
@@ -181,27 +177,27 @@ export default {
       }
     },
     goBack() {
-      if (this.memData) {
-        this.$emit("close");
-        this.$root.$emit("canceled");
-        if (this.$route.query.hasMate) {
-          console.log(this.$route.query.hasMate);
-          this.$router.push({
-            name: "MemberData",
-            params: { member: this.$route.params.member },
-            query: { hasMate: true }
-          });
-          this.$root.$emit("canceled", true);
-        } else {
-          this.$router.push({
-            name: "MemberData",
-            params: { member: this.$route.params.member }
-          });
-          this.$root.$emit("canceled", false);
-        }
-      } else {
+      // if (this.memData) {
+      //   this.$emit("close");
+      //   this.$root.$emit("canceled");
+      //   if (this.$route.query.hasMate) {
+      //     console.log(this.$route.query.hasMate);
+      //     this.$router.push({
+      //       name: "MemberData",
+      //       params: { member: this.$route.params.member },
+      //       query: { hasMate: true }
+      //     });
+      //     this.$root.$emit("canceled", true);
+      //   } else {
+      //     this.$router.push({
+      //       name: "MemberData",
+      //       params: { member: this.$route.params.member }
+      //     });
+      //     this.$root.$emit("canceled", false);
+      //   }
+      // } else {
         this.$emit("form-cancel");
-      }
+      // }
     }
   }
 };
