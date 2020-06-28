@@ -146,7 +146,7 @@ import Timeline from "@/components/Timeline/Timeline";
 import VueMaterial from "vue-material";
 import Axios from "axios";
 import Vue from "vue";
-import "vue-material/dist/vue-material.min.css";
+import "@/assets/css/vue-material.min.css";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
