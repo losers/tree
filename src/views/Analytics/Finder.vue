@@ -1,11 +1,24 @@
 <template>
   <div>
-    <div class="row justify-content-center">
-      <span class="mt-1">Person 1 :</span>
-      <vSelect :options="names" v-model="p1" class="col-3 myselect"></vSelect>
-      <span class="mt-1">Person 2 :</span>
-      <vSelect :options="names" v-model="p2" class="col-3"></vSelect>
-      <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
+    <div class="input_align">
+      <span class="mt-1" v-if="!$device.mobile">Person 1 :</span>
+      <vSelect
+        :options="names"
+        v-model="p1"
+        :placeholder="$device.mobile?'Person 1':''"
+        class="col-sm-10 col-md-3 myselect"
+      ></vSelect>
+      <span class="mt-1" v-if="!$device.mobile">Person 2 :</span>
+      <vSelect
+        :options="names"
+        v-model="p2"
+        :placeholder="$device.mobile?'Person 2':''"
+        :class="[{'mb-2':$device.mobile,'mt-2':$device.mobile}]"
+        class="col-sm-10 col-md-3"
+      ></vSelect>
+      <center>
+        <button class="btn btn-success" @click="submit" :disabled="!(p1&&p2)">Search</button>
+      </center>
     </div>
     <center>
       <img
@@ -34,12 +47,31 @@
             v-if="loading"
           ></span>
           <span v-else class="ml-1 relationName">{{relationName}}</span>
-          <button class="ml-3 btn btn-sm btn-primary" @click="opts=!opts">Change Language</button>
+          <br v-if="$device.mobile"/>
+          <button class="ml-3 btn btn-sm btn-primary" :class="{'mt-3':$device.mobile}" @click="opts=!opts">Change Language</button>
         </p>
         <div v-show="opts">
-          <input type="radio" class="mr-2" v-model="lang" value="western" name="lang" />Western
-          <input type="radio" class="mr-2 ml-4" v-model="lang" value="telugu" name="lang" />Telugu
-          <input type="radio" class="mr-2 ml-4" v-model="lang" value="kannada" name="lang" />Kannada
+          <input type="radio" id="western" class="mr-2" v-model="lang" value="western" name="lang" />
+          <label for="western" class="form-check-label">Western</label>
+          <input
+            type="radio"
+            id="telugu"
+            class="mr-2 ml-4"
+            v-model="lang"
+            value="telugu"
+            name="lang"
+          />
+          <label for="telugu" class="form-check-label">Telugu</label>
+
+          <input
+            type="radio"
+            id="kannada"
+            class="mr-2 ml-4"
+            v-model="lang"
+            value="kannada"
+            name="lang"
+          />
+          <label for="kannada" class="form-check-label">Kannada</label>
         </div>
         <TreeChart :json="tree" :images="images" style="padding-top:40px" />
       </div>
@@ -147,7 +179,12 @@ export default {
   font-weight: bold;
   font-size: 20px;
 }
-/* .myselect{
-  max-height: 10px;
-} */
+
+@media (min-width: 700px) {
+  .input_align {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 </style>

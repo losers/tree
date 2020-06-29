@@ -5,10 +5,10 @@
         <h3>Something went wrong {{error}}</h3>
       </section>
       <section v-else>
-        <section v-if="loading">Loading...</section>
+        <section v-if="payload.loading.main">Loading...</section>
         <section v-else>
           <!-- Titlebar -->
-          <div class="titlebar">
+          <div class="timeline-titlebar">
             <router-link
               :to="{name:'MainTree', params:{id:$route.params.id}}"
               class="float-left mt-2 ml-1"
@@ -16,7 +16,7 @@
               <i class="icofont-arrow-left"></i>
               Back
             </router-link>
-            <p class="title pt-3">{{user.name }}'s Timeline</p>
+            <b class="timeline-title">{{user.name }}'s Timeline</b>
           </div>
 
           <!-- Alert Modals -->
@@ -38,15 +38,15 @@
             </div>
           </transition>
 
-          <div class="row pt-5">
-            <div class="col-6">
+          <div class="row pt-5" style="margin:0">
+            <div class="col-md-6 col-sm-12" style="z-index:10">
               <div v-if="dataTimeline.length!=0">
                 <!-- <select v-model="order">
                   <option value="asc">Ascending</option>
                   <option value="desc">Descending</option>
                 </select>-->
 
-                <!-- TImeline Componet -->
+                <!-- Timeline Componet -->
                 <Timeline
                   class="mt-4"
                   :timeline-items="dataTimeline"
@@ -61,75 +61,35 @@
               <img
                 v-else
                 src="@/assets/no_timeline-min.jpg"
-                height="350px"
+                height="450px"
                 width="200px"
                 class="mt-5"
                 alt="Blood Line Helper"
               />
+
+              <div v-if="$device.mobile">
+                <!-- Swiper and modal -->
+                <DualPage
+                  v-if="showDualPage"
+                  :onlySwiper="true"
+                  :payload="payload"
+                  :reference="4"
+                  v-on:crudops="formEmit"
+                  ref="dualPageRef"
+                  v-on:closed="swiperDown"
+                ></DualPage>
+
+                <!-- Add Event Button for Mobile -->
+                <div
+                  style="position: fixed; font-size: 20px; padding:30px; bottom: 0px; left: 0;  width: 100%; -webkit-box-shadow: -14px 14px 32px -16px rgba(0,0,0,0.75); -moz-box-shadow: -14px 14px 32px -16px rgba(0,0,0,0.75); box-shadow: -14px 14px 32px -16px rgba(0,0,0,0.75);"
+                >
+                  <button @click="wrapperUp" class="btn btn-success" style="width:100%">+ Add Event</button>
+                </div>
+              </div>
             </div>
 
-            <div class="timeline_add_box">
-              <form v-on:submit.prevent="sendData">
-                <h3 class="mt-3" style="margin-bottom:40px;">{{edit?"Update":"Create"}} Event</h3>
-                <div class="row input-con">
-                  <label class="col-3 label">Date</label>
-                  <md-datepicker
-                    class="col-7"
-                    v-model="line.date"
-                    placeholder="Event Date"
-                    required="true"
-                  />
-                </div>
-                <div class="row input-con">
-                  <label class="col-3 label">Title</label>
-                  <input
-                    type="text"
-                    class="form-control col-7"
-                    placeholder="Enter Event Title"
-                    v-model="line.title"
-                    required="true"
-                  />
-                </div>
-                <div class="row input-con">
-                  <label class="col-3 label">Desciption</label>
-                  <textarea
-                    class="form-control col-7 rounded-2"
-                    rows="3"
-                    maxlength="1000"
-                    v-model="line.content"
-                    required="true"
-                    placeholder="Event description"
-                  ></textarea>
-                </div>
-                <div class="row input-con">
-                  <label class="col-3 label">Share with</label>
-                  <v-select
-                    class="col-7"
-                    style="height: 35px;"
-                    multiple
-                    :options="names"
-                    v-model="shared_with"
-                  ></v-select>
-                </div>
-
-                <div class="row input-con justify-content-around mb-4">
-                  <button type="submit" class="btn btn-success btn" :disabled="reqload">
-                    <span class="spinner-border spinner-border-sm" v-show="reqload"></span>
-                    {{edit?"Update":"Create"}}
-                  </button>
-                  <button class="btn btn-cancel" type="reset" @click="cancelclk">Cancel</button>
-                  <button
-                    type="button"
-                    @click="deleteItem()"
-                    v-show="edit"
-                    :disabled="del"
-                    class="btn btn-danger btn"
-                  >
-                    <span class="spinner-border spinner-border-sm" v-show="del"></span>
-                    Delete Permanently
-                  </button>
-                </div>
-              </form>
+            <div class="timeline_add_box" v-if="!$device.mobile && !payload.loading.main">
+              <TimelineForm :payload="payload" v-on:crudops="formEmit"></TimelineForm>
             </div>
           </div>
         </section>
@@ -143,47 +103,44 @@
 
 <script>
 import Timeline from "@/components/Timeline/Timeline";
-import VueMaterial from "vue-material";
 import Axios from "axios";
-import Vue from "vue";
-import "vue-material/dist/vue-material.min.css";
-import "vue-material/dist/theme/default.css";
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
-
-// var emitData;
-
-Vue.use(VueMaterial);
+import DualPage from "../../modals/DualPage";
 import ProData from "../../data.js";
+import TimelineForm from "../../components/TimelineForm";
 
 export default {
   name: "App",
   components: {
     Timeline,
-    vSelect
+    DualPage,
+    TimelineForm
   },
   watch: {
     names() {
-      if (this.names.length > 1) {
+      if (this.names != null) {
         this.getTimelineData();
       }
     }
   },
   mounted() {
-    if (this.names.length > 1) {
+    if (this.names != null) {
       this.getTimelineData();
     }
+
     //Emit for listening edit timeline
     this.$root.$on("edit-timeline", (data, shared) => {
-      this.line = Object.assign({}, data); //for form
-
-      this.shared_with = shared;
-      this.edit = true;
+      if (this.$device.mobile) {
+        this.showDualPage = true;
+      }
+      this.payload.formData = Object.assign({}, data); //for creating a new object eliminating a reference
+      this.payload.formData.shared_with = shared;
+      this.payload.formData.isEdit = true;
     });
   },
   methods: {
     getTimelineData() {
+      this.payload.names = this.names;
       Axios.get(
         ProData.getHostURL() +
           "/timeline/" +
@@ -224,30 +181,30 @@ export default {
           for (let i = 0; i < this.names.length; i++) {
             this.namesMap[this.names[i].value] = this.names[i].label;
           }
-          this.loading = false;
+          this.payload.loading.main = false;
         })
         .catch(err => {
           this.error = err;
         });
     },
     sendData() {
-      if (this.line.date != null) {
-        this.reqload = true;
+      if (this.payload.formData.date != null) {
+        this.payload.loading.change = true;
         //eve is the final obj
         let eve = {
-          date: this.line.date,
-          title: this.line.title,
-          content: this.line.content
+          date: this.payload.formData.date,
+          title: this.payload.formData.title,
+          content: this.payload.formData.content
         };
         eve.shared_with = [];
-        if (this.shared_with.length > 0) {
-          for (var i = 0; i < this.shared_with.length; i++) {
-            eve.shared_with.push(this.shared_with[i].value);
+        if (this.payload.formData.shared_with && this.payload.formData.shared_with.length > 0) {
+          for (var i = 0; i < this.payload.formData.shared_with.length; i++) {
+            eve.shared_with.push(this.payload.formData.shared_with[i].value);
           }
         }
-        if (this.edit) {
+        if (this.payload.formData.isEdit) {
           //Updating an event
-          eve.id = this.line.id;
+          eve.id = this.payload.formData.id;
           Axios.put(
             ProData.getHostURL() +
               "/timeline/" +
@@ -258,7 +215,7 @@ export default {
           )
             .then(() => {
               for (let i = 0; i < this.dataTimeline.length; i++) {
-                if (this.dataTimeline[i]["id"] == this.line.id) {
+                if (this.dataTimeline[i]["id"] == this.payload.formData.id) {
                   this.$set(this.dataTimeline, i, eve);
                 }
               }
@@ -268,7 +225,7 @@ export default {
             .catch(err => {
               this.alertStatus(false, err);
             })
-            .finally(() => (this.reqload = false));
+            .finally(() => (this.payload.loading.change = false));
         } else {
           //creating an event and pushing event to array locally
           Axios.post(
@@ -280,19 +237,37 @@ export default {
             eve
           )
             .then(data => {
+              console.log("create event api call");
               eve.id = data.data;
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);
-              this.line = {};
-              this.shared_with = [];
+              this.cancelclk();
             })
             .catch(err => {
               this.alertStatus(false, err);
             })
-            .finally(() => (this.reqload = false));
+            .finally(() => (this.payload.loading.change = false));
         }
       } else {
         this.alertStatus(false, "Please select a date");
+      }
+    },
+
+    //Called when the TImeline form Emits Callback
+    formEmit(type) {
+      console.log(type);
+      switch (type) {
+        case 0:
+          this.sendData();
+          break;
+        case 1:
+          this.cancelclk();
+          break;
+        case 2:
+          this.deleteItem();
+          break;
+        default:
+          break;
       }
     },
 
@@ -308,14 +283,22 @@ export default {
 
     //Cancel btn function
     cancelclk() {
-      this.line = {};
-      this.edit = false;
-      this.shared_with = [];
+      if (this.$device.mobile) {
+        this.$refs.dualPageRef.swiperClose();
+      }
+      this.payload.formData.shared_with = [];
+      this.payload.formData = {};
+      this.payload.formData.isEdit = false;
+    },
+
+    //Listens for Swiper to Down
+    swiperDown() {
+      this.showDualPage = false;
     },
 
     //Delete Btn Function
     deleteItem() {
-      this.del = true;
+      this.payload.loading.delete = true;
       Axios.delete(
         ProData.getHostURL() +
           "/timeline/" +
@@ -323,47 +306,53 @@ export default {
           "/" +
           this.$route.params.member,
         {
-          data: { id: this.line.id }
+          data: { id: this.payload.formData.id }
         }
       )
         .then(() => {
           this.alertStatus(true, "Deleted a Event");
           let temparr = this.dataTimeline;
-          temparr = temparr.filter(x => x.id !== this.line.id);
+          temparr = temparr.filter(x => x.id !== this.payload.formData.id);
           this.dataTimeline = temparr;
           this.cancelclk();
         })
         .catch(err => {
           this.alertStatus(false, err);
         })
-        .finally(() => (this.del = false));
+        .finally(() => (this.payload.loading.delete = false));
+    },
+
+    wrapperUp() {
+      this.payload.names = this.names;
+      this.showDualPage = true;
     }
   },
   data: () => ({
     user: {},
     error: null,
     modal_msg: null,
-    loading: true,
     show_alert: false,
     success_alert: false,
-    line: {},
     order: "asc",
-    edit: false,
     itemIndex: null,
     dataTimeline: [],
-    shared_with: [],
-    reqload: false,
-    del: false,
     namesMap: {},
-    emitData: {}
+    emitData: {},
+    showDualPage: false,
+    payload: {
+      formData: { isEdit: false, shared_with: [] },
+      loading: { main: true, delete: false, change: false }
+    }
   }),
   computed: {
     names: {
       get() {
         var name = Store.getters.getAllMembers;
+        if (name.length == 0) return null;
         name = name.filter(obj => {
           return obj.value !== this.$route.params.member;
         });
+
         return name;
       }
     }
@@ -372,6 +361,9 @@ export default {
 </script>
 
 <style>
+.card {
+  z-index: 10;
+}
 .btn-cancel {
   border: 1px solid black;
 }
@@ -394,19 +386,22 @@ export default {
 .input-con .v-select {
   padding: 0px;
 }
-.titlebar {
+.timeline-titlebar {
   position: fixed;
   width: 100%;
-  z-index: 100;
+  /* z-index: 100; */
   box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
   padding: 5px;
   background-color: white;
-  height: 50px;
+  display: flex;
+  align-items: center;
 }
-.title {
+.timeline-title {
   font-size: 30px;
   color: black;
   font-weight: bold;
+  flex: 1;
+  margin: 10px;
 }
 .timeline_add_box {
   overflow: scroll;

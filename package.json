@@ -27,7 +27,8 @@
     "vue-tabs-component": "^1.5.0",
     "vue-touch-ripple": "^3.0.0",
     "vue-typer": "^1.2.0",
-    "vuex": "^3.3.0"
+    "vuex": "^3.3.0",
+    "hammerjs": "*"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

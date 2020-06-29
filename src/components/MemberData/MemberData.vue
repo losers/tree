@@ -1,163 +1,205 @@
 <template>
-  <div style="left:70%!important;">
-    <router-view></router-view>
-    <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
-      <div v-if="open">
-        <section v-if="errored">
-          err
-          <p>{{errored}}</p>
-        </section>
-        <section v-else>
-          <div v-if="loading" style="margin-top:240px">
-            <center>
-              <img src="@/assets/dna.gif" alt="Family Tree Loading" />
-            </center>
-          </div>
-          <div v-else>
-            <div class="container_image mx-auto">
-              <div v-if="imageExists">
-                <img
-                  :src="previewImage"
-                  alt="Avatar"
-                  class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
-                />
-              </div>
-              <div v-else>
-                <img
-                  src="../../assets/profile.png"
-                  alt="Family Tree Loading"
-                  class="image mx-auto"
-                  style="border-radius: 50%;width: 150px;"
-                />
-              </div>
+  <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
+    <div v-if="open">
+      <section v-if="errored">
+        err
+        <p>{{errored}}</p>
+      </section>
+      <section v-else>
+        <div v-if="loading" class="container_image mx-auto">
+          <center>
+            <img src="@/assets/dna.gif" alt="Family Tree Loading" />
+          </center>
+        </div>
+        <div v-else>
+          <div class="container_image mx-auto">
+            <div v-if="imageExists">
+              <img
+                :src="previewImage"
+                alt="Avatar"
+                class="image mx-auto"
+                style="border-radius: 50%;width: 150px;"
+              />
+            </div>
+            <div v-else>
+              <img
+                src="../../assets/profile.png"
+                alt="Family Tree Loading"
+                class="image mx-auto"
+                style="border-radius: 50%;width: 150px;"
+              />
+            </div>
 
-              <div class="middle" v-show="cookeyStatus">
-                <div class="member-txt">
-                  <a class="btn" @click="show=true" style="color: white!important;">
-                    <i class="icofont-edit"></i>
-                    Change
-                  </a>
+            <div class="middle" v-if="cookeyStatus">
+              <div class="member-txt">
+                <a class="btn" @click="show=true" style="color: white!important;">
+                  <i class="icofont-edit"></i>
+                  Change
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <button
+            @click="uploadImage"
+            v-show="showUpload"
+            class="btn btn-success mt-3"
+            :disabled="loadingUpload"
+          >
+            <span v-if="!doneUpload">
+              <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
+              <i class="icofont-cloud-upload" v-else></i>
+              Upload Image
+            </span>
+            <span v-else>
+              <i class="icofont-tick-mark"></i>
+              Successfully Uploaded
+            </span>
+          </button>
+
+          <my-upload
+            :class="{'img-picker-mob':$device.mobile}"
+            field="img"
+            @crop-success="cropSuccess"
+            :width="200"
+            :height="200"
+            url
+            lang-type="en"
+            v-model="show"
+            img-format="jpg"
+          ></my-upload>
+          <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
+          <table class="table table-borderless table-hover mt-3 table-data">
+            <tbody class="text-left" style="color:black">
+              <tr class="text-center">
+                <td>
+                  {{data.short_name}}
+                  <i
+                    class="icofont-edit float-right"
+                    @click="addMember(2,data)"
+                    style="font-size:20px"
+                    v-show="cookeyStatus"
+                  ></i>
+                </td>
+              </tr>
+              <tr>
+                <td style="border-left:3px solid red;">
+                  <i class="icofont-business-man"></i>
+                  {{data.name}}
+                </td>
+              </tr>
+              <tr v-if="data.gender">
+                <td style="border-left:3px solid orange;">
+                  <span v-if="data.gender==1">
+                    <i class="icofont-male"></i>
+                  </span>
+                  <span v-else>
+                    <i class="icofont-female"></i>
+                  </span>
+                  {{data.gender=="1"?"Male":"Female"}}
+                </td>
+              </tr>
+            </tbody>
+
+            <!-- Accordian for Mobile -->
+            <div v-if="$device.mobile" class="mt-3">
+              <div id="accordion">
+                <!-- Actions Card -->
+                <div class="mb-1">
+                  <!-- Actions Heading -->
+                  <button
+                    class="btn p-0"
+                    style="color: #007bff;width:100%"
+                    data-toggle="collapse"
+                    data-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    <div class="card-header" id="headingOne">Actions</div>
+                  </button>
+
+                  <!-- Actions Body -->
+                  <div
+                    id="collapseOne"
+                    class="collapse show"
+                    aria-labelledby="headingOne"
+                    data-parent="#accordion"
+                  >
+                    <div class="card-body">
+                      <Actions
+                        :cookeyStatus="cookeyStatus"
+                        :data="data"
+                        :hasMate="hasMate"
+                        :cookey="cookey"
+                        v-on:actionsAddMember="addMember"
+                        v-on:actionsDeleteSwipe="deleteSwipe"
+                        v-on:keyTrue="cookeyStatus=true"
+                      ></Actions>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- More Info Card -->
+                <div>
+                  <!-- INfo HEading -->
+                  <button
+                    class="btn p-0 collapsed"
+                    style="color: #007bff;width:100%"
+                    :disabled="!cookeyStatus"
+                    data-toggle="collapse"
+                    data-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    <div class="card-header" id="headingTwo">More Info</div>
+                  </button>
+
+                  <!-- Info Body -->
+                  <div
+                    id="collapseTwo"
+                    class="collapse"
+                    aria-labelledby="headingTwo"
+                    data-parent="#accordion"
+                  >
+                    <div class="card-body">
+                      <MoreInfo :id="id" :data="data"></MoreInfo>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <button
-              @click="uploadImage"
-              v-show="showUpload"
-              class="btn btn-success mt-3"
-              :disabled="loadingUpload"
-            >
-              <span v-if="!doneUpload">
-                <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
-                <i class="icofont-cloud-upload" v-else></i>
-                Upload Image
-              </span>
-              <span v-else>
-                <i class="icofont-tick-mark"></i>
-                Successfully Uploaded
-              </span>
-            </button>
-
-            <my-upload
-              field="img"
-              @crop-success="cropSuccess"
-              :width="300"
-              :height="300"
-              url
-              lang-type="en"
-              v-model="show"
-              img-format="jpg"
-            ></my-upload>
-            <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
-            <table class="table table-borderless table-hover mt-3 table-data">
-              <tbody class="text-left" style="color:black">
-                <tr class="text-center">
-                  <td>
-                    {{data.short_name}}
-                    <i
-                      class="icofont-edit float-right"
-                      @click="showUpdateForm(data)"
-                      style="font-size:20px"
-                      v-show="cookeyStatus"
-                    ></i>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="border-left:3px solid red;">
-                    <i class="icofont-business-man"></i>
-                    {{data.name}}
-                  </td>
-                </tr>
-                <tr v-if="data.gender">
-                  <td style="border-left:3px solid orange;">
-                    <span v-if="data.gender==1">
-                      <i class="icofont-male"></i>
-                    </span>
-                    <span v-else>
-                      <i class="icofont-female"></i>
-                    </span>
-                    {{data.gender=="1"?"Male":"Female"}}
-                  </td>
-                </tr>
-              </tbody>
-
-              <!-- Tabbar -->
-              <tabs>
-                <tab name="Actions">
-                  <!-- Actions -->
-                  <transition name="fade" mode="out-in">
-                    <div class="mx-auto col-12" v-if="cookeyStatus">
-                      <button
-                        @click="addMember(0)"
-                        class="col-10 btn btn-warning mb-3"
-                        v-show="!data.parent_id"
-                      >+ Add Parent</button>
-                      <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
-
-                      <button
-                        v-show="!hasMate"
-                        @click="addMember('gender')"
-                        class="col-10 btn btn-primary mb-3"
-                      >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>
-
-                      <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
-                        <i class="icofont-ui-delete"></i> Delete
-                      </button>
-                    </div>
-                    <div v-else>
-                      <span class="col-4">
-                        <input
-                          class="form-control input-sm"
-                          placeholder="Enter Key to Edit"
-                          v-model="cookey"
-                          onkeypress="if(this.value.length==4) return false;"
-                          type="number"
-                        />
-                        <button
-                          v-show="cookey.length==4"
-                          @click="validate"
-                          :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-                          :disabled="loading"
-                        >
-                          <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
-                          <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                          {{retry?"Retry":"Validate"}}
-                        </button>
-                      </span>
-                    </div>
-                  </transition>
-                </tab>
-                <tab name="More Info" :is-disabled="!cookeyStatus">
-                  <MoreInfo :id="id" :data="data"></MoreInfo>
-                </tab>
-              </tabs>
-            </table>
-          </div>
-        </section>
-      </div>
-    </Drawer>
-  </div>
+            <!-- Tabbar -->
+            <tabs v-else>
+              <tab name="Actions">
+                <!-- Actions -->
+                <Actions
+                  :cookeyStatus="cookeyStatus"
+                  :data="data"
+                  :hasMate="hasMate"
+                  :cookey="cookey"
+                  v-on:actionsAddMember="addMember"
+                  v-on:actionsDeleteSwipe="deleteSwipe"
+                  v-on:keyTrue="cookeyStatus=true"
+                ></Actions>
+              </tab>
+              <tab name="More Info" :is-disabled="!cookeyStatus">
+                <MoreInfo :id="id" :data="data"></MoreInfo>
+              </tab>
+            </tabs>
+          </table>
+        </div>
+      </section>
+    </div>
+    <DualPage
+      :reference="dualPage.ref"
+      :payload="payload"
+      style="z-index:102!important"
+      v-if="dualPage.callForm"
+      v-on:closed="addMemberCancel"
+    ></DualPage>
+  </Drawer>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -167,13 +209,11 @@ const Compress = require("compress.js");
 import myUpload from "vue-image-crop-upload/upload-2.vue";
 import Vue from "vue";
 import VModal from "vue-js-modal";
-import Delete from "@/components/DeleteMember";
-import CommonForm from "../AddCommonForm";
 import ProdData from "@/data.js";
-import Store from "@/store/index";
 import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
-// import KProgress from "k-progress";
+import DualPage from "../../modals/DualPage";
+import Actions from "./Actions";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -188,7 +228,8 @@ export default {
     Tabs,
     Tab,
     MoreInfo,
-    // KProgress
+    DualPage,
+    Actions
   },
   data() {
     return {
@@ -198,7 +239,7 @@ export default {
       open: null,
       surname: this.$route.params.id,
       id: this.$route.params.member,
-      type: this.$route.params.type,
+      type: "",
       previewImage: null,
       imageData: "",
       show: false,
@@ -212,7 +253,13 @@ export default {
       vloading: false,
       hasMate: false,
       retry: false, //stores key status
-      count: 0
+      count: 0,
+      parent_id: "",
+      dualPage: {
+        callForm: false,
+        ref: 2
+      },
+      payload: {}
     };
   },
   watch: {
@@ -225,8 +272,13 @@ export default {
     }
   },
   mounted() {
+    this.open = true;
     this.hasMate = this.$route.query.hasMate;
     this.cookeyStatus = false; //Check version
+    if (this.$device.mobile) {
+      this.toggleBodyClass("addClass", "mem-spec");
+    }
+
     //Person Data API
     axios
       .get(
@@ -237,7 +289,6 @@ export default {
           this.hasMate = true;
         }
         this.data = data.data;
-        console.log(Object.keys(this.data))
         this.count = Object.keys(this.data).length - 6; //decremented 1 for image status
         this.cookeyStatus = this.data.has_session;
       })
@@ -268,15 +319,6 @@ export default {
           }
         }
       });
-    this.$root.$on("canceled", addedMate => {
-      if (addedMate) {
-        this.hasMate = false;
-      }
-      this.open = true;
-    });
-    if (this.type === undefined) {
-      this.open = true;
-    }
   },
   methods: {
     uploadImage() {
@@ -299,26 +341,6 @@ export default {
           setTimeout(() => {
             this.showUpload = false;
           }, 2000);
-        });
-    },
-    validate() {
-      this.vloading = true;
-      let sessionUrl = ProdData.getHostURL() + "/sessions/";
-      let params = {};
-      params.pin = this.cookey;
-      params.surname = this.surname;
-      axios
-        .post(sessionUrl, params)
-        .then(() => {
-          this.cookeyStatus = true;
-          this.vloading = false;
-          Store.commit("setSession", true);
-        })
-        .catch(() => {
-          this.retry = true;
-        })
-        .finally(() => {
-          this.vloading = false;
         });
     },
     cropSuccess(imgDataUrl) {
@@ -347,81 +369,53 @@ export default {
         });
     },
     toggle() {
-      if (!this.$route.params.type) {
-        this.open = false;
-        this.$router.push({
-          name: "MainTree",
-          params: { id: this.$route.params.id }
-        });
-      }
-    },
-    showUpdateForm(formd) {
       this.open = false;
-      this.$modal.show(
-        CommonForm,
-        {
-          memData: formd
-        },
-        {
-          height: "auto",
-          draggable: true,
-          clickToClose: false,
-          scrollable: true
-        }
-      );
+      this.$router.push({
+        name: "MainTree",
+        params: { id: this.$route.params.id }
+      });
     },
-    addMember(num) {
-      if (num == "gender") {
-        if (this.data.gender == "1") {
-          num = "b";
-        } else {
-          num = "a";
-        }
-      }
-      this.open = false;
-      console.log(num);
-      if (this.$route.query.hasMate) {
-        this.$router.push({
-          name: "AddMember",
-          params: { type: num },
-          query: {
-            parent_id: this.data.is_mate ? this.data.parent_id : this.data._id,
-            hasMate: true
-          }
-        });
+    addMember(num, memData) {
+      this.payload.memData = memData;
+      this.payload.gender = this.data.gender == 0 ? "male" : "female";
+      this.payload.type = num;
+      this.dualPage.callForm = true;
+      this.dualPage.ref = 2;
+      if (this.data.is_mate) {
+        this.payload.parent_id = this.data.parent_id;
       } else {
-        this.$router.push({
-          name: "AddMember",
-          params: { type: num },
-          query: {
-            parent_id: this.data.is_mate ? this.data.parent_id : this.data._id
-          }
-        });
+        this.payload.parent_id = this.id;
       }
     },
     deleteSwipe() {
-      this.$modal.show(
-        Delete,
-        {
-          name: this.data.name
-        },
-        {
-          height: "auto",
-          clickToClose: false,
-          scrollable: true,
-          draggable: true
-        }
-      );
-      this.open = false;
+      this.dualPage.callForm = true;
+      this.dualPage.ref = 3;
+      this.payload.name = this.data.name;
+    },
+    addMemberCancel() {
+      this.dualPage.callForm = false;
+    },
+    toggleBodyClass(addRemoveClass, className) {
+      const el = document.body;
+      if (addRemoveClass === "addClass") {
+        el.classList.add(className);
+      } else {
+        el.classList.remove(className);
+      }
     }
+  },
+  destroyed() {
+    this.toggleBodyClass("removeClass", "mem-spec");
   }
 };
 </script>
 
 <style>
-.vue-simple-drawer {
-  left: 70% !important;
+.img-picker-mob .vicp-wrap {
+  width: 300px;
+  height: 500px;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
@@ -438,9 +432,12 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
 .vue-simple-drawer {
+  position: absolute;
   background: white !important;
   box-shadow: 20px black;
+  color: black;
   -webkit-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
@@ -555,7 +552,33 @@ input[type="number"] {
   color: black;
 }
 
-@media (min-width: 700px) {
+.mobile-member-drawer {
+  left: 0% !important;
+  width: 100%;
+  top: 0%;
+  height: 100%;
+}
+
+.mask {
+  z-index: 10 !important;
+}
+.vue-simple-drawer {
+  z-index: 101 !important;
+}
+@media (min-width: 120px) {
+  .vue-simple-drawer.right {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@media (min-width: 720px) {
+  .vue-simple-drawer {
+    left: 70% !important;
+    position: fixed;
+  }
   .tabs-component-panels {
     border-top-left-radius: 0;
     background-color: #fff;

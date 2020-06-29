@@ -1,14 +1,14 @@
 <template>
   <div class="FormData p-5">
-    <h3 class="mb-3">{{memData?"Edit":"Add"}} Member</h3>
+    <h3 class="mb-3">{{payload.memData?"Edit":"Add"}} Member</h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
-        <label class="col-4">
+        <label class="d-none d-sm-block col-md-4">
           <span class="text-warning mr-1">*</span>Short Name:
         </label>
         <input
           type="text"
-          class="form-control col-7"
+          class="form-control col-md-7 col-sm-12"
           placeholder="Enter Short Name"
           v-model="data.short_name"
           required
@@ -16,23 +16,24 @@
       </div>
       <p class="info">Short Name will be shown in Family Tree</p>
       <div class="row">
-        <label class="col-4">
+        <label class="d-none d-sm-block col-md-4">
           <span class="text-warning mr-1">*</span>Name :
         </label>
         <input
           type="text"
-          class="form-control col-7"
+          class="form-control col-md-7 col-sm-12"
           v-model="data.name"
           placeholder="Enter Name"
           required
         />
       </div>
 
-      <!-- Gender Selection -->
-      <div class="row" v-if="(this.$route.params.type != 'a') && (this.$route.params.type != 'b')">
+      <!-- payload.gender Selection -->
+      <div v-if="type_data=='gender'"></div>
+      <div class="row" v-else>
         <div class="form-check col-3 ml-3">
           <input
-            class="form-check-input col-2 mt-2"
+            class="form-check-input col-3 mt-2"
             type="radio"
             name="gender"
             v-model="data.gender"
@@ -57,33 +58,27 @@
       </div>
       <hr class="mt-4 mb-4" style="background-color:white" />
       <div class="row">
-        <label class="col-4">DOB :</label>
-        <input
-          type="date"
-          class="form-control col-7"
-          v-model="data.dob"
-          placeholder="Date of Birth"
-        />
+        <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
+        <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" required="true">
+          <label>Date of Birth</label>
+        </md-datepicker>
+      </div>
+
+      <div class="row mb-2">
+        <label class="col-4 flexy">Is Alive :</label>
+        <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
+        <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
+          <md-datepicker v-model="data.died_on" required="true" class="cus">
+            <label>Date of Demise</label>
+          </md-datepicker>
+        </div>
       </div>
 
       <div class="row">
-        <label class="col-4">Is Alive</label>
-        <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="mb-4" />
-        <span class="form-inline" v-show="!is_alive">
-          <input
-            type="date"
-            class="form-control col-10 ml-5"
-            v-model="data.died_on"
-            placeholder="Died On"
-          />
-        </span>
-      </div>
-
-      <div class="row">
-        <label class="col-4">Mobile :</label>
+        <label class="d-none d-sm-flex col-md-4">Mobile :</label>
         <input
           type="tel"
-          class="form-control col-7"
+          class="form-control col-md-7 col-sm-12"
           v-model="data.mobile"
           placeholder="Mobile Number"
         />
@@ -105,15 +100,23 @@
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
 import ProdData from "../data.js";
+import Vue from "vue";
+import VueMaterial from "vue-material";
+import "@/assets/css/vue-material.min.css";
+
+// var emitData;
+
+Vue.use(VueMaterial);
 
 export default {
   components: {
     ToggleButton
   },
-  props: ["memData"],
+  props: ["payload"],
   data() {
     return {
       data: {},
+      type_data: this.payload.type,
       loading: false,
       is_error: false,
       is_alive: true
@@ -126,14 +129,13 @@ export default {
   },
   mounted() {
     this.is_alive = true;
-    //memdata comes from MemberData route for editing
-    if (this.memData) {
-      console.log(this.memData);
-      this.data = this.memData;
-      if (this.memData.is_died) {
+    //payload.memData comes from MemberData route for editing
+    if (this.payload.memData) {
+      this.data = this.payload.memData;
+      if (this.payload.memData.is_died) {
         this.is_alive = false;
-        if (this.memData.died_on) {
-          this.data.died_on = this.memData.died_on;
+        if (this.payload.memData.died_on) {
+          this.data.died_on = this.payload.memData.died_on;
         }
       }
     }
@@ -141,65 +143,53 @@ export default {
   methods: {
     sendData() {
       this.loading = true;
-      if (this.memData) {
+      if (this.payload.memData) {
         //calls while updating
         Axios.put(
           ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
           this.data
         )
           .then(() => {
-            this.$emit("close");
-            this.$root.$emit("canceled");
-            this.$router.push({
-              name: "MemberData",
-              params: { member: this.memData._id }
-            });
+            this.goBack();
           })
           .catch(errr => console.log(errr));
       } else {
-        if (this.$route.params.type == "a") {
-          this.data.gender = "1";
+        if (this.payload.type == "gender") {
           this.data.type = 1;
-        } else if (this.$route.params.type == "b") {
-          this.data.gender = "0";
-          this.data.type = 1;
-        } else if (this.$route.params.type == 1) {
+          if (this.payload.gender == "female") {
+            this.data.gender = "1";
+          } else {
+            this.data.gender = "0";
+          }
+        } else if (this.payload.type == 1) {
           this.data.type = 2;
-        } else if (this.$route.params.type == 0) {
+        } else if (this.payload.type == 0) {
           this.data.type = 0;
         }
+        this.data.parent_id = this.payload.parent_id;
         this.$emit("form-submit", this.data);
       }
     },
     goBack() {
-      if (this.memData) {
-        this.$emit("close");
-        this.$root.$emit("canceled");
-        // if (this.$route.query.hasMate) {
-        //   console.log(this.$route.query.hasMate);
-        //   this.$router.push({
-        //     name: "MemberData",
-        //     params: { member: this.$route.params.member },
-        //     query: { hasMate: true }
-        //   });
-        //   this.$root.$emit("canceled", true);
-        // } else {
-        //   console.log("thusss....");
-        //   this.$router.push({
-        //     name: "MemberData",
-        //     params: { member: this.$route.params.member }
-        //   });
-        //   this.$root.$emit("canceled", false);
-        // }
-      } else {
-        this.$emit("form-cancel");
-      }
+      this.$emit("form-cancel");
     }
   }
 };
 </script>
 
 <style scoped>
+/* .cus.md-field{
+  min-height: auto;
+  padding-top: 0px;
+}
+.cus.md-field label{
+  top: 5px;
+  margin-bottom: 0px;
+} */
+.flexy {
+  display: flex;
+  align-items: center;
+}
 .info {
   margin-top: -10px;
   font-size: 12px;

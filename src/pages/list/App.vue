@@ -6,6 +6,9 @@
 .j-stars {
   background-color: black !important;
 }
+.mem-spec, .mem-spec #app{
+  overflow: hidden;
+}
 @keyframes rocking {
   0%,100% {transform: rotateZ(-10deg);}
   50%     {transform: rotateZ(10deg);}

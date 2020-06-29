@@ -16,7 +16,6 @@
           <div id="stars3"></div>
           <div id="title">
             <img
-
               src="@/assets/logo.png"
               alt="Blood Line"
               height="60px"
@@ -25,35 +24,32 @@
             <span style="font-weight: 500;">lood Line</span>
             <br />
           </div>
-          <center>
+
+          <center v-show="addFBtn">
             <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
-          <center>
-            <touch-ripple
-              @click.native="addFamilyBtn"
-              class="button-box"
-              :speed="1.1"
-              v-show="addFBtn"
-            >
+
+          <!-- Create Family Button -->
+          <center class="mt-3">
+            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
         </div>
-        <AddFamily v-if="showModal == true" v-on:closed="showModal=false"></AddFamily>
+
+        <!-- Dual Page for Creating a Model -->
+        <DualPage :reference="0" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
         <div v-for="data in info" :key="data.id">
           <center>
             <div class="container div-box">
               <i
-                class="icofont-camera float-left"
+                class="icofont-star float-left"
                 style="color:white; font-size:25px"
                 data-toggle="tooltip"
                 title="Celebrity Family"
                 v-show="data.celeb"
               ></i>
-              <a :href="'/'+data.surname" class="title">{{data.title}}</a>
-              <!-- <router-link :to="{name:'MainTree', params:{id:data.surname}}">
-                <div class="title">{{data.title}}</div>
-              </router-link>-->
+              <a :href="data.surname" class="title">{{data.title}}</a>
               <p class="surname">Surname : {{data.surname}}</p>
             </div>
           </center>
@@ -645,13 +641,14 @@ a:hover {
 #title {
   left: 0;
   right: 0;
+  top: 30px;
+  margin-top: 30px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
   font-weight: 300;
   font-size: 50px;
   letter-spacing: 10px;
-  padding-left: 10px;
 }
 #title span {
   background: -webkit-linear-gradient(white, #38495a);
@@ -681,7 +678,7 @@ a:hover {
 
 <script>
 import axios from "axios";
-import AddFamily from "../modals/AddFamily";
+import DualPage from "../modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
@@ -700,7 +697,7 @@ export default {
     };
   },
   components: {
-    AddFamily,
+    DualPage,
     touchRipple,
     VueTyper
   },
@@ -725,6 +722,7 @@ export default {
     this.toggleBodyClass("removeClass", "j-stars");
   },
   mounted() {
+    console.log("csdmvvrbv");
     if (this.$device.mobile) {
       this.addFBtn = false;
     }

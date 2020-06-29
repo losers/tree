@@ -74,11 +74,7 @@ export default {
       return this.timelineItems;
     }
   },
-  watch: {
-    timelineItems() {
-      console.log("changed");
-    }
-  },
+
   methods: {
     wrapperItemClass(timelineIndex) {
       const isSameYearPreviousAndCurrent = this.checkYearTimelineItem(

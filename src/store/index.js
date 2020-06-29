@@ -65,8 +65,6 @@ export default new Vuex.Store({
       Algos.getAllGuys(tree, allMembers);
       state.commit('setAllMembers', allMembers);
     },
-
-
   },
   getters: {
     getIsLoading: (state) => {
