@@ -56,30 +56,28 @@
         <div v-if="tempData==undefined">
           <img
             src="../assets/stickman_family.jpg"
-            class="col-7"
+            class="col-xs-12 col-sm-7"
             style="margin-top:160px"
             alt="Blood Line Helper"
           />
-          <center>
-            <!-- Page Content -->
-            <div class="row">
-              <div class="col-3"></div>
-              <ul class="col-8">
-                <li>
-                  <h5 class="d-flex content-justify-left ml-2 mt-5">Add Members in a Top Down Manner</h5>
-                </li>
-                <h6
-                  class="d-flex content-justify-left ml-2 mb-4"
-                >E.g : Grand Father -> Father -> Child</h6>
-                <li>
-                  <h5
-                    class="d-flex content-justify-left ml-2"
-                  >Share your tree to your family members to collaborate</h5>
-                </li>
-              </ul>
-            </div>
-          </center>
-
+          <!-- Page Content -->
+          <div style="flex-direction: column;
+    display: flex;
+    align-items: center;">
+            <ul class="col-sm-6 col-xs-8">
+              <li>
+                <h5 class="d-flex content-justify-left ml-2 mt-5">Add Members in a Top Down Manner</h5>
+              </li>
+              <h6
+                class="d-flex content-justify-left ml-2 mb-4"
+              >E.g : Grand Father -> Father -> Child</h6>
+              <li>
+                <h5
+                  class="d-flex content-justify-left ml-2"
+                >Share your tree to your family members to collaborate</h5>
+              </li>
+            </ul>
+          </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
             <button @click="dualPage(1)" class="my-super-cool-btn">
