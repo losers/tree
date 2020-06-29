@@ -33,7 +33,7 @@
       <div class="row" v-else>
         <div class="form-check col-3 ml-3">
           <input
-            class="form-check-input col-2 mt-2"
+            class="form-check-input col-3 mt-2"
             type="radio"
             name="gender"
             v-model="data.gender"

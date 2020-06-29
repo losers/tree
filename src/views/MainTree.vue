@@ -19,94 +19,123 @@
         </center>
       </div>
 
-      <!-- Called When No data is found -->
-      <div v-else-if="tempData==undefined">
-        <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
-        <img
-          src="../assets/stickman_family.jpg"
-          class="col-7"
-          style="margin-top:160px"
-          alt="Blood Line Helper"
-        />
-        <center>
-          <!-- Loading Dual Page -->
-          <DualPage :reference="1" v-if="showDualPage" v-on:closed="showDualPage=false"></DualPage>
-
-          <!-- Page Content -->
-          <div class="row">
-            <div class="col-3"></div>
-            <ul class="col-8">
-              <li>
-                <h5 class="d-flex content-justify-left ml-2 mt-5">Add Members in a Top Down Manner</h5>
-              </li>
-              <h6
-                class="d-flex content-justify-left ml-2 mb-4"
-              >E.g : Grand Father -> Father -> Child</h6>
-              <li>
-                <h5
-                  class="d-flex content-justify-left ml-2"
-                >Share your tree to your family members to collaborate</h5>
-              </li>
-            </ul>
+      <div v-else>
+        <!-- Tree Tilebar -->
+        <div class="tree-titlebar">
+          <a :href="'/app/'">
+            <i class="icofont-arrow-left"></i> Back
+          </a>
+          <div class="tree-title">
+            {{newTitle?newTitle:title[0].title}}
+            <span v-show="is_session">
+              <i
+                class="icofont-edit ml-2"
+                @click="dualPage(0)"
+                style="font-size:20px;cursor: pointer;"
+              ></i>
+            </span>
           </div>
-        </center>
-
-        <!-- Add Root Button -->
-        <div id="wrapper" v-if="is_session">
-          <button @click="showDualPage = true;" class="my-super-cool-btn">
-            <div class="dots-container">
-              <div class="dot"></div>
-              <div class="dot"></div>
-              <div class="dot"></div>
-              <div class="dot"></div>
-            </div>
-            <span style="font-size:18px; font-weight:900">Add!</span>
-          </button>
+          <router-link
+            :to="{name:'Analytics'}"
+            style="display: flex;align-items: center;margin-right: 5px;"
+          >
+            <i class="icofont-gear" style="font-size: 21px;margin-right: 8px;"></i>
+            Analytics
+          </router-link>
         </div>
-        <div v-else>
+
+        <!-- Dual page for Add Root Edit form and  -->
+        <DualPage
+          :reference="dualPageData.reference"
+          :payload="title[0]"
+          v-on:closed="dualPageClosed"
+          v-if="dualPageData.showDualPage"
+        ></DualPage>
+
+        <!-- Called When No data is found -->
+        <div v-if="tempData==undefined">
+          <img
+            src="../assets/stickman_family.jpg"
+            class="col-7"
+            style="margin-top:160px"
+            alt="Blood Line Helper"
+          />
           <center>
-            <div class="row col-4">
-              <input
-                class="form-control input-sm"
-                placeholder="Enter Key to Edit"
-                v-model="cookey"
-                onkeypress="if(this.value.length==4) return false;"
-                type="number"
-              />
-              <button
-                v-show="cookey.length==4"
-                @click="validate"
-                :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
-                :disabled="vloading"
-              >
-                <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                {{retry?"Retry":"Validate"}}
-              </button>
+            <!-- Page Content -->
+            <div class="row">
+              <div class="col-3"></div>
+              <ul class="col-8">
+                <li>
+                  <h5 class="d-flex content-justify-left ml-2 mt-5">Add Members in a Top Down Manner</h5>
+                </li>
+                <h6
+                  class="d-flex content-justify-left ml-2 mb-4"
+                >E.g : Grand Father -> Father -> Child</h6>
+                <li>
+                  <h5
+                    class="d-flex content-justify-left ml-2"
+                  >Share your tree to your family members to collaborate</h5>
+                </li>
+              </ul>
             </div>
           </center>
-        </div>
-      </div>
 
-      <!-- Displays Tree Map -->
-      <div v-else>
-        <TreeTitle :meta="title[0]" :is_session="is_session"></TreeTitle>
-        <center>
-          <TreeChart
-            :json="tempData"
-            :images="images"
-            :class="{landscape: landscape.length}"
-            @click-node="clickNode"
-            style="padding-top:70px"
-          />
-        </center>
-        <footer class="foot">
-          <p>
-            With
-            <i class="icofont-heart" style="color:red"></i>
-            by
-            <a href="/app/medam">Satyanarayana's Family Devs</a>
-          </p>
-        </footer>
+          <!-- Add Root Button -->
+          <div id="wrapper" v-if="is_session">
+            <button @click="dualPage(1)" class="my-super-cool-btn">
+              <div class="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+              <span style="font-size:18px; font-weight:900">Add!</span>
+            </button>
+          </div>
+          <div v-else>
+            <center>
+              <div class="row col-4">
+                <input
+                  class="form-control input-sm"
+                  placeholder="Enter Key to Edit"
+                  v-model="cookey"
+                  onkeypress="if(this.value.length==4) return false;"
+                  type="number"
+                />
+                <button
+                  v-show="cookey.length==4"
+                  @click="validate"
+                  :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                  :disabled="vloading"
+                >
+                  <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+                  {{retry?"Retry":"Validate"}}
+                </button>
+              </div>
+            </center>
+          </div>
+        </div>
+
+        <!-- Displays Tree Map -->
+        <div v-else>
+          <center>
+            <TreeChart
+              :json="tempData"
+              :images="images"
+              :class="{landscape: landscape.length}"
+              @click-node="clickNode"
+              style="padding-top:70px"
+            />
+          </center>
+          <footer class="foot">
+            <p>
+              With
+              <i class="icofont-heart" style="color:red"></i>
+              by
+              <a href="/app/medam">Satyanarayana's Family Devs</a>
+            </p>
+          </footer>
+        </div>
       </div>
     </section>
   </div>
@@ -115,7 +144,6 @@
 <script>
 import TreeChart from "@/components/TreeChart";
 import axios from "axios";
-import TreeTitle from "../components/TreeTitle";
 import Error from "./Error";
 import Store from "../store/index";
 import ProData from "../data.js";
@@ -125,7 +153,6 @@ export default {
   name: "MainTree",
   components: {
     TreeChart,
-    TreeTitle,
     Error,
     DualPage
   },
@@ -138,7 +165,12 @@ export default {
       vloading: false,
       retry: false,
       sess: null,
-      showDualPage: false
+      newTitle: null,
+      dualPageData: {
+        showDualPage: false,
+        reference: null,
+        payload: {}
+      }
     };
   },
   computed: {
@@ -197,9 +229,6 @@ export default {
       }
     },
 
-    // Called when tree is empty
-    createRoot: function() {},
-
     //handling sessions
     validate() {
       this.vloading = true;
@@ -220,6 +249,19 @@ export default {
         .finally(() => {
           this.vloading = false;
         });
+    },
+
+    //Dual page calling function
+    dualPage(type) {
+      this.dualPageData.showDualPage = true;
+      this.dualPageData.reference = type;
+    },
+
+    dualPageClosed(payload) {
+      if (payload) {
+        this.newTitle = payload;
+      }
+      this.dualPageData.showDualPage = false;
     }
   }
 };
@@ -270,6 +312,23 @@ h2 {
   align-items: center;
   justify-content: center;
 }
+.tree-titlebar {
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
+  padding: 5px !important;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+.tree-title {
+  font-size: 30px;
+  color: black;
+  font-weight: bold;
+  flex: 1;
+}
+
 .my-super-cool-btn {
   background-color: Transparent;
   border: none;

@@ -1,15 +1,28 @@
 <template>
   <div>
-    <center>
-      <!-- <h3>We are working on it. We cant wait to see you</h3>
-      <img src="../../assets/working.jpg" width="200px">-->
-      <div class="row justify-content-center">
-        <vSelect :options="names" v-model="p1" class="col-3"></vSelect>
+    <div class="input_align">
+      <vSelect
+        :options="names"
+        palceholder="Select a Person"
+        v-model="p1"
+        class="col-sm-10 col-md-3"
+      ></vSelect>
+      <br v-if="$device.mobile" />
+      <center>
         <button class="btn btn-success" @click="submit" :disabled="!p1">Search</button>
-      </div>
-      <img v-if="!selected" src="../../assets/tree_gen.jpg" class="mt-5" height="400px" width="330px" alt="Blood Line Helper"/>
-      <TreeChart v-else :json="tree" :images="images" style="padding-top:70px" />
-    </center>
+
+        <img
+          v-if="!selected"
+          src="../../assets/tree_gen.jpg"
+          class="mt-5"
+          height="400px"
+          width="330px"
+          alt="Blood Line Helper"
+        />
+
+        <TreeChart :json="tree" :images="images" style="padding-top:70px" />
+      </center>
+    </div>
   </div>
 </template>
 
@@ -19,7 +32,7 @@ import "vue-select/dist/vue-select.css";
 import Store from "../../store/index";
 import Algos from "../../algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
-  
+
 export default {
   data() {
     return {
@@ -52,3 +65,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+@media (min-width: 700px) {
+  .input_align {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</style>

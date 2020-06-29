@@ -9,15 +9,14 @@
         <p class="title">Crazy Analytics</p>
       </center>
     </div>
-    <div class="row" style="
+    <div style="display:flex;
     width: 100%;height:100%;">
       <!-- Finders list -->
-      <div class="col-3 finders">
+      <div class="col-3 finders pl-0" v-if="!$device.mobile">
         <router-link :to="{name:'RelationFinder'}" class="alyt">
           <div class="item">
             <i class="icofont-search-2" style="margin-right:10px"></i>Relation Finder
           </div>
-          <!-- <div class="hr"></div> -->
         </router-link>
         <router-link :to="{name:'Subtree'}" class="alyt">
           <div class="item">
@@ -29,13 +28,43 @@
 
       <!-- Relations Data -->
       <div
-        class="col-9"
-        style="padding-top:100px;padding-top: 90px;height: 100%;overflow: auto;">
+        class="col-sm-12 col-md-9"
+        style="padding-top:100px;padding-top: 90px;height: 100%;overflow: auto;"
+      >
         <router-view></router-view>
+        <div
+          v-if="$device.mobile"
+          class="dropup"
+          style="width:100%;position:fixed;bottom:0;padding:15px;left:0;z-index:10"
+        >
+          <select v-model="selector" class="btn btn-success dropup form-control">
+            <option value="RelationFinder" selected>Relation Finder</option>
+            <option value="Subtree">Subtree</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      selector:this.$route.name
+    };
+  },
+  watch: {
+    selector: {
+      handler: function(val) {
+        this.$router.push({
+            name: val,
+          });
+      }
+    }
+  }
+};
+</script>
 
 <style scoped>
 .alyt {

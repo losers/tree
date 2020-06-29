@@ -257,7 +257,6 @@ a:hover {
 }
 
 #hero-area {
-  background: url("../images/slider.jpg") no-repeat 50%;
   background-size: cover;
   background-attachment: fixed;
   padding: 230px 0;
@@ -1068,11 +1067,11 @@ a.social:hover {
 }
 
 /* Images for features */
-
+/* 
 .img1{
   width: 100%;
   height: 400px;
-  background-image: url("http://testingraja.000webhostapp.com/v.jpg");
+  background-image: url("../images/family_tree.jpeg");
   background-size: 100% 100%;
-}
+} */
 

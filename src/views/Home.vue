@@ -24,20 +24,20 @@
             <span style="font-weight: 500;">lood Line</span>
             <br />
           </div>
+
           <center v-show="addFBtn">
             <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
           </center>
-          <center>
-            <touch-ripple
-              @click.native="addFamilyBtn"
-              class="button-box"
-              :speed="1.1"
-              v-show="addFBtn"
-            >
+
+          <!-- Create Family Button -->
+          <center class="mt-3">
+            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
         </div>
+
+        <!-- Dual Page for Creating a Model -->
         <DualPage :reference="0" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
         <div v-for="data in info" :key="data.id">
           <center>
@@ -50,9 +50,6 @@
                 v-show="data.celeb"
               ></i>
               <a :href="data.surname" class="title">{{data.title}}</a>
-              <!-- <router-link :to="{name:'MainTree', params:{id:data.surname}}">
-                <div class="title">{{data.title}}</div>
-              </router-link>-->
               <p class="surname">Surname : {{data.surname}}</p>
             </div>
           </center>
@@ -725,6 +722,7 @@ export default {
     this.toggleBodyClass("removeClass", "j-stars");
   },
   mounted() {
+    console.log("csdmvvrbv");
     if (this.$device.mobile) {
       this.addFBtn = false;
     }

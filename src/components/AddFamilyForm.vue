@@ -1,8 +1,8 @@
 <template>
   <div class="FormData p-5">
     <h3 v-if="!created&&!isDelete">
-      <span>{{metadata?"Updating":"Creating"}} a Family Tree</span>
-      <span class="close-btn" @click="goBack">x</span>
+      <span>{{payload?"Updating":"Creating"}} a Family Tree</span>
+      <span class="close-btn" v-if="!$device.mobile" @click="goBack">x</span>
       <span v-if="surname" class="ml-1">for {{surname}}</span>
     </h3>
     <transition name="fade" mode="out-in">
@@ -17,7 +17,7 @@
           <code>{{surname}}</code> in the input box to delete this family tree permanently
         </h6>
         <input class="form-control input-sm" type="text" v-model="errSurname" />
-        <button :disabled="errSurname != surname" class="btn btn-danger" @click="deleteFamily">
+        <button :disabled="errSurname != surname || loading" class="btn btn-danger" @click="deleteFamily">
           <span
             class="spinner-border spinner-border-sm"
             v-show="loading"
@@ -28,9 +28,9 @@
 
       <!-- Displays for editing and Creating Meta Data -->
       <form v-on:submit.prevent="sendData" v-else-if="!created">
-        <section v-if="editFormErrored&&metadata">{{editFormErrored}}</section>
+        <section v-if="editFormErrored&&payload">{{editFormErrored}}</section>
         <section v-else>
-          <span v-if="editFormLoading&&metadata">loading...</span>
+          <span v-if="editFormLoading&&payload">loading...</span>
           <span else>
             <div class="form-inline row">
               <label class="col" style="justify-content:left">Display Title :</label>
@@ -50,36 +50,39 @@
                 type="text"
                 class="form-control col-sm-8"
                 id="surname"
-                :disabled="metadata"
+                :disabled="payload"
                 placeholder="Enter Surname"
                 @input="makeSmall"
                 required
               />
             </div>
             <div class="form-inline row">
-              <label for="pin" class="col" style="justify-content:left">PIN :</label>
+              <label for="pin" class="col" style="justify-content:left">Create PIN :</label>
               <input
                 v-model="pin"
                 type="number"
                 class="form-control col-sm-8"
                 id="pin"
-                placeholder="Enter 4 Digit PIN"
+                placeholder="Create 4 Digit PIN"
                 onkeypress="if(this.value.length==4) return false;"
                 required
               />
             </div>
             <div class="row col-12" style="margin-top: 30px;">
-              <button type="submit" class="btn btn-success" :disabled="pin.length!=4">
+              <button type="submit" class="btn btn-success" :disabled="pin.length!=4 || loading">
                 <span
                   class="spinner-border spinner-border-sm"
                   v-show="loading"
                   style="margin-right: 8px;"
                 ></span>
-                <span>{{metadata?"Update":"Create"}}</span>
+                <span>{{payload?"Update":"Create"}}</span>
               </button>
+              <div v-if="errored" class="mt-3 text-danger">
+                <div class="mb-2">Surname {{surname}}, already exists</div>
+              </div>
               <button
                 type="button"
-                v-show="metadata"
+                v-show="payload"
                 class="ml-3 btn btn-danger"
                 @click="isDelete=true;created=false;"
               >Delete Family</button>
@@ -105,7 +108,6 @@
           <button class="btn btn-success" @click="goFamily">Go..</button>
         </center>
       </div>
-      <div v-else-if="errored">Error Code : {{errored}}</div>
     </transition>
   </div>
 </template>
@@ -120,13 +122,13 @@ export default {
   components: {
     Tick
   },
-  props: ["metadata"],
+  props: ["payload"],
   data() {
     return {
       surname: null,
       title: null,
       created: false,
-      errored: false,
+      errored: null,
       loading: false,
       pin: "",
       isDelete: false,
@@ -136,12 +138,12 @@ export default {
     };
   },
   mounted() {
-    if (this.metadata) {
-      this.title = this.metadata.title;
-      this.surname = this.metadata.surname;
+    if (this.payload) {
+      this.title = this.payload.title;
+      this.surname = this.payload.surname;
       this.editFormLoading = true;
-      Axios.get(ProdData.getHostURL()+"/meta/get/" + this.metadata._id)
-        .then((data) => {
+      Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
+        .then(data => {
           this.pin = data.data.pin;
         })
         .catch(err => (this.editFormErrored = err))
@@ -154,20 +156,20 @@ export default {
   methods: {
     sendData() {
       this.loading = true;
-      if (this.metadata) {
-        Axios.put(ProdData.getHostURL()+"/meta/update", {
+      if (this.payload) {
+        Axios.put(ProdData.getHostURL() + "/meta/update", {
           title: this.title,
-          _id: this.metadata._id,
-          created_at: this.metadata.created_at,
+          _id: this.payload._id,
+          created_at: this.payload.created_at,
           pin: this.pin
         })
-          .catch(err => (this.errored = err))
-          .finally(() => {
+          .then(() => {
             this.loading = false;
-            this.$emit("close");
-          });
+            this.$emit("close",this.title);
+          })
+          .catch(err => (this.errored = err));
       } else {
-        Axios.post(ProdData.getHostURL()+"/meta/add", {
+        Axios.post(ProdData.getHostURL() + "/meta/add", {
           title: this.title,
           surname: this.surname,
           pin: this.pin
@@ -175,16 +177,15 @@ export default {
           .then(() => {
             this.created = true;
           })
-          .catch(function(err) {
+          .catch(err => {
             this.errored = err;
-            console.log(err.response);
           })
           .finally(() => (this.loading = false));
       }
     },
     deleteFamily() {
       this.loading = true;
-      Axios.delete(ProdData.getHostURL()+"/meta", {
+      Axios.delete(ProdData.getHostURL() + "/meta", {
         data: { surname: this.errSurname }
       })
         .then(data => console.log(data))

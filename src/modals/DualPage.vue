@@ -1,17 +1,16 @@
 <template>
-  <!-- <MobileAddMemberForm v-show="$device.mobile" ref="m"></MobileAddMemberForm> -->
   <div>
     <swipeable-bottom-sheet
       v-if="$device.mobile"
       ref="swipeableBottomSheet"
-      style="z-index:2000"
-      v-on:close="beforeClose()"
+      style="z-index:100"
+      v-on:close="beforeClose"
     >
       <component
         v-bind:is="selectedComponent"
         :payload="this.payload"
         v-on:crudops="crudops"
-        v-on:close="swiperClose()"
+        v-on:close="swiperClose"
       ></component>
     </swipeable-bottom-sheet>
   </div>
@@ -26,7 +25,7 @@ import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 import TimelineForm from "../components/TimelineForm";
 
 export default {
-  props: ["reference", "payload"],
+  props: ["reference", "payload", "onlySwiper"],
   components: {
     SwipeableBottomSheet
   },
@@ -44,7 +43,7 @@ export default {
   },
   mounted() {
     this.selectedComponent = this.component[this.reference];
-    if (this.payload.onlySwiper) {
+    if (this.onlySwiper) {
       setTimeout(() => {
         this.$refs.swipeableBottomSheet.setState("open");
       }, 200);
@@ -65,7 +64,7 @@ export default {
           scrollable: true
         },
         {
-          "before-close": this.beforeClose
+          "before-close": this.beforeClose()
         }
       );
     }
@@ -74,13 +73,13 @@ export default {
     crudops(num) {
       this.$emit("crudops", num);
     },
-    beforeClose() {
-      this.$emit("closed");
+    beforeClose(return_payload) {
+      this.$emit("closed",return_payload);
     },
-    swiperClose() {
+    swiperClose(return_payload) {
       this.$refs.swipeableBottomSheet.setState("close");
       setTimeout(() => {
-        this.beforeClose();
+        this.beforeClose(return_payload);
       }, 500);
     }
   }

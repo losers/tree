@@ -68,9 +68,10 @@
               />
 
               <div v-if="$device.mobile">
-                <!-- Swiper -->
+                <!-- Swiper and modal -->
                 <DualPage
                   v-if="showDualPage"
+                  :onlySwiper="true"
                   :payload="payload"
                   :reference="4"
                   v-on:crudops="formEmit"
@@ -88,7 +89,7 @@
             </div>
 
             <div class="timeline_add_box" v-if="!$device.mobile && !payload.loading.main">
-              <TimelineForm :payload="payload" v-on:timelineFormEmit="formEmit"></TimelineForm>
+              <TimelineForm :payload="payload" v-on:crudops="formEmit"></TimelineForm>
             </div>
           </div>
         </section>
@@ -140,8 +141,6 @@ export default {
   methods: {
     getTimelineData() {
       this.payload.names = this.names;
-      console.log(this.payload.names);
-
       Axios.get(
         ProData.getHostURL() +
           "/timeline/" +
@@ -198,7 +197,7 @@ export default {
           content: this.payload.formData.content
         };
         eve.shared_with = [];
-        if (this.payload.formData.shared_with.length > 0) {
+        if (this.payload.formData.shared_with && this.payload.formData.shared_with.length > 0) {
           for (var i = 0; i < this.payload.formData.shared_with.length; i++) {
             eve.shared_with.push(this.payload.formData.shared_with[i].value);
           }
@@ -238,6 +237,7 @@ export default {
             eve
           )
             .then(data => {
+              console.log("create event api call");
               eve.id = data.data;
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);
@@ -255,6 +255,7 @@ export default {
 
     //Called when the TImeline form Emits Callback
     formEmit(type) {
+      console.log(type);
       switch (type) {
         case 0:
           this.sendData();
@@ -288,7 +289,6 @@ export default {
       this.payload.formData.shared_with = [];
       this.payload.formData = {};
       this.payload.formData.isEdit = false;
-      
     },
 
     //Listens for Swiper to Down
@@ -340,7 +340,6 @@ export default {
     emitData: {},
     showDualPage: false,
     payload: {
-      onlySwiper: true,
       formData: { isEdit: false, shared_with: [] },
       loading: { main: true, delete: false, change: false }
     }

@@ -30,7 +30,7 @@
               />
             </div>
 
-            <div class="middle" v-show="cookeyStatus">
+            <div class="middle" v-if="cookeyStatus">
               <div class="member-txt">
                 <a class="btn" @click="show=true" style="color: white!important;">
                   <i class="icofont-edit"></i>
@@ -58,10 +58,11 @@
           </button>
 
           <my-upload
+            :class="{'img-picker-mob':$device.mobile}"
             field="img"
             @crop-success="cropSuccess"
-            :width="300"
-            :height="300"
+            :width="200"
+            :height="200"
             url
             lang-type="en"
             v-model="show"
@@ -410,6 +411,11 @@ export default {
 </script>
 
 <style>
+.img-picker-mob .vicp-wrap {
+  width: 300px;
+  height: 500px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
