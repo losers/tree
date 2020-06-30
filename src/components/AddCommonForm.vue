@@ -156,7 +156,7 @@ export default {
       } else {
         if (this.payload.type == "gender") {
           this.data.type = 1;
-          if (this.payload.gender == "female") {
+          if (this.payload.gender == "male") {
             this.data.gender = "1";
           } else {
             this.data.gender = "0";
