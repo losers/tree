@@ -5,13 +5,17 @@
         <h3>Something went wrong {{error}}</h3>
       </section>
       <section v-else>
-        <section v-if="payload.loading.main">Loading...</section>
+        <section v-if="payload.loading.main">
+          <center style="padding-top:240px">
+            <img src="@/assets/dna.gif" alt="Bloodline Loader" />
+          </center>
+        </section>
         <section v-else>
           <!-- Titlebar -->
           <div class="timeline-titlebar">
             <router-link
               :to="{name:'MainTree', params:{id:$route.params.id}}"
-              class="float-left mt-2 ml-1"
+              class="float-left ml-1"
             >
               <i class="icofont-arrow-left"></i>
               Back
@@ -23,7 +27,7 @@
           <transition name="fade">
             <div
               v-show="show_alert"
-              style="right: 30px;position: fixed;margin-top:50px;"
+              style="right: 10px;position: fixed;margin-top:10px;z-index:10"
               class="alert float-right"
               :class="success_alert?'alert-success':'alert-danger'"
             >
@@ -39,7 +43,7 @@
           </transition>
 
           <div class="row pt-5" style="margin:0">
-            <div class="col-md-6 col-sm-12" style="z-index:10">
+            <div class="col-md-6 col-sm-12">
               <div v-if="dataTimeline.length!=0">
                 <!-- <select v-model="order">
                   <option value="asc">Ascending</option>
@@ -48,7 +52,7 @@
 
                 <!-- Timeline Componet -->
                 <Timeline
-                  class="mt-4"
+                  class="mt-5 pb-5 mb-5"
                   :timeline-items="dataTimeline"
                   :unique-year="false"
                   :show-day-and-month="true"
@@ -133,6 +137,7 @@ export default {
       if (this.$device.mobile) {
         this.showDualPage = true;
       }
+      console.log(this.payload.formData);
       this.payload.formData = Object.assign({}, data); //for creating a new object eliminating a reference
       this.payload.formData.shared_with = shared;
       this.payload.formData.isEdit = true;
@@ -197,7 +202,10 @@ export default {
           content: this.payload.formData.content
         };
         eve.shared_with = [];
-        if (this.payload.formData.shared_with && this.payload.formData.shared_with.length > 0) {
+        if (
+          this.payload.formData.shared_with &&
+          this.payload.formData.shared_with.length > 0
+        ) {
           for (var i = 0; i < this.payload.formData.shared_with.length; i++) {
             eve.shared_with.push(this.payload.formData.shared_with[i].value);
           }
@@ -237,7 +245,6 @@ export default {
             eve
           )
             .then(data => {
-              console.log("create event api call");
               eve.id = data.data;
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);
@@ -387,9 +394,10 @@ export default {
   padding: 0px;
 }
 .timeline-titlebar {
+  height: 50px;
   position: fixed;
   width: 100%;
-  /* z-index: 100; */
+  z-index: 1;
   box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
   padding: 5px;
   background-color: white;

@@ -1,17 +1,13 @@
 <template>
-  <div id="app-delete">
+  <div id="app-delete" class="p-4">
     <h3 class="text-danger mx-auto mt-4">
-      Delete
-      <span class="ml-3 mr-3">{{payload.name}} ?</span>
+      Delete {{payload.name}}?
     </h3>
-    <div class="d-flex justify-content-space mt-4">
-      <i class="mr-3" style="color:red; font-size:20px"></i>
-      <h5 class="text-danger">- It will delete all of his/her children</h5>
-    </div>
-    <div class="d-flex justify-content-space mt-3">
-      <i class="mr-3 mb-5" style="color:red; font-size:20px"></i>
-      <h5 class="text-danger">- No Backup, This action can't be undone</h5>
-    </div>
+    <ul class="text-danger mt-5">
+        <li class="mb-3">It will delete all of his/her children</li>
+        <li>No Backup, This action can't be undone</li>
+    </ul>
+    
     <div class="d-flex justify-content-between">
       <button
         @click="onActionConfirmed"
@@ -58,7 +54,6 @@ export default {
         )
         .then(treeData => {
           this.$emit("close");
-          console.log(treeData);
           Store.dispatch("treeOnlySetup", treeData.data).then(() => {
             this.$router.push({
               name: "MainTree",
@@ -76,19 +71,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #app-delete {
   padding-left: 20px;
 }
-.slide-button {
-  background-color: red !important;
-}
-.swipe-button {
-  width: 500px;
-  background-color: white;
-  -moz-box-shadow: inset 0 0 10px #000000;
-  -webkit-box-shadow: inset 0 0 10px #000000;
-  box-shadow: inset 0 0 10px #b6b6b6;
-  /* border: 1px solid #17255a; */
+ul{
+  font-size: 20px;
+  text-align: start;
 }
 </style>
