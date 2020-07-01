@@ -33,7 +33,7 @@
           @click="validate"
           class="btn mt-3"
           :class="{'btn-success':!retry, 'btn-warning':retry,}"
-          :disabled="loading"
+          :disabled="vloading"
         >
           <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
           <span class="spinner-border spinner-border-sm" v-show="vloading"></span>

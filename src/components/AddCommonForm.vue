@@ -42,9 +42,9 @@
             id="male"
             required
           />
-          <label for="male" class="form-check-label ml-2">Male</label>
+          <label for="male" class="form-check-label ml-2" style="color:black;">Male</label>
         </div>
-        <div class="form-check">
+        <div class="form-check" >
           <input
             class="form-check-input col-3 mt-2"
             type="radio"
@@ -53,19 +53,19 @@
             v-model="data.gender"
             value="0"
           />
-          <label for="female" class="form-check-label ml-2">Female</label>
+          <label for="female" class="form-check-label ml-2" style="color:black;">Female</label>
         </div>
       </div>
       <hr class="mt-4 mb-4" style="background-color:white" />
       <div class="row">
         <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
-        <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" required="true">
+        <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" :md-model-type="String">
           <label>Date of Birth</label>
         </md-datepicker>
       </div>
 
       <div class="row mb-2">
-        <label class="col-4 flexy">Is Alive :</label>
+        <label class="col-4 flexy" style="color:black;">Is Alive :</label>
         <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
         <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
           <md-datepicker v-model="data.died_on" required="true" class="cus">
@@ -131,6 +131,8 @@ export default {
     this.is_alive = true;
     //payload.memData comes from MemberData route for editing
     if (this.payload.memData) {
+      // this.payload.memData.dob = this.payload.memData.dob.toString().split("T")[0];
+      // console.log(this.payload.memData.dob);
       this.data = this.payload.memData;
       if (this.payload.memData.is_died) {
         this.is_alive = false;

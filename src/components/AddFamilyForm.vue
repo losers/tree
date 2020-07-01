@@ -17,7 +17,11 @@
           <code>{{surname}}</code> in the input box to delete this family tree permanently
         </h6>
         <input class="form-control input-sm" type="text" v-model="errSurname" />
-        <button :disabled="errSurname != surname || loading" class="btn btn-danger" @click="deleteFamily">
+        <button
+          :disabled="errSurname != surname || loading"
+          class="btn btn-danger"
+          @click="deleteFamily"
+        >
           <span
             class="spinner-border spinner-border-sm"
             v-show="loading"
@@ -68,7 +72,9 @@
                 required
               />
             </div>
-            <div class="row col-12" style="margin-top: 30px;">
+            <div
+              style="display:flex; margin-top: 30px;justify-content: space-between;"
+            >
               <button type="submit" class="btn btn-success" :disabled="pin.length!=4 || loading">
                 <span
                   class="spinner-border spinner-border-sm"
@@ -77,15 +83,16 @@
                 ></span>
                 <span>{{payload?"Update":"Create"}}</span>
               </button>
-              <div v-if="errored" class="mt-3 text-danger">
-                <div class="mb-2">Surname {{surname}}, already exists</div>
-              </div>
+
               <button
                 type="button"
                 v-show="payload"
-                class="ml-3 btn btn-danger"
+                class="btn btn-danger"
                 @click="isDelete=true;created=false;"
-              >Delete Family</button>
+              >Delete</button>
+            </div>
+            <div v-if="errored" class="mt-3 text-danger">
+              <div class="mb-2">Surname {{surname}}, already exists</div>
             </div>
           </span>
         </section>
@@ -165,7 +172,7 @@ export default {
         })
           .then(() => {
             this.loading = false;
-            this.$emit("close",this.title);
+            this.$emit("close", this.title);
           })
           .catch(err => (this.errored = err));
       } else {

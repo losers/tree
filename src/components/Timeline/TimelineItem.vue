@@ -15,6 +15,7 @@
         style="font-size:18px;cursor: pointer;"
       ></i>
 
+      
       <!-- Title name -->
       <h4 class="title-item" v-html="itemTimeline.title" />
 

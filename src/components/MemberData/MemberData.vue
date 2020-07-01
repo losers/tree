@@ -7,8 +7,8 @@
       </section>
       <section v-else>
         <div v-if="loading" class="container_image mx-auto">
-          <center>
-            <img src="@/assets/dna.gif" alt="Family Tree Loading" />
+          <center style="padding-top:240px">
+            <img src="@/assets/dna.gif" alt="Bloodline Loader" />
           </center>
         </div>
         <div v-else>

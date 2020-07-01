@@ -10,19 +10,20 @@
       <br v-if="$device.mobile" />
       <center>
         <button class="btn btn-success" @click="submit" :disabled="!p1">Search</button>
-
-        <img
-          v-if="!selected"
-          src="../../assets/tree_gen.jpg"
-          class="mt-5"
-          height="400px"
-          width="330px"
-          alt="Blood Line Helper"
-        />
-
-        <TreeChart :json="tree" :images="images" style="padding-top:70px" />
       </center>
     </div>
+    <center>
+      <img
+        v-if="!selected"
+        src="../../assets/tree_gen.jpg"
+        class="mt-5"
+        height="400px"
+        width="330px"
+        alt="Blood Line Helper"
+      />
+
+      <TreeChart :json="tree" :images="images" style="padding-top:70px" />
+    </center>
   </div>
 </template>
 

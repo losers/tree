@@ -64,7 +64,7 @@ export default {
           scrollable: true
         },
         {
-          "before-close": this.beforeClose()
+          "before-close": this.beforeClose
         }
       );
     }
