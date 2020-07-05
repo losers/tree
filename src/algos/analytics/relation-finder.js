@@ -188,7 +188,7 @@ function findLevel(tree, id, level) {
     }
 }
 
-function checkForInvRelation(tree, toChange, isInv) {
+function checkForInvRelation(tree, toChange, isInv, considerLastGirl) {
     if (tree == null) {
         return isInv;
     }
@@ -200,8 +200,11 @@ function checkForInvRelation(tree, toChange, isInv) {
         toChange = true;
     }
     if (tree.children)
-        return checkForInvRelation(tree.children[0], toChange, isInv);
+        return checkForInvRelation(tree.children[0], toChange, isInv, considerLastGirl);
     else {
+        if(toChange && considerLastGirl){
+            isInv = !isInv
+        }
         return isInv;
     }
 }
@@ -220,6 +223,7 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
     let p2 = findLevel(subTree, p2Id, 0);
 
     let isSameLane = false;
+    let strict = false;
     isSameLane = (subTree.id == p1Id) || (subTree.id == p2Id) || ((subTree.mate) && subTree.mate.id == p1Id) || ((subTree.mate) && subTree.mate.id == p2Id);
 
     let sameLane = isSameLane ? "same" : "other";
@@ -234,6 +238,7 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
     if (relationLev == 0) {
         if (p1.is_mate || p2.is_mate) {
             sameLane = "inv";
+            strict = true;
         }
         if (p1.level == 0 && p2.level == 0) {
             sameLane = "spl";
@@ -243,22 +248,35 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
         sameLane = "inv";
     }
 
-    if(relationType != "western" && subTree.children && subTree.children.length > 1){
-        let isInv1 = checkForInvRelation(subTree.children[0],false,false);
-        let isInv2 = checkForInvRelation(subTree.children[1],false, false);
+    if (relationType != "western" && sameLane != "spl" && subTree.children && subTree.children.length > 1) {
+        var considerLastGirl1 = false;
+        var considerLastGirl2 = false;
+        if(((p1.gender == 0) || (p1.gender == 1 && p1.is_mate)) && relationLev < 0){
+            considerLastGirl1 = true;
+        }
+        if(((p2.gender == 0) || (p2.gender == 1 && p2.is_mate)) && relationLev > 0){
+            considerLastGirl2 = true;
+        }
+        let isInv1 = checkForInvRelation(subTree.children[0], false, false, considerLastGirl1);
+        let isInv2 = checkForInvRelation(subTree.children[1], false, false, considerLastGirl2);
 
-        if(p1.gender == 0 && p1.level < p2.level && !p2.is_mate){
-            isInv1 = !isInv1;
-        }
-        else if(p2.gender == 0 && p2.level < p1.level && !p2.is_mate){
-            isInv2 = !isInv2;
-        }
-        else if(p2.gender == 1 && p2.level < p1.level && p2.is_mate){
-            isInv2 = !isInv2;
-        }
+        // if (p1.gender == 0 && p1.level < p2.level && !p1.is_mate && !p2.is_mate) { //Vani to Sai, Usha to Sai, Giri to Usha
+        //     isInv1 = !isInv1;
+        // }
+        // else if (p2.gender == 0 && p2.level < p1.level && !p2.is_mate) {
+        //     isInv2 = !isInv2;
+        // }
+        // else if (p2.gender == 1 && p2.level < p1.level && p2.is_mate) {
+        //     isInv2 = !isInv2;
+        // }
 
-        if(isInv1 != isInv2){
-            sameLane = "inv";
+        if (isInv1 != isInv2) {
+            if(sameLane == "inv" && !strict){
+                sameLane = "other";
+            }
+            else{
+                sameLane = "inv";
+            }
         }
     }
     return relations[relationLev][sameLane][p2.gender];
