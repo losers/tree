@@ -14,7 +14,8 @@ export default new Vuex.Store({
     is_session: false,
     loading: true,
     allMembers: [],
-    error: false
+    error: false,
+    cur_surname : ""
   },
   mutations: {
     setImages(state, imagesData) {
@@ -25,8 +26,9 @@ export default new Vuex.Store({
       state.title = treeData.data.meta;
       state.is_session = treeData.data.has_session;
     },
-    setSession(state, status) {
-      state.is_session = status;
+    setSession(state, sessData) {
+      state.is_session = sessData.status;
+      state.cur_surname = sessData.surname;
     },
     setLoading(state, status) {
       state.loading = status;
@@ -39,7 +41,6 @@ export default new Vuex.Store({
     },
     setTreeOnlyData(state, tree) {
       state.tree = tree;
-      console.log(tree);
     }
   },
   actions: {

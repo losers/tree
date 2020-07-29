@@ -35,7 +35,6 @@
           :class="{'btn-success':!retry, 'btn-warning':retry,}"
           :disabled="vloading"
         >
-          <!-- <button v-show="retry" class="btn btn-warning btn-sm"></button> -->
           <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
           {{retry?"Retry":"Validate"}}
         </button>
@@ -72,14 +71,16 @@ export default {
       let sessionUrl = ProdData.getHostURL() + "/sessions/";
       let params = {};
       params.pin = this.key;
-      console.log(params.pin);
       params.surname = this.$route.params.id;
       axios
         .post(sessionUrl, params)
         .then(() => {
           this.hasCookie = true;
           this.vloading = false;
-          Store.commit("setSession", true);
+          let sessData = {};
+          sessData.status = true;
+          sessData.surname = params.surname;
+          Store.commit("setSession", sessData);
           this.$emit("keyTrue")
         })
         .catch(() => {

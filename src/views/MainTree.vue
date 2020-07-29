@@ -237,7 +237,10 @@ export default {
       axios
         .post(sessionUrl, params)
         .then(() => {
-          Store.commit("setSession", true);
+          let sessData = {};
+          sessData.status = true;
+          sessData.surname = params.surname;
+          Store.commit("setSession", sessData);
           this.vloading = false;
         })
         .catch(err => {
