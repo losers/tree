@@ -40,7 +40,34 @@
           v-if="showAuthBox == true"
           v-on:closed="showAuthBox=false"
         ></DualPage>
-        <div v-for="data in info" :key="data.id">
+
+        <center>
+          <form
+            v-on:submit.prevent="search"
+            class="container"
+            style="display: flex;padding: 0px 0px 40px;"
+          >
+            <input type="text" v-model="text" class="form-control" placeholder="Search.." style="margin-right: 30px;"/>
+            <button type="submit" class="btn btn-default" style="color: black;background-color: white;">
+              <i class="icofont-search-2" style="padding-right: 10px;"></i>
+              <span>Search</span>
+            </button>
+            <!-- <input type="submit" value="Search" /> -->
+          </form>
+        </center>
+
+        <div v-if="s_load">
+          <center style="padding-top: 80px;">
+            <div
+              class="spinner-border text-light"
+              style="height: 100px;width: 100px;"
+              role="status"
+            >
+              <span class="sr-only">Loading...</span>
+            </div>
+          </center>
+        </div>
+        <div v-for="data in info" :key="data.id" v-else>
           <center>
             <div
               class="container div-box"
@@ -66,6 +93,12 @@
             </div>
           </center>
         </div>
+        <div v-if="info.length === 0 && !s_load">
+          <center>
+            <img src="@/assets/no-data.png" style="height:140px;margin-top: 70px;" />
+            <h4 style="color: white;margin-top: 30px;">Nothing matching...</h4>
+          </center>
+        </div>
       </div>
 
       <!-- Surname Tree -->
@@ -82,7 +115,7 @@
 .cur-family .surname {
   color: black;
 }
-.cur-family .title{
+.cur-family .title {
   color: black !important;
 }
 .div-box {
@@ -98,10 +131,10 @@ a:hover {
 .title {
   font-size: 35px;
   font-weight: bold;
-  color:#a0a0a0;
+  color: #a0a0a0;
 }
-a:not([href]){
-  color:#a0a0a0;
+a:not([href]) {
+  color: #a0a0a0;
 }
 .surname {
   font-size: 20px;
@@ -163,13 +196,15 @@ export default {
     return {
       info: null,
       loading: true,
+      s_load: false,
       errored: false,
       callMe: false,
       showModal: false,
       addFBtn: true,
       curFamily: "",
       showAuthBox: false,
-      authPayload: {}
+      authPayload: {},
+      text: ""
     };
   },
   components: {
@@ -181,8 +216,7 @@ export default {
     showAuth(surname, title, isCeleb) {
       if (surname === this.curFamily || isCeleb) {
         location.href = `/app/${surname}`;
-      }
-      else{
+      } else {
         this.authPayload.surname = surname;
         this.authPayload.title = title;
         this.showAuthBox = true;
@@ -202,6 +236,37 @@ export default {
       } else {
         el.classList.remove(className);
       }
+    },
+    search() {
+      if (this.text) {
+        this.s_load = true;
+        axios
+          .get(ProdData.getHostURL() + "/meta/search?text=" + this.text)
+          .then(response => {
+            this.info = response.data.list;
+            this.curFamily = response.data.cur_family;
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => (this.s_load = false));
+      } else {
+        this.getAllList();
+      }
+    },
+    getAllList() {
+      axios
+        .get(ProdData.getHostURL() + "/meta")
+        .then(response => {
+          this.toggleBodyClass("addClass", "j-stars");
+          this.info = response.data.list;
+          this.curFamily = response.data.cur_family;
+        })
+        .catch(error => {
+          this.errored = error;
+          console.log(error);
+        })
+        .finally(() => (this.loading = false));
     }
   },
   destroyed() {
@@ -211,18 +276,7 @@ export default {
     if (this.$device.mobile) {
       this.addFBtn = false;
     }
-    axios
-      .get(ProdData.getHostURL() + "/meta")
-      .then(response => {
-        this.toggleBodyClass("addClass", "j-stars");
-        this.info = response.data.list;
-        this.curFamily = response.data.cur_family;
-      })
-      .catch(error => {
-        this.errored = error;
-        console.log(error);
-      })
-      .finally(() => (this.loading = false));
+    this.getAllList();
   }
 };
 </script>
