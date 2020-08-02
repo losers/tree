@@ -1,6 +1,6 @@
 <template>
   <div class="FormData p-5">
-    <h3 class="mb-3">{{payload.memData?"Edit":"Add"}} Member</h3>
+    <h3 class="mb-3" style="color:black">{{payload.memData?"Edit":"Add"}} Member</h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
         <label class="d-none d-sm-block col-md-4">

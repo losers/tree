@@ -22,25 +22,32 @@
       <div v-else>
         <!-- Tree Tilebar -->
         <div class="tree-titlebar">
-          <a :href="'/app/'">
+          <a :href="'/app/'" class="flexy mr-2">
             <i class="icofont-arrow-left"></i> Back
           </a>
-          <div class="tree-title">
-            {{newTitle?newTitle:title[0].title}}
-            <span v-show="is_session">
+          <div class="tree-title flexy">
+            <div
+              class="fam-name"
+              :class="[{'f-26':$device.mobile}]"
+            >{{newTitle?newTitle:title[0].title}}</div>
+            <div v-show="is_session">
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
                 style="font-size:20px;cursor: pointer;"
               ></i>
-            </span>
+            </div>
           </div>
           <router-link
             :to="{name:'Analytics'}"
             style="display: flex;align-items: center;margin-right: 5px;"
           >
-            <i class="icofont-gear" style="font-size: 21px;margin-right: 8px;"></i>
-            Analytics
+            <i
+              class="icofont-gear"
+              style="margin-right: 8px;"
+              :class="[{'f-31':$device.mobile, 'f-21':$device.mobile}]"
+            ></i>
+            <span v-if="!$device.mobile">Analytics</span>
           </router-link>
         </div>
 
@@ -66,15 +73,9 @@
     align-items: center;">
             <ul class="col-sm-6 col-xs-8">
               <li>
-                <h5 class="d-flex content-justify-left ml-2 mt-5">Add Members in a Top Down Manner</h5>
-              </li>
-              <h6
-                class="d-flex content-justify-left ml-2 mb-4"
-              >E.g : Grand Father -> Father -> Child</h6>
-              <li>
                 <h5
-                  class="d-flex content-justify-left ml-2"
-                >Share your tree to your family members to collaborate</h5>
+                  class="d-flex content-justify-left ml-2 mt-5"
+                >Click 'Add' to Start Adding Members.</h5>
               </li>
             </ul>
           </div>
@@ -124,13 +125,17 @@
               @click-node="clickNode"
               style="padding-top:70px"
             />
+            <div v-if="!tempData.children && !tempData.mate" class="on-board">
+              <center><i class="icofont-long-arrow-up object"></i></center>
+              <h4 style="color:#848181">Click on this person to add Parents / Children etc.,</h4>
+            </div>
           </center>
           <footer class="foot">
             <p>
               With
               <i class="icofont-heart" style="color:red"></i>
               by
-              <a href="/app/medam">Satyanarayana's Family Devs</a>
+              <a>Losers</a>
             </p>
           </footer>
         </div>
@@ -164,6 +169,7 @@ export default {
       retry: false,
       sess: null,
       newTitle: null,
+      on_board: false,
       dualPageData: {
         showDualPage: false,
         reference: null,
@@ -184,6 +190,9 @@ export default {
     },
     tempData: {
       get() {
+        if (Store.state.tree && !Store.state.tree.id) {
+          return undefined;
+        }
         return Store.state.tree;
       }
     },
@@ -269,6 +278,45 @@ export default {
 </script>
 
 <style>
+.object {
+  animation: MoveUpDown 1s linear infinite;
+  position: relative;
+  /* left: 45%; */
+}
+
+@keyframes MoveUpDown {
+  0%, 100% {
+    top: -15px;
+  }
+  50% {
+    top: 0px;
+  }
+}
+
+.icofont-long-arrow-up {
+  font-size: 53px;
+}
+.on-board {
+  margin-top: -40px;
+  line-height: 36px;
+  position: relative;
+}
+.f-21 {
+  font-size: 21px;
+}
+.f-31 {
+  font-size: 31px;
+}
+.f-26 {
+  font-size: 26px;
+}
+.f-1 {
+  flex: 1;
+}
+.flexy {
+  display: flex;
+  align-items: center;
+}
 a:hover {
   text-decoration: none !important;
 }
@@ -328,8 +376,14 @@ h2 {
   color: black;
   font-weight: bold;
   flex: 1;
+  justify-content: center;
 }
-
+.fam-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+}
 .my-super-cool-btn {
   background-color: Transparent;
   border: none;

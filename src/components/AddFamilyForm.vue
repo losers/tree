@@ -3,7 +3,7 @@
     <h3 v-if="!created&&!isDelete">
       <span>{{payload?"Updating":"Creating"}} a Family Tree</span>
       <span class="close-btn" v-if="!$device.mobile" @click="goBack">x</span>
-      <span v-if="surname" class="ml-1">for {{surname}}</span>
+      <span v-if="surname" class="ml-1"> for {{surname}}</span>
     </h3>
     <transition name="fade" mode="out-in">
       <!-- UI will be displayed after clking delete button -->

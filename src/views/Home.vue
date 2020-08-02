@@ -124,6 +124,7 @@
   border-radius: 10px;
   margin-bottom: 40px;
   padding: 20px;
+  word-break: break-word;
 }
 a:hover {
   text-decoration: none !important;
