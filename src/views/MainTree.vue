@@ -61,23 +61,25 @@
 
         <!-- Called When No data is found -->
         <div v-if="tempData==undefined">
+          <img src="@/assets/intro-mob.png" class="mob-intro" v-if="$device.mobile" />
           <img
             src="../assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
             style="margin-top:160px"
             alt="Blood Line Helper"
+            v-else
           />
           <!-- Page Content -->
           <div style="flex-direction: column;
     display: flex;
     align-items: center;">
-            <ul class="col-sm-6 col-xs-8">
-              <li>
-                <h5
-                  class="d-flex content-justify-left ml-2 mt-5"
-                >Click 'Add' to Start Adding Members.</h5>
-              </li>
-            </ul>
+            <h5
+              class="d-flex content-justify-left ml-2"
+              :class="[{'desk-intro-text':!$device.mobile}]"
+            >Click 'Add' to Start Adding Members.</h5>
+            <center>
+              <i class="icofont-long-arrow-down object"></i>
+            </center>
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
@@ -126,7 +128,9 @@
               style="padding-top:70px"
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
-              <center><i class="icofont-long-arrow-up object"></i></center>
+              <center>
+                <i class="icofont-long-arrow-up object"></i>
+              </center>
               <h4 style="color:#848181">Click on this person to add Parents / Children etc.,</h4>
             </div>
           </center>
@@ -278,14 +282,23 @@ export default {
 </script>
 
 <style>
+.desk-intro-text {
+  font-size: 28px;
+  margin-top: 48px;
+}
+.mob-intro {
+  margin-top: 50px;
+  padding: 45px;
+}
 .object {
   animation: MoveUpDown 1s linear infinite;
   position: relative;
-  /* left: 45%; */
+  color: rgb(132, 129, 129);
 }
 
 @keyframes MoveUpDown {
-  0%, 100% {
+  0%,
+  100% {
     top: -15px;
   }
   50% {
@@ -293,7 +306,8 @@ export default {
   }
 }
 
-.icofont-long-arrow-up {
+.icofont-long-arrow-up,
+.icofont-long-arrow-down {
   font-size: 53px;
 }
 .on-board {

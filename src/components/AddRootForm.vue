@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AddCForm v-on:form-submit="sendData" :payload="{}" v-on:form-cancel="goBack"></AddCForm>
+    <AddCForm v-on:form-submit="sendData" :payload="{'is_root':true}" v-on:form-cancel="goBack"></AddCForm>
     <div v-show="err">{{err}}</div>
   </div>
 </template>

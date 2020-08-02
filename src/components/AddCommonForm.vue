@@ -44,7 +44,7 @@
           />
           <label for="male" class="form-check-label ml-2" style="color:black;">Male</label>
         </div>
-        <div class="form-check" >
+        <div class="form-check">
           <input
             class="form-check-input col-3 mt-2"
             type="radio"
@@ -56,32 +56,38 @@
           <label for="female" class="form-check-label ml-2" style="color:black;">Female</label>
         </div>
       </div>
-      <hr class="mt-4 mb-4" style="background-color:white" />
-      <div class="row">
-        <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
-        <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" :md-model-type="String">
-          <label>Date of Birth</label>
-        </md-datepicker>
-      </div>
-
-      <div class="row mb-2">
-        <label class="col-4 flexy" style="color:black;">Is Alive :</label>
-        <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
-        <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
-          <md-datepicker v-model="data.died_on" required="true" class="cus">
-            <label>Date of Demise</label>
+      <!-- Optional Params -->
+      <div v-if="!payload.is_root">
+        <hr class="mt-5 mb-3" style="background-color:white" />
+        <p style="margin-top: -29px;">
+          <center><span style="background-color: white;padding: 20px;color: #969696;">Optional</span></center>
+        </p>
+        <div class="row">
+          <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
+          <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" :md-model-type="String">
+            <label>Date of Birth</label>
           </md-datepicker>
         </div>
-      </div>
 
-      <div class="row">
-        <label class="d-none d-sm-flex col-md-4">Mobile :</label>
-        <input
-          type="tel"
-          class="form-control col-md-7 col-sm-12"
-          v-model="data.mobile"
-          placeholder="Mobile Number"
-        />
+        <div class="row mb-2">
+          <label class="col-4 flexy" style="color:black;">Is Alive :</label>
+          <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
+          <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
+            <md-datepicker v-model="data.died_on" required="true" class="cus">
+              <label>Date of Demise</label>
+            </md-datepicker>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="d-none d-sm-flex col-md-4">Mobile :</label>
+          <input
+            type="tel"
+            class="form-control col-md-7 col-sm-12"
+            v-model="data.mobile"
+            placeholder="Mobile Number"
+          />
+        </div>
       </div>
 
       <div class="d-flex justify-content-between mt-5">

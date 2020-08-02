@@ -4,8 +4,8 @@
       Delete {{payload.name}}?
     </h3>
     <ul class="text-danger mt-5">
-        <li class="mb-3">It will delete all of his/her children</li>
-        <li>No Backup, This action can't be undone</li>
+        <li class="mb-3">It will delete all of his/her descendants.</li>
+        <li>This action can't be undone</li>
     </ul>
     
     <div class="d-flex justify-content-between">
