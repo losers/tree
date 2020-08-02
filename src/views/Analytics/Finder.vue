@@ -65,6 +65,16 @@
 
           <input
             type="radio"
+            id="hindi"
+            class="mr-2 ml-4"
+            v-model="lang"
+            value="hindi"
+            name="lang"
+          />
+          <label for="hindi" class="form-check-label">Hindi</label>
+
+          <input
+            type="radio"
             id="kannada"
             class="mr-2 ml-4"
             v-model="lang"
