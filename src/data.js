@@ -128,4 +128,43 @@ data.relations.kannada = {
     }
 };
 
+data.relations.hindi = {
+    "3": {
+        "same": { "1": "परदादा [Pardada]", "0": "परदादी [Pardadi]" },           
+        "other": { "1": "महान चाचा [Mahan chacha]", "0": "महान भव्य चाची [Mahan chachi]" },       
+        "inv": { "1": "महान भव्य ससुर [mahan bhavya sasur]", "0": "बड़ी भव्य सास [badi bhavya saas]" },
+    },
+    "-3": { 
+        "same": { "1": "परपोता [parpota]", "0": "परपोती [parpoti]" },
+        "other": { "1": "महान भतीजा [mahan bhateeja]", "0": "महान भतीजी [mahan bhateeji]" },
+        "inv": { "1": "महान दामाद [mahan damad]", "0": "बड़ी बहू [badi bahu]" }
+    },
+    "2": {
+        "same": { "1": "दादा [dada]", "0": "दादी [dadi]" },                    
+        "other": { "1": "बड़े चाचा [bade chacha]", "0": "बड़ी चाची [badi chachi]" },
+        "inv": { "1": "ससुराल के दादा [sasural ke dada]", "0": "दादी सास [dadi saas]" },
+    },
+    "-2": {
+        "same": { "1": "पोता [pota]", "0": "पोती [poti]" },                   
+        "other": { "1": "पोता [pota]", "0": "पोती [poti]" },                  
+        "inv": { "1": "भव्य दामाद [bhavya damad]", "0": "भव्य बहू [bhavya bahu]" }
+    },
+    "0": {
+        "same": { "1": "भाई [bhai]", "0": "बहन [behen]" },                    
+        "other": { "1": "चचेरा भाई [chachera bhai]", "0": "चचेरी बहन [chacheri behen]" },
+        "inv": { "1": "साला [saala]", "0": "ननद [nanand]" },
+        "spl": { "1": "पति [pati]", "0": "पत्नी [patni]" }
+    },  
+    "1": {
+        "same": { "1": "पिता [pita]", "0": "मां [maa]" }, 
+        "other": { "1": "चाचा [chacha]", "0": " चाची [chachi]" },                         
+        "inv": { "1": "ससुर [sasur]", "0": "सास [saas]" },
+    },
+    "-1": {
+        "same": { "1": "बेटा [beta]", "0": "बेटी [beti]" },                             
+        "other": { "1": "भतीजा [bhateeja]", "0": "भांजी [bhanji]" },                         
+        "inv": { "1": "दामाद [damad]", "0": "बहु [bahu]" },                                
+    }
+};
+
 export default data;

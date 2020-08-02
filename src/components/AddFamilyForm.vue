@@ -108,7 +108,7 @@
             <h1>Success!</h1>
             <span
               style="font-size: 20px;"
-            >Family tree is created. Start Adding members to your family tree.</span>
+            >Let's Start Adding members to your family tree.</span>
           </center>
         </div>
         <center>

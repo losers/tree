@@ -18,7 +18,7 @@
 
 <script>
 import AddFamily from "../components/AddFamilyForm.vue";
-import AddRoot from "../components/AddRootForm";
+import AddRoot from "../components/AddRootForm.vue";
 import AddMemberForm from "../components/AddMemberForm";
 import DeleteMember from "../components/DeleteMember";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
@@ -38,7 +38,7 @@ export default {
         AddMemberForm,
         DeleteMember,
         TimelineForm,
-        AuthForm //5
+        AuthForm
       ],
       selectedComponent: ""
     };
@@ -75,13 +75,13 @@ export default {
     crudops(num) {
       this.$emit("crudops", num);
     },
-    beforeClose(return_payload) {
-      this.$emit("closed",return_payload);
+    beforeClose() {
+      this.$emit("closed");
     },
     swiperClose(return_payload) {
       this.$refs.swipeableBottomSheet.setState("close");
       setTimeout(() => {
-        this.beforeClose(return_payload);
+        this.$emit("closed", return_payload);
       }, 500);
     }
   }
