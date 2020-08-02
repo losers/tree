@@ -8,8 +8,12 @@
         <div :class="{node: true, hasMate: treeData.mate}">
           <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
             <div class="avat">
-              <img :src="'data:image/png;base64, '+treeData.image_url" v-if="treeData.image_url" alt="Blood Line User" />
-              <img src="../assets/dp.png" v-else alt="Blood Line User"/>
+              <img
+                :src="'data:image/png;base64, '+treeData.image_url"
+                v-if="treeData.image_url"
+                alt="Blood Line User"
+              />
+              <img src="../assets/dp.png" v-else alt="Blood Line User" />
             </div>
             <div class="name">{{treeData.name}}</div>
           </div>
@@ -24,8 +28,7 @@
                 v-if="treeData.mate.image_url"
                 alt="Blood Line User"
               />
-              <img src="../assets/dp.png" v-else 
-              alt="Blood Line User"/>
+              <img src="../assets/dp.png" v-else alt="Blood Line User" />
             </div>
             <div class="name">{{treeData.mate.name}}</div>
           </div>
@@ -100,10 +103,10 @@ export default {
 </script>
 
 <style scoped>
-.red-circle{
-  border:3px solid red !important;
+.red-circle {
+  border: 3px solid red !important;
 }
-.green-circle{
+.green-circle {
   border: 2px solid green !important;
 }
 table {
@@ -228,6 +231,9 @@ td {
   border: 1px solid #ccc;
   box-sizing: border-box;
   border-radius: 50%;
+  -webkit-box-shadow: 3px 3px 20px -9px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 3px 3px 20px -9px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 20px -9px rgba(0, 0, 0, 0.75);
 }
 .node .person .avat img {
   width: 100%;
