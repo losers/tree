@@ -47,8 +47,18 @@
             class="container"
             style="display: flex;padding: 0px 0px 40px;"
           >
-            <input type="text" v-model="text" class="form-control" placeholder="Search.." style="margin-right: 30px;"/>
-            <button type="submit" class="btn btn-default" style="color: black;background-color: white;">
+            <input
+              type="text"
+              v-model="text"
+              class="form-control"
+              :placeholder="`Search across ${totalFamilies} families..`"
+              style="margin-right: 30px;"
+            />
+            <button
+              type="submit"
+              class="btn btn-default"
+              style="color: black;background-color: white;"
+            >
               <i class="icofont-search-2" style="padding-right: 10px;"></i>
               <span>Search</span>
             </button>
@@ -67,29 +77,47 @@
             </div>
           </center>
         </div>
-        <div v-for="data in info" :key="data.id" v-else>
+        <div v-else>
           <center>
-            <div
-              class="container div-box"
-              :class="{'cur-family': curFamily == data.surname}"
-              @click="showAuth(data.surname, data.title, data.celeb)"
-            >
-              <i
-                class="icofont-unlocked float-left"
-                style="color:white; font-size:25px"
-                data-toggle="tooltip"
-                title="UnLocked"
-                v-show="data.celeb"
-              ></i>
-              <i
-                class="icofont-lock float-left"
-                style="color:white; font-size:25px"
-                data-toggle="tooltip"
-                title="Locked"
-                v-show="!data.celeb"
-              ></i>
-              <a class="title">{{data.title}}</a>
-              <p class="surname">Surname : {{data.surname}}</p>
+            <div v-for="data in info" :key="data.id">
+              <div
+                class="container div-box"
+                :class="{'cur-family': curFamily == data.surname}"
+                @click="showAuth(data.surname, data.title, data.celeb)"
+              >
+                <i
+                  class="icofont-unlocked float-left"
+                  style="color:white; font-size:25px"
+                  data-toggle="tooltip"
+                  title="UnLocked"
+                  v-show="data.celeb"
+                ></i>
+                <i
+                  class="icofont-lock float-left"
+                  style="color:white; font-size:25px"
+                  data-toggle="tooltip"
+                  title="Locked"
+                  v-show="!data.celeb"
+                ></i>
+                <a class="title">{{data.title}}</a>
+                <p class="surname">Surname : {{data.surname}}</p>
+              </div>
+            </div>
+            <div v-if="hasNext && info.length !== 0">
+              <button
+                type="button"
+                @click="loadMore"
+                v-if="!loadingMore"
+                class="btn load-more"
+              >Load more</button>
+              <div
+                v-if="loadingMore"
+                class="spinner-border text-light"
+                style="height: 100px;width: 100px;"
+                role="status"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
             </div>
           </center>
         </div>
@@ -108,6 +136,11 @@
 </template>
 
 <style scoped>
+.load-more {
+  background-color: white;
+  font-weight: bolder;
+  margin-bottom: 20px;
+}
 .cur-family {
   background-color: white;
   color: black;
@@ -205,7 +238,11 @@ export default {
       curFamily: "",
       showAuthBox: false,
       authPayload: {},
-      text: ""
+      text: "",
+      totalFamilies: null,
+      nextPage: 1,
+      hasNext: false,
+      loadingMore: false
     };
   },
   components: {
@@ -238,6 +275,21 @@ export default {
         el.classList.remove(className);
       }
     },
+    loadMore() {
+      this.loadingMore = true;
+      axios
+        .get(ProdData.getHostURL() + "/meta?page=" + this.nextPage)
+        .then(response => {
+          this.info = this.info.concat(response.data.list);
+          this.nextPage = response.data.next_page;
+          this.hasNext = response.data.has_next;
+        })
+        .catch(error => {
+          this.errored = error;
+          console.log(error);
+        })
+        .finally(() => (this.loadingMore = false));
+    },
     search() {
       if (this.text) {
         this.s_load = true;
@@ -262,6 +314,9 @@ export default {
           this.toggleBodyClass("addClass", "j-stars");
           this.info = response.data.list;
           this.curFamily = response.data.cur_family;
+          this.totalFamilies = response.data.total_families;
+          this.nextPage = response.data.next_page;
+          this.hasNext = response.data.has_next;
         })
         .catch(error => {
           this.errored = error;
