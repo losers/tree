@@ -3,7 +3,8 @@ data.isProd = true;
 
 data.getHostURL = function () {
     if (this.isProd) {
-        return "https://blineapi.herokuapp.com";
+       // return "https://blineapi.herokuapp.com";
+        return https://bloodlineqa.herokuapp.com/;
     }
     else {
         return "http://localhost:5000";
