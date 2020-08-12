@@ -82,8 +82,8 @@
             <div v-for="data in info" :key="data.id">
               <div
                 class="container div-box"
-                :class="{'cur-family': curFamily == data.surname}"
-                @click="showAuth(data.surname, data.title, data.celeb)"
+                :class="{'cur-family': curFamily == data._id}"
+                @click="showAuth(data.surname, data.title, data.celeb, data._id)"
               >
                 <i
                   class="icofont-unlocked float-left"
@@ -251,8 +251,8 @@ export default {
     VueTyper
   },
   methods: {
-    showAuth(surname, title, isCeleb) {
-      if (surname === this.curFamily || isCeleb) {
+    showAuth(surname, title, isCeleb, family_id) {
+      if (family_id === this.curFamily || isCeleb) {
         location.href = `/app/${surname}`;
       } else {
         this.authPayload.surname = surname;
