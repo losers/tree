@@ -15,7 +15,8 @@ export default new Vuex.Store({
     loading: true,
     allMembers: [],
     error: false,
-    cur_surname : ""
+    cur_surname : "",
+    metadata : {}
   },
   mutations: {
     setImages(state, imagesData) {
@@ -41,6 +42,9 @@ export default new Vuex.Store({
     },
     setTreeOnlyData(state, tree) {
       state.tree = tree;
+    },
+    setMetaData(state, metaData){
+      state.metadata = metaData;
     }
   },
   actions: {
@@ -66,10 +70,16 @@ export default new Vuex.Store({
       Algos.getAllGuys(tree, allMembers);
       state.commit('setAllMembers', allMembers);
     },
+    async setMetaData(state, metaData) {
+      state.commit('setMetaData', metaData);
+    },
   },
   getters: {
     getIsLoading: (state) => {
       return state.loading;
+    },
+    getMetaData: (state) => {
+      return state.metadata;
     },
     getTreeData: (state) => {
       return state.tree;

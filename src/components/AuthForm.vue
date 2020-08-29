@@ -56,6 +56,7 @@ export default {
     },
     validate() {
       this.vloading = true;
+      localStorage.pinner = true;
       let sessionUrl = ProdData.getHostURL() + "/sessions/";
       let params = {};
       params.pin = this.key;

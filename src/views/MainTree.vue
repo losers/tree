@@ -2,7 +2,37 @@
   <div id="app">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <error :msg="errored.response.data">{{errored}}</error>
+      <error v-if="errored.response.status == 404" :msg="errored.response.data">{{errored}}</error>
+      <DualPage
+        :payload="authModal.payload"
+        :reference="5"
+        v-if="authModal.show == true"
+        v-on:closed="authModal.show=false"
+      ></DualPage>
+
+      <div v-if="errored.response.status == 403">
+        <div style="display:flex">
+          <router-link :to="{name:'Home'}" class="mt-2 ml-1">
+            <i class="icofont-arrow-left"></i>
+            Back
+          </router-link>
+        </div>
+        <img
+          src="@/assets/no_entry.jpg"
+          alt="No Entry"
+          style="margin-top: 50px;margin-bottom: 30px;"
+        />
+        <h2 style="margin-bottom: 20px">You don't have access for "{{metadata.title}}"</h2>
+        <button class="btn btn-success" @click="openAuthBox">Enter PIN</button>
+
+        <div style="margin-top: 20px;" v-if="helper.main_show">
+          <a @click="toggleHelper" style="color:blue;cursor: pointer;">Help !</a>
+          <div v-if="helper.show">
+            <p>Change Cookie Settings in {{helper.browser}} Browser, to allow all third-party cookies.</p>
+            <p style="color:grey">( In case if you still face problem, Mail to "bloodline.helpline@gmail.com" and we can have quick one-on-one session to fix this )</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Loads when a tree is found -->
@@ -178,6 +208,15 @@ export default {
         showDualPage: false,
         reference: null,
         payload: {}
+      },
+      authModal: {
+        payload: {},
+        show: false
+      },
+      helper: {
+        show: false,
+        browser: "",
+        main_show : false
       }
     };
   },
@@ -212,11 +251,27 @@ export default {
     },
     errored: {
       get() {
+        if (Store.state.error.response) {
+          if (Store.state.error.response.status === 403) {
+            this.openAuthBox();
+            Store.dispatch("setMetaData", Store.state.error.response.data[0]);
+          }
+        }
         return Store.state.error;
+      }
+    },
+    metadata: {
+      get() {
+        return Store.state.metadata;
       }
     }
   },
   mounted() {
+    //To show Helper for Wrong Pinner
+    if(localStorage.pinner){
+      this.helper.main_show = true;
+    }
+
     //called after adding a new member
     this.$root.$on("update-tree", data => {
       console.log(data);
@@ -225,6 +280,35 @@ export default {
   },
   methods: {
     // Called when a node is clicked
+
+    toggleHelper: function() {
+      this.helper.show = !this.helper.show;
+
+      let nAgt = navigator.userAgent;
+      let browserName = navigator.appName;
+
+      if (nAgt.indexOf("Opera") != -1) {
+        browserName = "Opera";
+      } else if (nAgt.indexOf("MSIE") != -1) {
+        browserName = "Microsoft Internet Explorer";
+      } else if (nAgt.indexOf("Chrome") != -1) {
+        browserName = "Chrome";
+      } else if (nAgt.indexOf("Safari") != -1) {
+        browserName = "Safari";
+      } else if (nAgt.indexOf("Firefox") != -1) {
+        browserName = "Firefox";
+      } else {
+        browserName = "your";
+      }
+
+      this.helper.browser = browserName;
+    },
+    openAuthBox: function() {
+      this.authModal.show = true;
+      this.authModal.payload.title = Store.state.error.response.data[0].title;
+      this.authModal.payload.surname =
+        Store.state.error.response.data[0].surname;
+    },
     clickNode: function(node) {
       if (node.data.mate || node.isMate) {
         this.$router.push({
