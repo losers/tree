@@ -38,7 +38,8 @@ data.relations.western = {
         "same": { "1": "Brother [Sibling]", "0": "Sister [Sibling]" },
         "other": { "1": "Brother [Cousin]", "0": "Sister [Cousin]" },
         "inv": { "1": "Brother-in-Law", "0": "Sister-in-Law" },
-        "spl": { "1": "Husband", "0": "Wife" }
+        "spl": { "1": "Husband", "0": "Wife" },
+        "sav": { "1": "Brother", "0": "Sister" },
     },
     "1": {
         "same": { "1": "Father", "0": "Mother" },
@@ -77,7 +78,8 @@ data.relations.telugu = {
         "same": {"1" : "సొంతం అన్నయ/తమ్ముడు", "0": "సొంతం అక్క/చెల్లి"},
         "other": {"1" : "అన్నయ/తమ్ముడు", "0": "అక్క/చెల్లి"},
         "inv": {"1" : "బావ/బావమరిది", "0": "వదిన/మరదలు"},
-        "spl": {"1" : "భర్త", "0": "భార్య"}
+        "spl": {"1" : "భర్త", "0": "భార్య"},
+        "sav": {"1" : "అన్నయ/తమ్ముడు", "0": "అక్క/చెల్లి"},
     },
     "1": {
         "same": {"1" : "నాన్న", "0": "అమ్మ"},
@@ -116,7 +118,8 @@ data.relations.kannada = {
         "same": {"1" : "ಅಣ್ಣ/ತಮ್ಮ [Anna/Tamma]", "0": "ಅಕ್ಕ/ತಂಗಿ [Akka/Tangi]"},
         "other": {"1" : "ಅಣ್ಣ/ತಮ್ಮ [Anna/Tamma]", "0": "ಅಕ್ಕ/ತಂಗಿ [Akka/Tangi]"},
         "inv": {"1" : "ಭಾವ/ಬಾಮೈದ [Bhaava/Baamaida]", "0": "ಅತ್ತಿಗೆ/ನಾದಿನಿ [Attige/Naadini]"},
-        "spl": {"1" : "ಗಂಡ [Ganda]", "0": "ಹೆಂಡತಿ [Hendathi]"}
+        "spl": {"1" : "ಗಂಡ [Ganda]", "0": "ಹೆಂಡತಿ [Hendathi]"},
+        "sav": {"1" : "ಅಣ್ಣ/ತಮ್ಮ [Anna/Tamma]", "0": "ಅಕ್ಕ/ತಂಗಿ [Akka/Tangi]"},
     },
     "1": {
         "same": {"1" : "ಅಪ್ಪ [Appa]", "0": "ಅಮ್ಮ [Amma]"},
@@ -155,7 +158,8 @@ data.relations.hindi = {
         "same": { "1": "भाई [bhai]", "0": "बहन [behen]" },                    
         "other": { "1": "चचेरा भाई [chachera bhai]", "0": "चचेरी बहन [chacheri behen]" },
         "inv": { "1": "साला [saala]", "0": "ननद [nanand]" },
-        "spl": { "1": "पति [pati]", "0": "पत्नी [patni]" }
+        "spl": { "1": "पति [pati]", "0": "पत्नी [patni]" },
+        "sav": { "1": "भाई [bhai]", "0": "बहन [behen]" }                   
     },  
     "1": {
         "same": { "1": "पिता [pita]", "0": "मां [maa]" }, 

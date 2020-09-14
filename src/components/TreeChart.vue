@@ -5,35 +5,44 @@
         :colspan="treeData.children ? treeData.children.length * 2 : 1"
         :class="{parentLevel: treeData.children, extend: treeData.children && treeData.extend}"
       >
-        <div :class="{node: true, hasMate: treeData.mate}">
-          <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
-            <div class="avat">
-              <img
-                :src="'data:image/png;base64, '+treeData.image_url"
-                v-if="treeData.image_url"
-                alt="Blood Line User"
-              />
-              <img src="../assets/dp.png" v-else alt="Blood Line User" />
-            </div>
-            <div class="name">{{treeData.name}}</div>
-          </div>
+        <center>
           <div
-            class="person mate"
-            v-if="treeData.mate"
-            @click="$emit('click-node',{data:treeData.mate, isMate:true})"
+            :class="{node: true, hasMate: treeData.mate}"
+            style="display: flex; justify-content: center;"
+            :style="{'width': (treeData.mate) && (treeData.mate.length > 1) ? treeData.mate.length*134+'px':'224px'}"
           >
-            <div class="avat green-circle">
-              <img
-                :src="'data:image/png;base64, '+treeData.mate.image_url"
-                v-if="treeData.mate.image_url"
-                alt="Blood Line User"
-              />
-              <img src="../assets/dp.png" v-else alt="Blood Line User" />
+            <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
+              <div class="avat">
+                <img
+                  :src="'data:image/png;base64, '+treeData.image_url"
+                  v-if="treeData.image_url"
+                  alt="Blood Line User"
+                />
+                <img src="../assets/dp.png" v-else alt="Blood Line User" />
+              </div>
+              <div class="name">{{treeData.name}}</div>
             </div>
-            <div class="name">{{treeData.mate.name}}</div>
+            <div v-if="treeData.mate" style="display: flex;">
+              <div
+                class="person mate"
+                @click="$emit('click-node',{data:treeData.mate[index], isMate:true})"
+                v-for="(mate, index) in treeData.mate"
+                :key="index"
+              >
+                <div class="avat green-circle">
+                  <img
+                    :src="'data:image/png;base64, '+mate.image_url"
+                    v-if="mate.image_url"
+                    alt="Blood Line User"
+                  />
+                  <img src="../assets/dp.png" v-else alt="Blood Line User" />
+                </div>
+                <div class="name">{{mate.name}}</div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="extend_handle" v-if="treeData.children" @click="toggleExtend(treeData)"></div>
+          <div class="extend_handle" v-if="treeData.children" @click="toggleExtend(treeData)"></div>
+        </center>
       </td>
     </tr>
     <tr v-if="treeData.children && treeData.extend">
@@ -43,7 +52,9 @@
         colspan="2"
         class="childLevel"
       >
-        <TreeChart :json="children" @click-node="$emit('click-node', $event)" />
+        <center>
+          <TreeChart :json="children" @click-node="$emit('click-node', $event)" />
+        </center>
       </td>
     </tr>
   </table>
@@ -70,7 +81,9 @@ export default {
           if (images1.all) {
             jsonData.image_url = images1.all[jsonData.id];
             if (jsonData.mate) {
-              jsonData.mate.image_url = images1.all[jsonData.mate.id];
+              for(let mate of jsonData.mate){
+                 mate.image_url = images1.all[mate.id];
+              }
             }
           }
           jsonData.extend =
@@ -159,6 +172,7 @@ td {
   border-left: 2px solid #ccc;
   transform: translate3d(-1px, 0, 0);
 }
+
 .childLevel::before {
   content: "";
   position: absolute;
@@ -206,7 +220,7 @@ td {
 .node {
   position: relative;
   display: inline-block;
-  width: 13em;
+  /* width: 13em; */
   box-sizing: border-box;
   text-align: center;
 }
@@ -215,7 +229,7 @@ td {
   display: inline-block;
   z-index: 2;
   width: 6em;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .node .mate .avat {
   border-radius: 50%;
@@ -254,7 +268,7 @@ td {
   border-top: 2px solid #ccc;
   z-index: 1;
 }
-.node.hasMate .person:last-child {
+.node.hasMate .person {
   margin-left: 1em;
 }
 
