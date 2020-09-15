@@ -3,8 +3,14 @@ data.isProd = true;
 
 data.getHostURL = function () {
     if (this.isProd) {
+
+        //Test
         return "https://testdsfsds.herokuapp.com";
+
+        //US
         // return "https://blineapi.herokuapp.com";
+
+        //EU
         // return "https://bloodlineqa.herokuapp.com";
     }
     else {
