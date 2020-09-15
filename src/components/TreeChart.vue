@@ -220,7 +220,7 @@ td {
 .node {
   position: relative;
   display: inline-block;
-  /* width: 13em; */
+  width: 13em;
   box-sizing: border-box;
   text-align: center;
 }
