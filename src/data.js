@@ -4,11 +4,14 @@ data.isProd = true;
 data.getHostURL = function () {
     if (this.isProd) {
 
+        //Local
+        // return "http://localhost:5000";
+        
         //Test
-        return "https://testdsfsds.herokuapp.com";
+        // return "https://testdsfsds.herokuapp.com";
 
         //US
-        // return "https://blineapi.herokuapp.com";
+        return "https://blineapi.herokuapp.com";
 
         //EU
         // return "https://bloodlineqa.herokuapp.com";
