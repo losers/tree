@@ -64,6 +64,7 @@ export default new Vuex.Store({
     },
     async treeOnlySetup(state, tree) {
       state.commit('setTreeOnlyData', tree);
+      state.dispatch('allMembersSet', tree);
     },
     async allMembersSet(state, tree) {
       let allMembers = [];

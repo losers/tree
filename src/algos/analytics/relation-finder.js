@@ -154,6 +154,32 @@ function getSubTree(tree, id) {
     }
 }
 
+function getPersonById(tree, id) {
+    if (tree == null) {
+        return;
+    }
+
+    if (tree.id == id) {
+        return tree.name;
+    }
+
+    if(tree.mate){
+        for(let mate of tree.mate){
+            if(mate.id == id){
+                return mate.name;
+            }
+        }
+    }
+    if (tree.children) {
+        for (let i = 0; i < tree.children.length; i++) {
+            let x = getPersonById(tree.children[i], id);
+            if (x) {
+                return x;
+            }
+        }
+    }
+}
+
 function getAllIds(tree, arr) {
     if (tree == null) {
         return tree;
@@ -313,3 +339,4 @@ module.exports.getRelationTree = getRelationTree;
 module.exports.getSubTree = getSubTree;
 module.exports.getAllIds = getAllIds;
 module.exports.findRelationName = findRelationName;
+module.exports.getPersonById = getPersonById;

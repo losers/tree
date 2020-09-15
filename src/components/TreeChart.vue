@@ -9,7 +9,7 @@
           <div
             :class="{node: true, hasMate: treeData.mate}"
             style="display: flex; justify-content: center;"
-            :style="{'width': (treeData.mate) && (treeData.mate.length > 1) ? treeData.mate.length*134+'px':'224px'}"
+            :style="{'width': (treeData.mate) && ((treeData.mate.length > 1) ? treeData.mate.length*145+'px':(treeData.mate.length == 1)?'224px':'100px')}"
           >
             <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
               <div class="avat">
@@ -22,7 +22,7 @@
               </div>
               <div class="name">{{treeData.name}}</div>
             </div>
-            <div v-if="treeData.mate" style="display: flex;">
+            <div v-if="treeData.mate" style="display: flex;margin-left:20px">
               <div
                 class="person mate"
                 @click="$emit('click-node',{data:treeData.mate[index], isMate:true})"

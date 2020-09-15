@@ -28,6 +28,10 @@
             style="margin-right: 8px;"
           ></span>Delete Permanently
         </button>
+
+        <button type="button" class="btn btn-default" @click="goBack">
+          <span>Cancel</span>
+        </button>
       </div>
 
       <!-- Displays for editing and Creating Meta Data -->
@@ -37,7 +41,7 @@
           <span v-if="editFormLoading&&payload">loading...</span>
           <span else>
             <div class="form-inline row">
-              <label class="col" style="justify-content:left">Display Title :</label>
+              <label class="col" style="justify-content:left" v-if="!$device.mobile">Display Title :</label>
               <input
                 type="text"
                 class="form-control col-sm-8"
@@ -48,7 +52,12 @@
               />
             </div>
             <div class="form-inline row">
-              <label for="nickname" class="col" style="justify-content:left">Surname :</label>
+              <label
+                for="nickname"
+                class="col"
+                style="justify-content:left"
+                v-if="!$device.mobile"
+              >Surname :</label>
               <input
                 v-model="surname"
                 type="text"
@@ -61,7 +70,12 @@
               />
             </div>
             <div class="form-inline row">
-              <label for="pin" class="col" style="justify-content:left">Create PIN :</label>
+              <label
+                for="pin"
+                class="col"
+                style="justify-content:left"
+                v-if="!$device.mobile"
+              >Create PIN :</label>
               <input
                 v-model="pin"
                 type="number"
@@ -72,17 +86,21 @@
                 required
               />
             </div>
-            <div
-              style="display:flex; margin-top: 30px;justify-content: space-between;"
-            >
-              <button type="submit" class="btn btn-success" :disabled="pin.length!=4 || loading">
-                <span
-                  class="spinner-border spinner-border-sm"
-                  v-show="loading"
-                  style="margin-right: 8px;"
-                ></span>
-                <span>{{payload?"Update":"Create"}}</span>
-              </button>
+            <div style="display:flex; margin-top: 30px;justify-content: space-between;">
+              <div>
+                <button type="submit" class="btn btn-success" :disabled="pin.length!=4 || loading">
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    v-show="loading"
+                    style="margin-right: 8px;"
+                  ></span>
+                  <span>{{payload?"Update":"Create"}}</span>
+                </button>
+
+                <button type="button" class="btn btn-default" @click="goBack">
+                  <span>Cancel</span>
+                </button>
+              </div>
 
               <button
                 type="button"
@@ -106,9 +124,7 @@
           </center>
           <center>
             <h1>Success!</h1>
-            <span
-              style="font-size: 20px;"
-            >Let's Start Adding members to your family tree.</span>
+            <span style="font-size: 20px;">Let's Start Adding members to your family tree.</span>
           </center>
         </div>
         <center>

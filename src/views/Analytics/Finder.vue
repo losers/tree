@@ -47,41 +47,56 @@
             v-if="loading"
           ></span>
           <span v-else class="ml-1 relationName">{{relationName}}</span>
-          <br v-if="$device.mobile"/>
-          <button class="ml-3 btn btn-sm btn-primary" :class="{'mt-3':$device.mobile}" @click="opts=!opts">Change Language</button>
+          <br v-if="$device.mobile" />
+          <button
+            class="ml-3 btn btn-sm btn-primary"
+            :class="{'mt-3':$device.mobile}"
+            @click="opts=!opts"
+          >Change Language</button>
         </p>
         <div v-show="opts">
-          <input type="radio" id="western" class="mr-2" v-model="lang" value="western" name="lang" />
-          <label for="western" class="form-check-label">Western</label>
-          <input
-            type="radio"
-            id="telugu"
-            class="mr-2 ml-4"
-            v-model="lang"
-            value="telugu"
-            name="lang"
-          />
-          <label for="telugu" class="form-check-label">Telugu</label>
+          <div>
+            <input
+              type="radio"
+              id="western"
+              class="mr-2"
+              v-model="lang"
+              value="western"
+              name="lang"
+            />
+            <label for="western" class="form-check-label">Western</label>
+            <input
+              type="radio"
+              id="telugu"
+              class="mr-2 ml-4"
+              v-model="lang"
+              value="telugu"
+              name="lang"
+            />
+            <label for="telugu" class="form-check-label">Telugu</label>
 
-          <input
-            type="radio"
-            id="hindi"
-            class="mr-2 ml-4"
-            v-model="lang"
-            value="hindi"
-            name="lang"
-          />
-          <label for="hindi" class="form-check-label">Hindi</label>
+            <input
+              type="radio"
+              id="hindi"
+              class="mr-2 ml-4"
+              v-model="lang"
+              value="hindi"
+              name="lang"
+            />
+            <label for="hindi" class="form-check-label">Hindi</label>
+          </div>
 
-          <input
-            type="radio"
-            id="kannada"
-            class="mr-2 ml-4"
-            v-model="lang"
-            value="kannada"
-            name="lang"
-          />
-          <label for="kannada" class="form-check-label">Kannada</label>
+          <div>
+            <input
+              type="radio"
+              id="kannada"
+              class="mr-2 ml-4"
+              v-model="lang"
+              value="kannada"
+              name="lang"
+            />
+            <label for="kannada" class="form-check-label">Kannada</label>
+          </div>
         </div>
         <TreeChart :json="tree" :images="images" style="padding-top:40px" />
       </div>

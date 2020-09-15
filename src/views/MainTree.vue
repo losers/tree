@@ -29,7 +29,9 @@
           <a @click="toggleHelper" style="color:blue;cursor: pointer;">Help !</a>
           <div v-if="helper.show">
             <p>Change Cookie Settings in {{helper.browser}} Browser, to allow all third-party cookies.</p>
-            <p style="color:grey">( In case if you still face problem, Mail to "bloodline.helpline@gmail.com" and we can have quick one-on-one session to fix this )</p>
+            <p
+              style="color:grey"
+            >( In case if you still face problem, Mail to "bloodline.helpline@gmail.com" and we can have quick one-on-one session to fix this )</p>
           </div>
         </div>
       </div>
@@ -216,7 +218,7 @@ export default {
       helper: {
         show: false,
         browser: "",
-        main_show : false
+        main_show: false
       }
     };
   },
@@ -268,7 +270,7 @@ export default {
   },
   mounted() {
     //To show Helper for Wrong Pinner
-    if(localStorage.pinner){
+    if (localStorage.pinner) {
       this.helper.main_show = true;
     }
 
@@ -324,6 +326,14 @@ export default {
       }
     },
 
+    toggleBodyClass(addRemoveClass, className) {
+      const el = document.body;
+      if (addRemoveClass === "addClass") {
+        el.classList.add(className);
+      } else {
+        el.classList.remove(className);
+      }
+    },
     //handling sessions
     validate() {
       this.vloading = true;
@@ -351,11 +361,17 @@ export default {
 
     //Dual page calling function
     dualPage(type) {
+      if (this.$device.mobile) {
+        this.toggleBodyClass("addClass", "mem-spec");
+      }
       this.dualPageData.showDualPage = true;
       this.dualPageData.reference = type;
     },
 
     dualPageClosed(payload) {
+      if (this.$device.mobile) {
+        this.toggleBodyClass("removeClass", "mem-spec");
+      }
       if (payload) {
         this.newTitle = payload;
       }
