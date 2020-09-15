@@ -56,12 +56,28 @@
           <label for="female" class="form-check-label ml-2" style="color:black;">Female</label>
         </div>
       </div>
+
       <!-- Optional Params -->
       <div v-if="!payload.is_root">
         <hr class="mt-5 mb-3" style="background-color:white" />
         <p style="margin-top: -29px;">
-          <center><span style="background-color: white;padding: 20px;color: #969696;">Optional</span></center>
+          <center>
+            <span style="background-color: white;padding: 20px;color: #969696;">Optional</span>
+          </center>
         </p>
+
+        <div class="row" v-if="xtraParent.show">
+          <label class="d-none d-sm-flex col-md-4">
+            <span v-if="data.gender == 0">D/O :</span>
+            <span v-else>S/O :</span>
+          </label>
+          <vSelect
+            :options="xtraParent.options"
+            v-model="xtraParent.selected"
+            :placeholder="$device.mobile?'Select Parent':''"
+            class="col-md-7 col-sm-12 myselect"
+          ></vSelect>
+        </div>
         <div class="row">
           <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
           <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" :md-model-type="String">
@@ -103,12 +119,15 @@
 </template>
 
 <script>
+import vSelect from "vue-select";
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
 import ProdData from "../data.js";
 import Vue from "vue";
 import VueMaterial from "vue-material";
 import "@/assets/css/vue-material.min.css";
+import Store from "@/store/index";
+import Algos from "@/algos/analytics/relation-finder";
 
 // var emitData;
 
@@ -116,7 +135,8 @@ Vue.use(VueMaterial);
 
 export default {
   components: {
-    ToggleButton
+    ToggleButton,
+    vSelect
   },
   props: ["payload"],
   data() {
@@ -125,7 +145,12 @@ export default {
       type_data: this.payload.type,
       loading: false,
       is_error: false,
-      is_alive: true
+      is_alive: true,
+      xtraParent: {
+        show: false,
+        selected: {},
+        options: []
+      }
     };
   },
   watch: {
@@ -135,24 +160,58 @@ export default {
   },
   mounted() {
     this.is_alive = true;
-    //payload.memData comes from MemberData route for editing
+    let isChild = false;
+    let parentId;
+    let xtra_parent_id;
+
+    //Editing
     if (this.payload.memData) {
-      // this.payload.memData.dob = this.payload.memData.dob.toString().split("T")[0];
-      // console.log(this.payload.memData.dob);
       this.data = this.payload.memData;
+      isChild = this.data.is_mate ? false : true;
+      parentId = this.data.parent_id;
+      xtra_parent_id = this.data.xtra_parent_id;
+
       if (this.payload.memData.is_died) {
         this.is_alive = false;
         if (this.payload.memData.died_on) {
           this.data.died_on = this.payload.memData.died_on;
         }
       }
+    } else {
+      //Adding Member
+
+      //Direct Child - Not Mate
+      isChild = this.payload.type != "gender" ? true : false;
+      parentId = this.payload.parent_id;
+      xtra_parent_id = this.payload.xtra_parent_id;
     }
+
+    this.checkMultiParents(parentId, isChild, xtra_parent_id);
   },
   methods: {
+    checkMultiParents(parentId, isChild, xtra_parent_id) {
+      let tree = Algos.getSubTree(Store.getters.getTreeData, parentId);
+      if (isChild && tree.mate && tree.mate.length > 1) {
+        this.xtraParent.show = true;
+        for (let mate of tree.mate) {
+          let x = {};
+          x.label = mate.name;
+          x.value = mate.id;
+          this.xtraParent.options.push(x);
+          if (xtra_parent_id && xtra_parent_id == mate.id) {
+            this.xtraParent.selected = x;
+          }
+        }
+      }
+    },
     sendData() {
       this.loading = true;
+      if (this.xtraParent.selected) {
+        this.data.xtra_parent_id = this.xtraParent.selected.value;
+      }
       if (this.payload.memData) {
-        //calls while updating
+        //Update
+
         Axios.put(
           ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
           this.data
@@ -162,6 +221,7 @@ export default {
           })
           .catch(errr => console.log(errr));
       } else {
+        //ADDING Member
         if (this.payload.type == "gender") {
           this.data.type = 1;
           if (this.payload.gender == "male") {

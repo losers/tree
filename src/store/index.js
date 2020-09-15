@@ -30,6 +30,7 @@ export default new Vuex.Store({
     setSession(state, sessData) {
       state.is_session = sessData.status;
       state.cur_surname = sessData.surname;
+      console.log("surname-"+state.cur_surname);
     },
     setLoading(state, status) {
       state.loading = status;
@@ -64,6 +65,7 @@ export default new Vuex.Store({
     },
     async treeOnlySetup(state, tree) {
       state.commit('setTreeOnlyData', tree);
+      state.dispatch('allMembersSet', tree);
     },
     async allMembersSet(state, tree) {
       let allMembers = [];

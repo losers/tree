@@ -13,15 +13,18 @@ function treeUpDown(data, id) {
         arr.push(x);
         return true;
     }
-    else if ((data.mate) && (data.mate.id == id)) {
-        let x = {};
-        x.name = data.name;
-        x.id = data.id;
-        if (data.mate) {
-            x.mate = data.mate;
+    else if (data.mate) {
+        for (let mate of data.mate) {
+            if (mate.id == id) {
+                let x = {};
+                x.name = data.name;
+                x.id = data.id;
+                x.mate = [];
+                x.mate.push(mate);
+                arr.push(x);
+                return true;
+            }
         }
-        arr.push(x);
-        return true;
     }
 
     if (data.children) {
@@ -67,7 +70,13 @@ var getRelationTree = function (tree, p1, p2) {
     let newTree = {};
 
     if (newArr.length == 1 && newArr2.length == 1) {
-        newTree = (newArr[0].mate) ? newArr[0] : newArr2[0];
+        if (newArr[0].mate && newArr2[0].mate) {
+            newArr[0].mate.push(newArr2[0].mate[0]);
+            newTree = newArr[0];
+        }
+        else {
+            newTree = (newArr[0].mate) ? newArr[0] : newArr2[0];
+        }
     }
     else {
         newTree = newArr.pop();
@@ -103,10 +112,12 @@ var getAllGuys = function (tree, allMembers) {
     member.value = tree.id;
     allMembers.push(member);
     if (tree.mate) {
-        member = {};
-        member.value = tree.mate.id;
-        member.label = tree.mate.name;
-        allMembers.push(member);
+        for (let mate of tree.mate) {
+            member = {};
+            member.value = mate.id;
+            member.label = mate.name;
+            allMembers.push(member);
+        }
     }
 
     if (tree.children) {
@@ -122,13 +133,46 @@ function getSubTree(tree, id) {
         return;
     }
 
-    if (tree.id == id || (tree.mate && tree.mate.id == id)) {
+    if (tree.id == id) {
         return tree;
     }
 
+    if(tree.mate){
+        for(let mate of tree.mate){
+            if(mate.id == id){
+                return tree;
+            }
+        }
+    }
     if (tree.children) {
         for (let i = 0; i < tree.children.length; i++) {
             let x = getSubTree(tree.children[i], id);
+            if (x) {
+                return x;
+            }
+        }
+    }
+}
+
+function getPersonById(tree, id) {
+    if (tree == null) {
+        return;
+    }
+
+    if (tree.id == id) {
+        return tree.name;
+    }
+
+    if(tree.mate){
+        for(let mate of tree.mate){
+            if(mate.id == id){
+                return mate.name;
+            }
+        }
+    }
+    if (tree.children) {
+        for (let i = 0; i < tree.children.length; i++) {
+            let x = getPersonById(tree.children[i], id);
             if (x) {
                 return x;
             }
@@ -142,7 +186,9 @@ function getAllIds(tree, arr) {
     }
     arr.push(tree.id);
     if (tree.mate) {
-        arr.push(tree.mate.id);
+        for(let mate of tree.mate){
+            arr.push(mate.id);
+        }
     }
     if (tree.children) {
         for (let child of tree.children) {
@@ -157,7 +203,9 @@ function attachGender(tree, genderMap) {
     }
     tree.gender = genderMap[tree.id];
     if (tree.mate) {
-        tree.mate.gender = genderMap[tree.mate.id];
+        for (let index in tree.mate) {
+            tree.mate[index].gender = genderMap[tree.mate[index].id];
+        }
     }
     if (tree.children) {
         for (let i = 0; i < tree.children.length; i++) {
@@ -170,14 +218,18 @@ function findLevel(tree, id, level) {
     if (tree == null) {
         return;
     }
-    if (tree.id == id || (tree.mate && tree.mate.id == id)) {
-        if (tree.mate && tree.mate.id == id) {
-            return { "level": level, "gender": tree.mate.gender, "is_mate": true };
-        }
-        else {
-            return { "level": level, "gender": tree.gender };
+    if (tree.id == id) {
+        return { "level": level, "gender": tree.gender };
+    }
+
+    if (tree.mate) {
+        for (let mate of tree.mate) {
+            if (mate.id == id) {
+                return { "level": level, "gender": mate.gender, "is_mate": true };
+            }
         }
     }
+
     if (tree.children) {
         for (let child of tree.children) {
             let x = findLevel(child, id, level + 1);
@@ -202,7 +254,7 @@ function checkForInvRelation(tree, toChange, isInv, considerLastGirl) {
     if (tree.children)
         return checkForInvRelation(tree.children[0], toChange, isInv, considerLastGirl);
     else {
-        if(toChange && considerLastGirl){
+        if (toChange && considerLastGirl) {
             isInv = !isInv
         }
         return isInv;
@@ -224,7 +276,7 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
 
     let isSameLane = false;
     let strict = false;
-    isSameLane = (subTree.id == p1Id) || (subTree.id == p2Id) || ((subTree.mate) && subTree.mate.id == p1Id) || ((subTree.mate) && subTree.mate.id == p2Id);
+    isSameLane = (subTree.id == p1Id) || (subTree.id == p2Id) || ((subTree.mate) && subTree.mate[0].id == p1Id) || ((subTree.mate) && subTree.mate[0].id == p2Id);
 
     let sameLane = isSameLane ? "same" : "other";
     if (p1.level == 1 && p2.level == 1) {
@@ -241,20 +293,20 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
             strict = true;
         }
         if (p1.level == 0 && p2.level == 0) {
-            sameLane = "spl";
+            sameLane = (p1.gender == p2.gender) ? "sav" : "spl";
         }
     }
     else if ((p2.is_mate && relationLev < 0) || (p1.is_mate && relationLev > 0)) {
         sameLane = "inv";
     }
 
-    if (relationType != "western" && sameLane != "spl" && subTree.children && subTree.children.length > 1) {
+    if (relationType != "western" && sameLane != "spl" && sameLane != "sav" && subTree.children && subTree.children.length > 1) {
         var considerLastGirl1 = false;
         var considerLastGirl2 = false;
-        if(((p1.gender == 0) || (p1.gender == 1 && p1.is_mate)) && relationLev < 0){
+        if (((p1.gender == 0) || (p1.gender == 1 && p1.is_mate)) && relationLev < 0) {
             considerLastGirl1 = true;
         }
-        if(((p2.gender == 0) || (p2.gender == 1 && p2.is_mate)) && relationLev > 0){
+        if (((p2.gender == 0) || (p2.gender == 1 && p2.is_mate)) && relationLev > 0) {
             considerLastGirl2 = true;
         }
         let isInv1 = checkForInvRelation(subTree.children[0], false, false, considerLastGirl1);
@@ -271,10 +323,10 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
         // }
 
         if (isInv1 != isInv2) {
-            if(sameLane == "inv" && !strict){
+            if (sameLane == "inv" && !strict) {
                 sameLane = "other";
             }
-            else{
+            else {
                 sameLane = "inv";
             }
         }
@@ -287,3 +339,4 @@ module.exports.getRelationTree = getRelationTree;
 module.exports.getSubTree = getSubTree;
 module.exports.getAllIds = getAllIds;
 module.exports.findRelationName = findRelationName;
+module.exports.getPersonById = getPersonById;
