@@ -22,9 +22,7 @@
       <div v-else>
         <!-- Tree Tilebar -->
         <div class="tree-titlebar">
-          <a :href="'/app/'" class="flexy mr-2">
-            <i class="icofont-arrow-left"></i> Back
-          </a>
+          <router-link :to="{name:'Home'}">Back</router-link>
           <div class="tree-title flexy">
             <div
               class="fam-name"
