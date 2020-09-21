@@ -2,7 +2,7 @@
   <form class="p-5" v-on:submit.prevent="formEmit(0)">
     <h3 style="margin-bottom:40px;">{{payload.formData.isEdit?"Update":"Create"}} Event</h3>
     <div class="row" style="align-items: center;">
-      <label class="col-3 label">Date</label>
+      <!-- <label class="col-3 label">Date</label> -->
       <md-datepicker
         class="col-xs-9 col-md-7"
         v-model="payload.formData.date"
