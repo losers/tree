@@ -5,13 +5,13 @@ data.getHostURL = function () {
     if (this.isProd) {
 
         //Local
-        // return "http://localhost:5000";
+        return "/api";
         
         //Test
         // return "https://testdsfsds.herokuapp.com";
 
         //US
-        return "https://blineapi.herokuapp.com";
+        //return "https://blineapi.herokuapp.com";
 
         //EU
         // return "https://bloodlineqa.herokuapp.com";
