@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :data-open="state === 'open' ? 1 : 0">
-    <!-- <div class="bg" @click="()=>{setState('close');}"></div> -->
+    <div class="bg" @click="()=>{setState('close');}"></div>
     <div
       ref="card"
       class="card"
@@ -115,7 +115,7 @@ export default {
   left: 0;
 }
 
-/* .wrapper[data-open="1"] .bg {
+.wrapper[data-open="1"] .bg {
   display: block;
   transition: all 0.3s;
   position: fixed;
@@ -123,7 +123,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-} */
+}
 
 .card {
   width: 100%;

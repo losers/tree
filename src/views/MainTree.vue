@@ -54,7 +54,10 @@
       <div v-else>
         <!-- Tree Tilebar -->
         <div class="tree-titlebar">
-          <router-link :to="{name:'Home'}">Back</router-link>
+          <router-link :to="{name:'Home'}">
+            <i class="icofont-arrow-left"></i>
+            Back
+          </router-link>
           <div class="tree-title flexy">
             <div
               class="fam-name"
@@ -191,7 +194,7 @@ export default {
   components: {
     TreeChart,
     Error,
-    DualPage
+    DualPage,
   },
   data() {
     return {
@@ -207,29 +210,29 @@ export default {
       dualPageData: {
         showDualPage: false,
         reference: null,
-        payload: {}
+        payload: {},
       },
       authModal: {
         payload: {},
-        show: false
+        show: false,
       },
       helper: {
         show: false,
         browser: "",
-        main_show: false
-      }
+        main_show: false,
+      },
     };
   },
   computed: {
     loading: {
       get() {
         return Store.state.loading;
-      }
+      },
     },
     images: {
       get() {
         return Store.state.images;
-      }
+      },
     },
     tempData: {
       get() {
@@ -237,17 +240,17 @@ export default {
           return undefined;
         }
         return Store.state.tree;
-      }
+      },
     },
     title: {
       get() {
         return Store.state.title;
-      }
+      },
     },
     is_session: {
       get() {
         return Store.state.is_session;
-      }
+      },
     },
     errored: {
       get() {
@@ -258,13 +261,13 @@ export default {
           }
         }
         return Store.state.error;
-      }
+      },
     },
     metadata: {
       get() {
         return Store.state.metadata;
-      }
-    }
+      },
+    },
   },
   mounted() {
     //To show Helper for Wrong Pinner
@@ -273,7 +276,7 @@ export default {
     }
 
     //called after adding a new member
-    this.$root.$on("update-tree", data => {
+    this.$root.$on("update-tree", (data) => {
       console.log(data);
       this.$router.go();
     });
@@ -281,7 +284,7 @@ export default {
   methods: {
     // Called when a node is clicked
 
-    toggleHelper: function() {
+    toggleHelper: function () {
       this.helper.show = !this.helper.show;
 
       let nAgt = navigator.userAgent;
@@ -303,23 +306,23 @@ export default {
 
       this.helper.browser = browserName;
     },
-    openAuthBox: function() {
+    openAuthBox: function () {
       this.authModal.show = true;
       this.authModal.payload.title = Store.state.error.response.data[0].title;
       this.authModal.payload.surname =
         Store.state.error.response.data[0].surname;
     },
-    clickNode: function(node) {
+    clickNode: function (node) {
       if (node.data.mate || node.isMate) {
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id },
-          query: { hasMate: true }
+          query: { hasMate: true },
         });
       } else {
         this.$router.push({
           name: "MemberData",
-          params: { member: node.data.id }
+          params: { member: node.data.id },
         });
       }
     },
@@ -348,7 +351,7 @@ export default {
           Store.commit("setSession", sessData);
           this.vloading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           this.retry = true;
           console.log(err);
         })
@@ -374,8 +377,8 @@ export default {
         this.newTitle = payload;
       }
       this.dualPageData.showDualPage = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
