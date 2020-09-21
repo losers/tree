@@ -10,7 +10,7 @@
       <button @click="addMember(1)" class="col-10 btn btn-success mb-3">+ Add Child</button>
 
       <button
-        v-show="!hasMate"
+        v-show="!data.is_mate"
         @click="addMember('gender')"
         class="col-10 btn btn-primary mb-3"
       >+ Add {{data.gender=="1"?"Wife":"Husband"}}</button>

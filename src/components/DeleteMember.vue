@@ -1,13 +1,19 @@
 <template>
   <div id="app-delete" class="p-4">
-    <h3 class="text-danger mx-auto mt-4">
-      Delete {{payload.name}}?
-    </h3>
-    <ul class="text-danger mt-5">
-        <li class="mb-3">It will delete all of his/her descendants.</li>
-        <li>This action can't be undone</li>
+    <h3 class="text-danger mx-auto mt-4">Delete {{payload.name}}?</h3>
+    <ul class="text-danger mt-4">
+      <li class="mb-3" v-if="payload.is_mate">
+        It will delete {{payload.name}}'s node.
+      </li>
+      <li class="mb-3" v-else>
+        It will also delete all of
+        <span v-if="payload.gender == 1">his</span>
+        <span v-if="payload.gender == 0">her</span>
+        descendants/children.
+      </li>
+      <li>This action can't be undone</li>
     </ul>
-    
+
     <div class="d-flex justify-content-between">
       <button
         @click="onActionConfirmed"
@@ -75,7 +81,7 @@ export default {
 #app-delete {
   padding-left: 20px;
 }
-ul{
+ul {
   font-size: 20px;
   text-align: start;
 }

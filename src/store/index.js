@@ -15,7 +15,8 @@ export default new Vuex.Store({
     loading: true,
     allMembers: [],
     error: false,
-    cur_surname : ""
+    cur_surname : "",
+    metadata : {}
   },
   mutations: {
     setImages(state, imagesData) {
@@ -29,6 +30,7 @@ export default new Vuex.Store({
     setSession(state, sessData) {
       state.is_session = sessData.status;
       state.cur_surname = sessData.surname;
+      console.log("surname-"+state.cur_surname);
     },
     setLoading(state, status) {
       state.loading = status;
@@ -41,6 +43,9 @@ export default new Vuex.Store({
     },
     setTreeOnlyData(state, tree) {
       state.tree = tree;
+    },
+    setMetaData(state, metaData){
+      state.metadata = metaData;
     }
   },
   actions: {
@@ -60,16 +65,23 @@ export default new Vuex.Store({
     },
     async treeOnlySetup(state, tree) {
       state.commit('setTreeOnlyData', tree);
+      state.dispatch('allMembersSet', tree);
     },
     async allMembersSet(state, tree) {
       let allMembers = [];
       Algos.getAllGuys(tree, allMembers);
       state.commit('setAllMembers', allMembers);
     },
+    async setMetaData(state, metaData) {
+      state.commit('setMetaData', metaData);
+    },
   },
   getters: {
     getIsLoading: (state) => {
       return state.loading;
+    },
+    getMetaData: (state) => {
+      return state.metadata;
     },
     getTreeData: (state) => {
       return state.tree;

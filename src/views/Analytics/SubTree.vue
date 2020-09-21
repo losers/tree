@@ -3,7 +3,7 @@
     <div class="input_align">
       <vSelect
         :options="names"
-        palceholder="Select a Person"
+        placeholder="Select a Person"
         v-model="p1"
         class="col-sm-10 col-md-3"
       ></vSelect>

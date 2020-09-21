@@ -99,6 +99,17 @@
                   {{data.gender=="1"?"Male":"Female"}}
                 </td>
               </tr>
+              <tr v-if="data.xtra_parent_name">
+                <td style="border-left:3px solid green;">
+                  <span v-if="data.gender==1">
+                    S/O :
+                  </span>
+                  <span v-else>
+                    D/O :
+                  </span>
+                  {{data.xtra_parent_name}}
+                </td>
+              </tr>
             </tbody>
 
             <!-- Accordian for Mobile -->
@@ -214,6 +225,8 @@ import { Tabs, Tab } from "vue-tabs-component";
 import MoreInfo from "./MoreInfo";
 import DualPage from "../../modals/DualPage";
 import Actions from "./Actions";
+import Algos from "@/algos/analytics/relation-finder";
+import Store from "@/store/index";
 
 Vue.use(VModal, {
   dynamic: true,
@@ -291,6 +304,12 @@ export default {
         this.data = data.data;
         this.count = Object.keys(this.data).length - 6; //decremented 1 for image status
         this.cookeyStatus = this.data.has_session;
+        
+        if (this.data.xtra_parent_id){
+          this.data.xtra_parent_name = Algos.getPersonById(
+            Store.getters.getTreeData, this.data.xtra_parent_id
+          );
+        }
       })
       .catch(err => {
         this.errored = err;
@@ -383,6 +402,7 @@ export default {
       this.dualPage.ref = 2;
       if (this.data.is_mate) {
         this.payload.parent_id = this.data.parent_id;
+        this.payload.xtra_parent_id = this.id;
       } else {
         this.payload.parent_id = this.id;
       }
@@ -391,6 +411,8 @@ export default {
       this.dualPage.callForm = true;
       this.dualPage.ref = 3;
       this.payload.name = this.data.name;
+      this.payload.is_mate = this.data.is_mate;
+      this.payload.gender = this.data.gender;
     },
     addMemberCancel() {
       this.dualPage.callForm = false;
