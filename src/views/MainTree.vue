@@ -167,6 +167,7 @@
               <h4 style="color:#848181">Click on this person to add Parents / Children etc.,</h4>
             </div>
           </center>
+          <button @click="shareTree" class="btn btn-primary">Share Tree</button>
           <footer class="foot">
             <p>
               With
@@ -282,8 +283,14 @@ export default {
     });
   },
   methods: {
+    shareTree() {
+      navigator.share({
+        title: this.surname + " Family Tree",
+        text: `Click on the below link to start sharing ${this.surname} family tree to your loved ones`,
+        link: `https://bloodlineapp.page.link/familytree=${this.surname}`,
+      });
+    },
     // Called when a node is clicked
-
     toggleHelper: function () {
       this.helper.show = !this.helper.show;
 
