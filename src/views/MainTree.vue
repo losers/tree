@@ -284,11 +284,14 @@ export default {
   },
   methods: {
     shareTree() {
-      navigator.share({
-        title: this.surname + " Family Tree",
-        text: `Click on the below link to start sharing ${this.surname} family tree to your loved ones`,
-        link: `https://bloodlineapp.page.link/familytree=${this.surname}`,
-      });
+      var shareData = {
+        type: "share",
+        title: `${this.surname.toUpperCase()} Family Tree`,
+        text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
+        url: `https://bloodlineapp.page.link/familytree=${this.surname}`,
+      };
+      this.navigator.share(shareData);
+      print.postMessage(shareData);
     },
     // Called when a node is clicked
     toggleHelper: function () {
