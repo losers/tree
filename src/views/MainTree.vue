@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="overflow:auto;">
     <!-- All errors are handeled here -->
     <section v-if="errored">
       <error v-if="errored.response.status == 404" :msg="errored.response.data">
@@ -302,6 +302,8 @@ export default {
     },
   },
   mounted() {
+    // this.toggleBodyClass("addClass", "mem-spec");
+
     //To show Helper for Wrong Pinner
     if (localStorage.pinner) {
       this.helper.main_show = true;
@@ -799,10 +801,11 @@ h2 {
 
 .sharebtn {
   position: fixed;
-  bottom: 60px;
-  right: 60px;
+  bottom: 10px;
+  right: 10px;
   height: 50px;
   width: 50px;
   border-radius: 50px;
+  z-index: 100;
 }
 </style>
