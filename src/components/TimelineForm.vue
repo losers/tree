@@ -2,13 +2,10 @@
   <form class="p-5" v-on:submit.prevent="formEmit(0)">
     <h3 style="margin-bottom:40px;">{{payload.formData.isEdit?"Update":"Create"}} Event</h3>
     <div class="row" style="align-items: center;">
-      <!-- <label class="col-3 label">Date</label> -->
-      <md-datepicker
-        class="col-xs-9 col-md-7"
-        v-model="payload.formData.date"
-        placeholder="Event Date"
-        required="true"
-      />
+      <label class="col-md-3 d-none d-sm-block label">Date</label>
+      <md-datepicker class="col-xs-9 col-md-7" v-model="payload.formData.date" readonly required="true">
+        <label>Event Date</label>
+      </md-datepicker>
     </div>
     <div class="row mb-4">
       <label class="col-md-3 d-none d-sm-block label">Title</label>
@@ -37,7 +34,7 @@
       <label class="col-3 d-none d-sm-block label">Share with</label>
       <v-select
         class="col-sm-10 col-md-7"
-        style="height:40px;"
+        style="height:40px;padding:0px;"
         multiple
         :placeholder="$device.mobile?'Share With':''"
         :options="payload.names"

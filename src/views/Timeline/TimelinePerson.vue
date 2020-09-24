@@ -165,7 +165,7 @@ export default {
           //Adding Birhday to Timeline
           if (data.data[0].dob) {
             let udob = {
-              content: "Birthday Time",
+              content: "Day of Birth",
               date: new Date(data.data[0].dob),
               fixed: true,
               title: "Birthday"
@@ -410,6 +410,10 @@ export default {
   font-weight: bold;
   flex: 1;
   margin: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 44px;
+  white-space: nowrap;
 }
 .timeline_add_box {
   overflow: scroll;
