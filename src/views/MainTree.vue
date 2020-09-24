@@ -2,17 +2,19 @@
   <div id="app">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <error v-if="errored.response.status == 404" :msg="errored.response.data">{{errored}}</error>
+      <error v-if="errored.response.status == 404" :msg="errored.response.data">
+        {{ errored }}
+      </error>
       <DualPage
         :payload="authModal.payload"
         :reference="5"
         v-if="authModal.show == true"
-        v-on:closed="authModal.show=false"
+        v-on:closed="authModal.show = false"
       ></DualPage>
 
       <div v-if="errored.response.status == 403">
-        <div style="display:flex">
-          <router-link :to="{name:'Home'}" class="mt-2 ml-1">
+        <div style="display: flex">
+          <router-link :to="{ name: 'Home' }" class="mt-2 ml-1">
             <i class="icofont-arrow-left"></i>
             Back
           </router-link>
@@ -20,18 +22,27 @@
         <img
           src="@/assets/no_entry.jpg"
           alt="No Entry"
-          style="margin-top: 50px;margin-bottom: 30px;"
+          style="margin-top: 50px; margin-bottom: 30px"
         />
-        <h2 style="margin-bottom: 20px">You don't have access for "{{metadata.title}}"</h2>
+        <h2 style="margin-bottom: 20px">
+          You don't have access for "{{ metadata.title }}"
+        </h2>
         <button class="btn btn-success" @click="openAuthBox">Enter PIN</button>
 
-        <div style="margin-top: 20px;" v-if="helper.main_show">
-          <a @click="toggleHelper" style="color:blue;cursor: pointer;">Help !</a>
+        <div style="margin-top: 20px" v-if="helper.main_show">
+          <a @click="toggleHelper" style="color: blue; cursor: pointer"
+            >Help !</a
+          >
           <div v-if="helper.show">
-            <p>Change Cookie Settings in {{helper.browser}} Browser, to allow all third-party cookies.</p>
-            <p
-              style="color:grey"
-            >( In case if you still face problem, Mail to "bloodline.helpline@gmail.com" and we can have quick one-on-one session to fix this )</p>
+            <p>
+              Change Cookie Settings in {{ helper.browser }} Browser, to allow
+              all third-party cookies.
+            </p>
+            <p style="color: grey">
+              ( In case if you still face problem, Mail to
+              "bloodline.helpline@gmail.com" and we can have quick one-on-one
+              session to fix this )
+            </p>
           </div>
         </div>
       </div>
@@ -42,11 +53,11 @@
       <router-view></router-view>
 
       <div v-if="loading">
-        <router-link :to="{name:'Home'}" class="float-left mt-2 ml-1">
+        <router-link :to="{ name: 'Home' }" class="float-left mt-2 ml-1">
           <i class="icofont-arrow-left"></i>
           Back
         </router-link>
-        <center style="padding-top:240px">
+        <center style="padding-top: 240px">
           <img src="@/assets/dna.gif" alt="Bloodline Loader" />
         </center>
       </div>
@@ -54,31 +65,30 @@
       <div v-else>
         <!-- Tree Tilebar -->
         <div class="tree-titlebar">
-          <router-link :to="{name:'Home'}">
+          <router-link :to="{ name: 'Home' }">
             <i class="icofont-arrow-left"></i>
             Back
           </router-link>
           <div class="tree-title flexy">
-            <div
-              class="fam-name"
-              :class="[{'f-26':$device.mobile}]"
-            >{{newTitle?newTitle:title[0].title}}</div>
+            <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
+              {{ newTitle ? newTitle : title[0].title }}
+            </div>
             <div v-show="is_session">
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
-                style="font-size:20px;cursor: pointer;"
+                style="font-size: 20px; cursor: pointer"
               ></i>
             </div>
           </div>
           <router-link
-            :to="{name:'Analytics'}"
-            style="display: flex;align-items: center;margin-right: 5px;"
+            :to="{ name: 'Analytics' }"
+            style="display: flex; align-items: center; margin-right: 5px"
           >
             <i
               class="icofont-gear"
-              style="margin-right: 8px;"
-              :class="[{'f-31':$device.mobile, 'f-21':$device.mobile}]"
+              style="margin-right: 8px"
+              :class="[{ 'f-31': $device.mobile, 'f-21': $device.mobile }]"
             ></i>
             <span v-if="!$device.mobile">Analytics</span>
           </router-link>
@@ -93,23 +103,29 @@
         ></DualPage>
 
         <!-- Called When No data is found -->
-        <div v-if="tempData==undefined">
-          <img src="@/assets/intro-mob.png" class="mob-intro" v-if="$device.mobile" />
+        <div v-if="tempData == undefined">
+          <img
+            src="@/assets/intro-mob.png"
+            class="mob-intro"
+            v-if="$device.mobile"
+          />
           <img
             src="../assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
-            style="margin-top:160px"
+            style="margin-top: 160px"
             alt="Blood Line Helper"
             v-else
           />
           <!-- Page Content -->
-          <div style="flex-direction: column;
-    display: flex;
-    align-items: center;">
+          <div
+            style="flex-direction: column; display: flex; align-items: center"
+          >
             <h5
               class="d-flex content-justify-left ml-2"
-              :class="[{'desk-intro-text':!$device.mobile}]"
-            >Click 'Add' to Start Adding Members.</h5>
+              :class="[{ 'desk-intro-text': !$device.mobile }]"
+            >
+              Click 'Add' to Start Adding Members.
+            </h5>
             <center>
               <i class="icofont-long-arrow-down object"></i>
             </center>
@@ -123,7 +139,7 @@
                 <div class="dot"></div>
                 <div class="dot"></div>
               </div>
-              <span style="font-size:18px; font-weight:900">Add!</span>
+              <span style="font-size: 18px; font-weight: 900">Add!</span>
             </button>
           </div>
           <div v-else>
@@ -137,13 +153,21 @@
                   type="number"
                 />
                 <button
-                  v-show="cookey.length==4"
+                  v-show="cookey.length == 4"
                   @click="validate"
-                  :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                  :class="{
+                    btn: true,
+                    'btn-success': !retry,
+                    'btn-warning': retry,
+                    'mt-3': true,
+                  }"
                   :disabled="vloading"
                 >
-                  <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                  {{retry?"Retry":"Validate"}}
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    v-show="vloading"
+                  ></span>
+                  {{ retry ? "Retry" : "Validate" }}
                 </button>
               </div>
             </center>
@@ -156,22 +180,29 @@
             <TreeChart
               :json="tempData"
               :images="images"
-              :class="{landscape: landscape.length}"
+              :class="{ landscape: landscape.length }"
               @click-node="clickNode"
-              style="padding-top:70px"
+              style="padding-top: 70px"
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
-                <i class="icofont-long-arrow-up object"></i>
+                <i
+                  class="icofont-long-arrow-up object"
+                  style="font-size: 25px"
+                ></i>
               </center>
-              <h4 style="color:#848181">Click on this person to add Parents / Children etc.,</h4>
+              <h4 style="color: #848181">
+                Click on this person to add Parents / Children etc.,
+              </h4>
             </div>
           </center>
-          <button @click="shareTree" class="btn btn-primary">Share Tree</button>
+          <button @click="shareTree" class="btn btn-primary sharebtn">
+            <i class="icofont-share"></i>
+          </button>
           <footer class="foot">
             <p>
               With
-              <i class="icofont-heart" style="color:red"></i>
+              <i class="icofont-heart" style="color: red"></i>
               by
               <a>Losers</a>
             </p>
@@ -290,8 +321,11 @@ export default {
         text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
         url: `https://bloodlineapp.page.link/familytree=${this.surname}`,
       };
-      this.navigator.share(shareData);
-      print.postMessage(shareData);
+      try {
+        print.postMessage(`share--${this.surname}`);
+      } catch (error) {
+        navigator.share(shareData);
+      }
     },
     // Called when a node is clicked
     toggleHelper: function () {
@@ -761,5 +795,14 @@ h2 {
     width: 8px;
     opacity: 0;
   }
+}
+
+.sharebtn {
+  position: fixed;
+  bottom: 60px;
+  right: 60px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
 }
 </style>
