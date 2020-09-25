@@ -44,7 +44,7 @@
           <select v-model="selector" class="btn btn-success dropup form-control">
             <option value="RelationFinder" selected>Relation Finder</option>
             <option value="Subtree">Subtree</option>
-            <option value="Events">Events</option>
+            <!-- <option value="Events">Events</option> -->
           </select>
         </div>
       </div>
