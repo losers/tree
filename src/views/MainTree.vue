@@ -196,7 +196,7 @@
               </h4>
             </div>
           </center>
-          <button @click="shareTree" class="btn btn-primary sharebtn">
+          <button @click="shareTree" class="btn btn-primary sharebtn" v-if="$device.mobile">
             <i class="icofont-share"></i>
           </button>
           <footer class="foot">
