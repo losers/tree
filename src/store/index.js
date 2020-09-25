@@ -15,8 +15,8 @@ export default new Vuex.Store({
     loading: true,
     allMembers: [],
     error: false,
-    cur_surname : "",
-    metadata : {}
+    cur_surname: "",
+    metadata: {}
   },
   mutations: {
     setImages(state, imagesData) {
@@ -26,11 +26,16 @@ export default new Vuex.Store({
       state.tree = treeData.data.tree;
       state.title = treeData.data.meta;
       state.is_session = treeData.data.has_session;
+      try {
+        if (treeData.data.meta[0]["celeb"] != true)
+          print.postMessage("familyId--" + treeData.data.meta[0]["_id"]);
+      } catch (error) {
+        console.log("opened in browser");
+      }
     },
     setSession(state, sessData) {
       state.is_session = sessData.status;
       state.cur_surname = sessData.surname;
-      console.log("surname-"+state.cur_surname);
     },
     setLoading(state, status) {
       state.loading = status;
@@ -44,7 +49,7 @@ export default new Vuex.Store({
     setTreeOnlyData(state, tree) {
       state.tree = tree;
     },
-    setMetaData(state, metaData){
+    setMetaData(state, metaData) {
       state.metadata = metaData;
     }
   },
