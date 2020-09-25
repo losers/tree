@@ -321,7 +321,7 @@ export default {
         type: "share",
         title: `${this.surname.toUpperCase()} Family Tree`,
         text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
-        url: `https://bloodlineapp.page.link/familytree=${this.surname}`,
+        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`,
       };
       try {
         print.postMessage(`share--${this.surname}`);
