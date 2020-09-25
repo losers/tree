@@ -24,6 +24,7 @@ import DeleteMember from "../components/DeleteMember";
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 import TimelineForm from "../components/TimelineForm";
 import AuthForm from "../components/AuthForm";
+import Helper from "../components/Helper";
 
 export default {
   props: ["reference", "payload", "onlySwiper"],
@@ -38,7 +39,8 @@ export default {
         AddMemberForm,
         DeleteMember,
         TimelineForm,
-        AuthForm
+        AuthForm,
+        Helper
       ],
       selectedComponent: ""
     };
