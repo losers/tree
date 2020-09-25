@@ -15,12 +15,15 @@
         style="font-size:18px;cursor: pointer;"
       ></i>
 
-      
       <!-- Title name -->
       <h4 class="title-item" v-html="itemTimeline.title" />
 
       <!-- Item Description -->
-      <p class="description-item" v-html="itemTimeline.content" v-linkified />
+      <p
+        class="description-item"
+        v-html="itemTimeline.content"
+        v-linkified:options="{ format: modifyURL }"
+      />
 
       <!-- Sharedby -->
       <div class="shared-by" v-if="itemTimeline.shared_by">
@@ -38,9 +41,14 @@
       >
         <div class="key">Sharing With :</div>
         <div class="val-con">
-          <div v-for="(person, index) in itemTimeline.shared_with" :key="index" class="values">
-            <p class="value">{{namesMap[person]}},</p>
-          </div>
+          <!-- <div class="values"> -->
+          <p
+            v-for="(person, index) in itemTimeline.shared_with"
+            :key="index"
+            class="value"
+            :title="namesMap[person]"
+          >{{namesMap[person]}},</p>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -48,6 +56,12 @@
 </template>
 
 <script>
+const LINK_TYPE = {
+  URL: "url",
+  OTHERS: "Link",
+  GOOGLE_PHOTOS: "Google Photos",
+  GOOGLE_DRIVE: "Google Drive"
+};
 var eventData;
 export default {
   name: "TimelineItem",
@@ -73,6 +87,18 @@ export default {
     };
   },
   methods: {
+    modifyURL(value, type) {
+      if (type == LINK_TYPE.URL) {
+        let url_type = LINK_TYPE.OTHERS;
+        if (value.includes("photos.google")) {
+          url_type = LINK_TYPE.GOOGLE_PHOTOS;
+        } else if (value.includes("drive.google")) {
+          url_type = LINK_TYPE.GOOGLE_DRIVE;
+        }
+        return url_type;
+      }
+      return value;
+    },
     over() {
       this.show = true;
     },
@@ -119,13 +145,15 @@ export default {
 }
 .sharing-with .value {
   margin: 0px;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .sharing-with .values {
   margin-right: 5px;
 }
 .sharing-with .val-con {
   margin-right: 5px;
-  display: flex;
   max-width: 500px;
   white-space: nowrap;
 }

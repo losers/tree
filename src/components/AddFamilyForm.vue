@@ -128,7 +128,7 @@
           </center>
         </div>
         <center>
-          <button class="btn btn-success" @click="goFamily">Go..</button>
+          <button class="btn btn-success" @click="goFamily">Start</button>
         </center>
       </div>
     </transition>

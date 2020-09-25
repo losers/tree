@@ -1,18 +1,20 @@
 <template>
-  <div id="app">
+  <div id="app" style="overflow:auto;">
     <!-- All errors are handeled here -->
     <section v-if="errored">
-      <error v-if="errored.response.status == 404" :msg="errored.response.data">{{errored}}</error>
+      <error v-if="errored.response.status == 404" :msg="errored.response.data">
+        {{ errored }}
+      </error>
       <DualPage
         :payload="authModal.payload"
         :reference="5"
         v-if="authModal.show == true"
-        v-on:closed="authModal.show=false"
+        v-on:closed="authModal.show = false"
       ></DualPage>
 
       <div v-if="errored.response.status == 403">
-        <div style="display:flex">
-          <router-link :to="{name:'Home'}" class="mt-2 ml-1">
+        <div style="display: flex">
+          <router-link :to="{ name: 'Home' }" class="mt-2 ml-1">
             <i class="icofont-arrow-left"></i>
             Back
           </router-link>
@@ -20,18 +22,27 @@
         <img
           src="@/assets/no_entry.jpg"
           alt="No Entry"
-          style="margin-top: 50px;margin-bottom: 30px;"
+          style="margin-top: 50px; margin-bottom: 30px"
         />
-        <h2 style="margin-bottom: 20px">You don't have access for "{{metadata.title}}"</h2>
+        <h2 style="margin-bottom: 20px">
+          You don't have access for "{{ metadata.title }}"
+        </h2>
         <button class="btn btn-success" @click="openAuthBox">Enter PIN</button>
 
-        <div style="margin-top: 20px;" v-if="helper.main_show">
-          <a @click="toggleHelper" style="color:blue;cursor: pointer;">Help !</a>
+        <div style="margin-top: 20px" v-if="helper.main_show">
+          <a @click="toggleHelper" style="color: blue; cursor: pointer"
+            >Help !</a
+          >
           <div v-if="helper.show">
-            <p>Change Cookie Settings in {{helper.browser}} Browser, to allow all third-party cookies.</p>
-            <p
-              style="color:grey"
-            >( In case if you still face problem, Mail to "bloodline.helpline@gmail.com" and we can have quick one-on-one session to fix this )</p>
+            <p>
+              Change Cookie Settings in {{ helper.browser }} Browser, to allow
+              all third-party cookies.
+            </p>
+            <p style="color: grey">
+              ( In case if you still face problem, Mail to
+              "bloodline.helpline@gmail.com" and we can have quick one-on-one
+              session to fix this )
+            </p>
           </div>
         </div>
       </div>
@@ -42,11 +53,11 @@
       <router-view></router-view>
 
       <div v-if="loading">
-        <router-link :to="{name:'Home'}" class="float-left mt-2 ml-1">
+        <router-link :to="{ name: 'Home' }" class="float-left mt-2 ml-1">
           <i class="icofont-arrow-left"></i>
           Back
         </router-link>
-        <center style="padding-top:240px">
+        <center style="padding-top: 240px">
           <img src="@/assets/dna.gif" alt="Bloodline Loader" />
         </center>
       </div>
@@ -54,30 +65,30 @@
       <div v-else>
         <!-- Tree Tilebar -->
         <div class="tree-titlebar">
-          <a :href="'/app/'" class="flexy mr-2">
-            <i class="icofont-arrow-left"></i> Back
-          </a>
+          <router-link :to="{ name: 'Home' }">
+            <i class="icofont-arrow-left"></i>
+            Back
+          </router-link>
           <div class="tree-title flexy">
-            <div
-              class="fam-name"
-              :class="[{'f-26':$device.mobile}]"
-            >{{newTitle?newTitle:title[0].title}}</div>
+            <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
+              {{ newTitle ? newTitle : title[0].title }}
+            </div>
             <div v-show="is_session">
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
-                style="font-size:20px;cursor: pointer;"
+                style="font-size: 20px; cursor: pointer"
               ></i>
             </div>
           </div>
           <router-link
-            :to="{name:'Analytics'}"
-            style="display: flex;align-items: center;margin-right: 5px;"
+            :to="{ name: 'Analytics' }"
+            style="display: flex; align-items: center; margin-right: 5px"
           >
             <i
               class="icofont-gear"
-              style="margin-right: 8px;"
-              :class="[{'f-31':$device.mobile, 'f-21':$device.mobile}]"
+              style="margin-right: 8px"
+              :class="[{ 'f-31': $device.mobile, 'f-21': $device.mobile }]"
             ></i>
             <span v-if="!$device.mobile">Analytics</span>
           </router-link>
@@ -92,23 +103,29 @@
         ></DualPage>
 
         <!-- Called When No data is found -->
-        <div v-if="tempData==undefined">
-          <img src="@/assets/intro-mob.png" class="mob-intro" v-if="$device.mobile" />
+        <div v-if="tempData == undefined">
+          <img
+            src="@/assets/intro-mob.png"
+            class="mob-intro"
+            v-if="$device.mobile"
+          />
           <img
             src="../assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
-            style="margin-top:160px"
+            style="margin-top: 160px"
             alt="Blood Line Helper"
             v-else
           />
           <!-- Page Content -->
-          <div style="flex-direction: column;
-    display: flex;
-    align-items: center;">
+          <div
+            style="flex-direction: column; display: flex; align-items: center"
+          >
             <h5
               class="d-flex content-justify-left ml-2"
-              :class="[{'desk-intro-text':!$device.mobile}]"
-            >Click 'Add' to Start Adding Members.</h5>
+              :class="[{ 'desk-intro-text': !$device.mobile }]"
+            >
+              Click 'Add' to Start Adding Members.
+            </h5>
             <center>
               <i class="icofont-long-arrow-down object"></i>
             </center>
@@ -122,7 +139,7 @@
                 <div class="dot"></div>
                 <div class="dot"></div>
               </div>
-              <span style="font-size:18px; font-weight:900">Add!</span>
+              <span style="font-size: 18px; font-weight: 900">Add!</span>
             </button>
           </div>
           <div v-else>
@@ -136,13 +153,21 @@
                   type="number"
                 />
                 <button
-                  v-show="cookey.length==4"
+                  v-show="cookey.length == 4"
                   @click="validate"
-                  :class="{'btn':true, 'btn-success':!retry, 'btn-warning':retry, 'mt-3':true}"
+                  :class="{
+                    btn: true,
+                    'btn-success': !retry,
+                    'btn-warning': retry,
+                    'mt-3': true,
+                  }"
                   :disabled="vloading"
                 >
-                  <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
-                  {{retry?"Retry":"Validate"}}
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    v-show="vloading"
+                  ></span>
+                  {{ retry ? "Retry" : "Validate" }}
                 </button>
               </div>
             </center>
@@ -155,21 +180,29 @@
             <TreeChart
               :json="tempData"
               :images="images"
-              :class="{landscape: landscape.length}"
+              :class="{ landscape: landscape.length }"
               @click-node="clickNode"
-              style="padding-top:70px"
+              style="padding-top: 70px"
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
-                <i class="icofont-long-arrow-up object"></i>
+                <i
+                  class="icofont-long-arrow-up object"
+                  style="font-size: 25px"
+                ></i>
               </center>
-              <h4 style="color:#848181">Click on this person to add Parents / Children etc.,</h4>
+              <h4 style="color: #848181">
+                Click on this person to add Parents / Children etc.,
+              </h4>
             </div>
           </center>
+          <button @click="shareTree" class="btn btn-primary sharebtn" v-if="$device.mobile">
+            <i class="icofont-share"></i>
+          </button>
           <footer class="foot">
             <p>
               With
-              <i class="icofont-heart" style="color:red"></i>
+              <i class="icofont-heart" style="color: red"></i>
               by
               <a>Losers</a>
             </p>
@@ -193,7 +226,7 @@ export default {
   components: {
     TreeChart,
     Error,
-    DualPage
+    DualPage,
   },
   data() {
     return {
@@ -209,29 +242,29 @@ export default {
       dualPageData: {
         showDualPage: false,
         reference: null,
-        payload: {}
+        payload: {},
       },
       authModal: {
         payload: {},
-        show: false
+        show: false,
       },
       helper: {
         show: false,
         browser: "",
-        main_show: false
-      }
+        main_show: false,
+      },
     };
   },
   computed: {
     loading: {
       get() {
         return Store.state.loading;
-      }
+      },
     },
     images: {
       get() {
         return Store.state.images;
-      }
+      },
     },
     tempData: {
       get() {
@@ -239,17 +272,17 @@ export default {
           return undefined;
         }
         return Store.state.tree;
-      }
+      },
     },
     title: {
       get() {
         return Store.state.title;
-      }
+      },
     },
     is_session: {
       get() {
         return Store.state.is_session;
-      }
+      },
     },
     errored: {
       get() {
@@ -260,30 +293,44 @@ export default {
           }
         }
         return Store.state.error;
-      }
+      },
     },
     metadata: {
       get() {
         return Store.state.metadata;
-      }
-    }
+      },
+    },
   },
   mounted() {
+    // this.toggleBodyClass("addClass", "mem-spec");
+
     //To show Helper for Wrong Pinner
     if (localStorage.pinner) {
       this.helper.main_show = true;
     }
 
     //called after adding a new member
-    this.$root.$on("update-tree", data => {
+    this.$root.$on("update-tree", (data) => {
       console.log(data);
       this.$router.go();
     });
   },
   methods: {
+    shareTree() {
+      var shareData = {
+        type: "share",
+        title: `${this.surname.toUpperCase()} Family Tree`,
+        text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
+        url: `https://bloodlineapp.page.link/familytree=${this.surname}`,
+      };
+      try {
+        print.postMessage(`share--${this.surname}`);
+      } catch (error) {
+        navigator.share(shareData);
+      }
+    },
     // Called when a node is clicked
-
-    toggleHelper: function() {
+    toggleHelper: function () {
       this.helper.show = !this.helper.show;
 
       let nAgt = navigator.userAgent;
@@ -305,23 +352,23 @@ export default {
 
       this.helper.browser = browserName;
     },
-    openAuthBox: function() {
+    openAuthBox: function () {
       this.authModal.show = true;
       this.authModal.payload.title = Store.state.error.response.data[0].title;
       this.authModal.payload.surname =
         Store.state.error.response.data[0].surname;
     },
-    clickNode: function(node) {
+    clickNode: function (node) {
       if (node.data.mate || node.isMate) {
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id },
-          query: { hasMate: true }
+          query: { hasMate: true },
         });
       } else {
         this.$router.push({
           name: "MemberData",
-          params: { member: node.data.id }
+          params: { member: node.data.id },
         });
       }
     },
@@ -350,7 +397,7 @@ export default {
           Store.commit("setSession", sessData);
           this.vloading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           this.retry = true;
           console.log(err);
         })
@@ -376,8 +423,8 @@ export default {
         this.newTitle = payload;
       }
       this.dualPageData.showDualPage = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -750,5 +797,15 @@ h2 {
     width: 8px;
     opacity: 0;
   }
+}
+
+.sharebtn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+  z-index: 100;
 }
 </style>

@@ -22,7 +22,6 @@
           <div class="item">
             <i class="icofont-tree" style="margin-right:10px;font-size: 19px"></i> Subtree
           </div>
-          <!-- <div class="hr"></div> -->
         </router-link>
       </div>
 

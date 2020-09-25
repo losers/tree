@@ -1,2 +1,3 @@
 /   /index.html   200
 /app/*   /app.html   200!
+/api/* https://blineapi.herokuapp.com/:splat 200
