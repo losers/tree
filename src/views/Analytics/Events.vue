@@ -6,11 +6,6 @@
     </center>
     <div class="notification row" v-for="event in events" :key="event.name">
       <img
-        :src="event.type==1?require('@/assets/confetti.jpg'):event.type==2?require('@/assets/hearts.png'):require('@/assets/logo.png')"
-        height="50px"
-        class="col-xs-3 col-sm-1"
-      />
-      <img
         src="https://w0.pngwave.com/png/358/473/computer-icons-user-profile-person-png-clip-art.png"
         height="100px"
         class="col-xs-3 col-sm-2"
@@ -20,12 +15,6 @@
         height="100px"
         class="col-xs-3 col-sm-2"
         v-if="event.mate"
-      />
-      <img
-        v-if="$device.mobile"
-        :src="event.name=='Birthday'?require('@/assets/confetti.jpg'):event.name=='Marriage Day'?require('@/assets/hearts.png'):require('@/assets/logo.png')"
-        height="50px"
-        class="col-xs-3 col-sm-1"
       />
       <div :class="event.type==2?'col-sm-6 col-xs-12':'col-sm-8 col-xs-12'">
         <h4>
