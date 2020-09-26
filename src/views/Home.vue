@@ -11,10 +11,11 @@
       </div>
       <div v-else>
         <div class="heade">
-          <!-- <div id="stars"></div>
-          <div id="stars2"></div>
-          <div id="stars3"></div>-->
           <div id="title">
+            <i
+              class="icofont-question-circle help" v-if="$device.mobile"
+              @click="helperFunc"
+            ></i>
             <span style="font-weight: 500;">BloodLine</span>
             <br />
           </div>
@@ -39,6 +40,13 @@
           :reference="5"
           v-if="showAuthBox == true"
           v-on:closed="showAuthBox=false"
+        ></DualPage>
+
+        <DualPage
+          :payload="{}"
+          :reference="6"
+          v-if="helper.show == true"
+          v-on:closed="helper.show=false"
         ></DualPage>
 
         <center>
@@ -136,6 +144,11 @@
 </template>
 
 <style scoped>
+.help {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
 .load-more {
   background-color: white;
   font-weight: bolder;
@@ -242,7 +255,10 @@ export default {
       totalFamilies: null,
       nextPage: 1,
       hasNext: false,
-      loadingMore: false
+      loadingMore: false,
+      helper: {
+        show : false
+      }
     };
   },
   components: {
@@ -258,6 +274,14 @@ export default {
         this.authPayload.surname = surname;
         this.authPayload.title = title;
         this.showAuthBox = true;
+      }
+    },
+    helperFunc(){
+      try{
+        print.postMessage("teddy");
+      }
+      catch(e){
+        this.helper.show = true;
       }
     },
     addFamilyBtn() {
