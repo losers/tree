@@ -52,11 +52,6 @@ const myrouter = new VueRouter({
                             path: 'subtree',
                             name: "Subtree",
                             component: () => import('./views/Analytics/SubTree')
-                        },
-                        {
-                            path: 'events',
-                            name: "Events",
-                            component: () => import('./views/Analytics/Events')
                         }
                     ]
                 },

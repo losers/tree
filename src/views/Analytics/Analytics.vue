@@ -23,11 +23,6 @@
             <i class="icofont-tree" style="margin-right:10px;font-size: 19px"></i> Subtree
           </div>
         </router-link>
-        <!-- <router-link :to="{name:'Events'}" class="alyt">
-          <div class="item">
-            <i class="icofont-ui-calendar" style="margin-right:10px"></i>Events
-          </div>
-        </router-link> -->
       </div>
 
       <!-- Relations Data -->
@@ -44,7 +39,6 @@
           <select v-model="selector" class="btn btn-success dropup form-control">
             <option value="RelationFinder" selected>Relation Finder</option>
             <option value="Subtree">Subtree</option>
-            <option value="Events">Events</option>
           </select>
         </div>
       </div>
