@@ -1,10 +1,10 @@
 <template>
   <div>
     <section v-if="errored">
-      <p>{{errored}}</p>
+      <p>{{ errored }}</p>
     </section>
     <section v-else>
-      <div v-if="loading" style="padding-top:240px">
+      <div v-if="loading" style="padding-top: 240px">
         <center>
           <img src="@/assets/dna.gif" alt="Family Tree Loading" />
         </center>
@@ -13,72 +13,90 @@
         <div class="heade">
           <div id="title">
             <i
-              class="icofont-question-circle help" v-if="$device.mobile"
+              class="icofont-question-circle help"
+              v-if="$device.mobile"
               @click="helperFunc"
             ></i>
-            <span style="font-weight: 500;">BloodLine</span>
+            <span style="font-weight: 500">BloodLine</span>
             <br />
           </div>
 
           <center v-show="addFBtn">
-            <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
+            <vue-typer
+              :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"
+            ></vue-typer>
           </center>
 
           <!-- Create Family Button -->
           <center class="mt-3">
-            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
+            <touch-ripple
+              @click.native="addFamilyBtn"
+              class="button-box"
+              :speed="1.1"
+            >
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
         </div>
 
         <!-- Dual Page for Creating a Model -->
-        <DualPage :reference="0" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
+        <DualPage
+          :reference="0"
+          v-if="showModal == true"
+          v-on:closed="showModal = false"
+        ></DualPage>
 
         <DualPage
           :payload="authPayload"
           :reference="5"
           v-if="showAuthBox == true"
-          v-on:closed="showAuthBox=false"
+          v-on:closed="showAuthBox = false"
         ></DualPage>
 
         <DualPage
           :payload="{}"
           :reference="6"
           v-if="helper.show == true"
-          v-on:closed="helper.show=false"
+          v-on:closed="helper.show = false"
         ></DualPage>
 
         <center>
           <form
             v-on:submit.prevent="search"
             class="container"
-            style="display: flex;padding: 0px 0px 40px;"
+            style="display: flex; padding: 0px 0px 40px"
           >
-            <input
-              type="text"
-              v-model="text"
-              class="form-control"
-              :placeholder="`Search across ${totalFamilies} families..`"
-              style="margin-right: 30px;"
-            />
-            <button
-              type="submit"
-              class="btn btn-default"
-              style="color: black;background-color: white;"
-            >
-              <i class="icofont-search-2" style="padding-right: 10px;"></i>
-              <span>Search</span>
-            </button>
-            <!-- <input type="submit" value="Search" /> -->
+            <div class="col-lg-12 mb-2">
+              <div
+                class="input-group mycustom"
+                style="box-shadow: 0px 1px 12px 0px rgba(201, 201, 201, 1)"
+              >
+                <input
+                  type="text"
+                  style="height: 45px"
+                  v-model="text"
+                  :placeholder="`Find in ${totalFamilies} families..`"
+                  class="form-control input-lg rounded-lg"
+                />
+                <div class="input-group-prepend">
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-sm rounded-lg"
+                  >
+                    <i class="icofont-search-2"></i>
+                    Search
+                  </button>
+                </div>
+              </div>
+            </div>
           </form>
         </center>
 
         <div v-if="s_load">
-          <center style="padding-top: 80px;">
+          <center style="padding-top: 80px">
             <div
               class="spinner-border text-light"
-              style="height: 100px;width: 100px;"
+              style="height: 100px; width: 100px"
               role="status"
             >
               <span class="sr-only">Loading...</span>
@@ -90,25 +108,27 @@
             <div v-for="data in info" :key="data.id">
               <div
                 class="container div-box"
-                :class="{'cur-family': curFamily == data._id}"
-                @click="showAuth(data.surname, data.title, data.celeb, data._id)"
+                :class="{ 'cur-family': curFamily == data._id }"
+                @click="
+                  showAuth(data.surname, data.title, data.celeb, data._id)
+                "
               >
                 <i
                   class="icofont-unlocked float-left"
-                  style="color:white; font-size:25px"
+                  style="color: white; font-size: 25px"
                   data-toggle="tooltip"
                   title="UnLocked"
                   v-show="data.celeb"
                 ></i>
                 <i
                   class="icofont-lock float-left"
-                  style="color:white; font-size:25px"
+                  style="color: white; font-size: 25px"
                   data-toggle="tooltip"
                   title="Locked"
                   v-show="!data.celeb"
                 ></i>
-                <a class="title">{{data.title}}</a>
-                <p class="surname">Surname : {{data.surname}}</p>
+                <a class="title">{{ data.title }}</a>
+                <p class="surname">Surname : {{ data.surname }}</p>
               </div>
             </div>
             <div v-if="hasNext && info.length !== 0">
@@ -117,11 +137,13 @@
                 @click="loadMore"
                 v-if="!loadingMore"
                 class="btn load-more"
-              >Load more</button>
+              >
+                Load more
+              </button>
               <div
                 v-if="loadingMore"
                 class="spinner-border text-light"
-                style="height: 100px;width: 100px;"
+                style="height: 100px; width: 100px"
                 role="status"
               >
                 <span class="sr-only">Loading...</span>
@@ -131,8 +153,11 @@
         </div>
         <div v-if="info.length === 0 && !s_load">
           <center>
-            <img src="@/assets/no-data.png" style="height:140px;margin-top: 70px;" />
-            <h4 style="color: white;margin-top: 30px;">Nothing matching...</h4>
+            <img
+              src="@/assets/no-data.png"
+              style="height: 140px; margin-top: 70px"
+            />
+            <h4 style="color: white; margin-top: 30px">Nothing matching...</h4>
           </center>
         </div>
       </div>
@@ -144,10 +169,23 @@
 </template>
 
 <style scoped>
+.mycustom input[type="text"] {
+  border: none;
+  width: 100%;
+  padding-right: 110px;
+}
+.mycustom .input-group-prepend {
+  position: absolute;
+  right: 7px;
+  top: 5px;
+  bottom: 5px;
+  z-index: 9;
+}
+
 .help {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 .load-more {
   background-color: white;
@@ -189,7 +227,7 @@ a:not([href]) {
   color: white;
 }
 .heade {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 #title {
   left: 0;
@@ -257,14 +295,14 @@ export default {
       hasNext: false,
       loadingMore: false,
       helper: {
-        show : false
-      }
+        show: false,
+      },
     };
   },
   components: {
     DualPage,
     touchRipple,
-    VueTyper
+    VueTyper,
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id) {
@@ -276,11 +314,10 @@ export default {
         this.showAuthBox = true;
       }
     },
-    helperFunc(){
-      try{
+    helperFunc() {
+      try {
         print.postMessage("teddy");
-      }
-      catch(e){
+      } catch (e) {
         this.helper.show = true;
       }
     },
@@ -303,12 +340,12 @@ export default {
       this.loadingMore = true;
       axios
         .get(ProdData.getHostURL() + "/meta?page=" + this.nextPage)
-        .then(response => {
+        .then((response) => {
           this.info = this.info.concat(response.data.list);
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch(error => {
+        .catch((error) => {
           this.errored = error;
           console.log(error);
         })
@@ -319,11 +356,11 @@ export default {
         this.s_load = true;
         axios
           .get(ProdData.getHostURL() + "/meta/search?text=" + this.text)
-          .then(response => {
+          .then((response) => {
             this.info = response.data.list;
             this.curFamily = response.data.cur_family;
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           })
           .finally(() => (this.s_load = false));
@@ -334,7 +371,7 @@ export default {
     getAllList() {
       axios
         .get(ProdData.getHostURL() + "/meta")
-        .then(response => {
+        .then((response) => {
           this.toggleBodyClass("addClass", "j-stars");
           this.info = response.data.list;
           this.curFamily = response.data.cur_family;
@@ -342,12 +379,12 @@ export default {
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch(error => {
+        .catch((error) => {
           this.errored = error;
           console.log(error);
         })
         .finally(() => (this.loading = false));
-    }
+    },
   },
   destroyed() {
     this.toggleBodyClass("removeClass", "j-stars");
@@ -357,7 +394,7 @@ export default {
       this.addFBtn = false;
     }
     this.getAllList();
-  }
+  },
 };
 </script>
 
