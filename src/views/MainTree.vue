@@ -1,7 +1,7 @@
 <template>
-  <div id="app" style="overflow:auto;">
+  <div id="app" style="overflow:auto; height:100%">
     <!-- All errors are handeled here -->
-    <section v-if="errored">
+    <section v-if="errored" style="height:100%">
       <error v-if="errored.response.status == 404" :msg="errored.response.data">
         {{ errored }}
       </error>

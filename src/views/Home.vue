@@ -9,7 +9,33 @@
           <img src="@/assets/dna.gif" alt="Family Tree Loading" />
         </center>
       </div>
-      <div v-else>
+      <div
+        v-else
+        class="body-view"
+        :style="{
+          height: $device.mobile ? '210px' : '290px',
+        }"
+      >
+        <div style="height: 300px; position: absolute; width: 100%">
+          <vue-particles
+            style="z-index: 0; height: 100%; width: 100%"
+            color="#dedede"
+            :particleOpacity="1"
+            :particlesNumber="50"
+            shapeType="circle"
+            :particleSize="5"
+            linesColor="#dedede"
+            :linesWidth="1"
+            :lineLinked="true"
+            :lineOpacity="0.5"
+            :linesDistance="150"
+            :moveSpeed="3"
+            :hoverEffect="true"
+            hoverMode="grab"
+            :clickEffect="true"
+            clickMode="push"
+          ></vue-particles>
+        </div>
         <div class="heade">
           <div id="title">
             <i
@@ -17,7 +43,7 @@
               v-if="$device.mobile"
               @click="helperFunc"
             ></i>
-            <span style="font-weight: 500">BloodLine</span>
+            <span style="font-weight: 500; color: white">BloodLine</span>
             <br />
           </div>
 
@@ -69,7 +95,7 @@
             <div class="col-lg-12 mb-2">
               <div
                 class="input-group mycustom"
-                style="box-shadow: 0px 1px 12px 0px rgba(201, 201, 201, 1)"
+                style="box-shadow: rgb(241 241 241) 0px 5px 10px 0px"
               >
                 <input
                   type="text"
@@ -95,8 +121,8 @@
         <div v-if="s_load">
           <center style="padding-top: 80px">
             <div
-              class="spinner-border text-light"
-              style="height: 100px; width: 100px"
+              class="spinner-border"
+              style="height: 50px; width: 50px; color:red;"
               role="status"
             >
               <span class="sr-only">Loading...</span>
@@ -107,27 +133,39 @@
           <center>
             <div v-for="data in info" :key="data.id">
               <div
-                class="container div-box"
+                class="container div-box rounded-lg"
                 :class="{ 'cur-family': curFamily == data._id }"
                 @click="
                   showAuth(data.surname, data.title, data.celeb, data._id)
                 "
               >
                 <i
-                  class="icofont-unlocked float-left"
-                  style="color: white; font-size: 25px"
+                  class="icofont-unlocked float-left rounded-lg"
+                  :class="{
+                    'bigscreen-lock': !$device.mobile,
+                    'mobile-lock': $device.mobile,
+                  }"
                   data-toggle="tooltip"
                   title="UnLocked"
                   v-show="data.celeb"
                 ></i>
                 <i
-                  class="icofont-lock float-left"
-                  style="color: white; font-size: 25px"
+                  class="icofont-lock rounded-lg float-left"
+                  :class="{
+                    'bigscreen-lock': !$device.mobile,
+                    'mobile-lock': $device.mobile,
+                  }"
                   data-toggle="tooltip"
                   title="Locked"
                   v-show="!data.celeb"
                 ></i>
-                <a class="title">{{ data.title }}</a>
+                <a
+                  class="title"
+                  :style="{
+                    'font-size': $device.mobile ? '25px' : '35px',
+                  }"
+                  >{{ data.title }}</a
+                >
                 <p class="surname">Surname : {{ data.surname }}</p>
               </div>
             </div>
@@ -138,12 +176,12 @@
                 v-if="!loadingMore"
                 class="btn load-more"
               >
-                Load more
+                Load more <i class="icofont-arrow-down ml-1"></i>
               </button>
               <div
                 v-if="loadingMore"
-                class="spinner-border text-light"
-                style="height: 100px; width: 100px"
+                class="spinner-border"
+                style="height: 50px; width: 50px; color:red;"
                 role="status"
               >
                 <span class="sr-only">Loading...</span>
@@ -169,6 +207,23 @@
 </template>
 
 <style scoped>
+.bigscreen-lock {
+  color: white;
+  font-size: 25px;
+  background: #f00000;
+  padding: 10px;
+  box-shadow: 0px 10px 16px -12px rgba(0, 0, 0, 0.75);
+}
+.mobile-lock {
+  color: red;
+  font-size: 20px;
+}
+.body-view {
+  background-size: cover;
+  width: 100%;
+  background-color: black;
+}
+
 .mycustom input[type="text"] {
   border: none;
   width: 100%;
@@ -179,7 +234,6 @@
   right: 7px;
   top: 5px;
   bottom: 5px;
-  z-index: 9;
 }
 
 .help {
@@ -191,6 +245,8 @@
   background-color: white;
   font-weight: bolder;
   margin-bottom: 20px;
+  border: solid red 1px;
+  color: red;
 }
 .cur-family {
   background-color: white;
@@ -204,27 +260,27 @@
 }
 .div-box {
   cursor: pointer;
-  border: 3px solid white;
-  border-radius: 10px;
   margin-bottom: 40px;
   padding: 20px;
   word-break: break-word;
+  -webkit-box-shadow: 0px 5px 16px -12px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 5px 16px -12px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 5px 16px -12px rgba(0, 0, 0, 0.75);
 }
 a:hover {
   text-decoration: none !important;
 }
 .title {
-  font-size: 35px;
   font-weight: bold;
-  color: #a0a0a0;
+  color: red !important;
 }
-a:not([href]) {
+/* a:not([href]) {
   color: #a0a0a0;
-}
+} */
 .surname {
   font-size: 20px;
   font-weight: bold;
-  color: white;
+  color: #ff8e8e;
 }
 .heade {
   margin-bottom: 40px;
@@ -233,7 +289,7 @@ a:not([href]) {
   left: 0;
   right: 0;
   top: 30px;
-  margin-top: 30px;
+  padding-top: 30px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
@@ -261,9 +317,9 @@ a:not([href]) {
   cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"),
     auto !important;
   border-radius: 0px;
-  -webkit-box-shadow: 2px 7px 13px -2px rgba(0, 0, 0, 0.52);
-  -moz-box-shadow: 2px 7px 13px -2px rgba(0, 0, 0, 0.52);
-  box-shadow: 2px 7px 13px -2px rgba(0, 0, 0, 0.52);
+  -webkit-box-shadow: #cccccc 0px 2px 6px 0px;
+  -moz-box-shadow: #cccccc 0px 2px 6px 0px;
+  box-shadow: #cccccc 0px 2px 6px 0px;
 }
 </style>
 
