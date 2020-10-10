@@ -428,7 +428,7 @@ export default {
       axios
         .get(ProdData.getHostURL() + "/meta")
         .then((response) => {
-          this.toggleBodyClass("addClass", "j-stars");
+          this.toggleBodyClass("addClass");
           this.info = response.data.list;
           this.curFamily = response.data.cur_family;
           this.totalFamilies = response.data.total_families;
@@ -443,7 +443,7 @@ export default {
     },
   },
   destroyed() {
-    this.toggleBodyClass("removeClass", "j-stars");
+    this.toggleBodyClass("removeClass");
   },
   mounted() {
     if (this.$device.mobile) {
