@@ -57,6 +57,7 @@
           <div id="title">
             <i
               class="icofont-question-circle help"
+              style="color: indianred"
               v-if="$device.mobile"
               @click="helperFunc"
             ></i>
@@ -154,11 +155,13 @@
               <div
                 class="container div-box"
                 :style="{
-                  background: curFamily ? 'black' : 'white',
                   'border-radius': '10px',
                   'margin-top': $device.mobile ? '20px' : '30px',
                 }"
-                :class="{ 'cur-family': curFamily == data._id }"
+                :class="{
+                  'cur-family': curFamily == data._id,
+                  'normal-family': curFamily != data._id,
+                }"
                 @click="
                   showAuth(data.surname, data.title, data.celeb, data._id)
                 "
@@ -171,7 +174,7 @@
                   }"
                   data-toggle="tooltip"
                   title="UnLocked"
-                  v-show="data.celeb"
+                  v-if="data.celeb || curFamily == data._id"
                 ></i>
                 <i
                   class="icofont-lock rounded-lg"
@@ -181,7 +184,7 @@
                   }"
                   data-toggle="tooltip"
                   title="Locked"
-                  v-show="!data.celeb"
+                  v-else
                 ></i>
 
                 <!-- Family Title Box -->
@@ -275,6 +278,8 @@
   border: solid black 1px;
   color: black;
 }
+
+/* Access Famili */
 .cur-family {
   background-color: black;
   color: white;
@@ -284,6 +289,11 @@
 }
 .cur-family .title {
   color: white !important;
+}
+
+/* All Normal Families */
+.normal-family {
+  background: white;
 }
 .div-box {
   cursor: pointer;

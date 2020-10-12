@@ -1,7 +1,7 @@
 <template>
-  <div id="app" style="overflow:auto; height:100%">
+  <div id="app" style="overflow: auto; height: 100%">
     <!-- All errors are handeled here -->
-    <section v-if="errored" style="height:100%">
+    <section v-if="errored" style="height: 100%">
       <error v-if="errored.response.status == 404" :msg="errored.response.data">
         {{ errored }}
       </error>
@@ -77,7 +77,7 @@
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
-                style="font-size: 20px; cursor: pointer"
+                style="font-size: 20px; cursor: pointer; color: indianred"
               ></i>
             </div>
           </div>
@@ -196,7 +196,11 @@
               </h4>
             </div>
           </center>
-          <button @click="shareTree" class="btn btn-primary sharebtn" v-if="$device.mobile">
+          <button
+            @click="shareTree"
+            class="btn btn-primary sharebtn"
+            v-if="$device.mobile"
+          >
             <i class="icofont-share"></i>
           </button>
           <footer class="foot">
@@ -478,6 +482,9 @@ export default {
   display: flex;
   align-items: center;
 }
+a {
+  color: indianred !important;
+}
 a:hover {
   text-decoration: none !important;
 }
@@ -499,7 +506,7 @@ h2 {
   left: 0;
   bottom: -20px;
   width: 100%;
-  background: #333;
+  background:black;
   padding: 10px;
   overflow: hidden;
   color: white;
@@ -544,6 +551,7 @@ h2 {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 80%;
+  color: indianred;
 }
 .my-super-cool-btn {
   background-color: Transparent;
