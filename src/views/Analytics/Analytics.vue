@@ -2,23 +2,18 @@
   <div style="height: 100%">
     <!-- App Bar -->
     <div class="titlebar">
-      <router-link
-        :to="{ name: 'Tree' }"
-        class="float-left mt-2 ml-1"
-        style="color: #007bff"
-      >
+      <router-link :to="{ name: 'Tree' }" style="color: #007bff">
         <i class="icofont-arrow-left"></i>
         Back
       </router-link>
-      <center>
-        <p class="title">Crazy Analytics</p>
-      </center>
+      <b class="title">Crazy Analytics</b>
+      <i></i>
     </div>
 
     <!-- Body -->
     <div style="display: flex; width: 100%; height: 100%">
       <!-- Finders list -->
-      <div class="col-2 finders pl-0" v-if="!$device.mobile">
+      <div class="col-2 finders pl-0 pr-0" v-if="!$device.mobile">
         <router-link :to="{ name: 'RelationFinder' }" class="alyt">
           <div class="item">
             <i class="icofont-search-2" style="margin-right: 10px"></i>Relation
@@ -47,9 +42,10 @@
         "
       >
         <router-view></router-view>
+
+        <!-- Mobile Bottom Button -->
         <div
           v-if="$device.mobile"
-          class="dropup"
           style="
             width: 100%;
             position: fixed;
@@ -61,7 +57,8 @@
         >
           <select
             v-model="selector"
-            class="btn btn-success dropup form-control"
+            style="color: red; border: solid 1px red; background: white"
+            class="btn form-control"
           >
             <option value="RelationFinder" selected>Relation Finder</option>
             <option value="Subtree">Subtree</option>
@@ -110,14 +107,18 @@ export default {
   background-position: left; */
   color: white !important;
   clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
-background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(201,0,0,1) 73%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 1) 0%,
+    rgba(201, 0, 0, 1) 73%
+  );
+  box-shadow: 10px 10px 21px -9px rgba(255, 0, 0, 1);
 }
 .hr {
   height: 0.1px;
   background-color: grey;
 }
 .router-link-active {
-  color: #007bff;
   font-weight: bold;
 }
 .titlebar {
@@ -128,6 +129,9 @@ background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(201,0,0,1) 73%);
   padding: 5px;
   background-color: white;
   height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .title {
   font-size: 30px;
