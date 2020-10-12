@@ -116,7 +116,7 @@
             </tbody>
 
             <!-- Accordian for Mobile -->
-            <div v-if="$device.mobile" class="mt-3">
+            <div v-if="$device.mobile && cookeyStatus" class="mt-3">
               <div id="accordion">
                 <!-- Actions Card -->
                 <div class="mb-1">
