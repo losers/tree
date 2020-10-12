@@ -116,7 +116,7 @@
             </tbody>
 
             <!-- Accordian for Mobile -->
-            <div v-if="$device.mobile && cookeyStatus" class="mt-3">
+            <div v-if="$device.mobile" class="mt-3">
               <div id="accordion">
                 <!-- Actions Card -->
                 <div class="mb-1">
@@ -141,10 +141,13 @@
                   >
                     <div class="card-body">
                       <Actions
+                        :cookeyStatus="cookeyStatus"
                         :data="data"
                         :hasMate="hasMate"
+                        :cookey="cookey"
                         v-on:actionsAddMember="addMember"
                         v-on:actionsDeleteSwipe="deleteSwipe"
+                        v-on:keyTrue="cookeyStatus = true"
                       ></Actions>
                     </div>
                   </div>
@@ -181,15 +184,17 @@
             </div>
 
             <!-- Tabbar for Laptops-->
-            <tabs v-else-if="cookeyStatus">
+            <tabs v-else :style="{ display: cookeyStatus ? 'block' : 'none' }">
               <tab name="Actions">
                 <!-- Actions -->
                 <Actions
+                  :cookeyStatus="cookeyStatus"
                   :data="data"
                   :hasMate="hasMate"
                   :cookey="cookey"
                   v-on:actionsAddMember="addMember"
                   v-on:actionsDeleteSwipe="deleteSwipe"
+                  v-on:keyTrue="cookeyStatus = true"
                 ></Actions>
               </tab>
               <tab name="More Info" :is-disabled="!cookeyStatus">

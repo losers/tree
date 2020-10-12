@@ -106,10 +106,10 @@ export default {
   background-size: cover;
   background-position: left; */
   color: white !important;
-  clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 75% 0%, 85% 50%, 75% 100%, 0% 100%);
   background: linear-gradient(
     90deg,
-    rgba(255, 0, 0, 1) 0%,
+    indianred 0%,
     rgba(201, 0, 0, 1) 73%
   );
   box-shadow: 10px 10px 21px -9px rgba(255, 0, 0, 1);
@@ -135,7 +135,7 @@ export default {
 }
 .title {
   font-size: 30px;
-  color: red;
+  color: indianred;
   font-weight: bold;
 }
 </style>
