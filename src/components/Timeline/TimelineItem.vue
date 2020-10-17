@@ -56,13 +56,14 @@
 </template>
 
 <script>
+import {getAPIFormat} from "../../util/helper"; 
 const LINK_TYPE = {
   URL: "url",
   OTHERS: "Link",
   GOOGLE_PHOTOS: "Google Photos",
   GOOGLE_DRIVE: "Google Drive"
 };
-var eventData;
+let eventData;
 export default {
   name: "TimelineItem",
   props: {
@@ -116,6 +117,7 @@ export default {
         }
       }
       eventData = data;
+      eventData.date = getAPIFormat(eventData.date);
       this.$root.$emit("edit-timeline", eventData, shared);
     },
     getBackgroundColour(color) {

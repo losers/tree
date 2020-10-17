@@ -119,6 +119,8 @@ export default {
   display: block;
   transition: all 0.3s;
   position: fixed;
+  background-color : grey;
+  opacity: 0.5;
   top: 0;
   left: 0;
   right: 0;

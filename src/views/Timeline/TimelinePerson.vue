@@ -45,12 +45,6 @@
           <div class="row pt-5" style="margin:0">
             <div class="col-md-6 col-sm-12">
               <div v-if="dataTimeline.length!=0">
-                <!-- <select v-model="order">
-                  <option value="asc">Ascending</option>
-                  <option value="desc">Descending</option>
-                </select>-->
-
-                <!-- Timeline Componet -->
                 <Timeline
                   class="mt-5 pb-5 mb-5"
                   :timeline-items="dataTimeline"
@@ -62,14 +56,14 @@
               </div>
 
               <!-- No Timeline found -->
-              <img
-                v-else
-                src="@/assets/no_timeline-min.jpg"
-                height="450px"
-                width="200px"
-                class="mt-5"
-                alt="Blood Line Helper"
-              />
+              <div v-else class="timeline-intro">
+                <div>
+                  <i class="icofont-arrow-right"></i> Add events like BirthDay, Anniversaries, etc.,
+                </div>
+                <div class="intro-text2">
+                  <i class="icofont-arrow-right"></i> Shared Events like Trips, Marriage, etc., can also be added and shared with corresponding people So that it will appear on their Timeline.
+                </div>
+              </div>
 
               <div v-if="$device.mobile">
                 <!-- Swiper and modal -->
@@ -137,7 +131,6 @@ export default {
       if (this.$device.mobile) {
         this.showDualPage = true;
       }
-      console.log(this.payload.formData);
       this.payload.formData = Object.assign({}, data); //for creating a new object eliminating a reference
       this.payload.formData.shared_with = shared;
       this.payload.formData.isEdit = true;
@@ -165,7 +158,7 @@ export default {
           //Adding Birhday to Timeline
           if (data.data[0].dob) {
             let udob = {
-              content: "Day of Birth",
+              content: `[ Automatically created from ${this.user.fullname} data. ]`,
               date: new Date(data.data[0].dob),
               fixed: true,
               title: "Birthday"
@@ -176,10 +169,10 @@ export default {
           //Adding Death date to Timline if exists
           if (data.data[0].died_on) {
             let udob = {
-              content: "Died",
+              content: `[ Automatically created from ${this.user.fullname} data. ]`,
               date: new Date(data.data[0].died_on),
               fixed: true,
-              title: "Died On"
+              title: "Date of Demise"
             };
             this.dataTimeline.push(udob);
           }
@@ -368,6 +361,16 @@ export default {
 </script>
 
 <style>
+.timeline-intro .icofont-arrow-right{
+  color: indianred;
+}
+.timeline-intro {
+  margin-top: 130px;
+  font-size: 25px;
+}
+.intro-text2 {
+  margin-top: 50px;
+}
 .card {
   z-index: 10;
 }

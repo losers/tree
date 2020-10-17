@@ -28,7 +28,8 @@
     "vue-touch-ripple": "^3.0.0",
     "vue-typer": "^1.2.0",
     "vuex": "^3.3.0",
-    "hammerjs": "*"
+    "hammerjs": "*",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

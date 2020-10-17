@@ -22,6 +22,9 @@ export default {
       err: false
     };
   },
+  mounted(){
+    Store.dispatch("setStepNumber", 2);
+  },
   methods: {
     sendData(data) {
       data.type = 0;

@@ -16,7 +16,11 @@ export default new Vuex.Store({
     allMembers: [],
     error: false,
     cur_surname: "",
-    metadata: {}
+    metadata: {},
+    promos: {
+      1 : true, //Relation Finder
+      2 : true  // Website
+    }
   },
   mutations: {
     setImages(state, imagesData) {
@@ -51,6 +55,9 @@ export default new Vuex.Store({
     },
     setMetaData(state, metaData) {
       state.metadata = metaData;
+    },
+    setPromo(state, promoNo){
+      state.promos[promoNo] = false;
     }
   },
   actions: {
@@ -79,6 +86,12 @@ export default new Vuex.Store({
     },
     async setMetaData(state, metaData) {
       state.commit('setMetaData', metaData);
+    },
+    async setStepNumber(state, step) {
+      axios.put(ProdData.getHostURL() + "/meta/stepper", {
+        family_id: state.state.title[0]._id,
+        stepper: step
+      });
     },
   },
   getters: {
