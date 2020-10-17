@@ -39,6 +39,6 @@
 <script>
 export default {
   name: "MoreInfo",
-  props: ["name", "id", "data"]
+  props: ["id", "data"]
 };
 </script>

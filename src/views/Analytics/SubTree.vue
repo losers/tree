@@ -9,7 +9,7 @@
       ></vSelect>
       <br v-if="$device.mobile" />
       <center>
-        <button class="btn btn-success" @click="submit" :disabled="!p1">Search</button>
+        <button class="btn btn-danger" @click="submit" :disabled="!p1">Search</button>
       </center>
     </div>
     <center>

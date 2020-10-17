@@ -17,7 +17,7 @@
         class="col-sm-10 col-md-3"
       ></vSelect>
       <center>
-        <button class="btn btn-success" @click="submit" :disabled="!(p1 && p2)">
+        <button class="btn btn-danger" @click="submit" :disabled="!(p1 && p2)">
           Search
         </button>
       </center>
@@ -46,19 +46,21 @@
           {{ p.p2.label }} is {{ p.p1.label }}'s
           <span
             class="ml-3 spinner-border spinner-border-sm"
+            style="color: red"
             v-if="loading"
           ></span>
           <span v-else class="ml-1 relationName">{{ relationName }}</span>
           <br v-if="$device.mobile" />
           <button
-            class="ml-3 btn btn-sm btn-primary"
+            class="ml-3 btn btn-sm"
+            style="border:solid 1px red; color:red;"
             :class="{ 'mt-3': $device.mobile }"
             @click="opts = !opts"
           >
             Change Language
           </button>
         </p>
-        <div v-show="opts" style="padding:10px">
+        <div v-show="opts" style="padding: 10px">
           <input
             type="radio"
             id="western"

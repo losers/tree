@@ -3,11 +3,11 @@
     <div v-if="open">
       <section v-if="errored">
         err
-        <p>{{errored}}</p>
+        <p>{{ errored }}</p>
       </section>
       <section v-else>
         <div v-if="loading" class="container_image mx-auto">
-          <center style="padding-top:240px">
+          <center style="padding-top: 240px">
             <img src="@/assets/dna.gif" alt="Bloodline Loader" />
           </center>
         </div>
@@ -18,7 +18,7 @@
                 :src="previewImage"
                 alt="Avatar"
                 class="image mx-auto"
-                style="border-radius: 50%;width: 150px;"
+                style="border-radius: 50%; width: 150px"
               />
             </div>
             <div v-else>
@@ -26,13 +26,17 @@
                 src="../../assets/profile.png"
                 alt="Family Tree Loading"
                 class="image mx-auto"
-                style="border-radius: 50%;width: 150px;"
+                style="border-radius: 50%; width: 150px"
               />
             </div>
 
             <div class="middle" v-if="cookeyStatus">
               <div class="member-txt">
-                <a class="btn" @click="show=true" style="color: white!important;">
+                <a
+                  class="btn"
+                  @click="show = true"
+                  style="color: white !important"
+                >
                   <i class="icofont-edit"></i>
                   Change
                 </a>
@@ -47,7 +51,10 @@
             :disabled="loadingUpload"
           >
             <span v-if="!doneUpload">
-              <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
+              <span
+                class="spinner-border spinner-border-sm"
+                v-if="loadingUpload"
+              ></span>
               <i class="icofont-cloud-upload" v-else></i>
               Upload Image
             </span>
@@ -58,7 +65,7 @@
           </button>
 
           <my-upload
-            :class="{'img-picker-mob':$device.mobile}"
+            :class="{ 'img-picker-mob': $device.mobile }"
             field="img"
             @crop-success="cropSuccess"
             :width="200"
@@ -70,57 +77,53 @@
           ></my-upload>
           <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
           <table class="table table-borderless table-hover mt-3 table-data">
-            <tbody class="text-left" style="color:black">
+            <tbody class="text-left" style="color: black">
               <tr class="text-center">
                 <td>
-                  {{data.short_name}}
+                  {{ data.short_name }}
                   <i
                     class="icofont-edit float-right"
-                    @click="addMember(2,data)"
-                    style="font-size:20px"
+                    @click="addMember(2, data)"
+                    style="font-size: 20px"
                     v-show="cookeyStatus"
                   ></i>
                 </td>
               </tr>
               <tr>
-                <td style="border-left:3px solid red;">
+                <td style="border-left: 3px solid red">
                   <i class="icofont-business-man"></i>
-                  {{data.name}}
+                  {{ data.name }}
                 </td>
               </tr>
               <tr v-if="data.gender">
-                <td style="border-left:3px solid orange;">
-                  <span v-if="data.gender==1">
+                <td style="border-left: 3px solid orange">
+                  <span v-if="data.gender == 1">
                     <i class="icofont-male"></i>
                   </span>
                   <span v-else>
                     <i class="icofont-female"></i>
                   </span>
-                  {{data.gender=="1"?"Male":"Female"}}
+                  {{ data.gender == "1" ? "Male" : "Female" }}
                 </td>
               </tr>
               <tr v-if="data.xtra_parent_name">
-                <td style="border-left:3px solid green;">
-                  <span v-if="data.gender==1">
-                    S/O :
-                  </span>
-                  <span v-else>
-                    D/O :
-                  </span>
-                  {{data.xtra_parent_name}}
+                <td style="border-left: 3px solid green">
+                  <span v-if="data.gender == 1"> S/O : </span>
+                  <span v-else> D/O : </span>
+                  {{ data.xtra_parent_name }}
                 </td>
               </tr>
             </tbody>
 
             <!-- Accordian for Mobile -->
-            <div v-if="$device.mobile" class="mt-3">
+            <div v-if="$device.mobile && cookeyStatus" class="mt-3">
               <div id="accordion">
                 <!-- Actions Card -->
                 <div class="mb-1">
                   <!-- Actions Heading -->
                   <button
                     class="btn p-0"
-                    style="color: #007bff;width:100%"
+                    style="color: #007bff; width: 100%"
                     data-toggle="collapse"
                     data-target="#collapseOne"
                     aria-expanded="true"
@@ -144,7 +147,7 @@
                         :cookey="cookey"
                         v-on:actionsAddMember="addMember"
                         v-on:actionsDeleteSwipe="deleteSwipe"
-                        v-on:keyTrue="cookeyStatus=true"
+                        v-on:keyTrue="cookeyStatus = true"
                       ></Actions>
                     </div>
                   </div>
@@ -155,7 +158,7 @@
                   <!-- INfo HEading -->
                   <button
                     class="btn p-0 collapsed"
-                    style="color: #007bff;width:100%"
+                    style="color: #007bff; width: 100%"
                     :disabled="!cookeyStatus"
                     data-toggle="collapse"
                     data-target="#collapseTwo"
@@ -180,8 +183,8 @@
               </div>
             </div>
 
-            <!-- Tabbar -->
-            <tabs v-else>
+            <!-- Tabbar for Laptops-->
+            <tabs v-else :style="{ display: cookeyStatus ? 'block' : 'none' }">
               <tab name="Actions">
                 <!-- Actions -->
                 <Actions
@@ -191,7 +194,7 @@
                   :cookey="cookey"
                   v-on:actionsAddMember="addMember"
                   v-on:actionsDeleteSwipe="deleteSwipe"
-                  v-on:keyTrue="cookeyStatus=true"
+                  v-on:keyTrue="cookeyStatus = true"
                 ></Actions>
               </tab>
               <tab name="More Info" :is-disabled="!cookeyStatus">
@@ -205,7 +208,7 @@
     <DualPage
       :reference="dualPage.ref"
       :payload="payload"
-      style="z-index:102!important"
+      style="z-index: 102 !important"
       v-if="dualPage.callForm"
       v-on:closed="addMemberCancel"
     ></DualPage>
@@ -230,7 +233,7 @@ import Store from "@/store/index";
 
 Vue.use(VModal, {
   dynamic: true,
-  injectModalsContainer: true
+  injectModalsContainer: true,
 });
 
 export default {
@@ -242,7 +245,7 @@ export default {
     Tab,
     MoreInfo,
     DualPage,
-    Actions
+    Actions,
   },
   data() {
     return {
@@ -270,19 +273,19 @@ export default {
       parent_id: "",
       dualPage: {
         callForm: false,
-        ref: 2
+        ref: 2,
       },
-      payload: {}
+      payload: {},
     };
   },
   watch: {
     imageData: {
-      handler: function(val) {
+      handler: function (val) {
         if (val) {
           this.showUpload = true;
         }
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.open = true;
@@ -297,21 +300,22 @@ export default {
       .get(
         ProdData.getHostURL() + "/tree/" + this.surname + "/person/" + this.id
       )
-      .then(data => {
+      .then((data) => {
         if (data.data.is_mate) {
           this.hasMate = true;
         }
         this.data = data.data;
         this.count = Object.keys(this.data).length - 6; //decremented 1 for image status
         this.cookeyStatus = this.data.has_session;
-        
-        if (this.data.xtra_parent_id){
+
+        if (this.data.xtra_parent_id) {
           this.data.xtra_parent_name = Algos.getPersonById(
-            Store.getters.getTreeData, this.data.xtra_parent_id
+            Store.getters.getTreeData,
+            this.data.xtra_parent_id
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.errored = err;
       })
       .finally(() => {
@@ -327,7 +331,7 @@ export default {
           this.id +
           "/image"
       )
-      .then(data => {
+      .then((data) => {
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
@@ -353,8 +357,8 @@ export default {
         "/image";
       axios
         .post(this.url, params)
-        .then(function() {})
-        .catch(function() {})
+        .then(function () {})
+        .catch(function () {})
         .finally(() => {
           this.doneUpload = true;
           setTimeout(() => {
@@ -379,9 +383,9 @@ export default {
           quality: 0.2,
           maxWidth: 200,
           maxHeight: 200,
-          resize: true
+          resize: true,
         })
-        .then(data => {
+        .then((data) => {
           this.imageData = data[0].data;
           this.imageExists = true;
           this.previewImage = "data:image/png;base64, " + this.imageData;
@@ -391,7 +395,7 @@ export default {
       this.open = false;
       this.$router.push({
         name: "MainTree",
-        params: { id: this.$route.params.id }
+        params: { id: this.$route.params.id },
       });
     },
     addMember(num, memData) {
@@ -424,11 +428,11 @@ export default {
       } else {
         el.classList.remove(className);
       }
-    }
+    },
   },
   destroyed() {
     this.toggleBodyClass("removeClass", "mem-spec");
-  }
+  },
 };
 </script>
 

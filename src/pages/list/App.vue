@@ -3,9 +3,7 @@
 </template>
 
 <style>
-.j-stars {
-  background-color: black !important;
-}
+
 .mem-spec, .mem-spec #app{
   overflow: hidden;
 }

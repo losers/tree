@@ -1,19 +1,7 @@
 var data = {};
-data.isProd = true;
 
 data.getHostURL = function () {
-
-    //Local
     return "/api";
-
-    //Test
-    // return "https://testdsfsds.herokuapp.com";
-
-    //US
-    //return "https://blineapi.herokuapp.com";
-
-    //EU
-    // return "https://bloodlineqa.herokuapp.com";
 }
 
 data.relations = {};
