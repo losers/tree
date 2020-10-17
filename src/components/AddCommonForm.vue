@@ -89,7 +89,7 @@
           <label class="col-4 flexy" style="color:black;">Is Alive :</label>
           <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
           <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
-            <md-datepicker v-model="data.died_on" required="true" class="cus">
+            <md-datepicker v-model="data.died_on" required="true" class="cus" :md-model-type="String">
               <label>Date of Demise</label>
             </md-datepicker>
           </div>
@@ -191,7 +191,7 @@ export default {
   methods: {
     checkMultiParents(parentId, isChild, xtra_parent_id) {
       let tree = Algos.getSubTree(Store.getters.getTreeData, parentId);
-      if (isChild && tree.mate && tree.mate.length > 1) {
+      if (isChild &&tree &&tree.mate && tree.mate.length > 1) {
         this.xtraParent.show = true;
         for (let mate of tree.mate) {
           let x = {};

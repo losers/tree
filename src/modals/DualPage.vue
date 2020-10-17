@@ -17,14 +17,17 @@
 </template>
 
 <script>
+import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
+
 import AddFamily from "../components/AddFamilyForm.vue";
 import AddRoot from "../components/AddRootForm.vue";
 import AddMemberForm from "../components/AddMemberForm";
 import DeleteMember from "../components/DeleteMember";
-import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
 import TimelineForm from "../components/TimelineForm";
 import AuthForm from "../components/AuthForm";
-import Helper from "../components/Helper";
+import Helper from "../components/Helper"; //6
+import RelationFinderPromo from "../components/promotional/RelationFinder"; //7
+import WebsitePromo from "../components/promotional/Website"; //7
 
 export default {
   props: ["reference", "payload", "onlySwiper"],
@@ -40,7 +43,9 @@ export default {
         DeleteMember,
         TimelineForm,
         AuthForm,
-        Helper
+        Helper,
+        RelationFinderPromo,
+        WebsitePromo
       ],
       selectedComponent: ""
     };
@@ -64,7 +69,7 @@ export default {
         {
           height: "auto",
           draggable: true,
-          clickToClose: false,
+          clickToClose: true,
           scrollable: true
         },
         {

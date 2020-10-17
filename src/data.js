@@ -2,7 +2,6 @@ var data = {};
 
 data.getHostURL = function () {
     return "/api";
-
 }
 
 data.relations = {};
