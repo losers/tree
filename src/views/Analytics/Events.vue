@@ -2,67 +2,160 @@
   <div>
     <div class="main-title">
       <div class="header">Today's Events</div>
-      <div class="today">- {{date.display}}</div>
+      <div class="today">- {{ date.display }}</div>
     </div>
     <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
     </div>
+
+    <!-- All Boxes List -->
     <div class="row" v-else>
-      <div class="col-xs-12 col-sm-4 event-cont" v-for="(event, index) in events" :key="index">
+      <div
+        class="col-xs-12 col-sm-4 event-cont"
+        v-for="(event, index) in events"
+        :key="index"
+      >
+        <!-- Birthday event -->
         <div class="event" v-if="event.type == 1">
-          <div class="event-head">
-            <div class="test">
-              <img src="@/assets/cake.jpg" alt="Cake for Family Birthday" width="70" height="70" />
-              <div class="content">
-                <div class="name">{{event.nae}}</div>
-                <div class="anniv">
-                  <span class="anniv-num">
-                    {{event.dob | anivCalc}}
-                    <span class="a-th">th</span>
-                  </span> Birth Anniversary
-                </div>
-              </div>
-            </div>
+          <!-- Background -->
+          <img
+            src="@/assets/events/birthdaybg.png"
+            alt=" Birthday"
+            width="100%"
+            height="120"
+          />
+
+          <!-- Event Body -->
+          <div class="event-body">
+            <!-- Direct Picture -->
             <div class="person-img">
               <img
-                :src="'data:image/png;base64, '+store.state.images[event._id]"
+                :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
             </div>
+
+            <!-- Event Content -->
+            <center>
+              <div class="name">{{ event.name }}</div>
+              <div class="anniv">
+                <span class="anniv-num">
+                  {{ event.dob | anivCalc }}
+                  <span class="a-th">th</span>
+                </span>
+                Birth Anniversary
+              </div>
+
+              <button
+                class="btn mt-2"
+                style="border: solid 1px green; color: green"
+              >
+                Send Wishes
+              </button>
+            </center>
           </div>
-          <div class="event-body"></div>
         </div>
-        <!-- <div class="event" v-if="event.type == 2">
-          <img src="@/assets/candle.png" alt="Candle for Death Day" width="70" height="70" />
-          <div class="content">
-            <div class="name">{{event.name}}</div>
-            <div class="anniv">
-              <span class="anniv-num">{{event.dob | anivCalc}}<span class="a-th">th</span></span> Memorial day
-            </div>
+
+        <!-- Memorial Event -->
+        <div class="event" v-if="event.type == 2">
+          <!-- Background -->
+          <div style="width: 100%; background: black">
+            <img
+              src="@/assets/events/candle.jpeg"
+              alt=" Birthday"
+              width="50px"
+              height="120"
+            />
           </div>
-        </div>-->
+
+          <!-- Event body with DP -->
+          <div class="event-body">
+            <!-- DP -->
+            <div class="person-img">
+              <img
+                :src="'data:image/png;base64, ' + store.state.images[event._id]"
+                v-if="store.state.images[event._id]"
+                alt="Blood Line User"
+              />
+              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+            </div>
+
+            <!-- Event Content -->
+            <center>
+              <div class="name">{{ event.name }}</div>
+              <div class="anniv">
+                <span class="anniv-num"
+                  >{{ event.dob | anivCalc }}<span class="a-th">th</span></span
+                >
+                Memorial day
+              </div>
+              <button
+                class="btn mt-2"
+                style="border: solid 1px black; color: black"
+              >
+                Share
+              </button>
+            </center>
+          </div>
+        </div>
+
+        <!-- Timeline Event -->
+        <div class="event" v-if="event.type == 3">
+          <!-- Vertical Line -->
+          <div
+            style="
+              height: 300px;
+              width: 4px;
+              background: grey;
+              position: absolute;
+              margin-left: 50px;
+            "
+          ></div>
+          <span
+            style="
+              height: 20px;
+              width: 20px;
+              position: absolute;
+              background: #286b8b;
+              border-radius: 20px;
+              margin-left: 42px;
+              margin-top: 170px;
+            "
+          >
+          </span>
+          <div style="padding-top: 70px; display: flex">
+            <div class="person-img" style="margin-left: 10px">
+              <img
+                :src="'data:image/png;base64, ' + store.state.images[event._id]"
+                v-if="store.state.images[event._id]"
+                alt="Blood Line User"
+              />
+              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+            </div>
+            <div class="name" style="margin-left: 120px">{{ event.name }}</div>
+          </div>
+          <div class="anniv" style="margin-left: 80px; margin-top: 45px;">
+            <!-- <div>{{ event.heading }}</div>
+            <div style="height: 50px; width:60%">{{ event.content }}</div> -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.test {
+.event-body {
   display: flex;
-  width: 100%;
-  align-items: center;
-}
-.event-head {
-  display: flex;
-  height: 110px;
   padding: 10px;
   align-items: center;
   justify-content: center;
 }
 .person-img {
-  width: 118px;
+  box-shadow: 10px 10px 22px -13px rgba(0, 0, 0, 0.75);
+  width: 90px;
   border-radius: 50%;
   overflow: hidden;
   position: absolute;
@@ -75,9 +168,6 @@
 .anniv-num {
   color: indianred;
   font-size: 30px;
-}
-.content {
-  margin-left: 20px;
 }
 .name {
   font-size: 30px;
@@ -110,6 +200,7 @@
   padding: 10px;
 }
 .event {
+  height: 300px;
   -webkit-box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
@@ -128,31 +219,54 @@ export default {
     return {
       date: {
         display: getNormalDisplayDate(),
-        api: getAPIFormat()
+        api: getAPIFormat(),
       },
-      events: [],
+      events: [
+        {
+          type: 1,
+          name: "test name",
+          dob: "Jan 32",
+        },
+        {
+          type: 2,
+          name: "test name",
+          dob: "Jan 32",
+        },
+        {
+          type: 3,
+          name: "Person 1",
+          heading: "Timeline Heading",
+          content:
+            "cmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fb",
+        },
+        {
+          type: 2,
+          name: "test name",
+          dob: "Jan 32",
+        },
+      ],
       loading: true,
-      store: {}
+      store: {},
     };
   },
   filters: {
-    anivCalc: function(value) {
+    anivCalc: function (value) {
       let a = moment(value);
       let b = moment();
       return b.diff(a, "years");
-    }
+    },
   },
   mounted() {
     this.store = Store;
     let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
     axios
       .get(eventsUrl)
-      .then(response => {
+      .then((response) => {
         this.events = response.data;
       })
       .finally(() => {
         this.loading = false;
       });
-  }
+  },
 };
 </script>
