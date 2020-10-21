@@ -4,12 +4,12 @@
       <div class="header">Today's Events</div>
       <div class="today">- {{ date.display }}</div>
     </div>
-    <div class="load-con" v-if="loading">
+    <!-- <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
-    </div>
+    </div> -->
 
     <!-- All Boxes List -->
-    <div class="row" v-else>
+    <div class="row">
       <div
         class="col-xs-12 col-sm-4 event-cont"
         v-for="(event, index) in events"
@@ -48,12 +48,7 @@
                 Birth Anniversary
               </div>
 
-              <button
-                class="btn mt-2"
-                style="border: solid 1px green; color: green"
-              >
-                Send Wishes
-              </button>
+              <button class="btn mt-2 event-btn">Send Wishes</button>
             </center>
           </div>
         </div>
@@ -91,12 +86,7 @@
                 >
                 Memorial day
               </div>
-              <button
-                class="btn mt-2"
-                style="border: solid 1px black; color: black"
-              >
-                Share
-              </button>
+              <button class="btn mt-2 event-btn">Share</button>
             </center>
           </div>
         </div>
@@ -121,12 +111,15 @@
               background: #286b8b;
               border-radius: 20px;
               margin-left: 42px;
-              margin-top: 170px;
+              margin-top: 120px;
             "
           >
           </span>
-          <div style="padding-top: 70px; display: flex">
-            <div class="person-img" style="margin-left: 10px">
+          <div style="padding-top: 45px; display: flex">
+            <div
+              class="person-img"
+              style="margin-left: 22px; margin-top: -10px; width: 60px"
+            >
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images[event._id]"
@@ -136,9 +129,15 @@
             </div>
             <div class="name" style="margin-left: 120px">{{ event.name }}</div>
           </div>
-          <div class="anniv" style="margin-left: 80px; margin-top: 45px;">
-            <!-- <div>{{ event.heading }}</div>
-            <div style="height: 50px; width:60%">{{ event.content }}</div> -->
+          <div
+            class="anniv"
+            style="margin-left: 80px; margin-top: 25px; display: inline-block"
+          >
+            <div class="timeline-heading">{{ event.heading }}</div>
+            <div class="timeline-content">
+              {{ event.content }}
+            </div>
+            <a href="#" class="btn event-btn">View Timeline</a>
           </div>
         </div>
       </div>
@@ -152,6 +151,28 @@
   padding: 10px;
   align-items: center;
   justify-content: center;
+}
+.event-btn {
+  border: solid 1px indianred;
+  color: indianred;
+}
+.timeline-heading {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+  color: grey;
+  font-size: 24px;
+}
+.timeline-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+  margin: 10px;
 }
 .person-img {
   box-shadow: 10px 10px 22px -13px rgba(0, 0, 0, 0.75);
@@ -180,8 +201,8 @@
 .spinner-border-sm {
   font-size: 20px;
   color: indianred;
-  width: 5rem;
-  height: 5rem;
+  width: 3rem;
+  height: 3rem;
   border-width: 0.2em;
 }
 .today {
@@ -208,8 +229,8 @@
 </style>
 
 <script>
-import ProdData from "@/data.js";
-import axios from "axios";
+// import ProdData from "@/data.js";
+// import axios from "axios";
 import moment from "moment";
 import { getNormalDisplayDate, getAPIFormat } from "../../util/helper";
 import Store from "../../store/index";
@@ -237,7 +258,7 @@ export default {
           name: "Person 1",
           heading: "Timeline Heading",
           content:
-            "cmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fb",
+            "cmvlsmv;fmbfdlmb. fmdfbmdbm;bm d;bmgbmd ;bmd;fbcm vlsmv;fmb fdlmb.fmdf bmdbm;b md;bmgbm d;bm d;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fb",
         },
         {
           type: 2,
@@ -258,15 +279,16 @@ export default {
   },
   mounted() {
     this.store = Store;
-    let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
-    axios
-      .get(eventsUrl)
-      .then((response) => {
-        this.events = response.data;
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+    // let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
+    // axios
+    //   .get(eventsUrl)
+    //   .then((response) => {
+    //     this.events = response.data;
+    //   })
+    //   .finally(() => {
+    //     this.loading = false;
+    //     console.log(this.events)
+    //   });
   },
 };
 </script>
