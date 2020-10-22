@@ -39,7 +39,7 @@
                   :src="
                     'data:image/png;base64, ' + store.state.images[event._id]
                   "
-                  v-if="store.state.images[event._id]"
+                  v-if="store.state.images"
                   alt="Blood Line User"
                 />
                 <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -88,7 +88,7 @@
         </div>
 
         <!-- Memorial Event -->
-        <div class="event" v-if="event.type == 2">
+        <div class="event" v-if="event.type == 2" style="background-color: black;color: white;overflow:hidden">
           <!-- Background -->
           <div style="width: 100%; background: black; padding-left:15px;">
             <img
@@ -114,7 +114,7 @@
                   :src="
                     'data:image/png;base64, ' + store.state.images[event._id]
                   "
-                  v-if="store.state.images[event._id]"
+                  v-if="store.state.images"
                   alt="Blood Line User"
                 />
                 <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -126,11 +126,11 @@
               <div class="name">{{ event.name }}</div>
               <div class="anniv">
                 <span class="anniv-num"
-                  >{{ event.dob | anivCalc }}<span class="a-th">th</span></span
+                  >{{ event.died_on | anivCalc }}<span class="a-th">th</span></span
                 >
                 Memorial day
               </div>
-              <a
+              <!-- <a
                 :href="`https://api.whatsapp.com/send?text=Its ${
                   event.name
                 }'s ${
@@ -138,7 +138,7 @@
                 }th Memorial Day. Share news to all our  `"
                 class="btn mt-2 event-btn"
                 >Share</a
-              >
+              > -->
             </center>
           </div>
         </div>
@@ -174,7 +174,7 @@
             >
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images[event._id]"
+                v-if="store.state.images"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -347,7 +347,6 @@ export default {
       })
       .finally(() => {
         this.loading = false;
-        console.log(this.events);
       });
   },
 };

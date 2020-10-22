@@ -17,7 +17,7 @@
         <tr v-if="data.died_on">
           <td style="border-left:3px solid indianred;">
             <i class="icofont-sad"></i>
-            Demise : {{data.died_on}}
+            Death : {{data.died_on}}
           </td>
         </tr>
       </tbody>
