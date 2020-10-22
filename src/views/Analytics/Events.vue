@@ -4,12 +4,12 @@
       <div class="header">Today's Events</div>
       <div class="today">- {{ date.display }}</div>
     </div>
-    <!-- <div class="load-con" v-if="loading">
+    <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
-    </div> -->
+    </div>
 
     <!-- All Boxes List -->
-    <div class="row">
+    <div class="row" v-else>
       <div
         class="col-xs-12 col-sm-4 event-cont"
         v-for="(event, index) in events"
@@ -29,12 +29,21 @@
           <div class="event-body">
             <!-- Direct Picture -->
             <div class="person-img">
-              <img
-                :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images[event._id]"
-                alt="Blood Line User"
-              />
-              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              <router-link
+                :to="{
+                  name: 'MemberData',
+                  params: { id: $route.params.id, member: event._id },
+                }"
+              >
+                <img
+                  :src="
+                    'data:image/png;base64, ' + store.state.images[event._id]
+                  "
+                  v-if="store.state.images[event._id]"
+                  alt="Blood Line User"
+                />
+                <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              </router-link>
             </div>
 
             <!-- Event Content -->
@@ -48,7 +57,32 @@
                 Birth Anniversary
               </div>
 
-              <button class="btn mt-2 event-btn">Send Wishes</button>
+              <!-- Sending Greeting -->
+              <a
+                :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
+                class="btn mt-2 event-btn"
+                v-if="event.mobile != null && event.is_died != true"
+                >Wish {{ event.name }}</a
+              >
+
+              <!-- Found Mobile but Died -->
+              <a
+                :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
+                class="btn mt-2 event-btn"
+                v-if="event.mobile != null && event.is_died == true"
+                >Share in Whatsapp</a
+              >
+
+              <!-- No Mobile Number -->
+              <router-link
+                :to="{
+                  name: 'MemberData',
+                  params: { id: $route.params.id, member: event._id },
+                }"
+                v-else
+                class="btn mt-2 event-btn"
+                >Add mobile Number</router-link
+              >
             </center>
           </div>
         </div>
@@ -56,7 +90,7 @@
         <!-- Memorial Event -->
         <div class="event" v-if="event.type == 2">
           <!-- Background -->
-          <div style="width: 100%; background: black">
+          <div style="width: 100%; background: black; padding-left:15px;">
             <img
               src="@/assets/events/candle.jpeg"
               alt=" Birthday"
@@ -68,13 +102,23 @@
           <!-- Event body with DP -->
           <div class="event-body">
             <!-- DP -->
+
             <div class="person-img">
-              <img
-                :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images[event._id]"
-                alt="Blood Line User"
-              />
-              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              <router-link
+                :to="{
+                  name: 'MemberData',
+                  params: { id: $route.params.id, member: event._id },
+                }"
+              >
+                <img
+                  :src="
+                    'data:image/png;base64, ' + store.state.images[event._id]
+                  "
+                  v-if="store.state.images[event._id]"
+                  alt="Blood Line User"
+                />
+                <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              </router-link>
             </div>
 
             <!-- Event Content -->
@@ -86,7 +130,15 @@
                 >
                 Memorial day
               </div>
-              <button class="btn mt-2 event-btn">Share</button>
+              <a
+                :href="`https://api.whatsapp.com/send?text=Its ${
+                  event.name
+                }'s ${
+                  event.dob | anivCalc
+                }th Memorial Day. Share news to all our  `"
+                class="btn mt-2 event-btn"
+                >Share</a
+              >
             </center>
           </div>
         </div>
@@ -133,11 +185,18 @@
             class="anniv"
             style="margin-left: 80px; margin-top: 25px; display: inline-block"
           >
-            <div class="timeline-heading">{{ event.heading }}</div>
+            <div class="timeline-heading">{{ event.title }}</div>
             <div class="timeline-content">
               {{ event.content }}
             </div>
-            <a href="#" class="btn event-btn">View Timeline</a>
+            <router-link
+              :to="{
+                name: 'TimelinePerson',
+                params: { id: $route.params.id, member: event._id },
+              }"
+              class="btn event-btn"
+              >View Timeline</router-link
+            >
           </div>
         </div>
       </div>
@@ -148,7 +207,7 @@
 <style scoped>
 .event-body {
   display: flex;
-  padding: 10px;
+  margin-top: 25px;
   align-items: center;
   justify-content: center;
 }
@@ -180,7 +239,7 @@
   border-radius: 50%;
   overflow: hidden;
   position: absolute;
-  top: 55px;
+  top: 65px;
   border: 1px solid;
 }
 .a-th {
@@ -218,19 +277,20 @@
   align-items: center;
 }
 .event-cont {
-  padding: 10px;
+  padding: 20px;
 }
 .event {
   height: 300px;
+  border-radius: 10px;
   -webkit-box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 4px 9px 0px rgb(213 213 213 / 75%);
 }
 </style>
 
 <script>
-// import ProdData from "@/data.js";
-// import axios from "axios";
+import ProdData from "@/data.js";
+import axios from "axios";
 import moment from "moment";
 import { getNormalDisplayDate, getAPIFormat } from "../../util/helper";
 import Store from "../../store/index";
@@ -243,28 +303,28 @@ export default {
         api: getAPIFormat(),
       },
       events: [
-        {
-          type: 1,
-          name: "test name",
-          dob: "Jan 32",
-        },
-        {
-          type: 2,
-          name: "test name",
-          dob: "Jan 32",
-        },
-        {
-          type: 3,
-          name: "Person 1",
-          heading: "Timeline Heading",
-          content:
-            "cmvlsmv;fmbfdlmb. fmdfbmdbm;bm d;bmgbmd ;bmd;fbcm vlsmv;fmb fdlmb.fmdf bmdbm;b md;bmgbm d;bm d;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fb",
-        },
-        {
-          type: 2,
-          name: "test name",
-          dob: "Jan 32",
-        },
+        // {
+        //   type: 1,
+        //   name: "test name",
+        //   dob: "Jan 32",
+        // },
+        // {
+        //   type: 2,
+        //   name: "test name",
+        //   dob: "Jan 32",
+        // },
+        // {
+        //   type: 3,
+        //   name: "Person 1",
+        //   heading: "Timeline Heading",
+        //   content:
+        //     "cmvlsmv;fmbfdlmb. fmdfbmdbm;bm d;bmgbmd ;bmd;fbcm vlsmv;fmb fdlmb.fmdf bmdbm;b md;bmgbm d;bm d;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fb",
+        // },
+        // {
+        //   type: 2,
+        //   name: "test name",
+        //   dob: "Jan 32",
+        // },
       ],
       loading: true,
       store: {},
@@ -279,16 +339,16 @@ export default {
   },
   mounted() {
     this.store = Store;
-    // let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
-    // axios
-    //   .get(eventsUrl)
-    //   .then((response) => {
-    //     this.events = response.data;
-    //   })
-    //   .finally(() => {
-    //     this.loading = false;
-    //     console.log(this.events)
-    //   });
+    let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
+    axios
+      .get(eventsUrl)
+      .then((response) => {
+        this.events = response.data;
+      })
+      .finally(() => {
+        this.loading = false;
+        console.log(this.events);
+      });
   },
 };
 </script>
