@@ -15,7 +15,7 @@
         v-for="(event, index) in events"
         :key="index"
       >
-        <!-- Birthday event -->
+        <!---------------- Birthday event --------------->
         <div class="event" v-if="event.type == 1">
           <!-- Background -->
           <img
@@ -29,21 +29,12 @@
           <div class="event-body">
             <!-- Direct Picture -->
             <div class="person-img">
-              <router-link
-                :to="{
-                  name: 'MemberData',
-                  params: { id: $route.params.id, member: event._id },
-                }"
-              >
-                <img
-                  :src="
-                    'data:image/png;base64, ' + store.state.images[event._id]
-                  "
-                  v-if="store.state.images"
-                  alt="Blood Line User"
-                />
-                <img src="@/assets/dp.png" v-else alt="Blood Line User" />
-              </router-link>
+              <img
+                :src="'data:image/png;base64, ' + store.state.images[event._id]"
+                v-if="store.state.images"
+                alt="Blood Line User"
+              />
+              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
             </div>
 
             <!-- Event Content -->
@@ -57,24 +48,33 @@
                 Birth Anniversary
               </div>
 
+              <router-link
+                :to="{
+                  name: 'MemberData',
+                  params: { id: $route.params.id, member: event._id },
+                }"
+                class="btn mt-2 event-btn"
+              >
+                View Profile
+              </router-link>
               <!-- Sending Greeting -->
-              <a
+              <!-- <a
                 :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
                 class="btn mt-2 event-btn"
                 v-if="event.mobile != null && event.is_died != true"
                 >Wish {{ event.name }}</a
-              >
+              > -->
 
               <!-- Found Mobile but Died -->
-              <a
+              <!-- <a
                 :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
                 class="btn mt-2 event-btn"
                 v-if="event.mobile != null && event.is_died == true"
                 >Share in Whatsapp</a
-              >
+              > -->
 
               <!-- No Mobile Number -->
-              <router-link
+              <!-- <router-link
                 :to="{
                   name: 'MemberData',
                   params: { id: $route.params.id, member: event._id },
@@ -82,15 +82,15 @@
                 v-else
                 class="btn mt-2 event-btn"
                 >Add mobile Number</router-link
-              >
+              > -->
             </center>
           </div>
         </div>
 
-        <!-- Memorial Event -->
-        <div class="event" v-if="event.type == 2" style="background-color: black;color: white;overflow:hidden">
+        <!-------------- Memorial Event ------------->
+        <div class="event" v-if="event.type == 2">
           <!-- Background -->
-          <div style="width: 100%; background: black; padding-left:15px;">
+          <div class="memorial-bg">
             <img
               src="@/assets/events/candle.jpeg"
               alt=" Birthday"
@@ -104,21 +104,12 @@
             <!-- DP -->
 
             <div class="person-img">
-              <router-link
-                :to="{
-                  name: 'MemberData',
-                  params: { id: $route.params.id, member: event._id },
-                }"
-              >
-                <img
-                  :src="
-                    'data:image/png;base64, ' + store.state.images[event._id]
-                  "
-                  v-if="store.state.images"
-                  alt="Blood Line User"
-                />
-                <img src="@/assets/dp.png" v-else alt="Blood Line User" />
-              </router-link>
+              <img
+                :src="'data:image/png;base64, ' + store.state.images[event._id]"
+                v-if="store.state.images"
+                alt="Blood Line User"
+              />
+              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
             </div>
 
             <!-- Event Content -->
@@ -126,10 +117,20 @@
               <div class="name">{{ event.name }}</div>
               <div class="anniv">
                 <span class="anniv-num"
-                  >{{ event.died_on | anivCalc }}<span class="a-th">th</span></span
+                  >{{ event.died_on | anivCalc
+                  }}<span class="a-th">th</span></span
                 >
                 Memorial day
               </div>
+              <router-link
+                :to="{
+                  name: 'MemberData',
+                  params: { id: $route.params.id, member: event._id },
+                }"
+                class="btn mt-2 event-btn"
+              >
+                View Profile
+              </router-link>
               <!-- <a
                 :href="`https://api.whatsapp.com/send?text=Its ${
                   event.name
@@ -146,32 +147,12 @@
         <!-- Timeline Event -->
         <div class="event" v-if="event.type == 3">
           <!-- Vertical Line -->
-          <div
-            style="
-              height: 300px;
-              width: 4px;
-              background: grey;
-              position: absolute;
-              margin-left: 50px;
-            "
-          ></div>
-          <span
-            style="
-              height: 20px;
-              width: 20px;
-              position: absolute;
-              background: #286b8b;
-              border-radius: 20px;
-              margin-left: 42px;
-              margin-top: 120px;
-            "
-          >
-          </span>
-          <div style="padding-top: 45px; display: flex">
-            <div
-              class="person-img"
-              style="margin-left: 22px; margin-top: -10px; width: 60px"
-            >
+          <div class="timeline-line"></div>
+          <!-- Timeline Dot -->
+          <span class="timeline-dot"> </span>
+          <!-- Timeline Header -->
+          <div class="timeline-header">
+            <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images"
@@ -181,11 +162,8 @@
             </div>
             <div class="name" style="margin-left: 120px">{{ event.name }}</div>
           </div>
-          <div
-            class="anniv"
-            style="margin-left: 80px; margin-top: 25px; display: inline-block"
-          >
-            <div class="timeline-heading">{{ event.title }}</div>
+          <div class="timeline-body">
+            <div class="timeline-title">{{ event.title }}</div>
             <div class="timeline-content">
               {{ event.content }}
             </div>
@@ -215,7 +193,43 @@
   border: solid 1px indianred;
   color: indianred;
 }
-.timeline-heading {
+.timeline-line {
+  height: 300px;
+  width: 4px;
+  background: grey;
+  position: absolute;
+  margin-left: 50px;
+}
+.timeline-dot {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  background: #286b8b;
+  border-radius: 20px;
+  margin-left: 42px;
+  margin-top: 120px;
+}
+.memorial-bg {
+  width: 100%;
+  background: black;
+  padding-left: 15px;
+}
+.timeline-header {
+  padding-top: 45px;
+  display: flex;
+}
+.timeline-header .person-img {
+  margin-left: 22px;
+  margin-top: -10px;
+  width: 60px;
+}
+
+.timeline-body {
+  margin-left: 80px;
+  margin-top: 25px;
+  display: inline-block;
+}
+.timeline-title {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   overflow: hidden;

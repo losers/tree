@@ -107,7 +107,7 @@
                 </td>
               </tr>
               <tr v-if="data.xtra_parent_name">
-                <td style="border-left: 3px solid green">
+                <td style="border-left: 3px solid blue">
                   <span v-if="data.gender == 1"> S/O : </span>
                   <span v-else> D/O : </span>
                   {{ data.xtra_parent_name }}
@@ -175,7 +175,7 @@
                     aria-labelledby="headingTwo"
                     data-parent="#accordion"
                   >
-                    <div class="card-body">
+                    <div class="card-body" style="padding: 0px">
                       <MoreInfo :id="id" :data="data"></MoreInfo>
                     </div>
                   </div>

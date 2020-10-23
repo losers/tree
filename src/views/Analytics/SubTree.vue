@@ -14,76 +14,17 @@
         </button>
       </center>
     </div>
-    <!-- <center>
-      <div
-        style="
-          height: 300px;
-          width: 300px;
-          background: #f7f7f7;
-          box-shadow: 10px 10px 5px 0px rgb(218 218 218 / 75%);
-        "
-      >
-          <img src="../../assets/1602520786323.png" />
-          <img
-            src="../../assets/error.jpg"
-            style="
-              border-radius: 50%;
-              height: 100px;
-              margin-top: -90px;
-              width: 100px;
-              box-shadow: 5px 5px 5px 0px rgb(156 156 156 / 75%);
-            "
-          />
-          <p>Varun Kumar Medam</p>
-          <div style="background: white; color: red; margin-top: 10px">
-            <i class="icofont-heart"></i> Birthday
-          </div>
-          <p>Turned 25 today</p>
-          <button
-            class="btn btn-sm mt-3"
-            style="border: solid green 1px; background: white; color: green"
-          >
-            <i class="icofont-share"></i> Whatsapp
-          </button>
-      </div> -->
-      <!-- 
-    <div
-      style="
-        height: 300px;
-        width: 300px;
-        background: #f7f7f7;
-        box-shadow: 10px 10px 5px 0px rgb(218 218 218 / 75%);
-      "
-    >
-      <img
-        src="../../assets/event-ballons.png"
-        style="float: left; height: 250px; width: 200px"
-      />
-      <img
-        src="../../assets/error.jpg"
-        style="
-          border-radius: 50%;
-          height: 100px;
-          width: 100px;
-          box-shadow: 5px 5px 5px 0px rgb(156 156 156 / 75%);
-        "
-      />
-      <div style="background: white; color: red; margin-top: 10px">
-        <i class="icofont-heart"></i> Birthday
-      </div>
-    </div>
     <center>
       <img
         v-if="!selected"
         src="../../assets/tree_gen.jpg"
         class="mt-5"
-        height="400px"
-        width="330px"
+        height="300px"
+        width="230px"
         alt="Blood Line Helper"
-      /> -->
-
+      />
       <TreeChart :json="tree" :images="images" style="padding-top: 70px" />
-    <!-- </center> -->
+    </center>
   </div>
 </template>
 
