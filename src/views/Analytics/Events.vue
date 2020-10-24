@@ -9,10 +9,10 @@
     </div>
     <div v-else-if="events.length==0">
       <center>
-        <img src="@/assets/events/empty_events.png"  height="200px" width="200px"/>
+        <img src="@/assets/events/empty_events.png"  height="150px"/>
         <div style="color:indianred">
-          <h3 class="m-4">No Events Today</h3>
-          <h5>Birthdays and Timeline Events will be displayed here</h5>
+          <h3 class="m-4 mt-5">No Events Today</h3>
+          <h5>Birthdays, Timeline Events etc.., will be displayed here</h5>
         </div>
       </center>
     </div>
