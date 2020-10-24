@@ -30,7 +30,7 @@
             <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images"
+                v-if="store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -54,32 +54,6 @@
                 }"
                 class="btn mt-2 event-btn"
               >View Profile</router-link>
-              <!-- Sending Greeting -->
-              <!-- <a
-                :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
-                class="btn mt-2 event-btn"
-                v-if="event.mobile != null && event.is_died != true"
-                >Wish {{ event.name }}</a
-              >-->
-
-              <!-- Found Mobile but Died -->
-              <!-- <a
-                :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
-                class="btn mt-2 event-btn"
-                v-if="event.mobile != null && event.is_died == true"
-                >Share in Whatsapp</a
-              >-->
-
-              <!-- No Mobile Number -->
-              <!-- <router-link
-                :to="{
-                  name: 'MemberData',
-                  params: { id: $route.params.id, member: event._id },
-                }"
-                v-else
-                class="btn mt-2 event-btn"
-                >Add mobile Number</router-link
-              >-->
             </center>
           </div>
         </div>
@@ -98,7 +72,7 @@
             <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images"
+                v-if="store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -122,15 +96,6 @@
                 }"
                 class="btn mt-2 event-btn"
               >View Profile</router-link>
-              <!-- <a
-                :href="`https://api.whatsapp.com/send?text=Its ${
-                  event.name
-                }'s ${
-                  event.dob | anivCalc
-                }th Memorial Day. Share news to all our  `"
-                class="btn mt-2 event-btn"
-                >Share</a
-              >-->
             </center>
           </div>
         </div>
@@ -146,7 +111,7 @@
             <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images"
+                v-if="store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -309,30 +274,6 @@ export default {
         display: getNormalDisplayDate(),
         api: getAPIFormat()
       },
-      events: [
-        // {
-        //   type: 1,
-        //   name: "test name",
-        //   dob: "Jan 32",
-        // },
-        // {
-        //   type: 2,
-        //   name: "test name",
-        //   dob: "Jan 32",
-        // },
-        // {
-        //   type: 3,
-        //   name: "Person 1",
-        //   heading: "Timeline Heading",
-        //   content:
-        //     "cmvlsmv;fmbfdlmb. fmdfbmdbm;bm d;bmgbmd ;bmd;fbcm vlsmv;fmb fdlmb.fmdf bmdbm;b md;bmgbm d;bm d;fbcmvlsmv;fmbfdlmb.fmdfbmdbm;bmd;bmgbmd;bmd;fb",
-        // },
-        // {
-        //   type: 2,
-        //   name: "test name",
-        //   dob: "Jan 32",
-        // },
-      ],
       loading: true,
       store: {}
     };
