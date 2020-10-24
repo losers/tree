@@ -9,7 +9,9 @@
       ></vSelect>
       <br v-if="$device.mobile" />
       <center>
-        <button class="btn btn-success" @click="submit" :disabled="!p1">Search</button>
+        <button class="btn btn-danger" @click="submit" :disabled="!p1">
+          Search
+        </button>
       </center>
     </div>
     <center>
@@ -17,12 +19,10 @@
         v-if="!selected"
         src="../../assets/tree_gen.jpg"
         class="mt-5"
-        height="400px"
-        width="330px"
+        height="300px"
         alt="Blood Line Helper"
       />
-
-      <TreeChart :json="tree" :images="images" style="padding-top:70px" />
+      <TreeChart :json="tree" :images="images" style="padding-top: 70px" />
     </center>
   </div>
 </template>
@@ -39,31 +39,31 @@ export default {
     return {
       p1: null,
       tree: {},
-      selected: false
+      selected: false,
     };
   },
   components: {
     TreeChart,
-    vSelect
+    vSelect,
   },
   computed: {
     names: {
       get() {
         return Store.getters.getAllMembers;
-      }
+      },
     },
     images: {
       get() {
         return Store.getters.images;
-      }
-    }
+      },
+    },
   },
   methods: {
     submit() {
       this.selected = true;
       this.tree = Algos.getSubTree(Store.getters.getTreeData, this.p1.value);
-    }
-  }
+    },
+  },
 };
 </script>
 

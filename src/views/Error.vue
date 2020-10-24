@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
-    <h1 class="msg mx-auto col-12">{{msg}}</h1>
-    <router-link :to="{name:'Home'}" class="back mr-5">
+  <div id="app" style="height: 100%">
+    <h1 class="msg mx-auto col-12">{{ msg }}</h1>
+    <router-link :to="{ name: 'Home' }" class="back mr-5">
       <i class="icofont-arrow-left"></i>
       Home
     </router-link>
     <vue-particles
-      style="z-index:200"
+      style="z-index: 200; height:100%  "
       color="#dedede"
       :particleOpacity="1"
       :particlesNumber="50"
@@ -29,11 +29,11 @@
 <script>
 export default {
   props: ["msg"],
-  methods:{
-    test(){
+  methods: {
+    test() {
       this.$router.replace("/abcd");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -46,10 +46,8 @@ export default {
 }
 #app {
   background-image: url("../assets/error.jpg");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  width: 100%;
-  height: 90% !important;
+  min-height: 100%;
+  background-size: cover;
 }
 .back {
   top: 5%;

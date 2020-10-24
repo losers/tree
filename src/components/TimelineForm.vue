@@ -3,7 +3,7 @@
     <h3 style="margin-bottom:40px;">{{payload.formData.isEdit?"Update":"Create"}} Event</h3>
     <div class="row" style="align-items: center;">
       <label class="col-md-3 d-none d-sm-block label">Date</label>
-      <md-datepicker class="col-xs-9 col-md-7" v-model="payload.formData.date" readonly required="true">
+      <md-datepicker class="col-xs-9 col-md-7" v-model="payload.formData.date" :md-model-type="String" readonly required="true">
         <label>Event Date</label>
       </md-datepicker>
     </div>
@@ -83,6 +83,8 @@ export default {
     formEmit: function(type) {
       this.$emit("crudops", type);
     }
+  },
+  mounted(){
   }
 };
 </script>

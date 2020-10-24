@@ -1,127 +1,220 @@
 <template>
   <div>
     <section v-if="errored">
-      <p>{{errored}}</p>
+      <p>{{ errored }}</p>
     </section>
     <section v-else>
-      <div v-if="loading" style="padding-top:240px">
+      <!-- Main Loader -->
+      <div v-if="loading" style="padding-top: 240px">
         <center>
           <img src="@/assets/dna.gif" alt="Family Tree Loading" />
         </center>
       </div>
-      <div v-else>
-        <div class="heade">
+
+      <!-- Entire Body view -->
+      <div
+        v-else
+        class="body-view"
+        :style="{
+          height: $device.mobile ? '220px' : '300px',
+        }"
+      >
+        <!-- Vue Particles Component -->
+        <div
+          style="position: absolute; width: 100%; background-color: black color:black"
+          :style="{
+            height: $device.mobile ? '200px' : '280px',
+          }"
+        >
+          <vue-particles
+            style="z-index: 0; height: 100%; width: 100%"
+            color="#dedede"
+            :particleOpacity="1"
+            :particlesNumber="50"
+            shapeType="circle"
+            :particleSize="5"
+            linesColor="#dedede"
+            :linesWidth="1"
+            :lineLinked="true"
+            :lineOpacity="0.5"
+            :linesDistance="150"
+            :moveSpeed="3"
+            :hoverEffect="true"
+            hoverMode="grab"
+            :clickEffect="true"
+            clickMode="push"
+          ></vue-particles>
+        </div>
+
+        <!-- Page Head -->
+        <div
+          style="background: black"
+          :style="{
+            height: $device.mobile ? '220px' : '300px',
+          }"
+        >
+          <!-- Bloodline Title -->
           <div id="title">
             <i
-              class="icofont-question-circle help" v-if="$device.mobile"
+              class="icofont-question-circle help"
+              style="color: indianred"
+              v-if="$device.mobile"
               @click="helperFunc"
             ></i>
-            <span style="font-weight: 500;">BloodLine</span>
+            <span style="font-weight: 500; color: white">BloodLine</span>
             <br />
           </div>
 
+          <!-- Typer for Big Devices -->
           <center v-show="addFBtn">
-            <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
+            <vue-typer
+              :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"
+            ></vue-typer>
           </center>
 
           <!-- Create Family Button -->
           <center class="mt-3">
-            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
+            <touch-ripple
+              @click.native="addFamilyBtn"
+              class="button-box"
+              :speed="1.1"
+            >
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
         </div>
 
         <!-- Dual Page for Creating a Model -->
-        <DualPage :reference="0" v-if="showModal == true" v-on:closed="showModal=false"></DualPage>
+        <DualPage
+          :reference="0"
+          v-if="showModal == true"
+          v-on:closed="showModal = false"
+        ></DualPage>
 
         <DualPage
           :payload="authPayload"
           :reference="5"
           v-if="showAuthBox == true"
-          v-on:closed="showAuthBox=false"
+          v-on:closed="showAuthBox = false"
         ></DualPage>
 
         <DualPage
           :payload="{}"
           :reference="6"
           v-if="helper.show == true"
-          v-on:closed="helper.show=false"
+          v-on:closed="helper.show = false"
         ></DualPage>
 
+        <!-- Search Box -->
         <center>
           <form
             v-on:submit.prevent="search"
-            class="container"
-            style="display: flex;padding: 0px 0px 40px;"
+            :style="{ width: $device.mobile ? '90%' : '80%' }"
+            style="
+              background: #f9f9f9;
+              box-shadow: rgb(241 241 241) 0px 5px 10px 0px;
+            "
           >
             <input
               type="text"
+              style="height: 45px; margin-top: -25px"
+              :class="{ 'desktop-search': $device.mobile }"
               v-model="text"
-              class="form-control"
-              :placeholder="`Search across ${totalFamilies} families..`"
-              style="margin-right: 30px;"
+              :placeholder="`Find in ${totalFamilies} families..`"
+              class="form-control input-lg rounded-lg float-left"
             />
             <button
               type="submit"
-              class="btn btn-default"
-              style="color: black;background-color: white;"
+              class="btn btn-danger btn-sm rounded-lg"
+              style="float: right; margin-right: 10px; margin-top: -38px"
             >
-              <i class="icofont-search-2" style="padding-right: 10px;"></i>
-              <span>Search</span>
+              <i class="icofont-search-2"></i> Search
             </button>
-            <!-- <input type="submit" value="Search" /> -->
           </form>
         </center>
-
+        <!-- Loader -->
         <div v-if="s_load">
-          <center style="padding-top: 80px;">
+          <center style="padding-top: 80px">
             <div
-              class="spinner-border text-light"
-              style="height: 100px;width: 100px;"
+              class="spinner-border"
+              style="height: 50px; width: 50px; color: black"
               role="status"
             >
               <span class="sr-only">Loading...</span>
             </div>
           </center>
         </div>
-        <div v-else>
+
+        <!-- Families List View -->
+        <div
+          v-else
+          style="background: #f9f9f9; padding: 10px; padding-top: 20px"
+        >
           <center>
             <div v-for="data in info" :key="data.id">
               <div
                 class="container div-box"
-                :class="{'cur-family': curFamily == data._id}"
-                @click="showAuth(data.surname, data.title, data.celeb, data._id)"
+                :style="{
+                  'border-radius': '10px',
+                  'margin-top': $device.mobile ? '20px' : '30px',
+                }"
+                :class="{
+                  'cur-family': curFamily == data._id,
+                  'normal-family': curFamily != data._id,
+                }"
+                @click="
+                  showAuth(data.surname, data.title, data.celeb, data._id)
+                "
               >
                 <i
-                  class="icofont-unlocked float-left"
-                  style="color:white; font-size:25px"
+                  class="icofont-unlocked rounded-lg"
+                  :class="{
+                    'bigscreen-lock': !$device.mobile,
+                    'mobile-lock': $device.mobile,
+                  }"
                   data-toggle="tooltip"
                   title="UnLocked"
-                  v-show="data.celeb"
+                  v-if="data.celeb || curFamily == data._id"
                 ></i>
                 <i
-                  class="icofont-lock float-left"
-                  style="color:white; font-size:25px"
+                  class="icofont-lock rounded-lg"
+                  :class="{
+                    'bigscreen-lock': !$device.mobile,
+                    'mobile-lock': $device.mobile,
+                  }"
                   data-toggle="tooltip"
                   title="Locked"
-                  v-show="!data.celeb"
+                  v-else
                 ></i>
-                <a class="title">{{data.title}}</a>
-                <p class="surname">Surname : {{data.surname}}</p>
+
+                <!-- Family Title Box -->
+                <div style="width: 85%">
+                  <a
+                    class="title"
+                    :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
+                  >
+                    {{ data.title }}
+                  </a>
+                </div>
+                <p class="surname">Surname : {{ data.surname }}</p>
               </div>
             </div>
-            <div v-if="hasNext && info.length !== 0">
+            <div
+              v-if="hasNext && info.length !== 0"
+              style="margin-bottom: 20px; margin-top: 20px"
+            >
               <button
                 type="button"
                 @click="loadMore"
                 v-if="!loadingMore"
                 class="btn load-more"
-              >Load more</button>
+              >
+                Load more <i class="icofont-arrow-down ml-1"></i>
+              </button>
               <div
                 v-if="loadingMore"
-                class="spinner-border text-light"
-                style="height: 100px;width: 100px;"
+                class="spinner-border"
+                style="height: 50px; width: 50px; color: black"
                 role="status"
               >
                 <span class="sr-only">Loading...</span>
@@ -131,8 +224,11 @@
         </div>
         <div v-if="info.length === 0 && !s_load">
           <center>
-            <img src="@/assets/no-data.png" style="height:140px;margin-top: 70px;" />
-            <h4 style="color: white;margin-top: 30px;">Nothing matching...</h4>
+            <img
+              src="@/assets/no-data.png"
+              style="height: 140px; margin-top: 70px"
+            />
+            <h4 style="color: white; margin-top: 30px">Nothing matching...</h4>
           </center>
         </div>
       </div>
@@ -144,58 +240,89 @@
 </template>
 
 <style scoped>
+.bigscreen-lock {
+  color: white;
+  font-size: 25px;
+  background: #6a6a6a;
+  padding: 10px;
+  float: left;
+  left: 25px;
+  box-shadow: 0px 5px 18px -12px rgba(0, 0, 0, 0.75);
+}
+.mobile-lock {
+  color: #6a6a6a;
+  font-size: 20px;
+  float: left;
+  left: 25px;
+}
+.desktop-form {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.body-view {
+  background-size: cover;
+  width: 100%;
+  /* background-color: black; */
+  background-color: #f9f9f9;
+}
+
 .help {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 .load-more {
   background-color: white;
   font-weight: bolder;
-  margin-bottom: 20px;
-}
-.cur-family {
-  background-color: white;
+  border: solid black 1px;
   color: black;
+}
+
+/* Access Famili */
+.cur-family {
+  background-color: black;
+  color: white;
 }
 .cur-family .surname {
-  color: black;
+  color: #c7c7c7;
 }
 .cur-family .title {
-  color: black !important;
+  color: white !important;
+}
+
+/* All Normal Families */
+.normal-family {
+  background: white;
 }
 .div-box {
   cursor: pointer;
-  border: 3px solid white;
-  border-radius: 10px;
-  margin-bottom: 40px;
   padding: 20px;
   word-break: break-word;
+  -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
 }
 a:hover {
   text-decoration: none !important;
 }
 .title {
-  font-size: 35px;
   font-weight: bold;
-  color: #a0a0a0;
+  color: #6a6a6a !important;
 }
-a:not([href]) {
+/* a:not([href]) {
   color: #a0a0a0;
-}
+} */
 .surname {
   font-size: 20px;
   font-weight: bold;
-  color: white;
-}
-.heade {
-  margin-bottom: 60px;
+  color: #a4a4a4;
 }
 #title {
   left: 0;
   right: 0;
   top: 30px;
-  margin-top: 30px;
+  padding-top: 30px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
@@ -223,9 +350,9 @@ a:not([href]) {
   cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"),
     auto !important;
   border-radius: 0px;
-  -webkit-box-shadow: 2px 7px 13px -2px rgba(0, 0, 0, 0.52);
-  -moz-box-shadow: 2px 7px 13px -2px rgba(0, 0, 0, 0.52);
-  box-shadow: 2px 7px 13px -2px rgba(0, 0, 0, 0.52);
+  -webkit-box-shadow: #cccccc 0px 2px 6px 0px;
+  -moz-box-shadow: #cccccc 0px 2px 6px 0px;
+  box-shadow: #cccccc 0px 2px 6px 0px;
 }
 </style>
 
@@ -257,14 +384,14 @@ export default {
       hasNext: false,
       loadingMore: false,
       helper: {
-        show : false
-      }
+        show: false,
+      },
     };
   },
   components: {
     DualPage,
     touchRipple,
-    VueTyper
+    VueTyper,
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id) {
@@ -276,11 +403,10 @@ export default {
         this.showAuthBox = true;
       }
     },
-    helperFunc(){
-      try{
+    helperFunc() {
+      try {
         print.postMessage("teddy");
-      }
-      catch(e){
+      } catch (e) {
         this.helper.show = true;
       }
     },
@@ -303,12 +429,12 @@ export default {
       this.loadingMore = true;
       axios
         .get(ProdData.getHostURL() + "/meta?page=" + this.nextPage)
-        .then(response => {
+        .then((response) => {
           this.info = this.info.concat(response.data.list);
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch(error => {
+        .catch((error) => {
           this.errored = error;
           console.log(error);
         })
@@ -319,11 +445,11 @@ export default {
         this.s_load = true;
         axios
           .get(ProdData.getHostURL() + "/meta/search?text=" + this.text)
-          .then(response => {
+          .then((response) => {
             this.info = response.data.list;
             this.curFamily = response.data.cur_family;
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           })
           .finally(() => (this.s_load = false));
@@ -334,30 +460,30 @@ export default {
     getAllList() {
       axios
         .get(ProdData.getHostURL() + "/meta")
-        .then(response => {
-          this.toggleBodyClass("addClass", "j-stars");
+        .then((response) => {
+          this.toggleBodyClass("addClass");
           this.info = response.data.list;
           this.curFamily = response.data.cur_family;
           this.totalFamilies = response.data.total_families;
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch(error => {
+        .catch((error) => {
           this.errored = error;
           console.log(error);
         })
         .finally(() => (this.loading = false));
-    }
+    },
   },
   destroyed() {
-    this.toggleBodyClass("removeClass", "j-stars");
+    this.toggleBodyClass("removeClass");
   },
   mounted() {
     if (this.$device.mobile) {
       this.addFBtn = false;
     }
     this.getAllList();
-  }
+  },
 };
 </script>
 

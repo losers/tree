@@ -1,7 +1,7 @@
 <template>
-  <div id="app" style="overflow:auto;">
+  <div id="app" style="overflow: auto; height: 100%">
     <!-- All errors are handeled here -->
-    <section v-if="errored">
+    <section v-if="errored" style="height: 100%">
       <error v-if="errored.response.status == 404" :msg="errored.response.data">
         {{ errored }}
       </error>
@@ -77,19 +77,16 @@
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
-                style="font-size: 20px; cursor: pointer"
+                style="font-size: 20px; cursor: pointer; color: indianred"
               ></i>
             </div>
           </div>
           <router-link
             :to="{ name: 'Analytics' }"
             style="display: flex; align-items: center; margin-right: 5px"
+            v-if="!$device.mobile"
           >
-            <i
-              class="icofont-gear"
-              style="margin-right: 8px"
-              :class="[{ 'f-31': $device.mobile, 'f-21': $device.mobile }]"
-            ></i>
+            <i class="icofont-gear" style="margin-right: 8px"></i>
             <span v-if="!$device.mobile">Analytics</span>
           </router-link>
         </div>
@@ -102,19 +99,30 @@
           v-if="dualPageData.showDualPage"
         ></DualPage>
 
+        <!-- Promotional Pages -->
+        <DualPage
+          :payload="promo.relationFinder"
+          :reference="7"
+          v-if="numOfMemebers == 5 && promo.relationFinder.show"
+          v-on:closed="promo.relationFinder.show = false"
+        ></DualPage>
+
+        <DualPage
+          :payload="promo.relationFinder"
+          :reference="8"
+          v-if="numOfMemebers == 20 && promo.website.show && $device.mobile"
+          v-on:closed="promo.website.show = false"
+        ></DualPage>
+
         <!-- Called When No data is found -->
         <div v-if="tempData == undefined">
-          <img
-            src="@/assets/intro-mob.png"
-            class="mob-intro"
-            v-if="$device.mobile"
-          />
+          <!-- <img src="@/assets/intro-mob.png" class="mob-intro"/> -->
           <img
             src="../assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
             style="margin-top: 160px"
             alt="Blood Line Helper"
-            v-else
+            v-if="!$device.mobile"
           />
           <!-- Page Content -->
           <div
@@ -122,17 +130,31 @@
           >
             <h5
               class="d-flex content-justify-left ml-2"
-              :class="[{ 'desk-intro-text': !$device.mobile }]"
+              :class="[
+                { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
+              ]"
             >
-              Click 'Add' to Start Adding Members.
+              Let's build a Family Tree
             </h5>
-            <center>
+            <!-- <center>
               <i class="icofont-long-arrow-down object"></i>
-            </center>
+            </center> -->
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
-            <button @click="dualPage(1)" class="my-super-cool-btn">
+            <touch-ripple
+              @click.native="dualPage(1)"
+              class="button-box"
+              :speed="1.1"
+            >
+              <button
+                class="btn btn-success my-btn"
+                style="font-weight: bolder; font-size: 17px"
+              >
+                + Add Person
+              </button>
+            </touch-ripple>
+            <!-- <button @click="dualPage(1)" class="my-super-cool-btn">
               <div class="dots-container">
                 <div class="dot"></div>
                 <div class="dot"></div>
@@ -140,7 +162,7 @@
                 <div class="dot"></div>
               </div>
               <span style="font-size: 18px; font-weight: 900">Add!</span>
-            </button>
+            </button> -->
           </div>
           <div v-else>
             <center>
@@ -196,7 +218,20 @@
               </h4>
             </div>
           </center>
-          <button @click="shareTree" class="btn btn-primary sharebtn" v-if="$device.mobile">
+          <router-link
+            :to="{ name: 'Analytics' }"
+            class="btn bottombtn"
+            style="left: 10px; font-size: 25px"
+            v-if="$device.mobile"
+          >
+            <i class="icofont-light-bulb"></i>
+          </router-link>
+          <button
+            @click="shareTree"
+            class="btn bottombtn"
+            style="right: 10px"
+            v-if="$device.mobile"
+          >
             <i class="icofont-share"></i>
           </button>
           <footer class="foot">
@@ -220,6 +255,8 @@ import Error from "./Error";
 import Store from "../store/index";
 import ProData from "../data.js";
 import DualPage from "../modals/DualPage";
+import { touchRipple } from "vue-touch-ripple";
+import "vue-touch-ripple/dist/vue-touch-ripple.css";
 
 export default {
   name: "MainTree",
@@ -227,6 +264,7 @@ export default {
     TreeChart,
     Error,
     DualPage,
+    touchRipple,
   },
   data() {
     return {
@@ -253,6 +291,14 @@ export default {
         browser: "",
         main_show: false,
       },
+      promo: {
+        relationFinder: {
+          show: Store.state.promos[1],
+        },
+        website: {
+          show: Store.state.promos[2],
+        },
+      },
     };
   },
   computed: {
@@ -266,10 +312,20 @@ export default {
         return Store.state.images;
       },
     },
+    numOfMemebers: {
+      get() {
+        if (Store.state.allMembers) {
+          return Store.state.allMembers.length;
+        }
+        return 0;
+      },
+    },
     tempData: {
       get() {
         if (Store.state.tree && !Store.state.tree.id) {
           return undefined;
+        } else if (!Store.state.tree) {
+          Store.dispatch("setStepNumber", 1);
         }
         return Store.state.tree;
       },
@@ -429,6 +485,9 @@ export default {
 </script>
 
 <style>
+.padt340 {
+  padding-top: 340px;
+}
 .desk-intro-text {
   font-size: 28px;
   margin-top: 48px;
@@ -478,6 +537,9 @@ export default {
   display: flex;
   align-items: center;
 }
+a {
+  color: indianred !important;
+}
 a:hover {
   text-decoration: none !important;
 }
@@ -499,7 +561,7 @@ h2 {
   left: 0;
   bottom: -20px;
   width: 100%;
-  background: #333;
+  background: black;
   padding: 10px;
   overflow: hidden;
   color: white;
@@ -544,6 +606,7 @@ h2 {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 80%;
+  color: indianred;
 }
 .my-super-cool-btn {
   background-color: Transparent;
@@ -799,13 +862,14 @@ h2 {
   }
 }
 
-.sharebtn {
+.bottombtn {
   position: fixed;
+  background: indianred;
+  color: white !important;
   bottom: 10px;
-  right: 10px;
   height: 50px;
   width: 50px;
-  border-radius: 50px;
+  border-radius: 60px;
   z-index: 100;
 }
 </style>

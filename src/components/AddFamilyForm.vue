@@ -117,7 +117,7 @@
       </form>
 
       <!-- On creating a family tree -->
-      <div v-else-if="created">
+      <!-- <div v-else-if="created">
         <div style="margin-bottom:20px">
           <center>
             <Tick></Tick>
@@ -130,20 +130,20 @@
         <center>
           <button class="btn btn-success" @click="goFamily">Start</button>
         </center>
-      </div>
+      </div> -->
     </transition>
   </div>
 </template>
 
 <script>
 import Axios from "axios";
-import Tick from "./small/tick.vue";
+// import Tick from "./small/tick.vue";
 import ProdData from "../data.js";
 
 export default {
   name: "AddFamilyForm",
   components: {
-    Tick
+    // Tick
   },
   props: ["payload"],
   data() {
@@ -198,7 +198,8 @@ export default {
           pin: this.pin
         })
           .then(() => {
-            this.created = true;
+            this.goFamily();
+            // this.created = true;
           })
           .catch(err => {
             this.errored = err;
