@@ -7,7 +7,15 @@
     <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
     </div>
-
+    <div v-else-if="events.length==0">
+      <center>
+        <img src="@/assets/events/empty_events.png"  height="200px" width="200px"/>
+        <div style="color:indianred">
+          <h3 class="m-4">No Events Today</h3>
+          <h5>Birthdays and Timeline Events will be displayed here</h5>
+        </div>
+      </center>
+    </div>
     <!-- All Boxes List -->
     <div class="row" v-else>
       <div

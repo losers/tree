@@ -20,7 +20,6 @@
         src="../../assets/tree_gen.jpg"
         class="mt-5"
         height="300px"
-        width="230px"
         alt="Blood Line Helper"
       />
       <TreeChart :json="tree" :images="images" style="padding-top: 70px" />

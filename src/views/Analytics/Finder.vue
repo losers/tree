@@ -27,7 +27,7 @@
         v-if="same == null"
         src="@/assets/finder.jpg"
         style="margin-top: 70px"
-        height="350px"
+        height="250px"
         alt="Blood Line Helper"
       />
       <div v-else-if="same">
