@@ -177,7 +177,7 @@ export default {
   margin-left: 10px;
   cursor: pointer;
 }
-.shared-by a:hover {
+.shared-by a {
   color: white !important;
 }
 .timeline-item .item {
