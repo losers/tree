@@ -9,7 +9,7 @@
     </div>
     <div v-else-if="events.length==0">
       <center>
-        <img src="@/assets/events/empty_events.png"  height="150px"/>
+        <img src="@/assets/events/empty_events.png" height="150px" />
         <div style="color:indianred">
           <h3 class="m-4 mt-5">No Events Today</h3>
           <h5>Birthdays, Timeline Events etc.., will be displayed here</h5>
@@ -17,21 +17,12 @@
       </center>
     </div>
     <!-- All Boxes List -->
-    <div class="row" v-else>
-      <div
-        class="col-xs-12 col-sm-4 event-cont"
-        v-for="(event, index) in events"
-        :key="index"
-      >
+    <div class="row" v-else style="padding-bottom: 50px;">
+      <div class="col-xs-12 col-sm-4 event-cont" v-for="(event, index) in events" :key="index">
         <!---------------- Birthday event --------------->
         <div class="event" v-if="event.type == 1">
           <!-- Background -->
-          <img
-            src="@/assets/events/birthdaybg.png"
-            alt=" Birthday"
-            width="100%"
-            height="120"
-          />
+          <img src="@/assets/events/birthdaybg.png" alt=" Birthday" width="100%" height="120" />
 
           <!-- Event Body -->
           <div class="event-body">
@@ -62,16 +53,14 @@
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-              >
-                View Profile
-              </router-link>
+              >View Profile</router-link>
               <!-- Sending Greeting -->
               <!-- <a
                 :href="`https://api.whatsapp.com/send?phone=${event.mobile}&text=Happy Birthday ${event.name}`"
                 class="btn mt-2 event-btn"
                 v-if="event.mobile != null && event.is_died != true"
                 >Wish {{ event.name }}</a
-              > -->
+              >-->
 
               <!-- Found Mobile but Died -->
               <!-- <a
@@ -79,7 +68,7 @@
                 class="btn mt-2 event-btn"
                 v-if="event.mobile != null && event.is_died == true"
                 >Share in Whatsapp</a
-              > -->
+              >-->
 
               <!-- No Mobile Number -->
               <!-- <router-link
@@ -90,21 +79,16 @@
                 v-else
                 class="btn mt-2 event-btn"
                 >Add mobile Number</router-link
-              > -->
+              >-->
             </center>
           </div>
         </div>
 
         <!-------------- Memorial Event ------------->
-        <div class="event" v-if="event.type == 2">
+        <div class="event death" v-if="event.type == 2">
           <!-- Background -->
           <div class="memorial-bg">
-            <img
-              src="@/assets/events/candle.jpeg"
-              alt=" Birthday"
-              width="50px"
-              height="120"
-            />
+            <img src="@/assets/events/candle.jpeg" alt=" Birthday" width="50px" height="120" />
           </div>
 
           <!-- Event body with DP -->
@@ -124,10 +108,11 @@
             <center>
               <div class="name">{{ event.name }}</div>
               <div class="anniv">
-                <span class="anniv-num"
-                  >{{ event.died_on | anivCalc
-                  }}<span class="a-th">th</span></span
-                >
+                <span class="anniv-num">
+                  {{ event.died_on | anivCalc
+                  }}
+                  <span class="a-th">th</span>
+                </span>
                 Memorial day
               </div>
               <router-link
@@ -136,9 +121,7 @@
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-              >
-                View Profile
-              </router-link>
+              >View Profile</router-link>
               <!-- <a
                 :href="`https://api.whatsapp.com/send?text=Its ${
                   event.name
@@ -147,7 +130,7 @@
                 }th Memorial Day. Share news to all our  `"
                 class="btn mt-2 event-btn"
                 >Share</a
-              > -->
+              >-->
             </center>
           </div>
         </div>
@@ -157,7 +140,7 @@
           <!-- Vertical Line -->
           <div class="timeline-line"></div>
           <!-- Timeline Dot -->
-          <span class="timeline-dot"> </span>
+          <span class="timeline-dot"></span>
           <!-- Timeline Header -->
           <div class="timeline-header">
             <div class="person-img">
@@ -172,17 +155,14 @@
           </div>
           <div class="timeline-body">
             <div class="timeline-title">{{ event.title }}</div>
-            <div class="timeline-content">
-              {{ event.content }}
-            </div>
+            <div class="timeline-content">{{ event.content }}</div>
             <router-link
               :to="{
                 name: 'TimelinePerson',
                 params: { id: $route.params.id, member: event._id },
               }"
               class="btn event-btn"
-              >View Timeline</router-link
-            >
+            >View Timeline</router-link>
           </div>
         </div>
       </div>
@@ -191,6 +171,11 @@
 </template>
 
 <style scoped>
+.death {
+  background-color: black;
+  color: white;
+  overflow: hidden;
+}
 .event-body {
   display: flex;
   margin-top: 25px;
@@ -322,7 +307,7 @@ export default {
     return {
       date: {
         display: getNormalDisplayDate(),
-        api: getAPIFormat(),
+        api: getAPIFormat()
       },
       events: [
         // {
@@ -349,27 +334,27 @@ export default {
         // },
       ],
       loading: true,
-      store: {},
+      store: {}
     };
   },
   filters: {
-    anivCalc: function (value) {
+    anivCalc: function(value) {
       let a = moment(value);
       let b = moment();
       return b.diff(a, "years");
-    },
+    }
   },
   mounted() {
     this.store = Store;
     let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
     axios
       .get(eventsUrl)
-      .then((response) => {
+      .then(response => {
         this.events = response.data;
       })
       .finally(() => {
         this.loading = false;
       });
-  },
+  }
 };
 </script>
