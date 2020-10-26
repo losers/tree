@@ -1,11 +1,19 @@
 <template>
   <div class="wrapper" :data-open="state === 'open' ? 1 : 0">
-    <div class="bg" @click="()=>{setState('close');}"></div>
+    <div
+      class="bg"
+      @click="
+        () => {
+          setState('close');
+        }
+      "
+    ></div>
     <div
       ref="card"
-      class="card"
+      class="card transY"
       :data-state="isMove ? 'move' : state"
-      :style="{ top: `${isMove ? y : calcY()}px` }"
+      style="transition: transform 0.5s linear"
+      :style="x"
     >
       <div class="pan-area" ref="pan">
         <div class="bar" ref="bar"></div>
@@ -29,6 +37,11 @@ export default {
     defaultState: {
       type: String,
       default: "close",
+    },
+  },
+  computed: {
+    x() {
+      return `transform: translateY(${this.isMove ? this.y : this.calcY()}px)`;
     },
   },
   data() {
@@ -97,7 +110,6 @@ export default {
     },
     setState(state) {
       this.state = state;
-
       if (state == "close") {
         setTimeout(() => {
           this.$emit("close");
@@ -119,7 +131,7 @@ export default {
   display: block;
   transition: all 0.3s;
   position: fixed;
-  background-color : grey;
+  background-color: grey;
   opacity: 0.5;
   top: 0;
   left: 0;
@@ -164,5 +176,7 @@ export default {
   max-height: 100%;
   padding-bottom: calc(100vh * 0.2);
   box-sizing: border-box;
+}
+.transY {
 }
 </style>
