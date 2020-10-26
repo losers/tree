@@ -7,22 +7,31 @@
     <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
     </div>
-    <div v-else-if="events.length==0">
+    <div v-else-if="events.length == 0">
       <center>
         <img src="@/assets/events/empty_events.png" height="150px" />
-        <div style="color:indianred">
+        <div style="color: indianred">
           <h3 class="m-4 mt-5">No Events Today</h3>
           <h5>Birthdays, Timeline Events etc.., will be displayed here</h5>
         </div>
       </center>
     </div>
     <!-- All Boxes List -->
-    <div class="row" v-else style="padding-bottom: 50px;">
-      <div class="col-xs-12 col-sm-4 event-cont" v-for="(event, index) in events" :key="index">
+    <div class="row" v-else style="padding-bottom: 50px">
+      <div
+        class="col-xs-12 col-sm-4 event-cont"
+        v-for="(event, index) in events"
+        :key="index"
+      >
         <!---------------- Birthday event --------------->
         <div class="event" v-if="event.type == 1">
           <!-- Background -->
-          <img src="@/assets/events/birthdaybg.png" alt=" Birthday" width="100%" height="120" />
+          <img
+            src="@/assets/events/birthdaybg.png"
+            alt=" Birthday"
+            width="100%"
+            height="120"
+          />
 
           <!-- Event Body -->
           <div class="event-body">
@@ -30,7 +39,7 @@
             <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images[event._id]"
+                v-if="store.state.images && store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -53,7 +62,8 @@
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-              >View Profile</router-link>
+                >View Profile</router-link
+              >
             </center>
           </div>
         </div>
@@ -62,7 +72,12 @@
         <div class="event death" v-if="event.type == 2">
           <!-- Background -->
           <div class="memorial-bg">
-            <img src="@/assets/events/candle.jpeg" alt=" Birthday" width="50px" height="120" />
+            <img
+              src="@/assets/events/candle.jpeg"
+              alt=" Birthday"
+              width="50px"
+              height="120"
+            />
           </div>
 
           <!-- Event body with DP -->
@@ -72,7 +87,7 @@
             <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images[event._id]"
+                v-if="store.state.images && store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -83,8 +98,7 @@
               <div class="name">{{ event.name }}</div>
               <div class="anniv">
                 <span class="anniv-num">
-                  {{ event.died_on | anivCalc
-                  }}
+                  {{ event.died_on | anivCalc }}
                   <span class="a-th">th</span>
                 </span>
                 Memorial day
@@ -95,7 +109,8 @@
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-              >View Profile</router-link>
+                >View Profile</router-link
+              >
             </center>
           </div>
         </div>
@@ -111,7 +126,7 @@
             <div class="person-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
-                v-if="store.state.images[event._id]"
+                v-if="store.state.images && store.state.images[event._id]"
                 alt="Blood Line User"
               />
               <img src="@/assets/dp.png" v-else alt="Blood Line User" />
@@ -127,7 +142,8 @@
                 params: { id: $route.params.id, member: event._id },
               }"
               class="btn event-btn"
-            >View Timeline</router-link>
+              >View Timeline</router-link
+            >
           </div>
         </div>
       </div>
@@ -272,30 +288,30 @@ export default {
     return {
       date: {
         display: getNormalDisplayDate(),
-        api: getAPIFormat()
+        api: getAPIFormat(),
       },
       loading: true,
-      store: {}
+      store: {},
     };
   },
   filters: {
-    anivCalc: function(value) {
+    anivCalc: function (value) {
       let a = moment(value);
       let b = moment();
       return b.diff(a, "years");
-    }
+    },
   },
   mounted() {
     this.store = Store;
     let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
     axios
       .get(eventsUrl)
-      .then(response => {
+      .then((response) => {
         this.events = response.data;
       })
       .finally(() => {
         this.loading = false;
       });
-  }
+  },
 };
 </script>
