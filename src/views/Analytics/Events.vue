@@ -292,8 +292,6 @@ export default {
       .get(eventsUrl)
       .then(response => {
         this.events = response.data;
-      })
-      .finally(() => {
         this.loading = false;
       });
   }
