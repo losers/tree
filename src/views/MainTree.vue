@@ -2,9 +2,7 @@
   <div id="app" style="overflow: auto; height: 100%">
     <!-- All errors are handeled here -->
     <section v-if="errored" style="height: 100%">
-      <error v-if="errored.response.status == 404" :msg="errored.response.data">
-        {{ errored }}
-      </error>
+      <error v-if="errored.response.status == 404" :msg="errored.response.data">{{ errored }}</error>
       <DualPage
         :payload="authModal.payload"
         :reference="5"
@@ -24,15 +22,11 @@
           alt="No Entry"
           style="margin-top: 50px; margin-bottom: 30px"
         />
-        <h2 style="margin-bottom: 20px">
-          You don't have access for "{{ metadata.title }}"
-        </h2>
+        <h2 style="margin-bottom: 20px">You don't have access for "{{ metadata.title }}"</h2>
         <button class="btn btn-success" @click="openAuthBox">Enter PIN</button>
 
         <div style="margin-top: 20px" v-if="helper.main_show">
-          <a @click="toggleHelper" style="color: blue; cursor: pointer"
-            >Help !</a
-          >
+          <a @click="toggleHelper" style="color: blue; cursor: pointer">Help !</a>
           <div v-if="helper.show">
             <p>
               Change Cookie Settings in {{ helper.browser }} Browser, to allow
@@ -70,9 +64,10 @@
             Back
           </router-link>
           <div class="tree-title flexy">
-            <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
-              {{ newTitle ? newTitle : title[0].title }}
-            </div>
+            <div
+              class="fam-name"
+              :class="[{ 'f-26': $device.mobile }]"
+            >{{ newTitle ? newTitle : title[0].title }}</div>
             <div v-show="is_session">
               <i
                 class="icofont-edit ml-2"
@@ -125,34 +120,24 @@
             v-if="!$device.mobile"
           />
           <!-- Page Content -->
-          <div
-            style="flex-direction: column; display: flex; align-items: center"
-          >
+          <div style="flex-direction: column; display: flex; align-items: center">
             <h5
               class="d-flex content-justify-left ml-2"
               :class="[
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
-            >
-              Let's build a Family Tree
-            </h5>
+            >Let's build a Family Tree</h5>
             <!-- <center>
               <i class="icofont-long-arrow-down object"></i>
-            </center> -->
+            </center>-->
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
-            <touch-ripple
-              @click.native="dualPage(1)"
-              class="button-box"
-              :speed="1.1"
-            >
+            <touch-ripple @click.native="dualPage(1)" class="button-box" :speed="1.1">
               <button
                 class="btn btn-success my-btn"
                 style="font-weight: bolder; font-size: 17px"
-              >
-                + Add Person
-              </button>
+              >+ Add Person</button>
             </touch-ripple>
             <!-- <button @click="dualPage(1)" class="my-super-cool-btn">
               <div class="dots-container">
@@ -162,7 +147,7 @@
                 <div class="dot"></div>
               </div>
               <span style="font-size: 18px; font-weight: 900">Add!</span>
-            </button> -->
+            </button>-->
           </div>
           <div v-else>
             <center>
@@ -185,10 +170,7 @@
                   }"
                   :disabled="vloading"
                 >
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    v-show="vloading"
-                  ></span>
+                  <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
                   {{ retry ? "Retry" : "Validate" }}
                 </button>
               </div>
@@ -199,6 +181,15 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
+            <button @click="puppyDownload" id="download-pic" style="margin-top: 100px;position: fixed;left: 10px;font-size: 22px;cursor: pointer;z-index: 100;">
+              <i class="icofont-download" v-if="!puppyData.loader"></i>
+              <div
+                class="spinner-border"
+                style="height: 22px; width: 22px; color: black"
+                role="status"
+                v-else
+              ></div>
+            </button>
             <TreeChart
               :json="tempData"
               :images="images"
@@ -208,14 +199,9 @@
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
-                <i
-                  class="icofont-long-arrow-up object"
-                  style="font-size: 25px"
-                ></i>
+                <i class="icofont-long-arrow-up object" style="font-size: 25px"></i>
               </center>
-              <h4 style="color: #848181">
-                Click on this person to add Parents / Children etc.,
-              </h4>
+              <h4 style="color: #848181">Click on this person to add Parents / Children etc.,</h4>
             </div>
           </center>
           <router-link
@@ -264,10 +250,13 @@ export default {
     TreeChart,
     Error,
     DualPage,
-    touchRipple,
+    touchRipple
   },
   data() {
     return {
+      puppyData:{
+        loader : false,
+      },
       landscape: [],
       surname: this.$route.params.id,
       cookey: "",
@@ -280,37 +269,42 @@ export default {
       dualPageData: {
         showDualPage: false,
         reference: null,
-        payload: {},
+        payload: {}
       },
       authModal: {
         payload: {},
-        show: false,
+        show: false
       },
       helper: {
         show: false,
         browser: "",
-        main_show: false,
+        main_show: false
       },
       promo: {
         relationFinder: {
-          show: Store.state.promos[1],
+          show: Store.state.promos[1]
         },
         website: {
-          show: Store.state.promos[2],
-        },
-      },
+          show: Store.state.promos[2]
+        }
+      }
     };
   },
   computed: {
+    metadata: {
+      get(){
+          return Store.state.metadata;
+      }
+    },
     loading: {
       get() {
         return Store.state.loading;
-      },
+      }
     },
     images: {
       get() {
         return Store.state.images;
-      },
+      }
     },
     numOfMemebers: {
       get() {
@@ -318,7 +312,7 @@ export default {
           return Store.state.allMembers.length;
         }
         return 0;
-      },
+      }
     },
     tempData: {
       get() {
@@ -328,17 +322,17 @@ export default {
           Store.dispatch("setStepNumber", 1);
         }
         return Store.state.tree;
-      },
+      }
     },
     title: {
       get() {
         return Store.state.title;
-      },
+      }
     },
     is_session: {
       get() {
         return Store.state.is_session;
-      },
+      }
     },
     errored: {
       get() {
@@ -349,13 +343,8 @@ export default {
           }
         }
         return Store.state.error;
-      },
-    },
-    metadata: {
-      get() {
-        return Store.state.metadata;
-      },
-    },
+      }
+    }
   },
   mounted() {
     // this.toggleBodyClass("addClass", "mem-spec");
@@ -366,18 +355,39 @@ export default {
     }
 
     //called after adding a new member
-    this.$root.$on("update-tree", (data) => {
+    this.$root.$on("update-tree", data => {
       console.log(data);
       this.$router.go();
     });
   },
   methods: {
+    puppyDownload() {
+      this.puppyData.loader = true;
+      let puppyUrl = ProData.getHostURL() + "/puppy/";
+      let params = {};
+      params.family_id = this.metadata[0]._id;
+      params.members = this.numOfMemebers;
+      axios
+        .post(puppyUrl, params)
+        .then(response => {
+          const link = document.createElement("a");
+          link.href = "data:image/png;base64,"+response.data;
+          link.download = `${this.surname}.png`;
+          link.click();
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.puppyData.loader = false
+        });
+    },
     shareTree() {
       var shareData = {
         type: "share",
         title: `${this.surname.toUpperCase()} Family Tree`,
         text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
-        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`,
+        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`
       };
       try {
         print.postMessage(`share--${this.surname}`);
@@ -386,7 +396,7 @@ export default {
       }
     },
     // Called when a node is clicked
-    toggleHelper: function () {
+    toggleHelper: function() {
       this.helper.show = !this.helper.show;
 
       let nAgt = navigator.userAgent;
@@ -408,23 +418,23 @@ export default {
 
       this.helper.browser = browserName;
     },
-    openAuthBox: function () {
+    openAuthBox: function() {
       this.authModal.show = true;
       this.authModal.payload.title = Store.state.error.response.data[0].title;
       this.authModal.payload.surname =
         Store.state.error.response.data[0].surname;
     },
-    clickNode: function (node) {
+    clickNode: function(node) {
       if (node.data.mate || node.isMate) {
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id },
-          query: { hasMate: true },
+          query: { hasMate: true }
         });
       } else {
         this.$router.push({
           name: "MemberData",
-          params: { member: node.data.id },
+          params: { member: node.data.id }
         });
       }
     },
@@ -453,7 +463,7 @@ export default {
           Store.commit("setSession", sessData);
           this.vloading = false;
         })
-        .catch((err) => {
+        .catch(err => {
           this.retry = true;
           console.log(err);
         })
@@ -479,8 +489,8 @@ export default {
         this.newTitle = payload;
       }
       this.dualPageData.showDualPage = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
