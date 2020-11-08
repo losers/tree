@@ -181,7 +181,11 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
-            <button @click="puppyDownload" id="download-pic" style="margin-top: 100px;position: fixed;left: 10px;font-size: 22px;cursor: pointer;z-index: 100;">
+            <button
+              @click="puppyDownload"
+              id="download-pic"
+              style="margin-top: 100px;position: fixed;left: 10px;font-size: 22px;cursor: pointer;z-index: 100;"
+            >
               <i class="icofont-download" v-if="!puppyData.loader"></i>
               <div
                 class="spinner-border"
@@ -243,6 +247,8 @@ import ProData from "../data.js";
 import DualPage from "../modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
+import * as htmlToImage from "html-to-image";
+// import { toJpeg } from "html-to-image";
 
 export default {
   name: "MainTree",
@@ -254,8 +260,8 @@ export default {
   },
   data() {
     return {
-      puppyData:{
-        loader : false,
+      puppyData: {
+        loader: false
       },
       landscape: [],
       surname: this.$route.params.id,
@@ -292,8 +298,8 @@ export default {
   },
   computed: {
     metadata: {
-      get(){
-          return Store.state.metadata;
+      get() {
+        return Store.state.metadata;
       }
     },
     loading: {
@@ -363,23 +369,42 @@ export default {
   methods: {
     puppyDownload() {
       this.puppyData.loader = true;
-      let puppyUrl = ProData.getHostURL() + "/puppy/";
+      // let puppyUrl = ProData.getHostURL() + "/puppy/";
       let params = {};
       params.family_id = this.metadata[0]._id;
       params.members = this.numOfMemebers;
-      axios
-        .post(puppyUrl, params)
-        .then(response => {
-          const link = document.createElement("a");
-          link.href = "data:image/png;base64,"+response.data;
+      // axios
+      //   .post(puppyUrl, params)
+      //   .then(response => {
+      //     const link = document.createElement("a");
+      //     link.href = "data:image/png;base64,"+response.data;
+      //     link.download = `${this.surname}.png`;
+      //     link.click();
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
+      //   .finally(() => {
+      //     this.puppyData.loader = false
+      //   });
+
+      let puppyTree = document.querySelector(".puppy-tree");
+      htmlToImage
+        .toPng(puppyTree, {
+          backgroundColor: "white",
+          pixelRatio: 1
+        })
+        .then((dataUrl) => {
+          var link = document.createElement("a");
           link.download = `${this.surname}.png`;
+          link.href = dataUrl;
           link.click();
         })
         .catch(err => {
           console.log(err);
         })
         .finally(() => {
-          this.puppyData.loader = false
+          this.puppyData.loader = false;
         });
     },
     shareTree() {
