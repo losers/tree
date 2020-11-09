@@ -138,9 +138,6 @@
             >
               Let's build a Family Tree
             </h5>
-            <!-- <center>
-              <i class="icofont-long-arrow-down object"></i>
-            </center>-->
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
@@ -217,17 +214,15 @@
               ></div>
             </button>
 
+            <!-- Downloaded Successfully -->
             <div
               v-else
               class="download-tree-pic-body"
               style="position: absolute; top: 85px; z-index: 10; left: 10px"
             >
-              <div class="download-circle">
-                <i
-                  class="icofont-tick-mark"
-                  style="font-size: 30px; color: white"
-                ></i>
-              </div>
+              <!-- Ticker -->
+              <tick></tick>
+              <!-- Message -->
               <div
                 class="download-msg"
                 :style="{
@@ -298,6 +293,7 @@ import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
 // import { toJpeg } from "html-to-image";
+import Tick from "../components/small/tick";
 
 export default {
   name: "MainTree",
@@ -306,6 +302,7 @@ export default {
     Error,
     DualPage,
     touchRipple,
+    Tick,
   },
   data() {
     return {
@@ -452,9 +449,12 @@ export default {
           link.click();
           this.puppyData.downloaded = true;
           setTimeout(() => {
-            console.log("nflsng;smgs");
             this.puppyData.hide = true;
-          }, 2500);
+          }, 2000);
+          setTimeout(() => {
+            this.puppyData.downloaded = false;
+            this.puppyData.hide = false;
+          }, 3000);
         })
         .catch((err) => {
           console.log(err);
@@ -699,115 +699,7 @@ h2 {
   max-width: 80%;
   color: indianred;
 }
-.my-super-cool-btn {
-  background-color: Transparent;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-  position: relative;
-  text-decoration: none;
-  letter-spacing: 1px;
-  font-size: 2rem;
-  box-sizing: border-box;
-  padding: 0 !important;
-}
-.my-super-cool-btn span {
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  height: 150px;
-}
-.my-super-cool-btn span:before {
-  content: "";
-  width: 55%;
-  height: 55%;
-  display: block;
-  position: absolute;
-  border-radius: 100%;
-  border: 4px solid grey;
-  box-sizing: border-box;
-  transition: all 0.85s cubic-bezier(0.25, 1, 0.33, 1);
-  -webkit-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  /* box-shadow: 0 30px 85px rgba(0, 0, 0, 0.14), 0 15px 35px rgba(0, 0, 0, 0.14); */
-}
-.my-super-cool-btn:hover span:before {
-  transform: scale(0.8);
-  -webkit-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  /* box-shadow: 0 20px 55px rgba(0, 0, 0, 0.14), 0 15px 35px rgba(0, 0, 0, 0.14); */
-}
-.my-super-cool-btn .dots-container {
-  opacity: 0;
-  animation: intro 1.6s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn .dot {
-  width: 8px;
-  height: 8px;
-  display: block;
-  background-color: grey;
-  border-radius: 100%;
-  position: absolute;
-  transition: all 0.85s cubic-bezier(0.25, 1, 0.33, 1);
-}
-.my-super-cool-btn .dot:nth-child(1) {
-  top: 25px;
-  left: 25px;
-  transform: rotate(-140deg);
-  animation: swag1-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn .dot:nth-child(2) {
-  top: 50px;
-  right: 50px;
-  transform: rotate(140deg);
-  animation: swag2-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn .dot:nth-child(3) {
-  bottom: 50px;
-  left: 50px;
-  transform: rotate(140deg);
-  animation: swag3-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn .dot:nth-child(4) {
-  bottom: 50px;
-  right: 50px;
-  transform: rotate(-140deg);
-  animation: swag4-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn:hover span {
-  font-size: 1.5rem;
-}
-.my-super-cool-btn:hover .dot:nth-child(1) {
-  animation: swag1 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(2) {
-  animation: swag2 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(3) {
-  animation: swag3 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(4) {
-  animation: swag4 0.3s;
-  animation-fill-mode: forwards;
-}
+
 @keyframes intro {
   0% {
     opacity: 0;
@@ -965,7 +857,7 @@ h2 {
 }
 
 .download-tree-btn {
-  margin-top: 100px;
+  margin-top: 80px;
   position: fixed;
   left: 10px;
   font-size: 22px;
@@ -978,7 +870,6 @@ h2 {
   width: 50px;
 }
 
-.download-circle,
 .download-msg,
 .download-tree-pic-body {
   display: flex;
@@ -986,15 +877,8 @@ h2 {
   justify-content: center;
 }
 
-.download-circle {
-  background: green;
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-}
-
 .download-msg {
-  background: green;
+  background: #7ac142;
   transition: all 1s linear;
   height: 30px;
   border-radius: 0px 10px 10px 0px;
