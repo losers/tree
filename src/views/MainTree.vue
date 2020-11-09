@@ -178,7 +178,7 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
-            <div v-if="numOfMemebers > 1">
+            <div v-if="false">
               <!-- Download Tree -->
               <button
                 class="btn download-tree-btn"
