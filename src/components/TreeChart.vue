@@ -1,5 +1,5 @@
 <template>
-  <table v-if="treeData.name">
+  <table v-if="treeData.name" class="puppy-tree">
     <tr>
       <td
         :colspan="treeData.children ? treeData.children.length * 2 : 1"

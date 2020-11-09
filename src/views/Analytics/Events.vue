@@ -12,7 +12,7 @@
         <img src="@/assets/events/empty_events.png" height="150px" />
         <div style="color: indianred">
           <h3 class="m-4 mt-5">No Events Today</h3>
-          <h5>Birthdays, Timeline Events etc.., will be displayed here</h5>
+          <h5 style="color:black">Birthdays, Timeline events will be displayed here.</h5>
         </div>
       </center>
     </div>

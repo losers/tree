@@ -2,9 +2,7 @@
   <div id="app" style="overflow: auto; height: 100%">
     <!-- All errors are handeled here -->
     <section v-if="errored" style="height: 100%">
-      <error v-if="errored.response.status == 404" :msg="errored.response.data">
-        {{ errored }}
-      </error>
+      <error v-if="errored.response.status == 404" :msg="errored.response.data">{{ errored }}</error>
       <DualPage
         :payload="authModal.payload"
         :reference="5"
@@ -24,15 +22,11 @@
           alt="No Entry"
           style="margin-top: 50px; margin-bottom: 30px"
         />
-        <h2 style="margin-bottom: 20px">
-          You don't have access for "{{ metadata.title }}"
-        </h2>
+        <h2 style="margin-bottom: 20px">You don't have access for "{{ metadata.title }}"</h2>
         <button class="btn btn-success" @click="openAuthBox">Enter PIN</button>
 
         <div style="margin-top: 20px" v-if="helper.main_show">
-          <a @click="toggleHelper" style="color: blue; cursor: pointer"
-            >Help !</a
-          >
+          <a @click="toggleHelper" style="color: blue; cursor: pointer">Help !</a>
           <div v-if="helper.show">
             <p>
               Change Cookie Settings in {{ helper.browser }} Browser, to allow
@@ -70,9 +64,10 @@
             Back
           </router-link>
           <div class="tree-title flexy">
-            <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
-              {{ newTitle ? newTitle : title[0].title }}
-            </div>
+            <div
+              class="fam-name"
+              :class="[{ 'f-26': $device.mobile }]"
+            >{{ newTitle ? newTitle : title[0].title }}</div>
             <div v-show="is_session">
               <i
                 class="icofont-edit ml-2"
@@ -125,34 +120,21 @@
             v-if="!$device.mobile"
           />
           <!-- Page Content -->
-          <div
-            style="flex-direction: column; display: flex; align-items: center"
-          >
+          <div style="flex-direction: column; display: flex; align-items: center">
             <h5
               class="d-flex content-justify-left ml-2"
               :class="[
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
-            >
-              Let's build a Family Tree
-            </h5>
-            <!-- <center>
-              <i class="icofont-long-arrow-down object"></i>
-            </center> -->
+            >Let's build a Family Tree</h5>
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
-            <touch-ripple
-              @click.native="dualPage(1)"
-              class="button-box"
-              :speed="1.1"
-            >
+            <touch-ripple @click.native="dualPage(1)" class="button-box" :speed="1.1">
               <button
                 class="btn btn-success my-btn"
                 style="font-weight: bolder; font-size: 17px"
-              >
-                + Add Person
-              </button>
+              >+ Add Person</button>
             </touch-ripple>
             <!-- <button @click="dualPage(1)" class="my-super-cool-btn">
               <div class="dots-container">
@@ -162,7 +144,7 @@
                 <div class="dot"></div>
               </div>
               <span style="font-size: 18px; font-weight: 900">Add!</span>
-            </button> -->
+            </button>-->
           </div>
           <div v-else>
             <center>
@@ -185,10 +167,7 @@
                   }"
                   :disabled="vloading"
                 >
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    v-show="vloading"
-                  ></span>
+                  <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
                   {{ retry ? "Retry" : "Validate" }}
                 </button>
               </div>
@@ -199,6 +178,41 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
+            <div v-if="numOfMemebers > 1">
+              <!-- Download Tree -->
+              <button
+                class="btn download-tree-btn"
+                @click="puppyDownload"
+                id="download-pic"
+                v-if="!puppyData.downloaded"
+              >
+                <i class="icofont-download" v-if="!puppyData.loader"></i>
+                <div
+                  class="spinner-border"
+                  style="height: 22px; width: 22px; color: white"
+                  role="status"
+                  v-else
+                ></div>
+              </button>
+
+              <!-- Downloaded Successfully -->
+              <div
+                v-else
+                class="download-tree-pic-body"
+                style="position: absolute; top: 85px; z-index: 10; left: 10px"
+              >
+                <!-- Ticker -->
+                <tick></tick>
+                <!-- Message -->
+                <div
+                  class="download-msg"
+                  :style="{
+                  width: puppyData.hide ? '0px' : '260px',
+                  'font-size': puppyData.hide ? '0px' : '18px',
+                }"
+                >Downloaded Sucessfully</div>
+              </div>
+            </div>
             <TreeChart
               :json="tempData"
               :images="images"
@@ -208,14 +222,9 @@
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
-                <i
-                  class="icofont-long-arrow-up object"
-                  style="font-size: 25px"
-                ></i>
+                <i class="icofont-long-arrow-up object" style="font-size: 25px"></i>
               </center>
-              <h4 style="color: #848181">
-                Click on this person to add Parents / Children etc.,
-              </h4>
+              <h4 style="color: #848181">Click on this person to add Parents / Children etc.,</h4>
             </div>
           </center>
           <router-link
@@ -257,6 +266,9 @@ import ProData from "../data.js";
 import DualPage from "../modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
+import * as htmlToImage from "html-to-image";
+// import { toJpeg } from "html-to-image";
+import Tick from "../components/small/tick";
 
 export default {
   name: "MainTree",
@@ -265,9 +277,15 @@ export default {
     Error,
     DualPage,
     touchRipple,
+    Tick
   },
   data() {
     return {
+      puppyData: {
+        loader: false,
+        hide: false,
+        downloaded: false
+      },
       landscape: [],
       surname: this.$route.params.id,
       cookey: "",
@@ -280,37 +298,42 @@ export default {
       dualPageData: {
         showDualPage: false,
         reference: null,
-        payload: {},
+        payload: {}
       },
       authModal: {
         payload: {},
-        show: false,
+        show: false
       },
       helper: {
         show: false,
         browser: "",
-        main_show: false,
+        main_show: false
       },
       promo: {
         relationFinder: {
-          show: Store.state.promos[1],
+          show: Store.state.promos[1]
         },
         website: {
-          show: Store.state.promos[2],
-        },
-      },
+          show: Store.state.promos[2]
+        }
+      }
     };
   },
   computed: {
+    metadata: {
+      get() {
+        return Store.state.metadata;
+      }
+    },
     loading: {
       get() {
         return Store.state.loading;
-      },
+      }
     },
     images: {
       get() {
         return Store.state.images;
-      },
+      }
     },
     numOfMemebers: {
       get() {
@@ -318,7 +341,7 @@ export default {
           return Store.state.allMembers.length;
         }
         return 0;
-      },
+      }
     },
     tempData: {
       get() {
@@ -328,17 +351,17 @@ export default {
           Store.dispatch("setStepNumber", 1);
         }
         return Store.state.tree;
-      },
+      }
     },
     title: {
       get() {
         return Store.state.title;
-      },
+      }
     },
     is_session: {
       get() {
         return Store.state.is_session;
-      },
+      }
     },
     errored: {
       get() {
@@ -349,13 +372,8 @@ export default {
           }
         }
         return Store.state.error;
-      },
-    },
-    metadata: {
-      get() {
-        return Store.state.metadata;
-      },
-    },
+      }
+    }
   },
   mounted() {
     // this.toggleBodyClass("addClass", "mem-spec");
@@ -366,18 +384,66 @@ export default {
     }
 
     //called after adding a new member
-    this.$root.$on("update-tree", (data) => {
+    this.$root.$on("update-tree", data => {
       console.log(data);
       this.$router.go();
     });
   },
   methods: {
+    puppyDownload() {
+      this.puppyData.loader = true;
+      let params = {};
+      params.family_id = this.metadata[0]._id;
+      params.members = this.numOfMemebers;
+      // let puppyUrl = ProData.getHostURL() + "/puppy/";
+      // axios
+      //   .post(puppyUrl, params)
+      //   .then(response => {
+      //     const link = document.createElement("a");
+      //     link.href = "data:image/png;base64,"+response.data;
+      //     link.download = `${this.surname}.png`;
+      //     link.click();
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
+      //   .finally(() => {
+      //     this.puppyData.loader = false
+      //   });
+
+      let puppyTree = document.querySelector(".puppy-tree");
+      htmlToImage
+        .toPng(puppyTree, {
+          backgroundColor: "white",
+          pixelRatio: 1
+        })
+        .then(dataUrl => {
+          var link = document.createElement("a");
+          link.download = `${this.surname}.png`;
+          link.href = dataUrl;
+          link.click();
+          this.puppyData.downloaded = true;
+          setTimeout(() => {
+            this.puppyData.hide = true;
+          }, 2000);
+          setTimeout(() => {
+            this.puppyData.downloaded = false;
+            this.puppyData.hide = false;
+          }, 3000);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.puppyData.loader = false;
+        });
+    },
     shareTree() {
       var shareData = {
         type: "share",
         title: `${this.surname.toUpperCase()} Family Tree`,
         text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
-        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`,
+        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`
       };
       try {
         print.postMessage(`share--${this.surname}`);
@@ -386,7 +452,7 @@ export default {
       }
     },
     // Called when a node is clicked
-    toggleHelper: function () {
+    toggleHelper: function() {
       this.helper.show = !this.helper.show;
 
       let nAgt = navigator.userAgent;
@@ -408,23 +474,23 @@ export default {
 
       this.helper.browser = browserName;
     },
-    openAuthBox: function () {
+    openAuthBox: function() {
       this.authModal.show = true;
       this.authModal.payload.title = Store.state.error.response.data[0].title;
       this.authModal.payload.surname =
         Store.state.error.response.data[0].surname;
     },
-    clickNode: function (node) {
+    clickNode: function(node) {
       if (node.data.mate || node.isMate) {
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id },
-          query: { hasMate: true },
+          query: { hasMate: true }
         });
       } else {
         this.$router.push({
           name: "MemberData",
-          params: { member: node.data.id },
+          params: { member: node.data.id }
         });
       }
     },
@@ -453,7 +519,7 @@ export default {
           Store.commit("setSession", sessData);
           this.vloading = false;
         })
-        .catch((err) => {
+        .catch(err => {
           this.retry = true;
           console.log(err);
         })
@@ -479,8 +545,8 @@ export default {
         this.newTitle = payload;
       }
       this.dualPageData.showDualPage = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -608,115 +674,7 @@ h2 {
   max-width: 80%;
   color: indianred;
 }
-.my-super-cool-btn {
-  background-color: Transparent;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-  position: relative;
-  text-decoration: none;
-  letter-spacing: 1px;
-  font-size: 2rem;
-  box-sizing: border-box;
-  padding: 0 !important;
-}
-.my-super-cool-btn span {
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  height: 150px;
-}
-.my-super-cool-btn span:before {
-  content: "";
-  width: 55%;
-  height: 55%;
-  display: block;
-  position: absolute;
-  border-radius: 100%;
-  border: 4px solid grey;
-  box-sizing: border-box;
-  transition: all 0.85s cubic-bezier(0.25, 1, 0.33, 1);
-  -webkit-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  /* box-shadow: 0 30px 85px rgba(0, 0, 0, 0.14), 0 15px 35px rgba(0, 0, 0, 0.14); */
-}
-.my-super-cool-btn:hover span:before {
-  transform: scale(0.8);
-  -webkit-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  box-shadow: 9px 10px 38px -19px rgba(0, 0, 0, 0.75);
-  /* box-shadow: 0 20px 55px rgba(0, 0, 0, 0.14), 0 15px 35px rgba(0, 0, 0, 0.14); */
-}
-.my-super-cool-btn .dots-container {
-  opacity: 0;
-  animation: intro 1.6s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn .dot {
-  width: 8px;
-  height: 8px;
-  display: block;
-  background-color: grey;
-  border-radius: 100%;
-  position: absolute;
-  transition: all 0.85s cubic-bezier(0.25, 1, 0.33, 1);
-}
-.my-super-cool-btn .dot:nth-child(1) {
-  top: 25px;
-  left: 25px;
-  transform: rotate(-140deg);
-  animation: swag1-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn .dot:nth-child(2) {
-  top: 50px;
-  right: 50px;
-  transform: rotate(140deg);
-  animation: swag2-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn .dot:nth-child(3) {
-  bottom: 50px;
-  left: 50px;
-  transform: rotate(140deg);
-  animation: swag3-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn .dot:nth-child(4) {
-  bottom: 50px;
-  right: 50px;
-  transform: rotate(-140deg);
-  animation: swag4-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.my-super-cool-btn:hover span {
-  font-size: 1.5rem;
-}
-.my-super-cool-btn:hover .dot:nth-child(1) {
-  animation: swag1 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(2) {
-  animation: swag2 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(3) {
-  animation: swag3 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(4) {
-  animation: swag4 0.3s;
-  animation-fill-mode: forwards;
-}
+
 @keyframes intro {
   0% {
     opacity: 0;
@@ -871,5 +829,35 @@ h2 {
   width: 50px;
   border-radius: 60px;
   z-index: 100;
+}
+
+.download-tree-btn {
+  margin-top: 80px;
+  position: fixed;
+  left: 10px;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 100;
+  background: indianred;
+  color: white !important;
+  border-radius: 60px;
+  height: 50px;
+  width: 50px;
+}
+
+.download-msg,
+.download-tree-pic-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-msg {
+  background: #7ac142;
+  transition: all 1s linear;
+  height: 30px;
+  border-radius: 0px 10px 10px 0px;
+  margin-left: -10px;
+  color: white;
 }
 </style>

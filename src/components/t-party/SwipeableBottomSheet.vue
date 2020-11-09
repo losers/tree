@@ -1,11 +1,19 @@
 <template>
   <div class="wrapper" :data-open="state === 'open' ? 1 : 0">
-    <div class="bg" @click="()=>{setState('close');}"></div>
+    <div
+      class="bg"
+      @click="
+        () => {
+          setState('close');
+        }
+      "
+    ></div>
     <div
       ref="card"
-      class="card"
+      class="card transY100"
       :data-state="isMove ? 'move' : state"
-      :style="{ top: `${isMove ? y : calcY()}px` }"
+      style="transition: all 0.4s linear; z-index:100;"
+      :style="x"
     >
       <div class="pan-area" ref="pan">
         <div class="bar" ref="bar"></div>
@@ -31,6 +39,11 @@ export default {
       default: "close",
     },
   },
+  computed: {
+    x() {
+      return `transform: translateY(${this.isMove ? this.y : this.calcY()}px)`;
+    },
+  },
   data() {
     return {
       mc: null,
@@ -51,7 +64,7 @@ export default {
     this.mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
 
     this.mc.on("panup pandown", (evt) => {
-      this.y = evt.center.y - 16;
+      this.y = evt.center.y;
     });
 
     this.mc.on("panstart", () => {
@@ -60,11 +73,11 @@ export default {
 
     this.mc.on("panend", (evt) => {
       this.isMove = false;
-      if (this.startY - evt.center.y < -100) {
+      if (this.startY - evt.center.y < -200) {
         this.state = "close";
         setTimeout(() => {
           this.$emit("close");
-        }, 300);
+        }, 400);
       }
       // switch (this.state) {
       //   case "half":
@@ -90,14 +103,13 @@ export default {
         case "close":
           return this.rect.height;
         case "open":
-          return this.rect.height * this.openY + 50;
+          return this.rect.height * this.openY + 100;
         default:
           return this.y;
       }
     },
     setState(state) {
       this.state = state;
-
       if (state == "close") {
         setTimeout(() => {
           this.$emit("close");
@@ -119,7 +131,7 @@ export default {
   display: block;
   transition: all 0.3s;
   position: fixed;
-  background-color : grey;
+  background-color: grey;
   opacity: 0.5;
   top: 0;
   left: 0;
@@ -129,7 +141,7 @@ export default {
 
 .card {
   width: 100%;
-  height: 100vh;
+  height: 80%;
   position: fixed;
   background: white;
   border-radius: 10px 10px 0 0;
@@ -164,5 +176,8 @@ export default {
   max-height: 100%;
   padding-bottom: calc(100vh * 0.2);
   box-sizing: border-box;
+}
+.transY100 {
+  transform: translateY(100%);
 }
 </style>
