@@ -126,7 +126,7 @@
               :class="[
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
-            >Let's build a Family Tree</h5>
+            >Let's add members to Family Tree</h5>
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
