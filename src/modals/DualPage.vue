@@ -1,6 +1,6 @@
 <template>
   <div>
-    <swipeable-bottom-sheet
+    <!-- <swipeable-bottom-sheet
       v-if="$device.mobile"
       ref="swipeableBottomSheet"
       style="z-index:100"
@@ -12,12 +12,33 @@
         v-on:crudops="crudops"
         v-on:close="swiperClose"
       ></component>
-    </swipeable-bottom-sheet>
+    </swipeable-bottom-sheet> -->
+
+
+    <vue-bottom-dialog
+      v-if="$device.mobile"
+      v-model="$device.mobile"
+      ref="swipeableBottomSheet"
+      style="z-index:100"
+      v-on:close="beforeClose"
+      :height="400"
+      :backgroundColor="'#ffffff'"
+      :topRadius="'0px'"
+      :overlayColor="'grey'"
+    >
+      <component
+        v-bind:is="selectedComponent"
+        :payload="this.payload"
+        v-on:crudops="crudops"
+        v-on:close="swiperClose"
+      ></component>
+    </vue-bottom-dialog>
   </div>
 </template>
 
 <script>
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
+import VueBottomDialog from 'vue-bottom-dialog';
 
 import AddFamily from "../components/AddFamilyForm.vue";
 import AddRoot from "../components/AddRootForm.vue";
@@ -28,6 +49,8 @@ import AuthForm from "../components/AuthForm";
 import Helper from "../components/Helper"; //6
 import RelationFinderPromo from "../components/promotional/RelationFinder"; //7
 import WebsitePromo from "../components/promotional/Website"; //7
+import Vue from "vue";
+Vue.use(VueBottomDialog);
 
 export default {
   props: ["reference", "payload", "onlySwiper"],

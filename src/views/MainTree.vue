@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="overflow: auto; height: 100%">
+  <div id="app" style="height: 100%" :class="[{ 'o-auto': $device.mobile }]">
     <!-- All errors are handeled here -->
     <section v-if="errored" style="height: 100%">
       <error v-if="errored.response.status == 404" :msg="errored.response.data">{{ errored }}</error>
@@ -551,6 +551,9 @@ export default {
 </script>
 
 <style>
+.o-auto{
+  overflow: auto;
+}
 .padt340 {
   padding-top: 340px;
 }
