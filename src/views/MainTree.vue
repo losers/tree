@@ -178,7 +178,7 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
-            <div v-if="false">
+            <div>
               <!-- Download Tree -->
               <button
                 class="btn download-tree-btn"
@@ -277,7 +277,8 @@ export default {
     Error,
     DualPage,
     touchRipple,
-    Tick
+    Tick,
+  
   },
   data() {
     return {
