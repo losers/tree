@@ -341,6 +341,9 @@ export default {
       if (this.xtraParent.selected) {
         this.data.xtra_parent_id = this.xtraParent.selected.value;
       }
+      if(!this.data.short_name){
+          this.data.short_name = this.data.name;
+        }
       if (this.payload.memData) {
         //Update
         Axios.put(
@@ -365,9 +368,7 @@ export default {
         } else if (this.payload.type == 0) {
           this.data.type = 0;
         }
-        if(!this.data.short_name){
-          this.data.short_name = this.data.name;
-        }
+        
         this.data.parent_id = this.payload.parent_id;
         this.$emit("form-submit", this.data);
       }
