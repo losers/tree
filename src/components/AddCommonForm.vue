@@ -63,9 +63,7 @@
         </p>
 
         <div class="row">
-          <label class="d-none d-sm-block col-md-4">
-            Short Name:
-          </label>
+          <label class="d-none d-sm-block col-md-4"> Short Name: </label>
           <input
             type="text"
             class="form-control col-md-7 col-sm-12"
@@ -89,13 +87,23 @@
         </div>
         <div class="row">
           <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
-          <md-datepicker
-            class="col-md-7 col-xs-12 cus"
-            v-model="data.dob"
-            :md-model-type="String"
+          <button
+            type="button"
+            style="
+              height: 60px;
+              padding: 0;
+              background: transparent;
+              border: none;
+            "
           >
-            <label>Date of Birth</label>
-          </md-datepicker>
+            <md-datepicker
+              class="col-md-7 col-xs-12 cus"
+              v-model="data.dob"
+              :md-model-type="button"
+            >
+              <label>Date of Birth</label>
+            </md-datepicker>
+          </button>
         </div>
 
         <div class="row mb-2">
@@ -111,7 +119,7 @@
               v-model="data.died_on"
               required="true"
               class="cus"
-              :md-model-type="String"
+              :md-model-type="button"
             >
               <label>Date of Demise</label>
             </md-datepicker>
@@ -263,7 +271,6 @@ import Algos from "@/algos/analytics/relation-finder";
 // var emitData;
 
 Vue.use(VueMaterial);
-
 export default {
   components: {
     ToggleButton,
@@ -295,6 +302,7 @@ export default {
     let isChild = false;
     let parentId;
     let xtra_parent_id;
+    this.$material.locale.startYear = 1000;
 
     //Editing
     if (this.payload.memData) {
@@ -341,9 +349,9 @@ export default {
       if (this.xtraParent.selected) {
         this.data.xtra_parent_id = this.xtraParent.selected.value;
       }
-      if(!this.data.short_name){
-          this.data.short_name = this.data.name;
-        }
+      if (!this.data.short_name) {
+        this.data.short_name = this.data.name;
+      }
       if (this.payload.memData) {
         //Update
         Axios.put(
@@ -368,7 +376,7 @@ export default {
         } else if (this.payload.type == 0) {
           this.data.type = 0;
         }
-        
+
         this.data.parent_id = this.payload.parent_id;
         this.$emit("form-submit", this.data);
       }
