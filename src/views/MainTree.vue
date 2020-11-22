@@ -178,7 +178,7 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
-            <div v-if="false">
+            <div>
               <!-- Download Tree -->
               <button
                 class="btn download-tree-btn"
@@ -277,7 +277,8 @@ export default {
     Error,
     DualPage,
     touchRipple,
-    Tick
+    Tick,
+  
   },
   data() {
     return {
@@ -419,7 +420,7 @@ export default {
         })
         .then(dataUrl => {
           var link = document.createElement("a");
-          link.download = `${this.surname}.png`;
+          link.download = `${Date.now()}.png`;
           link.href = dataUrl;
           link.click();
           this.puppyData.downloaded = true;

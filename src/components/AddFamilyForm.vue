@@ -1,20 +1,21 @@
 <template>
   <div class="FormData p-5">
-    <h3 v-if="!created&&!isDelete">
-      <span>{{payload?"Updating":"Creating"}} a Family Tree</span>
+    <h3 v-if="!created && !isDelete">
+      <span>{{ payload ? "Updating" : "Creating" }} a Family Tree</span>
       <span class="close-btn" v-if="!$device.mobile" @click="goBack">x</span>
-      <span v-if="surname" class="ml-1"> for {{surname}}</span>
+      <span v-if="surname" class="ml-1"> for {{ surname }}</span>
     </h3>
     <transition name="fade" mode="out-in">
       <!-- UI will be displayed after clking delete button -->
-      <div v-if="isDelete&&!created">
+      <div v-if="isDelete && !created">
         <h3>
           Delete Family Permanently
           <span class="close-btn" @click="goBack">x</span>
         </h3>
         <h6 class="mt-3">
           Please enter
-          <code>{{surname}}</code> in the input box to delete this family tree permanently
+          <code>{{ surname }}</code> in the input box to delete this family tree
+          permanently
         </h6>
         <input class="form-control input-sm" type="text" v-model="errSurname" />
         <button
@@ -25,8 +26,9 @@
           <span
             class="spinner-border spinner-border-sm"
             v-show="loading"
-            style="margin-right: 8px;"
-          ></span>Delete Permanently
+            style="margin-right: 8px"
+          ></span
+          >Delete Permanently
         </button>
 
         <button type="button" class="btn btn-default" @click="goBack">
@@ -36,12 +38,19 @@
 
       <!-- Displays for editing and Creating Meta Data -->
       <form v-on:submit.prevent="sendData" v-else-if="!created">
-        <section v-if="editFormErrored&&payload">{{editFormErrored}}</section>
+        <section v-if="editFormErrored && payload">
+          {{ editFormErrored }}
+        </section>
         <section v-else>
-          <span v-if="editFormLoading&&payload">loading...</span>
+          <span v-if="editFormLoading && payload">loading...</span>
           <span else>
             <div class="form-inline row">
-              <label class="col" style="justify-content:left" v-if="!$device.mobile">Display Title :</label>
+              <label
+                class="col"
+                style="justify-content: left"
+                v-if="!$device.mobile"
+                >Display Title :</label
+              >
               <input
                 type="text"
                 class="form-control col-sm-8"
@@ -55,9 +64,10 @@
               <label
                 for="nickname"
                 class="col"
-                style="justify-content:left"
+                style="justify-content: left"
                 v-if="!$device.mobile"
-              >Surname :</label>
+                >Surname :</label
+              >
               <input
                 v-model="surname"
                 type="text"
@@ -73,9 +83,10 @@
               <label
                 for="pin"
                 class="col"
-                style="justify-content:left"
+                style="justify-content: left"
                 v-if="!$device.mobile"
-              >Create PIN :</label>
+                >Create PIN :</label
+              >
               <input
                 v-model="pin"
                 type="number"
@@ -86,31 +97,96 @@
                 required
               />
             </div>
-            <div style="display:flex; margin-top: 30px;justify-content: space-between;">
-              <div>
-                <button type="submit" class="btn btn-success" :disabled="pin.length!=4 || loading">
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    v-show="loading"
-                    style="margin-right: 8px;"
-                  ></span>
-                  <span>{{payload?"Update":"Create"}}</span>
-                </button>
-
-                <button type="button" class="btn btn-default" @click="goBack">
-                  <span>Cancel</span>
-                </button>
+            <div v-if="pin == '1234' || pin == '0000'" class="mt-3 text-danger">
+              <div class="mb-2">
+                This pin can easily guessed. Still want to continue ?
               </div>
+            </div>
+
+            <!-- Optional Header -->
+            <hr class="mt-5 mb-3" style="background-color: white" />
+            <p style="margin-top: -29px">
+              <center>
+                <span
+                  style="background-color: white; padding: 20px; color: #969696"
+                  >Optional Contact Details</span
+                >
+              </center>
+            </p>
+            <div style="font-size: 12px; color: rgb(160, 160, 160)">
+              This helps your relatives to find you
+            </div>
+            <div class="form-inline row">
+              <label
+                for="name"
+                class="col"
+                style="justify-content: left"
+                v-if="!$device.mobile"
+                >Your Name :</label
+              >
+              <input
+                v-model="contact.name"
+                type="text"
+                class="form-control col-sm-8"
+                id="name"
+                placeholder="Your Name"
+              />
+            </div>
+
+            <div class="form-inline row">
+              <label
+                for="email"
+                class="col"
+                style="justify-content: left"
+                v-if="!$device.mobile"
+                >Your Email :</label
+              >
+              <input
+                v-model="contact.email"
+                type="email"
+                class="form-control col-sm-8"
+                id="email"
+                placeholder="Your Email"
+              />
+            </div>
+            <div
+              style="
+                display: flex;
+                margin-top: 30px;
+                justify-content: space-between;
+              "
+            >
+              <button
+                type="submit"
+                class="btn btn-success"
+                :disabled="pin.length != 4 || loading"
+              >
+                <span
+                  class="spinner-border spinner-border-sm"
+                  v-show="loading"
+                  style="margin-right: 8px"
+                ></span>
+                <span>{{ payload ? "Update" : "Create" }}</span>
+              </button>
+
+              <button type="button" class="btn btn-default" @click="goBack">
+                <span>Cancel</span>
+              </button>
 
               <button
                 type="button"
                 v-show="payload"
                 class="btn btn-danger"
-                @click="isDelete=true;created=false;"
-              >Delete</button>
+                @click="
+                  isDelete = true;
+                  created = false;
+                "
+              >
+                Delete
+              </button>
             </div>
             <div v-if="errored" class="mt-3 text-danger">
-              <div class="mb-2">Surname {{surname}}, already exists</div>
+              <div class="mb-2">Surname {{ surname }}, already exists</div>
             </div>
           </span>
         </section>
@@ -157,7 +233,11 @@ export default {
       isDelete: false,
       errSurname: null,
       editFormLoading: null,
-      editFormErrored: null
+      editFormErrored: null,
+      contact: {
+        name: null,
+        email: null,
+      },
     };
   },
   mounted() {
@@ -166,10 +246,10 @@ export default {
       this.surname = this.payload.surname;
       this.editFormLoading = true;
       Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
-        .then(data => {
+        .then((data) => {
           this.pin = data.data.pin;
         })
-        .catch(err => (this.editFormErrored = err))
+        .catch((err) => (this.editFormErrored = err))
         .finally(() => (this.editFormLoading = false));
     } else {
       this.editFormLoading = false;
@@ -184,24 +264,25 @@ export default {
           title: this.title,
           _id: this.payload._id,
           created_at: this.payload.created_at,
-          pin: this.pin
+          pin: this.pin,
         })
           .then(() => {
             this.loading = false;
             this.$emit("close", this.title);
           })
-          .catch(err => (this.errored = err));
+          .catch((err) => (this.errored = err));
       } else {
         Axios.post(ProdData.getHostURL() + "/meta/add", {
           title: this.title,
           surname: this.surname,
-          pin: this.pin
+          pin: this.pin,
+          contact:this.contact
         })
           .then(() => {
             this.goFamily();
             // this.created = true;
           })
-          .catch(err => {
+          .catch((err) => {
             this.errored = err;
           })
           .finally(() => (this.loading = false));
@@ -210,10 +291,10 @@ export default {
     deleteFamily() {
       this.loading = true;
       Axios.delete(ProdData.getHostURL() + "/meta", {
-        data: { surname: this.errSurname }
+        data: { surname: this.errSurname },
       })
-        .then(data => console.log(data))
-        .catch(err => console.log(err))
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err))
         .finally(() => {
           this.goBack();
           this.$router.push({ name: "Home" });
@@ -229,8 +310,8 @@ export default {
     makeSmall() {
       this.surname = this.surname.toLowerCase();
       this.surname = this.surname.split(" ").join("");
-    }
-  }
+    },
+  },
 };
 </script>
 
