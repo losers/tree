@@ -86,23 +86,13 @@
         </div>
         <div class="row">
           <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
-          <button
-            type="button"
-            style="
-              height: 60px;
-              padding: 0;
-              background: transparent;
-              border: none;
-            "
+          <md-datepicker
+            class="col-md-7 col-xs-12 cus"
+            v-model="data.dob"
+            :md-model-type="String"
           >
-            <md-datepicker
-              class="col-md-7 col-xs-12 cus"
-              v-model="data.dob"
-              :md-model-type="button"
-            >
-              <label>Date of Birth</label>
-            </md-datepicker>
-          </button>
+            <label>Date of Birth</label>
+          </md-datepicker>
         </div>
 
         <div class="row mb-2">
@@ -118,7 +108,7 @@
               v-model="data.died_on"
               required="true"
               class="cus"
-              :md-model-type="button"
+              :md-model-type="String"
             >
               <label>Date of Demise</label>
             </md-datepicker>
@@ -302,7 +292,10 @@ export default {
     let parentId;
     let xtra_parent_id;
     this.$material.locale.startYear = 1000;
-
+    var dateDiv = document
+      .querySelector(".md-datepicker")
+      .querySelector(".md-input").setAttribute("onfocus","blur()");
+    console.log(dateDiv);
     //Editing
     if (this.payload.memData) {
       this.data = this.payload.memData;
