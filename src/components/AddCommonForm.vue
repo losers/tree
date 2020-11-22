@@ -51,8 +51,7 @@
       </div>
 
       <!-- Optional Params -->
-      <!-- <div v-if="!payload.is_root"> -->
-      <div>
+      <div v-if="!payload.is_root">
         <hr class="mt-5 mb-3" style="background-color: white" />
         <p style="margin-top: -29px">
           <center>

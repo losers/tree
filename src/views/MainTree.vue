@@ -126,7 +126,7 @@
               :class="[
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
-            >Let's build a Family Tree</h5>
+            >Let's add members to Family Tree</h5>
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
@@ -420,7 +420,7 @@ export default {
         })
         .then(dataUrl => {
           var link = document.createElement("a");
-          link.download = `${this.surname}.png`;
+          link.download = `${Date.now()}.png`;
           link.href = dataUrl;
           link.click();
           this.puppyData.downloaded = true;
