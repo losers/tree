@@ -108,6 +108,7 @@
               v-model="data.died_on"
               required="true"
               class="cus"
+              id="demise"
               :md-model-type="String"
             >
               <label>Date of Demise</label>
@@ -292,10 +293,15 @@ export default {
     let parentId;
     let xtra_parent_id;
     this.$material.locale.startYear = 1000;
-    var dateDiv = document
+    document
       .querySelector(".md-datepicker")
-      .querySelector(".md-input").setAttribute("onfocus","blur()");
-    console.log(dateDiv);
+      .querySelector(".md-input")
+      .setAttribute("onfocus", "blur()");
+    document
+      .querySelector("#demise")
+      .querySelector(".md-input")
+      .setAttribute("onfocus", "blur()");
+
     //Editing
     if (this.payload.memData) {
       this.data = this.payload.memData;
