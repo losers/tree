@@ -448,7 +448,11 @@ export default {
           var link = document.createElement("a");
           link.download = `${Date.now()}.png`;
           link.href = dataUrl;
-          console.log("download--" + dataUrl.split("base64,")[1]);
+          try {
+            print.postMessage("download--" + dataUrl.split("base64,")[1]);
+          } catch (error) {
+            console.log("downloading from browser not in mobile app");
+          }
           link.click();
           this.puppyData.downloaded = true;
           setTimeout(() => {
