@@ -53,14 +53,28 @@
             height: $device.mobile ? '220px' : '300px',
           }"
         >
+          <i
+            class="icofont-alarm"
+            style="
+              font-size: 25px;
+              color: white;
+              position: absolute;
+              right: 20px;
+              top: 20px;
+            "
+            v-if="notificationsIcon"
+            @click="showNotifications"
+          ></i>
           <!-- Bloodline Title -->
           <div id="title">
-            <i
-              class="icofont-question-circle help"
-              style="color: indianred"
-              v-if="$device.mobile"
-              @click="helperFunc"
-            ></i>
+            <span class="help">
+              <i
+                class="icofont-chat"
+                style="color: indianred"
+                v-if="$device.mobile"
+                @click="helperFunc"
+              ></i>
+            </span>
             <span style="font-weight: 500; color: white">BloodLine</span>
             <br />
           </div>
@@ -163,7 +177,13 @@
                   'normal-family': curFamily != data._id,
                 }"
                 @click="
-                  showAuth(data.surname, data.title, data.celeb, data._id)
+                  showAuth(
+                    data.surname,
+                    data.title,
+                    data.celeb,
+                    data._id,
+                    data.contact
+                  )
                 "
               >
                 <i
@@ -322,12 +342,12 @@ a:hover {
   left: 0;
   right: 0;
   top: 30px;
-  padding-top: 30px;
+  padding-top: 50px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
   font-weight: 300;
-  font-size: 50px;
+  font-size: 40px;
   letter-spacing: 10px;
 }
 #title span {
@@ -386,6 +406,7 @@ export default {
       helper: {
         show: false,
       },
+      notificationsIcon: false,
     };
   },
   components: {
@@ -394,12 +415,13 @@ export default {
     VueTyper,
   },
   methods: {
-    showAuth(surname, title, isCeleb, family_id) {
+    showAuth(surname, title, isCeleb, family_id, contact) {
       if (family_id === this.curFamily || isCeleb) {
         location.href = `/app/${surname}`;
       } else {
         this.authPayload.surname = surname;
         this.authPayload.title = title;
+        this.authPayload.contact = contact;
         this.showAuthBox = true;
       }
     },
@@ -415,6 +437,13 @@ export default {
         this.showModal = true;
       } else {
         alert("Please enable cookies to Start creating a family");
+      }
+    },
+    showNotifications() {
+      try {
+        print.postMessage("notifications");
+      } catch (error) {
+        console.log("Download app and recieve notifications baby");
       }
     },
     toggleBodyClass(addRemoveClass, className) {
@@ -481,6 +510,12 @@ export default {
   mounted() {
     if (this.$device.mobile) {
       this.addFBtn = false;
+    }
+    try {
+      print.postMessage("show Notifications");
+    } catch (error) {
+      this.notificationsIcon = true;
+      console.log();
     }
     this.getAllList();
   },

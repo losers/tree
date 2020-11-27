@@ -53,7 +53,6 @@
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
-
       <div v-if="loading">
         <router-link :to="{ name: 'Home' }" class="float-left mt-2 ml-1">
           <i class="icofont-arrow-left"></i>
@@ -437,7 +436,6 @@ export default {
       //   .finally(() => {
       //     this.puppyData.loader = false
       //   });
-
       let puppyTree = document.querySelector(".puppy-tree");
       htmlToImage
         .toPng(puppyTree, {
@@ -445,15 +443,16 @@ export default {
           pixelRatio: 1,
         })
         .then((dataUrl) => {
-          var link = document.createElement("a");
-          link.download = `${Date.now()}.png`;
-          link.href = dataUrl;
           try {
-            print.postMessage("download--" + dataUrl.split("base64,")[1]);
+            print.postMessage(
+              "download--" + this.surname + "--" + dataUrl.split("base64,")[1]
+            );
           } catch (error) {
-            console.log("downloading from browser not in mobile app");
+            var link = document.createElement("a");
+            link.download = `${this.surname} - ${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
           }
-          link.click();
           this.puppyData.downloaded = true;
           setTimeout(() => {
             this.puppyData.hide = true;
@@ -474,7 +473,7 @@ export default {
       var shareData = {
         type: "share",
         title: `${this.surname.toUpperCase()} Family Tree`,
-        text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
+        text: `Click on the below link to check ${this.surname.toUpperCase()} family tree. You can also open the link in your desktop or laptop browser`,
         url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`,
       };
       try {

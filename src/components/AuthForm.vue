@@ -10,6 +10,12 @@
           onkeypress="if(this.value.length==4) return false;"
           type="number"
         />
+        <div v-if="payload.contact.name">
+          This family is created by {{ payload.contact.name }}
+        </div>
+        <div v-if="payload.contact.email">
+          You can write to {{ payload.contact.email }} 
+        </div>
         <button
           type="submit"
           class="btn mt-3"

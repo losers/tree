@@ -85,24 +85,46 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >Create PIN :</label
+                >{{ payload ? "Admin" : "Create" }} PIN :</label
               >
               <input
                 v-model="pin"
                 type="number"
                 class="form-control col-sm-8"
                 id="pin"
-                placeholder="Create 4 Digit PIN"
+                :placeholder="pin_placeholder"
                 onkeypress="if(this.value.length==4) return false;"
                 required
               />
             </div>
-            <div v-if="pin == '1234' || pin == '0000'" class="mt-3 text-danger">
+            <div
+              v-if="pin == '1234' || pin == '0000'"
+              class="mt-3 text-warning"
+            >
               <div class="mb-2">
-                This pin can easily guessed. Still want to continue ?
+                {{ payload ? "Admin " : "" }}pin can be easily guessed.
               </div>
             </div>
-
+            <div class="form-inline row" v-if="payload">
+              <label
+                for="view-pin"
+                class="col"
+                style="justify-content: left"
+                v-if="!$device.mobile"
+                >View-Only PIN :</label
+              >
+              <input
+                v-model="view_pin"
+                type="number"
+                class="form-control col-sm-8"
+                id="view-pin"
+                placeholder="Create 4 Digit View-Only PIN"
+                onkeypress="if(this.value.length==4) return false;"
+              />
+            </div>
+            <div v-if="view_pin == pin" class="mt-3 text-danger">
+              <div class="mb-2">Admin pin and View-Only pin cannot be same</div>
+            </div>
             <!-- Optional Header -->
             <hr class="mt-5 mb-3" style="background-color: white" />
             <p style="margin-top: -29px">
@@ -159,7 +181,7 @@
               <button
                 type="submit"
                 class="btn btn-success"
-                :disabled="pin.length != 4 || loading"
+                :disabled="pin.length != 4 || loading || pin == view_pin"
               >
                 <span
                   class="spinner-border spinner-border-sm"
@@ -229,7 +251,9 @@ export default {
       created: false,
       errored: null,
       loading: false,
+      pin_placeholder: "",
       pin: "",
+      view_pin: "",
       isDelete: false,
       errSurname: null,
       editFormLoading: null,
@@ -241,9 +265,12 @@ export default {
     };
   },
   mounted() {
+    this.pin_placeholder = `Create 4 Digit ${this.payload ? "Admin" : ""} PIN`;
     if (this.payload) {
       this.title = this.payload.title;
       this.surname = this.payload.surname;
+      this.contact = this.payload.contact;
+      this.view_pin = this.payload.view_pin;
       this.editFormLoading = true;
       Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
         .then((data) => {
@@ -265,6 +292,7 @@ export default {
           _id: this.payload._id,
           created_at: this.payload.created_at,
           pin: this.pin,
+          view_pin: this.view_pin,
         })
           .then(() => {
             this.loading = false;
@@ -276,7 +304,7 @@ export default {
           title: this.title,
           surname: this.surname,
           pin: this.pin,
-          contact:this.contact
+          contact: this.contact,
         })
           .then(() => {
             this.goFamily();
