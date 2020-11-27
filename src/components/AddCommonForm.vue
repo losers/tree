@@ -56,7 +56,7 @@
         <p style="margin-top: -29px">
           <center>
             <span style="background-color: white; padding: 20px; color: #969696"
-              >Optional</span
+              >Optional Details</span
             >
           </center>
         </p>
