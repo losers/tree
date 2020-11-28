@@ -91,10 +91,11 @@ export default {
           let sessData = {};
           sessData.status = true;
           sessData.surname = params.surname;
-          if (data.view_only == true) {
+          if (data.view_only) {
             this.retry = true;
+            sessData.view_only = true;
           } else {
-            sessData.view_only = data.view_only;
+            sessData.view_only = false;
           }
           Store.commit("setSession", sessData);
           this.$emit("keyTrue");
