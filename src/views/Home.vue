@@ -67,14 +67,14 @@
           ></i>
           <!-- Bloodline Title -->
           <div id="title">
-            <span class="help">
+            <div class="help">
               <i
                 class="icofont-chat"
-                style="color: indianred"
+                style="margin-right: -10px"
                 v-if="$device.mobile"
                 @click="helperFunc"
               ></i>
-            </span>
+            </div>
             <span style="font-weight: 500; color: white">BloodLine</span>
             <br />
           </div>
@@ -290,6 +290,10 @@
 .help {
   position: fixed;
   bottom: 20px;
+  padding: 5px 15px;
+  background: indianred;
+  border-radius: 40px;
+  color: white;
   right: 20px;
 }
 .load-more {
@@ -443,7 +447,7 @@ export default {
       try {
         print.postMessage("notifications");
       } catch (error) {
-        console.log("Download app and recieve notifications baby");
+        console.log();
       }
     },
     toggleBodyClass(addRemoveClass, className) {
@@ -513,8 +517,8 @@ export default {
     }
     try {
       print.postMessage("show Notifications");
-    } catch (error) {
       this.notificationsIcon = true;
+    } catch (error) {
       console.log();
     }
     this.getAllList();
