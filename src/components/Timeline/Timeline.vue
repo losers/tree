@@ -8,7 +8,9 @@
         :class="wrapperItemClass(timelineIndex)"
       >
         <div class="section-year">
-          <p v-if="hasYear(timelineContent)" class="year">{{ getYear(timelineContent) }}</p>
+          <p v-if="hasYear(timelineContent)" class="year">
+            {{ getYear(timelineContent) }}
+          </p>
         </div>
         <TimelineItem
           :item-timeline="timelineContent"
@@ -30,37 +32,37 @@ import TimelineItem from "./TimelineItem.vue";
 export default {
   name: "Timeline",
   components: {
-    TimelineItem
+    TimelineItem,
   },
   props: {
     timelineItems: {
-      type: Array
+      type: Array,
     },
     messageWhenNoItems: {
       type: String,
-      default: ""
+      default: "",
     },
     colorDots: {
       type: String,
-      default: "#2da1bf"
+      default: "#2da1bf",
     },
     uniqueTimeline: {
       type: Boolean,
-      default: false
+      default: false,
     },
     uniqueYear: {
       type: Boolean,
-      default: false
+      default: false,
     },
     order: {
       type: String,
-      default: ""
+      default: "",
     },
     dateLocale: {
       type: String,
-      default: ""
+      default: "",
     },
-    namesMap: {}
+    namesMap: {},
   },
   computed: {
     hasItems() {
@@ -72,7 +74,7 @@ export default {
       if (this.order === "asc")
         return this.orderItems(this.timelineItems, "asc");
       return this.timelineItems;
-    }
+    },
   },
 
   methods: {
@@ -86,7 +88,7 @@ export default {
         this.order !== undefined;
       return {
         "wrapper-item": true,
-        "unique-timeline": this.uniqueTimeline || isUniqueYear
+        "unique-timeline": this.uniqueTimeline || isUniqueYear,
       };
     },
     checkYearTimelineItem(timelineIndex) {
@@ -113,7 +115,7 @@ export default {
     },
     getTimelineItemsAssembled(items) {
       const itemsGroupByYear = [];
-      items.forEach(item => {
+      items.forEach((item) => {
         item.date = new Date(item.date);
         const fullTime = item.date.getTime();
         if (itemsGroupByYear[fullTime]) {
@@ -132,16 +134,15 @@ export default {
         }
         return a - b;
       });
-      return timeItemsOrdered.map(timeItem => itemsGrouped[timeItem]).flat();
-    }
-  }
+      return timeItemsOrdered.map((timeItem) => itemsGrouped[timeItem]).flat();
+    },
+  },
 };
 </script>
 
 <style scoped>
 .timeline {
   text-align: left;
-  width: 100%;
   max-width: 500px;
 }
 .timeline .wrapper-timeline {
@@ -150,6 +151,7 @@ export default {
 .timeline .wrapper-item {
   display: grid;
   grid-template-columns: 100px 1fr;
+  margin-left: -40px;
 }
 .timeline .wrapper-item .section-year {
   display: flex;

@@ -27,7 +27,12 @@
           class="btn btn-danger"
           @click="deleteFamily"
         >
-          <span class="spinner-border spinner-border-sm" v-show="loading" style="margin-right: 8px"></span>Delete Permanently
+          <span
+            class="spinner-border spinner-border-sm"
+            v-show="loading"
+            style="margin-right: 8px"
+          ></span
+          >Delete Permanently
         </button>
 
         <button type="button" class="btn btn-default" @click="goBack">
@@ -37,13 +42,24 @@
 
       <!-- Displays for editing and Creating Meta Data -->
       <form v-on:submit.prevent="sendData" v-else-if="!created">
-        <section v-if="editFormErrored && payload">{{ editFormErrored }}</section>
+        <section v-if="editFormErrored && payload">
+          {{ editFormErrored }}
+        </section>
         <section v-else>
           <div
             v-if="editFormLoading && payload"
-            style="font-size: 20px;justify-content: center;display: flex;margin-top: 60px;color: indianred;"
+            style="
+              font-size: 20px;
+              justify-content: center;
+              display: flex;
+              margin-top: 60px;
+              color: indianred;
+            "
           >
-            <div class="spinner-border spinner-border-sm" style="width: 5rem;height: 5rem;"></div>
+            <div
+              class="spinner-border spinner-border-sm"
+              style="width: 5rem; height: 5rem"
+            ></div>
           </div>
           <span v-if="!editFormLoading">
             <div class="form-inline row">
@@ -51,7 +67,8 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-              >Display Title :</label>
+                >Display Title :</label
+              >
               <input
                 type="text"
                 class="form-control col-sm-8"
@@ -67,7 +84,8 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-              >Surname :</label>
+                >Surname :</label
+              >
               <input
                 v-model="surname"
                 type="text"
@@ -85,7 +103,8 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-              >{{ payload ? "Admin" : "Create" }} PIN :</label>
+                >{{ payload ? "Admin" : "Create" }} PIN :</label
+              >
               <input
                 v-model="pin"
                 type="number"
@@ -96,8 +115,13 @@
                 required
               />
             </div>
-            <div v-if="pin == '1234' || pin == '0000'" class="mt-3 text-warning">
-              <div class="mb-2">{{ payload ? "Admin " : "" }}pin can be easily guessed.</div>
+            <div
+              v-if="pin == '1234' || pin == '0000'"
+              class="mt-3 text-warning"
+            >
+              <div class="mb-2">
+                {{ payload ? "Admin " : "" }}pin can be easily guessed.
+              </div>
             </div>
             <div class="form-inline row" v-if="payload">
               <label
@@ -105,7 +129,8 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-              >View-Only PIN :</label>
+                >View-Only PIN :</label
+              >
               <input
                 v-model="view_pin"
                 type="number"
@@ -115,7 +140,7 @@
                 onkeypress="if(this.value.length==4) return false;"
               />
             </div>
-            <div v-if="view_pin == pin" class="mt-3 text-danger">
+            <div v-if="view_pin == pin && pin" class="mt-3 text-danger">
               <div class="mb-2">Admin PIN and View-Only PIN cannot be same</div>
             </div>
             <!-- Optional Header -->
@@ -124,19 +149,21 @@
               <center>
                 <span
                   style="background-color: white; padding: 20px; color: #969696"
-                >Optional Contact Details</span>
+                  >Optional Contact Details</span
+                >
               </center>
             </p>
-            <div
-              style="font-size: 12px; color: rgb(160, 160, 160)"
-            >This helps your relatives to contact you.</div>
+            <div style="font-size: 12px; color: rgb(160, 160, 160)">
+              This helps your relatives to contact you.
+            </div>
             <div class="form-inline row">
               <label
                 for="name"
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-              >Your Name :</label>
+                >Your Name :</label
+              >
               <input
                 v-model="contact.name"
                 type="text"
@@ -152,7 +179,8 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-              >Your Email :</label>
+                >Your Email :</label
+              >
               <input
                 v-model="contact.email"
                 type="email"
@@ -168,22 +196,24 @@
                 justify-content: space-between;
               "
             >
-              <button
-                type="submit"
-                class="btn btn-success"
-                :disabled="pin.length != 4 || loading || pin == view_pin"
-              >
-                <span
-                  class="spinner-border spinner-border-sm"
-                  v-show="loading"
-                  style="margin-right: 8px"
-                ></span>
-                <span>{{ payload ? "Update" : "Create" }}</span>
-              </button>
+              <div>
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  :disabled="pin.length != 4 || loading || pin == view_pin"
+                >
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    v-show="loading"
+                    style="margin-right: 8px"
+                  ></span>
+                  <span>{{ payload ? "Update" : "Create" }}</span>
+                </button>
 
-              <button type="button" class="btn btn-default" @click="goBack">
-                <span>Cancel</span>
-              </button>
+                <button type="button" class="btn btn-default ml-3" @click="goBack">
+                  Cancel
+                </button>
+              </div>
 
               <button
                 type="button"
@@ -193,7 +223,9 @@
                   isDelete = true;
                   created = false;
                 "
-              >Delete</button>
+              >
+                Delete
+              </button>
             </div>
             <div v-if="errored" class="mt-3 text-danger">
               <div class="mb-2">Surname {{ surname }}, already exists</div>
@@ -248,8 +280,8 @@ export default {
       editFormErrored: null,
       contact: {
         name: null,
-        email: null
-      }
+        email: null,
+      },
     };
   },
   mounted() {
@@ -263,10 +295,10 @@ export default {
       this.view_pin = this.payload.view_pin;
       this.editFormLoading = true;
       Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
-        .then(data => {
+        .then((data) => {
           this.pin = data.data.pin;
         })
-        .catch(err => (this.editFormErrored = err))
+        .catch((err) => (this.editFormErrored = err))
         .finally(() => (this.editFormLoading = false));
     } else {
       this.editFormLoading = false;
@@ -283,25 +315,25 @@ export default {
           created_at: this.payload.created_at,
           pin: this.pin,
           view_pin: this.view_pin,
-          contact: this.contact
+          contact: this.contact,
         })
           .then(() => {
             this.loading = false;
             this.$emit("close", this.title);
           })
-          .catch(err => (this.errored = err));
+          .catch((err) => (this.errored = err));
       } else {
         Axios.post(ProdData.getHostURL() + "/meta/add", {
           title: this.title,
           surname: this.surname,
           pin: this.pin,
-          contact: this.contact
+          contact: this.contact,
         })
           .then(() => {
             this.goFamily();
             // this.created = true;
           })
-          .catch(err => {
+          .catch((err) => {
             this.errored = err;
           })
           .finally(() => (this.loading = false));
@@ -310,10 +342,10 @@ export default {
     deleteFamily() {
       this.loading = true;
       Axios.delete(ProdData.getHostURL() + "/meta", {
-        data: { surname: this.errSurname }
+        data: { surname: this.errSurname },
       })
-        .then(data => console.log(data))
-        .catch(err => console.log(err))
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err))
         .finally(() => {
           this.goBack();
           this.$router.push({ name: "Home" });
@@ -329,8 +361,8 @@ export default {
     makeSmall() {
       this.surname = this.surname.toLowerCase();
       this.surname = this.surname.split(" ").join("");
-    }
-  }
+    },
+  },
 };
 </script>
 

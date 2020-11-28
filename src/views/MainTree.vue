@@ -203,7 +203,8 @@
                 class="btn download-tree-btn"
                 @click="puppyDownload"
                 id="download-pic"
-                v-if="!puppyData.downloaded"
+                :disabled="puppyData.loader"
+                v-if="!puppyData.downloaded && numOfMemebers > 1"
               >
                 <i class="icofont-download" v-if="!puppyData.loader"></i>
                 <div
@@ -216,7 +217,7 @@
 
               <!-- Downloaded Successfully -->
               <div
-                v-else
+                v-else-if="numOfMemebers > 1"
                 class="download-tree-pic-body"
                 style="position: absolute; top: 85px; z-index: 10; left: 10px"
               >
@@ -228,6 +229,7 @@
                   :style="{
                     width: puppyData.hide ? '0px' : '260px',
                     'font-size': puppyData.hide ? '0px' : '18px',
+                    color: puppyData.hide ? '#7ac142' : 'white',
                   }"
                 >
                   Downloaded Sucessfully

@@ -62,7 +62,7 @@
               right: 0;
               padding: 20px;
             "
-            v-if="$device.mobile && notificationsIcon"
+            v-if="$device.mobile && notificationsIcon == true"
             @click="showNotifications"
           ></i>
           <!-- Bloodline Title -->
@@ -74,7 +74,13 @@
                 @click="helperFunc"
               ></i>
             </div>
-            <span style="font-weight: 500; color: white">BloodLine</span>
+            <span
+              style="font-weight: 500; color: white"
+              :style="{
+                'font-size': $device.mobile ? '40px' : '50px',
+              }"
+              >BloodLine</span
+            >
             <br />
           </div>
 
@@ -354,7 +360,6 @@ a:hover {
   text-align: center;
   font-family: "lato", sans-serif;
   font-weight: 300;
-  font-size: 40px;
   letter-spacing: 10px;
 }
 #title span {
@@ -519,8 +524,8 @@ export default {
       this.addFBtn = false;
     }
     try {
-      this.notificationsIcon = true;
       print.postMessage("show Notifications");
+      this.notificationsIcon = true;
     } catch (error) {
       console.log();
     }

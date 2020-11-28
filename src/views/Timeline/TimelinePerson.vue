@@ -61,7 +61,7 @@
               </div>
 
               <!-- No Timeline found -->
-              <div v-else class="timeline-intro">
+              <div v-else class="timeline-intro col-md-10">
                 <div>
                   <i class="icofont-arrow-right"></i> Add events like BirthDay,
                   Anniversaries, etc.,
@@ -70,6 +70,9 @@
                   <i class="icofont-arrow-right"></i> Shared Events like Trips,
                   Marriage, etc., can also be added and shared with
                   corresponding people So that it will appear on their Timeline.
+                </div>
+                <div class="intro-text2">
+                  <i class="icofont-arrow-right"></i> Will send a notification everyone.
                 </div>
               </div>
 
@@ -402,7 +405,7 @@ export default {
 }
 .timeline-intro {
   margin-top: 130px;
-  font-size: 25px;
+  font-size: 20px;
 }
 .intro-text2 {
   margin-top: 50px;
