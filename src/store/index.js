@@ -17,9 +17,10 @@ export default new Vuex.Store({
     error: false,
     cur_surname: "",
     metadata: {},
+    view_only: null,
     promos: {
-      1 : true, //Relation Finder
-      2 : true  // Website
+      1: true, //Relation Finder
+      2: true  // Website
     }
   },
   mutations: {
@@ -31,16 +32,19 @@ export default new Vuex.Store({
       state.title = treeData.data.meta;
       state.metadata = treeData.data.meta;
       state.is_session = treeData.data.has_session;
+      state.view_only = treeData.data.view_only;
       try {
         if (treeData.data.meta[0]["celeb"] != true)
           print.postMessage("familyId--" + treeData.data.meta[0]["_id"]);
       } catch (error) {
-        console.log("opened in browser");
+        console.log();
       }
     },
     setSession(state, sessData) {
       state.is_session = sessData.status;
       state.cur_surname = sessData.surname;
+      state.view_only = sessData.view_only;
+      console.log(state.view_only);
     },
     setLoading(state, status) {
       state.loading = status;
@@ -57,7 +61,7 @@ export default new Vuex.Store({
     setMetaData(state, metaData) {
       state.metadata = metaData;
     },
-    setPromo(state, promoNo){
+    setPromo(state, promoNo) {
       state.promos[promoNo] = false;
     }
   },

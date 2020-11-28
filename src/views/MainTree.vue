@@ -74,7 +74,7 @@
             <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
               {{ newTitle ? newTitle : title[0].title }}
             </div>
-            <div v-show="is_session">
+            <div v-show="is_session && !view_only">
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
@@ -384,6 +384,11 @@ export default {
         return Store.state.title;
       },
     },
+    view_only: {
+      get() {
+        return Store.state.view_only;
+      },
+    },
     is_session: {
       get() {
         return Store.state.is_session;
@@ -456,11 +461,11 @@ export default {
           this.puppyData.downloaded = true;
           setTimeout(() => {
             this.puppyData.hide = true;
-          }, 2000);
+          }, 4000);
           setTimeout(() => {
             this.puppyData.downloaded = false;
             this.puppyData.hide = false;
-          }, 3000);
+          }, 6000);
         })
         .catch((err) => {
           console.log(err);
@@ -862,7 +867,7 @@ h2 {
   height: 50px;
   width: 50px;
   border-radius: 60px;
-  z-index: 100;
+  z-index: 11;
 }
 
 .download-tree-btn {
@@ -871,7 +876,7 @@ h2 {
   left: 10px;
   font-size: 22px;
   cursor: pointer;
-  z-index: 100;
+  z-index: 11;
   background: indianred;
   color: white !important;
   border-radius: 60px;

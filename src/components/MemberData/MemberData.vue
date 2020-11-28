@@ -30,7 +30,7 @@
               />
             </div>
 
-            <div class="middle" v-if="cookeyStatus">
+            <div class="middle" v-if="cookeyStatus && !view_only">
               <div class="member-txt">
                 <a
                   class="btn"
@@ -85,7 +85,7 @@
                     class="icofont-edit float-right"
                     @click="addMember(2, data)"
                     style="font-size: 20px"
-                    v-show="cookeyStatus"
+                    v-show="cookeyStatus && !view_only"
                   ></i>
                 </td>
               </tr>
@@ -135,16 +135,17 @@
                   <!-- Actions Body -->
                   <div
                     id="collapseOne"
-                    class="collapse show"
+                    class="collapse"
                     aria-labelledby="headingOne"
                     data-parent="#accordion"
+                    :class="{ show: !view_only }"
                   >
                     <div class="card-body">
                       <Actions
                         :cookeyStatus="cookeyStatus"
                         :data="data"
                         :hasMate="hasMate"
-                        :cookey="cookey"
+                        :viewOnly="view_only"
                         v-on:actionsAddMember="addMember"
                         v-on:actionsDeleteSwipe="deleteSwipe"
                         v-on:keyTrue="cookeyStatus = true"
@@ -159,7 +160,6 @@
                   <button
                     class="btn p-0 collapsed"
                     style="color: #007bff; width: 100%"
-                    :disabled="!cookeyStatus"
                     data-toggle="collapse"
                     data-target="#collapseTwo"
                     aria-expanded="false"
@@ -174,6 +174,7 @@
                     class="collapse"
                     aria-labelledby="headingTwo"
                     data-parent="#accordion"
+                    :class="{ show: view_only }"
                   >
                     <div class="card-body" style="padding: 0px">
                       <MoreInfo :id="id" :data="data"></MoreInfo>
@@ -191,13 +192,13 @@
                   :cookeyStatus="cookeyStatus"
                   :data="data"
                   :hasMate="hasMate"
-                  :cookey="cookey"
+                  :viewOnly="view_only"
                   v-on:actionsAddMember="addMember"
                   v-on:actionsDeleteSwipe="deleteSwipe"
                   v-on:keyTrue="cookeyStatus = true"
                 ></Actions>
               </tab>
-              <tab name="More Info" :is-disabled="!cookeyStatus">
+              <tab name="More Info">
                 <MoreInfo :id="id" :data="data"></MoreInfo>
               </tab>
             </tabs>
@@ -264,7 +265,6 @@ export default {
       loadingUpload: false,
       doneUpload: false,
       imageExists: false,
-      cookey: "",
       cookeyStatus: false,
       vloading: false,
       hasMate: false,
@@ -284,6 +284,13 @@ export default {
         if (val) {
           this.showUpload = true;
         }
+      },
+    },
+  },
+  computed: {
+    view_only: {
+      get() {
+        return Store.state.view_only;
       },
     },
   },
@@ -307,7 +314,6 @@ export default {
         this.data = data.data;
         this.count = Object.keys(this.data).length - 6; //decremented 1 for image status
         this.cookeyStatus = this.data.has_session;
-
         if (this.data.xtra_parent_id) {
           this.data.xtra_parent_name = Algos.getPersonById(
             Store.getters.getTreeData,

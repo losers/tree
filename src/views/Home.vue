@@ -59,19 +59,18 @@
               font-size: 25px;
               color: white;
               position: absolute;
-              right: 20px;
-              top: 20px;
+              right: 0;
+              padding: 20px;
             "
-            v-if="notificationsIcon"
+            v-if="$device.mobile && notificationsIcon"
             @click="showNotifications"
           ></i>
           <!-- Bloodline Title -->
           <div id="title">
-            <div class="help">
+            <div class="help" v-if="$device.mobile">
               <i
                 class="icofont-chat"
-                style="margin-right: -10px"
-                v-if="$device.mobile"
+                style="margin-right: -10px; font-size: 35px"
                 @click="helperFunc"
               ></i>
             </div>
@@ -290,11 +289,15 @@
 .help {
   position: fixed;
   bottom: 20px;
-  padding: 5px 15px;
   background: indianred;
-  border-radius: 40px;
+  border-radius: 50%;
   color: white;
   right: 20px;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .load-more {
   background-color: white;
@@ -516,8 +519,8 @@ export default {
       this.addFBtn = false;
     }
     try {
-      print.postMessage("show Notifications");
       this.notificationsIcon = true;
+      print.postMessage("show Notifications");
     } catch (error) {
       console.log();
     }
