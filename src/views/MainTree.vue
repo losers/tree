@@ -1,8 +1,12 @@
 <template>
-  <div id="app" style="overflow: auto; height: 100%">
+  <div id="app" style="height: 100%" :class="[{ 'o-auto': $device.mobile }]">
     <!-- All errors are handeled here -->
     <section v-if="errored" style="height: 100%">
-      <error v-if="errored.response.status == 404" :msg="errored.response.data">{{ errored }}</error>
+      <error
+        v-if="errored.response.status == 404"
+        :msg="errored.response.data"
+        >{{ errored }}</error
+      >
       <DualPage
         :payload="authModal.payload"
         :reference="5"
@@ -22,11 +26,15 @@
           alt="No Entry"
           style="margin-top: 50px; margin-bottom: 30px"
         />
-        <h2 style="margin-bottom: 20px">You don't have access for "{{ metadata.title }}"</h2>
+        <h2 style="margin-bottom: 20px">
+          You don't have access for "{{ metadata.title }}"
+        </h2>
         <button class="btn btn-success" @click="openAuthBox">Enter PIN</button>
 
         <div style="margin-top: 20px" v-if="helper.main_show">
-          <a @click="toggleHelper" style="color: blue; cursor: pointer">Help !</a>
+          <a @click="toggleHelper" style="color: blue; cursor: pointer"
+            >Help !</a
+          >
           <div v-if="helper.show">
             <p>
               Change Cookie Settings in {{ helper.browser }} Browser, to allow
@@ -45,7 +53,6 @@
     <!-- Loads when a tree is found -->
     <section v-else>
       <router-view></router-view>
-
       <div v-if="loading">
         <router-link :to="{ name: 'Home' }" class="float-left mt-2 ml-1">
           <i class="icofont-arrow-left"></i>
@@ -64,11 +71,10 @@
             Back
           </router-link>
           <div class="tree-title flexy">
-            <div
-              class="fam-name"
-              :class="[{ 'f-26': $device.mobile }]"
-            >{{ newTitle ? newTitle : title[0].title }}</div>
-            <div v-show="is_session">
+            <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
+              {{ newTitle ? newTitle : title[0].title }}
+            </div>
+            <div v-show="is_session && !view_only">
               <i
                 class="icofont-edit ml-2"
                 @click="dualPage(0)"
@@ -120,21 +126,31 @@
             v-if="!$device.mobile"
           />
           <!-- Page Content -->
-          <div style="flex-direction: column; display: flex; align-items: center">
+          <div
+            style="flex-direction: column; display: flex; align-items: center"
+          >
             <h5
               class="d-flex content-justify-left ml-2"
               :class="[
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
-            >Let's add members to Family Tree</h5>
+            >
+              Let's add members to Family Tree
+            </h5>
           </div>
           <!-- Add Root Button -->
           <div id="wrapper" v-if="is_session">
-            <touch-ripple @click.native="dualPage(1)" class="button-box" :speed="1.1">
+            <touch-ripple
+              @click.native="dualPage(1)"
+              class="button-box"
+              :speed="1.1"
+            >
               <button
                 class="btn btn-success my-btn"
                 style="font-weight: bolder; font-size: 17px"
-              >+ Add Person</button>
+              >
+                + Add Person
+              </button>
             </touch-ripple>
             <!-- <button @click="dualPage(1)" class="my-super-cool-btn">
               <div class="dots-container">
@@ -167,7 +183,10 @@
                   }"
                   :disabled="vloading"
                 >
-                  <span class="spinner-border spinner-border-sm" v-show="vloading"></span>
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    v-show="vloading"
+                  ></span>
                   {{ retry ? "Retry" : "Validate" }}
                 </button>
               </div>
@@ -178,13 +197,14 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
-            <div v-if="false">
+            <div>
               <!-- Download Tree -->
               <button
                 class="btn download-tree-btn"
                 @click="puppyDownload"
                 id="download-pic"
-                v-if="!puppyData.downloaded"
+                :disabled="puppyData.loader"
+                v-if="!puppyData.downloaded && numOfMemebers > 1"
               >
                 <i class="icofont-download" v-if="!puppyData.loader"></i>
                 <div
@@ -197,7 +217,7 @@
 
               <!-- Downloaded Successfully -->
               <div
-                v-else
+                v-else-if="numOfMemebers > 1"
                 class="download-tree-pic-body"
                 style="position: absolute; top: 85px; z-index: 10; left: 10px"
               >
@@ -207,10 +227,13 @@
                 <div
                   class="download-msg"
                   :style="{
-                  width: puppyData.hide ? '0px' : '260px',
-                  'font-size': puppyData.hide ? '0px' : '18px',
-                }"
-                >Downloaded Sucessfully</div>
+                    width: puppyData.hide ? '0px' : '260px',
+                    'font-size': puppyData.hide ? '0px' : '18px',
+                    color: puppyData.hide ? '#7ac142' : 'white',
+                  }"
+                >
+                  Downloaded Sucessfully
+                </div>
               </div>
             </div>
             <TreeChart
@@ -222,9 +245,14 @@
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
-                <i class="icofont-long-arrow-up object" style="font-size: 25px"></i>
+                <i
+                  class="icofont-long-arrow-up object"
+                  style="font-size: 25px"
+                ></i>
               </center>
-              <h4 style="color: #848181">Click on this person to add Parents / Children etc.,</h4>
+              <h4 style="color: #848181">
+                Click on this person to add Parents / Children etc.,
+              </h4>
             </div>
           </center>
           <router-link
@@ -277,14 +305,14 @@ export default {
     Error,
     DualPage,
     touchRipple,
-    Tick
+    Tick,
   },
   data() {
     return {
       puppyData: {
         loader: false,
         hide: false,
-        downloaded: false
+        downloaded: false,
       },
       landscape: [],
       surname: this.$route.params.id,
@@ -298,42 +326,42 @@ export default {
       dualPageData: {
         showDualPage: false,
         reference: null,
-        payload: {}
+        payload: {},
       },
       authModal: {
         payload: {},
-        show: false
+        show: false,
       },
       helper: {
         show: false,
         browser: "",
-        main_show: false
+        main_show: false,
       },
       promo: {
         relationFinder: {
-          show: Store.state.promos[1]
+          show: Store.state.promos[1],
         },
         website: {
-          show: Store.state.promos[2]
-        }
-      }
+          show: Store.state.promos[2],
+        },
+      },
     };
   },
   computed: {
     metadata: {
       get() {
         return Store.state.metadata;
-      }
+      },
     },
     loading: {
       get() {
         return Store.state.loading;
-      }
+      },
     },
     images: {
       get() {
         return Store.state.images;
-      }
+      },
     },
     numOfMemebers: {
       get() {
@@ -341,7 +369,7 @@ export default {
           return Store.state.allMembers.length;
         }
         return 0;
-      }
+      },
     },
     tempData: {
       get() {
@@ -351,17 +379,22 @@ export default {
           Store.dispatch("setStepNumber", 1);
         }
         return Store.state.tree;
-      }
+      },
     },
     title: {
       get() {
         return Store.state.title;
-      }
+      },
+    },
+    view_only: {
+      get() {
+        return Store.state.view_only;
+      },
     },
     is_session: {
       get() {
         return Store.state.is_session;
-      }
+      },
     },
     errored: {
       get() {
@@ -372,8 +405,8 @@ export default {
           }
         }
         return Store.state.error;
-      }
-    }
+      },
+    },
   },
   mounted() {
     // this.toggleBodyClass("addClass", "mem-spec");
@@ -384,7 +417,7 @@ export default {
     }
 
     //called after adding a new member
-    this.$root.$on("update-tree", data => {
+    this.$root.$on("update-tree", (data) => {
       console.log(data);
       this.$router.go();
     });
@@ -410,28 +443,33 @@ export default {
       //   .finally(() => {
       //     this.puppyData.loader = false
       //   });
-
       let puppyTree = document.querySelector(".puppy-tree");
       htmlToImage
         .toPng(puppyTree, {
           backgroundColor: "white",
-          pixelRatio: 1
+          pixelRatio: 1,
         })
-        .then(dataUrl => {
-          var link = document.createElement("a");
-          link.download = `${this.surname}.png`;
-          link.href = dataUrl;
-          link.click();
+        .then((dataUrl) => {
+          try {
+            print.postMessage(
+              "download--" + this.surname + "--" + dataUrl.split("base64,")[1]
+            );
+          } catch (error) {
+            var link = document.createElement("a");
+            link.download = `${this.surname} - ${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
+          }
           this.puppyData.downloaded = true;
           setTimeout(() => {
             this.puppyData.hide = true;
-          }, 2000);
+          }, 4000);
           setTimeout(() => {
             this.puppyData.downloaded = false;
             this.puppyData.hide = false;
-          }, 3000);
+          }, 6000);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -442,8 +480,8 @@ export default {
       var shareData = {
         type: "share",
         title: `${this.surname.toUpperCase()} Family Tree`,
-        text: `Click on the below link to see and edit ${this.surname.toUpperCase()} family tree`,
-        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`
+        text: `Click on the below link to check ${this.surname.toUpperCase()} family tree. You can also open the link in your desktop or laptop browser`,
+        url: `https://bloodlineapp.page.link/familytree?surname=${this.surname}`,
       };
       try {
         print.postMessage(`share--${this.surname}`);
@@ -452,7 +490,7 @@ export default {
       }
     },
     // Called when a node is clicked
-    toggleHelper: function() {
+    toggleHelper: function () {
       this.helper.show = !this.helper.show;
 
       let nAgt = navigator.userAgent;
@@ -474,23 +512,23 @@ export default {
 
       this.helper.browser = browserName;
     },
-    openAuthBox: function() {
+    openAuthBox: function () {
       this.authModal.show = true;
       this.authModal.payload.title = Store.state.error.response.data[0].title;
       this.authModal.payload.surname =
         Store.state.error.response.data[0].surname;
     },
-    clickNode: function(node) {
+    clickNode: function (node) {
       if (node.data.mate || node.isMate) {
         this.$router.push({
           name: "MemberData",
           params: { member: node.data.id },
-          query: { hasMate: true }
+          query: { hasMate: true },
         });
       } else {
         this.$router.push({
           name: "MemberData",
-          params: { member: node.data.id }
+          params: { member: node.data.id },
         });
       }
     },
@@ -519,7 +557,7 @@ export default {
           Store.commit("setSession", sessData);
           this.vloading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           this.retry = true;
           console.log(err);
         })
@@ -545,12 +583,15 @@ export default {
         this.newTitle = payload;
       }
       this.dualPageData.showDualPage = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
+.o-auto {
+  overflow: auto;
+}
 .padt340 {
   padding-top: 340px;
 }
@@ -828,7 +869,7 @@ h2 {
   height: 50px;
   width: 50px;
   border-radius: 60px;
-  z-index: 100;
+  z-index: 11;
 }
 
 .download-tree-btn {
@@ -837,7 +878,7 @@ h2 {
   left: 10px;
   font-size: 22px;
   cursor: pointer;
-  z-index: 100;
+  z-index: 11;
   background: indianred;
   color: white !important;
   border-radius: 60px;

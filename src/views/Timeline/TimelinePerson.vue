@@ -2,11 +2,11 @@
   <div id="app">
     <div v-if="$route.params.member">
       <section v-if="error">
-        <h3>Something went wrong {{error}}</h3>
+        <h3>Something went wrong {{ error }}</h3>
       </section>
       <section v-else>
         <section v-if="payload.loading.main">
-          <center style="padding-top:240px">
+          <center style="padding-top: 240px">
             <img src="@/assets/dna.gif" alt="Bloodline Loader" />
           </center>
         </section>
@@ -14,37 +14,42 @@
           <!-- Titlebar -->
           <div class="timeline-titlebar">
             <router-link
-              :to="{name:'MainTree', params:{id:$route.params.id}}"
+              :to="{ name: 'MainTree', params: { id: $route.params.id } }"
               class="float-left ml-1"
             >
               <i class="icofont-arrow-left"></i>
               Back
             </router-link>
-            <b class="timeline-title">{{user.name }}'s Timeline</b>
+            <b class="timeline-title">{{ user.name }}'s Timeline</b>
           </div>
 
           <!-- Alert Modals -->
           <transition name="fade">
             <div
               v-show="show_alert"
-              style="right: 10px;position: fixed;margin-top:10px;z-index:10"
+              style="
+                right: 10px;
+                position: fixed;
+                margin-top: 10px;
+                z-index: 10;
+              "
               class="alert float-right"
-              :class="success_alert?'alert-success':'alert-danger'"
+              :class="success_alert ? 'alert-success' : 'alert-danger'"
             >
               <p v-if="success_alert">
                 <strong>Success!</strong>
-                {{modal_msg}}.
+                {{ modal_msg }}.
               </p>
               <p v-else>
                 <strong>Error!</strong>
-                Something went wrong {{modal_msg}}.
+                Something went wrong {{ modal_msg }}.
               </p>
             </div>
           </transition>
 
-          <div class="row pt-5" style="margin:0">
+          <div class="row pt-5" style="margin: 0">
             <div class="col-md-6 col-sm-12">
-              <div v-if="dataTimeline.length!=0">
+              <div v-if="dataTimeline.length != 0">
                 <Timeline
                   class="mt-5 pb-5 mb-5"
                   :timeline-items="dataTimeline"
@@ -56,12 +61,18 @@
               </div>
 
               <!-- No Timeline found -->
-              <div v-else class="timeline-intro">
+              <div v-else class="timeline-intro col-md-10">
                 <div>
-                  <i class="icofont-arrow-right"></i> Add events like BirthDay, Anniversaries, etc.,
+                  <i class="icofont-arrow-right"></i> Add events like BirthDay,
+                  Anniversaries, etc.,
                 </div>
                 <div class="intro-text2">
-                  <i class="icofont-arrow-right"></i> Shared Events like Trips, Marriage, etc., can also be added and shared with corresponding people So that it will appear on their Timeline.
+                  <i class="icofont-arrow-right"></i> Shared Events like Trips,
+                  Marriage, etc., can also be added and shared with
+                  corresponding people So that it will appear on their Timeline.
+                </div>
+                <div class="intro-text2">
+                  <i class="icofont-arrow-right"></i> Will send a notification everyone.
                 </div>
               </div>
 
@@ -79,15 +90,38 @@
 
                 <!-- Add Event Button for Mobile -->
                 <div
-                  style="position: fixed; font-size: 20px; padding:30px; bottom: 0px; left: 0;  width: 100%; -webkit-box-shadow: -14px 14px 32px -16px rgba(0,0,0,0.75); -moz-box-shadow: -14px 14px 32px -16px rgba(0,0,0,0.75); box-shadow: -14px 14px 32px -16px rgba(0,0,0,0.75);"
+                  v-if="!view_only"
+                  style="
+                    position: fixed;
+                    font-size: 20px;
+                    padding: 30px;
+                    bottom: 0px;
+                    left: 0;
+                    width: 100%;
+                    -webkit-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
+                    -moz-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
+                    box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
+                  "
                 >
-                  <button @click="wrapperUp" class="btn btn-success" style="width:100%">+ Add Event</button>
+                  <button
+                    @click="wrapperUp"
+                    class="btn btn-success"
+                    style="width: 100%"
+                  >
+                    + Add Event
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div class="timeline_add_box" v-if="!$device.mobile && !payload.loading.main">
-              <TimelineForm :payload="payload" v-on:crudops="formEmit"></TimelineForm>
+            <div
+              class="timeline_add_box"
+              v-if="!$device.mobile && !payload.loading.main && !view_only"
+            >
+              <TimelineForm
+                :payload="payload"
+                v-on:crudops="formEmit"
+              ></TimelineForm>
             </div>
           </div>
         </section>
@@ -112,14 +146,14 @@ export default {
   components: {
     Timeline,
     DualPage,
-    TimelineForm
+    TimelineForm,
   },
   watch: {
     names() {
       if (this.names != null) {
         this.getTimelineData();
       }
-    }
+    },
   },
   mounted() {
     if (this.names != null) {
@@ -146,7 +180,7 @@ export default {
           "/" +
           this.$route.params.member
       )
-        .then(data => {
+        .then((data) => {
           //Timeline Meta Data
           this.user.fullname = data.data[0].name;
           this.user.name = data.data[0].short_name;
@@ -161,7 +195,7 @@ export default {
               content: `[ Automatically created from ${this.user.fullname} data. ]`,
               date: new Date(data.data[0].dob),
               fixed: true,
-              title: "Birthday"
+              title: "Birthday",
             };
             this.dataTimeline.push(udob);
           }
@@ -172,7 +206,7 @@ export default {
               content: `[ Automatically created from ${this.user.fullname} data. ]`,
               date: new Date(data.data[0].died_on),
               fixed: true,
-              title: "Date of Demise"
+              title: "Date of Demise",
             };
             this.dataTimeline.push(udob);
           }
@@ -181,7 +215,7 @@ export default {
           }
           this.payload.loading.main = false;
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = err;
         });
     },
@@ -192,7 +226,7 @@ export default {
         let eve = {
           date: this.payload.formData.date,
           title: this.payload.formData.title,
-          content: this.payload.formData.content
+          content: this.payload.formData.content,
         };
         eve.shared_with = [];
         if (
@@ -223,7 +257,7 @@ export default {
               this.cancelclk();
               this.alertStatus(true, "Updated an event");
             })
-            .catch(err => {
+            .catch((err) => {
               this.alertStatus(false, err);
             })
             .finally(() => (this.payload.loading.change = false));
@@ -237,13 +271,13 @@ export default {
               this.$route.params.member,
             eve
           )
-            .then(data => {
+            .then((data) => {
               eve.id = data.data;
               this.alertStatus(true, "Created a Event");
               this.dataTimeline.push(eve);
               this.cancelclk();
             })
-            .catch(err => {
+            .catch((err) => {
               this.alertStatus(false, err);
             })
             .finally(() => (this.payload.loading.change = false));
@@ -306,17 +340,17 @@ export default {
           "/" +
           this.$route.params.member,
         {
-          data: { id: this.payload.formData.id }
+          data: { id: this.payload.formData.id },
         }
       )
         .then(() => {
           this.alertStatus(true, "Deleted a Event");
           let temparr = this.dataTimeline;
-          temparr = temparr.filter(x => x.id !== this.payload.formData.id);
+          temparr = temparr.filter((x) => x.id !== this.payload.formData.id);
           this.dataTimeline = temparr;
           this.cancelclk();
         })
-        .catch(err => {
+        .catch((err) => {
           this.alertStatus(false, err);
         })
         .finally(() => (this.payload.loading.delete = false));
@@ -325,7 +359,7 @@ export default {
     wrapperUp() {
       this.payload.names = this.names;
       this.showDualPage = true;
-    }
+    },
   },
   data: () => ({
     user: {},
@@ -341,32 +375,37 @@ export default {
     showDualPage: false,
     payload: {
       formData: { isEdit: false, shared_with: [] },
-      loading: { main: true, delete: false, change: false }
-    }
+      loading: { main: true, delete: false, change: false },
+    },
   }),
   computed: {
     names: {
       get() {
         var name = Store.getters.getAllMembers;
         if (name.length == 0) return null;
-        name = name.filter(obj => {
+        name = name.filter((obj) => {
           return obj.value !== this.$route.params.member;
         });
 
         return name;
-      }
-    }
-  }
+      },
+    },
+    view_only: {
+      get() {
+        return Store.state.view_only;
+      },
+    },
+  },
 };
 </script>
 
 <style>
-.timeline-intro .icofont-arrow-right{
+.timeline-intro .icofont-arrow-right {
   color: indianred;
 }
 .timeline-intro {
   margin-top: 130px;
-  font-size: 25px;
+  font-size: 20px;
 }
 .intro-text2 {
   margin-top: 50px;

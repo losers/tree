@@ -3,7 +3,7 @@
     <swipeable-bottom-sheet
       v-if="$device.mobile"
       ref="swipeableBottomSheet"
-      style="z-index:100"
+      style="z-index: 100"
       v-on:close="beforeClose"
     >
       <component
@@ -13,12 +13,31 @@
         v-on:close="swiperClose"
       ></component>
     </swipeable-bottom-sheet>
+
+    <!-- <bottom-modal
+      v-if="$device.mobile"
+      v-model="$device.mobile"
+      ref="swipeableBottomSheet"
+      style="z-index: 100"
+      v-on:close="beforeClose"
+      :height="400"
+      :backgroundColor="'transparent'"
+      :topRadius="'0px'"
+      :overlayColor="'white'"
+    >
+      <component
+        v-bind:is="selectedComponent"
+        :payload="this.payload"
+        v-on:crudops="crudops"
+        v-on:close="swiperClose"
+      ></component>
+    </bottom-modal> -->
   </div>
 </template>
 
 <script>
 import SwipeableBottomSheet from "../components/t-party/SwipeableBottomSheet";
-
+import BottomModal from "vue-bottom-dialog";
 import AddFamily from "../components/AddFamilyForm.vue";
 import AddRoot from "../components/AddRootForm.vue";
 import AddMemberForm from "../components/AddMemberForm";
@@ -28,11 +47,14 @@ import AuthForm from "../components/AuthForm";
 import Helper from "../components/Helper"; //6
 import RelationFinderPromo from "../components/promotional/RelationFinder"; //7
 import WebsitePromo from "../components/promotional/Website"; //7
+import Vue from "vue";
+// import BottomModal from "./BottomModal.vue";
+Vue.use(BottomModal);
 
 export default {
   props: ["reference", "payload", "onlySwiper"],
   components: {
-    SwipeableBottomSheet
+    SwipeableBottomSheet,
   },
   data() {
     return {
@@ -45,9 +67,9 @@ export default {
         AuthForm,
         Helper,
         RelationFinderPromo,
-        WebsitePromo
+        WebsitePromo,
       ],
-      selectedComponent: ""
+      selectedComponent: "",
     };
   },
   mounted() {
@@ -64,16 +86,16 @@ export default {
       this.$modal.show(
         this.selectedComponent,
         {
-          payload: this.payload
+          payload: this.payload,
         },
         {
           height: "auto",
           draggable: true,
           clickToClose: true,
-          scrollable: true
+          scrollable: true,
         },
         {
-          "before-close": this.beforeClose
+          "before-close": this.beforeClose,
         }
       );
     }
@@ -83,6 +105,7 @@ export default {
       this.$emit("crudops", num);
     },
     beforeClose() {
+      console.log("closed");
       this.$emit("closed");
     },
     swiperClose(return_payload) {
@@ -90,7 +113,7 @@ export default {
       setTimeout(() => {
         this.$emit("closed", return_payload);
       }, 500);
-    }
-  }
+    },
+  },
 };
 </script>

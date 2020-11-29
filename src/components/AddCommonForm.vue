@@ -1,10 +1,12 @@
 <template>
   <div class="FormData p-5">
-    <h3 class="mb-3" style="color: black">{{ payload.memData ? "Edit" : "Add" }} Member</h3>
+    <h3 class="mb-3" style="color: black">
+      {{ payload.memData ? "Edit" : "Add" }} Member
+    </h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
         <label class="d-none d-sm-block col-md-4">
-          <span class="text-warning mr-1">*</span>Full Name :
+          <span class="text-warning mr-1">*</span>Name :
         </label>
         <input
           type="text"
@@ -14,20 +16,6 @@
           required
         />
       </div>
-
-      <div class="row">
-        <label class="d-none d-sm-block col-md-4">
-          <span class="text-warning mr-1">*</span>Short Name:
-        </label>
-        <input
-          type="text"
-          class="form-control col-md-7 col-sm-12"
-          placeholder="Enter Short Name"
-          v-model="data.short_name"
-          required
-        />
-      </div>
-      <p class="info">Short Name will be shown in Family Tree</p>
 
       <!-- payload.gender Selection -->
       <div v-if="type_data == 'gender'"></div>
@@ -43,7 +31,9 @@
             id="male"
             required
           />
-          <label for="male" class="form-check-label ml-2" style="color: black">Male</label>
+          <label for="male" class="form-check-label ml-2" style="color: black"
+            >Male</label
+          >
         </div>
         <div class="form-check">
           <input
@@ -54,7 +44,9 @@
             v-model="data.gender"
             value="0"
           />
-          <label for="female" class="form-check-label ml-2" style="color: black">Female</label>
+          <label for="female" class="form-check-label ml-2" style="color: black"
+            >Female</label
+          >
         </div>
       </div>
 
@@ -63,9 +55,22 @@
         <hr class="mt-5 mb-3" style="background-color: white" />
         <p style="margin-top: -29px">
           <center>
-            <span style="background-color: white; padding: 20px; color: #969696">Optional</span>
+            <span style="background-color: white; padding: 20px; color: #969696"
+              >Optional Details</span
+            >
           </center>
         </p>
+
+        <div class="row">
+          <label class="d-none d-sm-block col-md-4"> Short Name: </label>
+          <input
+            type="text"
+            class="form-control col-md-7 col-sm-12"
+            placeholder="Enter Short Name"
+            v-model="data.short_name"
+          />
+        </div>
+        <p class="info">Short Name will be shown in Family Tree</p>
 
         <div class="row" v-if="xtraParent.show">
           <label class="d-none d-sm-flex col-md-4">
@@ -81,14 +86,23 @@
         </div>
         <div class="row">
           <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
-          <md-datepicker class="col-md-7 col-xs-12 cus" v-model="data.dob" :md-model-type="String">
+          <md-datepicker
+            class="col-md-7 col-xs-12 cus"
+            v-model="data.dob"
+            :md-model-type="String"
+          >
             <label>Date of Birth</label>
           </md-datepicker>
         </div>
 
         <div class="row mb-2">
           <label class="col-4 flexy" style="color: black">Is Alive :</label>
-          <toggle-button v-model="is_alive" :value="is_alive" :sync="true" class="flexy" />
+          <toggle-button
+            v-model="is_alive"
+            :value="is_alive"
+            :sync="true"
+            class="flexy"
+          />
           <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
             <md-datepicker
               v-model="data.died_on"
@@ -155,7 +169,9 @@
         <hr class="mt-5 mb-3" style="background-color: white" />
         <p style="margin-top: -29px">
           <center>
-            <span style="background-color: white; padding: 20px; color: #969696">Social Media</span>
+            <span style="background-color: white; padding: 20px; color: #969696"
+              >Social Media</span
+            >
           </center>
         </p>
 
@@ -215,10 +231,15 @@
 
       <div class="d-flex justify-content-between mt-5">
         <button type="submit" class="btn btn-primary" :disabled="loading">
-          <span class="spinner-border spinner-border-sm" v-show="loading"></span>
+          <span
+            class="spinner-border spinner-border-sm"
+            v-show="loading"
+          ></span>
           Submit
         </button>
-        <button type="button" @click="goBack" class="btn btn-danger">Cancel</button>
+        <button type="button" @click="goBack" class="btn btn-danger">
+          Cancel
+        </button>
       </div>
       <div v-show="is_error" class="mt-3">{{ is_error }}</div>
     </form>
@@ -240,11 +261,10 @@ import Algos from "@/algos/analytics/relation-finder";
 // var emitData;
 
 Vue.use(VueMaterial);
-
 export default {
   components: {
     ToggleButton,
-    vSelect
+    vSelect,
   },
   props: ["payload"],
   data() {
@@ -257,21 +277,30 @@ export default {
       xtraParent: {
         show: false,
         selected: {},
-        options: []
+        options: [],
       },
-      countries: ProdData.countries
+      countries: ProdData.countries,
     };
   },
   watch: {
     is_alive() {
       this.data.is_died = !this.is_alive;
-    }
+    },
   },
   mounted() {
     this.is_alive = true;
     let isChild = false;
     let parentId;
     let xtra_parent_id;
+    this.$material.locale.startYear = 1000;
+    document
+      .querySelector(".md-datepicker")
+      .querySelector(".md-input")
+      .setAttribute("onfocus", "blur()");
+    document
+      .querySelector("#demise")
+      .querySelector(".md-input")
+      .setAttribute("onfocus", "blur()");
 
     this.$material.locale.startYear = 1000;
     
@@ -331,9 +360,11 @@ export default {
       if (this.xtraParent.selected) {
         this.data.xtra_parent_id = this.xtraParent.selected.value;
       }
+      if (!this.data.short_name) {
+        this.data.short_name = this.data.name;
+      }
       if (this.payload.memData) {
         //Update
-
         Axios.put(
           ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
           this.data
@@ -341,7 +372,7 @@ export default {
           .then(() => {
             this.goBack();
           })
-          .catch(errr => console.log(errr));
+          .catch((errr) => console.log(errr));
       } else {
         //ADDING Member
         if (this.payload.type == "gender") {
@@ -356,14 +387,15 @@ export default {
         } else if (this.payload.type == 0) {
           this.data.type = 0;
         }
+
         this.data.parent_id = this.payload.parent_id;
         this.$emit("form-submit", this.data);
       }
     },
     goBack() {
       this.$emit("form-cancel");
-    }
-  }
+    },
+  },
 };
 </script>
 

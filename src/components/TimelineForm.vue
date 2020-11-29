@@ -1,9 +1,17 @@
 <template>
   <form class="p-5" v-on:submit.prevent="formEmit(0)">
-    <h3 style="margin-bottom:40px;">{{payload.formData.isEdit?"Update":"Create"}} Event</h3>
-    <div class="row" style="align-items: center;">
+    <h3 style="margin-bottom: 40px">
+      {{ payload.formData.isEdit ? "Update" : "Create" }} Event
+    </h3>
+    <div class="row" style="align-items: center">
       <label class="col-md-3 d-none d-sm-block label">Date</label>
-      <md-datepicker class="col-xs-9 col-md-7" v-model="payload.formData.date" :md-model-type="String" readonly required="true">
+      <md-datepicker
+        class="col-xs-9 col-md-7"
+        v-model="payload.formData.date"
+        :md-model-type="String"
+        readonly
+        required="true"
+      >
         <label>Event Date</label>
       </md-datepicker>
     </div>
@@ -34,20 +42,29 @@
       <label class="col-3 d-none d-sm-block label">Share with</label>
       <v-select
         class="col-sm-10 col-md-7"
-        style="height:40px;padding:0px;"
+        style="height: 40px; padding: 0px"
         multiple
-        :placeholder="$device.mobile?'Share With':''"
+        :placeholder="$device.mobile ? 'Share With' : ''"
         :options="payload.names"
         v-model="payload.formData.shared_with"
       ></v-select>
     </div>
 
     <div class="row justify-content-around">
-      <button type="submit" class="btn btn-success btn" :disabled="payload.loading.change">
-        <span class="spinner-border spinner-border-sm" v-show="payload.loading.change"></span>
-        {{payload.formData.isEdit?"Update":"Create"}}
+      <button
+        type="submit"
+        class="btn btn-success btn"
+        :disabled="payload.loading.change"
+      >
+        <span
+          class="spinner-border spinner-border-sm"
+          v-show="payload.loading.change"
+        ></span>
+        {{ payload.formData.isEdit ? "Update" : "Create" }}
       </button>
-      <button class="btn btn-cancel" type="reset" @click="formEmit(1)">Cancel</button>
+      <button class="btn btn-cancel" type="reset" @click="formEmit(1)">
+        Cancel
+      </button>
       <button
         type="button"
         @click="formEmit(2)"
@@ -55,7 +72,10 @@
         :disabled="payload.loading.delete"
         class="btn btn-danger btn"
       >
-        <span class="spinner-border spinner-border-sm" v-show="payload.loading.delete"></span>
+        <span
+          class="spinner-border spinner-border-sm"
+          v-show="payload.loading.delete"
+        ></span>
         Delete Permanently
       </button>
     </div>
@@ -74,18 +94,23 @@ Vue.use(VueMaterial);
 export default {
   props: ["payload"],
   components: {
-    vSelect
+    vSelect,
   },
   data() {
     return {};
   },
   methods: {
-    formEmit: function(type) {
+    formEmit: function (type) {
       this.$emit("crudops", type);
-    }
+    },
   },
-  mounted(){
-  }
+  mounted() {
+    this.$material.locale.startYear = 1000;
+    document
+      .querySelector(".md-datepicker")
+      .querySelector(".md-input")
+      .setAttribute("onfocus", "blur()");
+  },
 };
 </script>
 

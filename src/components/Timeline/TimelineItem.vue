@@ -1,5 +1,8 @@
 <template>
-  <section class="timeline-item" :class="{bgfade:(itemTimeline.fixed || itemTimeline.shared_by)}">
+  <section
+    class="timeline-item"
+    :class="{ bgfade: itemTimeline.fixed || itemTimeline.shared_by }"
+  >
     <div class="item" @mouseover="over" @mouseleave="leave">
       <!-- Dot UI -->
       <span :style="getBackgroundColour(itemTimeline.color)" class="dot" />
@@ -11,8 +14,10 @@
       <i
         class="icofont-ui-edit float-right"
         @click="findme(itemTimeline)"
-        v-show="show && !itemTimeline.fixed && !itemTimeline.shared_by"
-        style="font-size:18px;cursor: pointer;"
+        v-show="
+          show && !itemTimeline.fixed && !itemTimeline.shared_by && !view_only
+        "
+        style="font-size: 18px; cursor: pointer"
       ></i>
 
       <!-- Title name -->
@@ -30,14 +35,20 @@
         <span class="key">Shared By :</span>
         <router-link
           class="value"
-          :to="{name:'TimelinePerson', params:{member:itemTimeline.shared_by}}"
-        >{{namesMap[itemTimeline.shared_by]}}</router-link>
+          :to="{
+            name: 'TimelinePerson',
+            params: { member: itemTimeline.shared_by },
+          }"
+          >{{ namesMap[itemTimeline.shared_by] }}</router-link
+        >
       </div>
 
       <!-- Sharing with -->
       <div
         class="sharing-with"
-        v-else-if="itemTimeline.shared_with && itemTimeline.shared_with.length>0"
+        v-else-if="
+          itemTimeline.shared_with && itemTimeline.shared_with.length > 0
+        "
       >
         <div class="key">Sharing With :</div>
         <div class="val-con">
@@ -47,7 +58,9 @@
             :key="index"
             class="value"
             :title="namesMap[person]"
-          >{{namesMap[person]}},</p>
+          >
+            {{ namesMap[person] }},
+          </p>
           <!-- </div> -->
         </div>
       </div>
@@ -56,12 +69,13 @@
 </template>
 
 <script>
-import {getAPIFormat} from "../../util/helper"; 
+import Store from "../../store/index";
+import { getAPIFormat } from "../../util/helper";
 const LINK_TYPE = {
   URL: "url",
   OTHERS: "Link",
   GOOGLE_PHOTOS: "Google Photos",
-  GOOGLE_DRIVE: "Google Drive"
+  GOOGLE_DRIVE: "Google Drive",
 };
 let eventData;
 export default {
@@ -69,22 +83,22 @@ export default {
   props: {
     itemTimeline: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     colorDots: {
       type: String,
-      default: "#2da1bf"
+      default: "#2da1bf",
     },
     dateLocale: {
       type: String,
-      default: ""
+      default: "",
     },
-    namesMap: {}
+    namesMap: {},
   },
   data() {
     return {
       show: false,
-      showTimelineShare: false
+      showTimelineShare: false,
     };
   },
   methods: {
@@ -112,7 +126,7 @@ export default {
         for (let i = 0; i < this.itemTimeline.shared_with.length; i++) {
           shared.push({
             label: this.namesMap[this.itemTimeline.shared_with[i]],
-            value: this.itemTimeline.shared_with[i]
+            value: this.itemTimeline.shared_with[i],
           });
         }
       }
@@ -128,8 +142,15 @@ export default {
       const nameMonth = item.date.toLocaleDateString(locale, { month: "long" });
       const day = item.date.getDate();
       return `${day}, ${nameMonth}`;
-    }
-  }
+    },
+  },
+  computed: {
+    view_only: {
+      get() {
+        return Store.state.view_only;
+      },
+    },
+  },
 };
 </script>
 

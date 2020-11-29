@@ -10,6 +10,15 @@
           onkeypress="if(this.value.length==4) return false;"
           type="number"
         />
+        <div v-if="payload.contact" class="contact-box">
+          <div class="contact">Contact Details :</div>
+          <div v-if="payload.contact && payload.contact.email">
+            Name : {{ payload.contact.name }}
+          </div>
+          <div v-if="payload.contact && payload.contact.email">
+            Email : {{ payload.contact.email }}
+          </div>
+        </div>
         <button
           type="submit"
           class="btn mt-3"
@@ -31,6 +40,19 @@
   </div>
 </template>
 <style scoped>
+.contact-box {
+  border: 1px solid lightgrey;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background: #fcfcfc;
+  color: #9c9c9c;
+  margin-bottom: 20px;
+}
+.contact-box > .contact {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 .title {
   padding: 15px;
   margin-bottom: 0px;

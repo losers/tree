@@ -53,15 +53,34 @@
             height: $device.mobile ? '220px' : '300px',
           }"
         >
+          <i
+            class="icofont-alarm"
+            style="
+              font-size: 25px;
+              color: white;
+              position: absolute;
+              right: 0;
+              padding: 20px;
+            "
+            v-if="$device.mobile && notificationsIcon == true"
+            @click="showNotifications"
+          ></i>
           <!-- Bloodline Title -->
           <div id="title">
-            <i
-              class="icofont-question-circle help"
-              style="color: indianred"
-              v-if="$device.mobile"
-              @click="helperFunc"
-            ></i>
-            <span style="font-weight: 500; color: white">BloodLine</span>
+            <div class="help" v-if="$device.mobile">
+              <i
+                class="icofont-chat"
+                style="margin-right: -10px; font-size: 35px"
+                @click="helperFunc"
+              ></i>
+            </div>
+            <span
+              style="font-weight: 500; color: white"
+              :style="{
+                'font-size': $device.mobile ? '40px' : '50px',
+              }"
+              >BloodLine</span
+            >
             <br />
           </div>
 
@@ -163,7 +182,13 @@
                   'normal-family': curFamily != data._id,
                 }"
                 @click="
-                  showAuth(data.surname, data.title, data.celeb, data._id)
+                  showAuth(
+                    data.surname,
+                    data.title,
+                    data.celeb,
+                    data._id,
+                    data.contact
+                  )
                 "
               >
                 <i
@@ -270,7 +295,15 @@
 .help {
   position: fixed;
   bottom: 20px;
+  background: indianred;
+  border-radius: 50%;
+  color: white;
   right: 20px;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .load-more {
   background-color: white;
@@ -322,12 +355,11 @@ a:hover {
   left: 0;
   right: 0;
   top: 30px;
-  padding-top: 30px;
+  padding-top: 50px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
   font-weight: 300;
-  font-size: 50px;
   letter-spacing: 10px;
 }
 #title span {
@@ -386,6 +418,7 @@ export default {
       helper: {
         show: false,
       },
+      notificationsIcon: false,
     };
   },
   components: {
@@ -394,12 +427,13 @@ export default {
     VueTyper,
   },
   methods: {
-    showAuth(surname, title, isCeleb, family_id) {
+    showAuth(surname, title, isCeleb, family_id, contact) {
       if (family_id === this.curFamily || isCeleb) {
         location.href = `/app/${surname}`;
       } else {
         this.authPayload.surname = surname;
         this.authPayload.title = title;
+        this.authPayload.contact = contact;
         this.showAuthBox = true;
       }
     },
@@ -415,6 +449,13 @@ export default {
         this.showModal = true;
       } else {
         alert("Please enable cookies to Start creating a family");
+      }
+    },
+    showNotifications() {
+      try {
+        print.postMessage("notifications");
+      } catch (error) {
+        console.log();
       }
     },
     toggleBodyClass(addRemoveClass, className) {
@@ -481,6 +522,12 @@ export default {
   mounted() {
     if (this.$device.mobile) {
       this.addFBtn = false;
+    }
+    try {
+      print.postMessage("show Notifications");
+      this.notificationsIcon = true;
+    } catch (error) {
+      console.log();
     }
     this.getAllList();
   },
