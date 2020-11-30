@@ -197,7 +197,7 @@
         <!-- Displays Tree Map -->
         <div v-else>
           <center>
-            <div v-if="false">
+            <div>
               <!-- Download Tree -->
               <button
                 class="btn download-tree-btn"
