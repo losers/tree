@@ -101,7 +101,7 @@
             v-model="is_alive"
             :value="is_alive"
             :sync="true"
-            class="flexy"
+            class="flexy col-4"
           />
           <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
             <md-datepicker

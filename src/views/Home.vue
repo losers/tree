@@ -199,7 +199,7 @@
                   }"
                   data-toggle="tooltip"
                   title="UnLocked"
-                  v-if="data.celeb || curFamily == data._id"
+                  v-if="data.celeb"
                 ></i>
                 <i
                   class="icofont-lock rounded-lg"

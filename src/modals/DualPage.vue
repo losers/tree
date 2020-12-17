@@ -41,12 +41,13 @@ import BottomModal from "vue-bottom-dialog";
 import AddFamily from "../components/AddFamilyForm.vue";
 import AddRoot from "../components/AddRootForm.vue";
 import AddMemberForm from "../components/AddMemberForm";
-import DeleteMember from "../components/DeleteMember";
+import DeleteMember from "../components/DeleteMember"; //3
 import TimelineForm from "../components/TimelineForm";
 import AuthForm from "../components/AuthForm";
 import Helper from "../components/Helper"; //6
 import RelationFinderPromo from "../components/promotional/RelationFinder"; //7
-import WebsitePromo from "../components/promotional/Website"; //7
+import WebsitePromo from "../components/promotional/Website"; //8
+import ReArrageMembers from "../components/ReArrange"; //9
 import Vue from "vue";
 // import BottomModal from "./BottomModal.vue";
 Vue.use(BottomModal);
@@ -68,6 +69,7 @@ export default {
         Helper,
         RelationFinderPromo,
         WebsitePromo,
+        ReArrageMembers
       ],
       selectedComponent: "",
     };

@@ -148,6 +148,7 @@
                         :viewOnly="view_only"
                         v-on:actionsAddMember="addMember"
                         v-on:actionsDeleteSwipe="deleteSwipe"
+                        v-on:actionsReArrange="reArrange"
                         v-on:keyTrue="cookeyStatus = true"
                       ></Actions>
                     </div>
@@ -186,7 +187,12 @@
 
             <!-- Tabbar for Laptops-->
             <tabs v-else :style="{ display: cookeyStatus ? 'block' : 'none' }">
-              <tab name="Actions">
+              <tab
+                name="Actions"
+                :class="{
+                  'is-active': !cookeyStatus,
+                }"
+              >
                 <!-- Actions -->
                 <Actions
                   :cookeyStatus="cookeyStatus"
@@ -195,10 +201,16 @@
                   :viewOnly="view_only"
                   v-on:actionsAddMember="addMember"
                   v-on:actionsDeleteSwipe="deleteSwipe"
+                  v-on:actionsReArrange="reArrange"
                   v-on:keyTrue="cookeyStatus = true"
                 ></Actions>
               </tab>
-              <tab name="More Info">
+              <tab
+                name="More Info"
+                :class="{
+                  'is-active': cookeyStatus,
+                }"
+              >
                 <MoreInfo :id="id" :data="data"></MoreInfo>
               </tab>
             </tabs>
@@ -424,6 +436,11 @@ export default {
       this.payload.is_mate = this.data.is_mate;
       this.payload.gender = this.data.gender;
     },
+    reArrange(){
+      this.dualPage.callForm = true;
+      this.dualPage.ref = 9;
+      this.payload.parent_id = this.data.parent_id;
+    },
     addMemberCancel() {
       this.dualPage.callForm = false;
     },
@@ -443,6 +460,14 @@ export default {
 </script>
 
 <style>
+.badge {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  border-radius: 50%;
+  background: indianred;
+  color: white;
+}
 .img-picker-mob .vicp-wrap {
   width: 300px;
   height: 500px;
