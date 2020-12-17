@@ -69,7 +69,7 @@ export default {
         Helper,
         RelationFinderPromo,
         WebsitePromo,
-        ReArrageMembers
+        ReArrageMembers,
       ],
       selectedComponent: "",
     };
@@ -92,7 +92,7 @@ export default {
         },
         {
           height: "auto",
-          draggable: true,
+          draggable: this.reference == 9 ? false : true,
           clickToClose: true,
           scrollable: true,
         },

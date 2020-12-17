@@ -86,19 +86,13 @@ export default {
 };
 </script>
 
-<style>
-.button {
-  margin-top: 35px;
-}
-.flip-list-move {
-  transition: transform 0.5s;
-}
-.no-move {
-  transition: transform 0s;
+<style scoped>
+div {
+  color: black;
 }
 .ghost {
   opacity: 0.5;
-  background: #c8ebfb;
+  background: #caeeff;
 }
 .list-group {
   min-height: 20px;
