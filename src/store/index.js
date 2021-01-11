@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import ProdData from "../data.js";
 import Algos from "../algos/analytics/relation-finder";
+import { setExitNodeInfo } from "../util/helper";
 
 Vue.use(Vuex)
 
@@ -21,7 +22,9 @@ export default new Vuex.Store({
     promos: {
       1: true, //Relation Finder
       2: true  // Website
-    }
+    },
+    subtree:{},
+    sub_member_data: {}
   },
   mutations: {
     setImages(state, imagesData) {
@@ -61,6 +64,12 @@ export default new Vuex.Store({
     setMetaData(state, metaData) {
       state.metadata = metaData;
     },
+    setSubtree(state, subtree ) {
+      state.subtree = subtree;
+    },
+    setSubMemberData(state,  sub_member_data) {
+      state.sub_member_data = sub_member_data;
+    },
     setPromo(state, promoNo) {
       state.promos[promoNo] = false;
     }
@@ -92,6 +101,19 @@ export default new Vuex.Store({
     async setMetaData(state, metaData) {
       state.commit('setMetaData', metaData);
     },
+    async setSubtree(state, payload) {
+      if(payload.member_data){
+        setExitNodeInfo(payload.tree, payload.member_data);
+        state.commit('setSubMemberData', payload.member_data);
+      }
+      else{
+        if(payload.tree.name)
+          setExitNodeInfo(payload.tree, state.state.sub_member_data);
+        else
+          state.commit('setSubMemberData', {});
+      }
+      state.commit('setSubtree', payload.tree);
+    },
     async setStepNumber(state, step) {
       axios.put(ProdData.getHostURL() + "/meta/stepper", {
         family_id: state.state.title[0]._id,
@@ -100,6 +122,9 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    getSubTree: (state) => {
+      return state.subtree;
+    },
     getIsLoading: (state) => {
       return state.loading;
     },

@@ -4,13 +4,21 @@
       <button
         @click="addMember(0)"
         class="col-10 btn btn-warning mb-3"
-        v-show="!data.parent_id"
+        v-show="!data.parent_id || (data.is_mate && !data.linked_tree)"
       >
         + Add Parent
       </button>
 
       <button @click="addMember(1)" class="col-10 btn btn-success mb-3">
         + Add Child
+      </button>
+
+      <button
+        @click="goToSubTree()"
+        class="col-10 btn btn-warning mb-3"
+        v-show="data.linked_tree"
+      >
+        View Parent Tree
       </button>
 
       <button
@@ -21,9 +29,9 @@
         + Add {{ data.gender == "1" ? "Wife" : "Husband" }}
       </button>
 
-      <button @click="reArrange" class="col-10 btn btn-warning mb-3" style="color:white">
+      <!-- <button @click="reArrange" class="col-10 btn btn-warning mb-3" style="color:white">
         + Rearrange 
-      </button>
+      </button> -->
 
       <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
         <i class="icofont-ui-delete"></i> Delete
@@ -72,7 +80,12 @@ export default {
     };
   },
   props: ["cookeyStatus", "data", "hasMate", "viewOnly"],
+  mounted(){
+  },
   methods: {
+    goToSubTree(){
+      this.$router.push({ name: "Subtrees", params: { subtree_id: this.data.linked_tree } });
+    },
     addMember(num) {
       this.$emit("actionsAddMember", num);
     },

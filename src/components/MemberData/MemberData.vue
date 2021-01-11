@@ -32,11 +32,7 @@
 
             <div class="middle" v-if="cookeyStatus && !view_only">
               <div class="member-txt">
-                <a
-                  class="btn"
-                  @click="show = true"
-                  style="color: white !important"
-                >
+                <a class="btn" @click="show = true" style="color: white !important">
                   <i class="icofont-edit"></i>
                   Change
                 </a>
@@ -51,10 +47,7 @@
             :disabled="loadingUpload"
           >
             <span v-if="!doneUpload">
-              <span
-                class="spinner-border spinner-border-sm"
-                v-if="loadingUpload"
-              ></span>
+              <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
               <i class="icofont-cloud-upload" v-else></i>
               Upload Image
             </span>
@@ -108,8 +101,8 @@
               </tr>
               <tr v-if="data.xtra_parent_name">
                 <td style="border-left: 3px solid blue">
-                  <span v-if="data.gender == 1"> S/O : </span>
-                  <span v-else> D/O : </span>
+                  <span v-if="data.gender == 1">S/O :</span>
+                  <span v-else>D/O :</span>
                   {{ data.xtra_parent_name }}
                 </td>
               </tr>
@@ -246,7 +239,7 @@ import Store from "@/store/index";
 
 Vue.use(VModal, {
   dynamic: true,
-  injectModalsContainer: true,
+  injectModalsContainer: true
 });
 
 export default {
@@ -258,7 +251,7 @@ export default {
     Tab,
     MoreInfo,
     DualPage,
-    Actions,
+    Actions
   },
   data() {
     return {
@@ -285,26 +278,26 @@ export default {
       parent_id: "",
       dualPage: {
         callForm: false,
-        ref: 2,
+        ref: 2
       },
-      payload: {},
+      payload: {}
     };
   },
   watch: {
     imageData: {
-      handler: function (val) {
+      handler: function(val) {
         if (val) {
           this.showUpload = true;
         }
-      },
-    },
+      }
+    }
   },
   computed: {
     view_only: {
       get() {
         return Store.state.view_only;
-      },
-    },
+      }
+    }
   },
   mounted() {
     this.open = true;
@@ -319,7 +312,7 @@ export default {
       .get(
         ProdData.getHostURL() + "/tree/" + this.surname + "/person/" + this.id
       )
-      .then((data) => {
+      .then(data => {
         if (data.data.is_mate) {
           this.hasMate = true;
         }
@@ -333,7 +326,7 @@ export default {
           );
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.errored = err;
       })
       .finally(() => {
@@ -349,7 +342,7 @@ export default {
           this.id +
           "/image"
       )
-      .then((data) => {
+      .then(data => {
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
@@ -375,8 +368,8 @@ export default {
         "/image";
       axios
         .post(this.url, params)
-        .then(function () {})
-        .catch(function () {})
+        .then(function() {})
+        .catch(function() {})
         .finally(() => {
           this.doneUpload = true;
           setTimeout(() => {
@@ -401,9 +394,9 @@ export default {
           quality: 0.2,
           maxWidth: 200,
           maxHeight: 200,
-          resize: true,
+          resize: true
         })
-        .then((data) => {
+        .then(data => {
           this.imageData = data[0].data;
           this.imageExists = true;
           this.previewImage = "data:image/png;base64, " + this.imageData;
@@ -411,10 +404,20 @@ export default {
     },
     toggle() {
       this.open = false;
-      this.$router.push({
-        name: "MainTree",
-        params: { id: this.$route.params.id },
-      });
+      let routerLink = {};
+      if (this.$route.params.subtree_id) {
+        routerLink = {
+          name: "Subtrees",
+          params: {subtree_id:  this.$route.params.subtree_id}
+        };
+      }
+      else{
+        routerLink = {
+          name: "MainTree",
+          params: { id: this.$route.params.id }
+        };
+      }
+      this.$router.push(routerLink);
     },
     addMember(num, memData) {
       this.payload.memData = memData;
@@ -436,7 +439,7 @@ export default {
       this.payload.is_mate = this.data.is_mate;
       this.payload.gender = this.data.gender;
     },
-    reArrange(){
+    reArrange() {
       this.dualPage.callForm = true;
       this.dualPage.ref = 9;
       this.payload.parent_id = this.data.parent_id;
@@ -451,11 +454,11 @@ export default {
       } else {
         el.classList.remove(className);
       }
-    },
+    }
   },
   destroyed() {
     this.toggleBodyClass("removeClass", "mem-spec");
-  },
+  }
 };
 </script>
 

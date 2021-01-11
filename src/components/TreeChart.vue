@@ -12,7 +12,7 @@
             :style="{'width': (treeData.mate) && ((treeData.mate.length > 1) ? treeData.mate.length*145+'px':(treeData.mate.length == 1)?'224px':'100px')}"
           >
             <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
-              <div class="avat">
+              <div class="avat" :class="{'avat-exit': treeData.way_point_node}">
                 <img
                   :src="'data:image/png;base64, '+treeData.image_url"
                   v-if="treeData.image_url"
@@ -116,11 +116,19 @@ export default {
 </script>
 
 <style scoped>
+.avat-exit{
+    width: 5em !important;
+    height: 5em !important;
+    -moz-box-shadow: 0px 2px 35px -1px rgba(224,103,103,1) !important;
+    -webkit-box-shadow: 0px 2px 35px -5px rgba(224,103,103,1) !important;
+    -moz-box-shadow: 0px 2px 35px -5px rgba(224,103,103,1) !important;
+    box-shadow: 0px 2px 35px -5px rgba(224,103,103,1) !important;
+}
 .red-circle {
   border: 3px solid red !important;
 }
 .green-circle {
-  border: 2px solid green !important;
+  border: 2px solid indianred !important;
 }
 table {
   border-collapse: separate !important;
