@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "./views/Home.vue";
 import MainTree from "./views/MainTree.vue";
+import Subtree from "./views/subtree/Subtree.vue";
 
 Vue.use(VueRouter);
 
@@ -84,6 +85,18 @@ const myrouter = new VueRouter({
                         },
                     ]
                 },
+                {
+                    path: "subtree/:subtree_id",
+                    name: "Subtrees",
+                    component: Subtree,
+                    children: [
+                        {
+                            path: ":member",
+                            name: "SubMemberData",
+                            component: () => import('./components/MemberData/MemberData'),
+                        },
+                    ]
+                }
             ]
         },
 
