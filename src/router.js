@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "./views/Home.vue";
-import MainTree from "./views/MainTree.vue";
+import MainTree from "./views/Tabs/MainTree.vue";
 
 Vue.use(VueRouter);
 
@@ -28,49 +28,61 @@ const myrouter = new VueRouter({
                 {
                     path: "profile",
                     name: "ProfileFrame",
-                    component: () => import('./views/Profile'),
+                    component: () => import('./views/Tabs/Profile'),
                     children: [
                         {
                             path: ":member",
                             name: "Profile",
-                            component: () => import('./views/Profile'),
+                            component: () => import('./views/Tabs/Profile'),
                         }
                     ]
                 },
                 {
-                    path: "analytics",
-                    name: "Analytics",
-                    redirect: "analytics/relation-finder",
-                    component: () => import('./views/Analytics/Analytics'),
-                    children: [
-                        {
-                            path: 'relation-finder',
-                            name: "RelationFinder",
-                            component: () => import('./views/Analytics/Finder')
-                        },
-                        {
-                            path: 'subtree',
-                            name: "Subtree",
-                            component: () => import('./views/Analytics/SubTree')
-                        },
-                        {
-                            path: 'events',
-                            name: "Events",
-                            component: () => import('./views/Analytics/Events')
-                        }
-                    ]
+                    path: 'relation-finder',
+                    name: "RelationFinder",
+                    component: () => import('./views/Tabs/Finder')
+                },
+                {
+                    path: 'partial-tree',
+                    name: "Subtree",
+                    component: () => import('./views/Tabs/PartialTree')
+                },
+                {
+                    path: 'events',
+                    name: "Events",
+                    component: () => import('./views/Tabs/Events')
+                },
+                {
+                    path: 'subtree',
+                    name: "Subtree",
+                    component: () => import('./views/Tabs/SubTree')
                 },
                 {
                     path: "timeline",
                     name: "Timeline",
-                    component: () => import('./views/Timeline/Timeline.vue'),
+                    component: () => import('./views/Tabs/Timeline/Timeline.vue'),
                     children: [
                         {
                             path: ":member",
-                            name: "TimelinePerson",
-                            component: () => import('./views/Timeline/TimelinePerson.vue')
+                            name: "PersonTimeline",
+                            component: () => import('./views/Tabs/Timeline/PersonTimeline.vue')
+                        },
+                        {
+                            path: "",
+                            name: "FamilyTimeline",
+                            component: () => import('./views/Tabs/Timeline/FamilyTimeline.vue')
                         }
                     ]
+                },
+                {
+                    path: "records",
+                    name: "Records",
+                    component: () => import('./views/Tabs/Records.vue'),
+                },
+                {
+                    path: 'settings',
+                    name: "Settings",
+                    component: () => import('./views/Tabs/Settings.vue')
                 },
                 {
                     path: "",

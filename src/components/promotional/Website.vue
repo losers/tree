@@ -75,7 +75,7 @@ export default {
     },
     checkFunc() {
       this.goBack();
-      this.$router.push({ name: "Analytics" });
+      // this.$router.push({ name: "Analytics" });
     }
   }
 };

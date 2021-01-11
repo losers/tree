@@ -138,7 +138,7 @@
             <div class="timeline-content">{{ event.content }}</div>
             <router-link
               :to="{
-                name: 'TimelinePerson',
+                name: 'PersonTimeline',
                 params: { id: $route.params.id, member: event._id },
               }"
               class="btn event-btn"
@@ -280,8 +280,8 @@
 import ProdData from "@/data.js";
 import axios from "axios";
 import moment from "moment";
-import { getNormalDisplayDate, getAPIFormat } from "../../util/helper";
-import Store from "../../store/index";
+import { getNormalDisplayDate, getAPIFormat } from "@/util/helper";
+import Store from "@/store/index";
 export default {
   name: "Events",
   data() {

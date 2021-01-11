@@ -1,5 +1,17 @@
 <template>
   <div>
+    <!-- <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px;
+      "
+    >
+      <strong class="header-bg">
+        Relation Finder <i class="icofont-ui-love-add"></i
+      ></strong>
+    </div> -->
     <div class="input_align">
       <span class="mt-1" v-if="!$device.mobile">Person 1 :</span>
       <vSelect
@@ -32,7 +44,7 @@
       />
       <div v-else-if="same">
         <img
-          src="../../assets/same.jpg"
+          src="@/assets/same.jpg"
           height="300px"
           width="200px"
           class="mt-5 pt-5"
@@ -53,7 +65,7 @@
           <br v-if="$device.mobile" />
           <button
             class="ml-3 btn btn-sm"
-            style="border:solid 1px red; color:red;"
+            style="border: solid 1px red; color: red"
             :class="{ 'mt-3': $device.mobile }"
             @click="opts = !opts"
           >
@@ -117,11 +129,11 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import Store from "../../store/index";
-import Algos from "../../algos/analytics/relation-finder";
+import Store from "@/store/index";
+import Algos from "@/algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
 import axios from "axios";
-import ProData from "../../data";
+import ProData from "@/data";
 
 export default {
   data() {
@@ -183,6 +195,7 @@ export default {
             .then((response) => {
               this.loading = false;
               this.tree.response = response;
+              console.log(this.tree.response);
               this.rName();
             })
             .catch((error) => {
@@ -200,6 +213,7 @@ export default {
         this.p2.value,
         this.lang
       );
+      console.log(this.relationName);
     },
   },
   components: {
@@ -214,7 +228,13 @@ export default {
   font-weight: bold;
   font-size: 20px;
 }
-
+.header-bg {
+  color: white;
+  background-color: indianred;
+  padding: 15px 50px;
+  box-shadow: 2px 2px 5px 0px rgba(255, 168, 168, 1);
+  border-radius: 10px;
+}
 @media (min-width: 700px) {
   .input_align {
     display: flex;

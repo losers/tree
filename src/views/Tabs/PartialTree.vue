@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="header-bg">
+      <h3 style="color: white">Subtree</h3>
+    </div>
+
     <div class="input_align">
       <vSelect
         :options="names"
@@ -17,7 +21,7 @@
     <center>
       <img
         v-if="!selected"
-        src="../../assets/tree_gen.jpg"
+        src="@/assets/tree_gen.jpg"
         class="mt-5"
         height="300px"
         alt="Blood Line Helper"
@@ -30,8 +34,8 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import Store from "../../store/index";
-import Algos from "../../algos/analytics/relation-finder";
+import Store from "@/store/index";
+import Algos from "@/algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
 
 export default {
@@ -64,6 +68,11 @@ export default {
       this.tree = Algos.getSubTree(Store.getters.getTreeData, this.p1.value);
     },
   },
+  mounted() {
+    setTimeout(() => {
+      document.querySelector(".header-bg").classList.add("width-100");
+    }, 100);
+  },
 };
 </script>
 
@@ -74,5 +83,19 @@ export default {
     align-items: center;
     justify-content: center;
   }
+}
+
+.header-bg {
+  background-color: indianred;
+  width: 0%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 300ms ease-in;
+}
+
+.width-100 {
+  width: 100%;
 }
 </style>

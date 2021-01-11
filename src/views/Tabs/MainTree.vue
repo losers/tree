@@ -65,12 +65,21 @@
 
       <div v-else>
         <!-- Tree Tilebar -->
-        <div class="tree-titlebar">
-          <router-link :to="{ name: 'Home' }">
+        <div v-if="$device.mobile" style="float: left">
+          <SideDrawer></SideDrawer>
+        </div>
+        <h3 style="color: indianred">{{ title[0].title }}</h3>
+        <!-- <div class="tree-titlebar"> -->
+
+        <!-- <center class="fam-name" :class="[{ 'f-26': $device.mobile }]">
+            {{ newTitle ? newTitle : title[0].title }}
+          </center> -->
+        <!-- <router-link :to="{ name: 'Home' }">
             <i class="icofont-arrow-left"></i>
             Back
-          </router-link>
-          <div class="tree-title flexy">
+          </router-link> -->
+
+        <!-- <div class="tree-title flexy">
             <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
               {{ newTitle ? newTitle : title[0].title }}
             </div>
@@ -80,17 +89,23 @@
                 @click="dualPage(0)"
                 style="font-size: 20px; cursor: pointer; color: indianred"
               ></i>
-            </div>
-          </div>
-          <router-link
+            </div> -->
+        <!-- </div> -->
+        <!-- <i
+            class="icofont-gear"
+            style="display: flex; align-items: center; margin-right: 5px"
+          >
+          <SideDrawer></SideDrawer>
+          </i> -->
+        <!-- <router-link
             :to="{ name: 'Analytics' }"
             style="display: flex; align-items: center; margin-right: 5px"
             v-if="!$device.mobile"
           >
             <i class="icofont-gear" style="margin-right: 8px"></i>
-            <span v-if="!$device.mobile">Analytics</span>
-          </router-link>
-        </div>
+            <span v-if="!$device.mobile"> </span>
+          </router-link> -->
+        <!-- </div> -->
 
         <!-- Dual page for Add Root Edit form and  -->
         <DualPage
@@ -119,7 +134,7 @@
         <div v-if="tempData == undefined">
           <!-- <img src="@/assets/intro-mob.png" class="mob-intro"/> -->
           <img
-            src="../assets/stickman_family.jpg"
+            src="@/assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
             style="margin-top: 160px"
             alt="Blood Line Helper"
@@ -219,10 +234,8 @@
               <div
                 v-else-if="numOfMemebers > 1"
                 class="download-tree-pic-body"
-                style="position: absolute; top: 85px; z-index: 10; left: 10px"
+                style="position: absolute; top: 85px; z-index: 10; right: 10px"
               >
-                <!-- Ticker -->
-                <tick></tick>
                 <!-- Message -->
                 <div
                   class="download-msg"
@@ -234,6 +247,8 @@
                 >
                   Downloaded Sucessfully
                 </div>
+                <!-- Ticker -->
+                <tick></tick>
               </div>
             </div>
             <TreeChart
@@ -241,7 +256,7 @@
               :images="images"
               :class="{ landscape: landscape.length }"
               @click-node="clickNode"
-              style="padding-top: 70px"
+              style="padding-top: 20px"
             />
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
@@ -255,14 +270,6 @@
               </h4>
             </div>
           </center>
-          <router-link
-            :to="{ name: 'Analytics' }"
-            class="btn bottombtn"
-            style="left: 10px; font-size: 25px"
-            v-if="$device.mobile"
-          >
-            <i class="icofont-light-bulb"></i>
-          </router-link>
           <button
             @click="shareTree"
             class="btn bottombtn"
@@ -288,15 +295,17 @@
 <script>
 import TreeChart from "@/components/TreeChart";
 import axios from "axios";
-import Error from "./Error";
-import Store from "../store/index";
-import ProData from "../data.js";
-import DualPage from "../modals/DualPage";
+import Error from "@/views/Error";
+import Store from "@/store/index";
+import ProData from "@/data.js";
+import DualPage from "@/modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
 // import { toJpeg } from "html-to-image";
-import Tick from "../components/small/tick";
+import Tick from "@/components/small/tick";
+
+import SideDrawer from "@/components/t-party/SideDrawer";
 
 export default {
   name: "MainTree",
@@ -306,6 +315,7 @@ export default {
     DualPage,
     touchRipple,
     Tick,
+    SideDrawer,
   },
   data() {
     return {
@@ -644,9 +654,7 @@ export default {
   display: flex;
   align-items: center;
 }
-a {
-  color: indianred !important;
-}
+
 a:hover {
   text-decoration: none !important;
 }
@@ -691,23 +699,6 @@ h2 {
   align-items: center;
   justify-content: center;
 }
-.tree-titlebar {
-  position: fixed;
-  width: 100%;
-  z-index: 10;
-  box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
-  padding: 5px !important;
-  background-color: white;
-  display: flex;
-  align-items: center;
-}
-.tree-title {
-  font-size: 30px;
-  color: black;
-  font-weight: bold;
-  flex: 1;
-  justify-content: center;
-}
 .fam-name {
   white-space: nowrap;
   overflow: hidden;
@@ -716,151 +707,7 @@ h2 {
   color: indianred;
 }
 
-@keyframes intro {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-@keyframes swag1 {
-  0% {
-    top: 50px;
-    left: 50px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    top: 20px;
-    left: 20px;
-    width: 8px;
-    opacity: 1;
-  }
-}
-@keyframes swag1-out {
-  0% {
-    top: 20px;
-    left: 20px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    top: 50px;
-    left: 50px;
-    width: 8px;
-    opacity: 0;
-  }
-}
-@keyframes swag2 {
-  0% {
-    top: 50px;
-    right: 50px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    top: 20px;
-    right: 20px;
-    width: 8px;
-    opacity: 1;
-  }
-}
-@keyframes swag2-out {
-  0% {
-    top: 20px;
-    right: 20px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    top: 50px;
-    right: 50px;
-    width: 8px;
-    opacity: 0;
-  }
-}
-@keyframes swag3 {
-  0% {
-    bottom: 50px;
-    left: 50px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    bottom: 20px;
-    left: 20px;
-    width: 8px;
-    opacity: 1;
-  }
-}
-@keyframes swag3-out {
-  0% {
-    bottom: 20px;
-    left: 20px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    bottom: 50px;
-    left: 50px;
-    width: 8px;
-    opacity: 0;
-  }
-}
-@keyframes swag4 {
-  0% {
-    bottom: 50px;
-    right: 50px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    bottom: 20px;
-    right: 20px;
-    width: 8px;
-    opacity: 1;
-  }
-}
-@keyframes swag4-out {
-  0% {
-    bottom: 20px;
-    right: 20px;
-    width: 8px;
-  }
-  50% {
-    width: 30px;
-    opacity: 1;
-  }
-  100% {
-    bottom: 50px;
-    right: 50px;
-    width: 8px;
-    opacity: 0;
-  }
-}
-
+/* Share Button In Mobile */
 .bottombtn {
   position: fixed;
   background: indianred;
@@ -873,9 +720,8 @@ h2 {
 }
 
 .download-tree-btn {
-  margin-top: 80px;
   position: fixed;
-  left: 10px;
+  right: 30px;
   font-size: 22px;
   cursor: pointer;
   z-index: 11;
@@ -897,8 +743,8 @@ h2 {
   background: #7ac142;
   transition: all 1s linear;
   height: 30px;
-  border-radius: 0px 10px 10px 0px;
-  margin-left: -10px;
+  border-radius: 10px 0px 0px 10px;
+  margin-right: -10px;
   color: white;
 }
 </style>

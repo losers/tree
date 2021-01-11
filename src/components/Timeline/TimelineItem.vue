@@ -36,7 +36,7 @@
         <router-link
           class="value"
           :to="{
-            name: 'TimelinePerson',
+            name: 'PersonTimeline',
             params: { member: itemTimeline.shared_by },
           }"
           >{{ namesMap[itemTimeline.shared_by] }}</router-link

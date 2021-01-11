@@ -60,7 +60,7 @@
       </tbody>
     </table>
     <router-link
-      :to="{ name: 'TimelinePerson', params: { member: id } }"
+      :to="{ name: 'PersonTimeline', params: { member: id } }"
       class="btn btn-default"
       >View Timeline</router-link
     ><br />

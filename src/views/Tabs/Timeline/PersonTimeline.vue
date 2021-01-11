@@ -136,10 +136,10 @@
 <script>
 import Timeline from "@/components/Timeline/Timeline";
 import Axios from "axios";
-import Store from "../../store/index";
-import DualPage from "../../modals/DualPage";
-import ProData from "../../data.js";
-import TimelineForm from "../../components/TimelineForm";
+import Store from "@/store/index";
+import DualPage from "@/modals/DualPage";
+import ProData from "@/data.js";
+import TimelineForm from "@/components/TimelineForm";
 
 export default {
   name: "App",
