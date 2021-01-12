@@ -3,45 +3,74 @@
     <tr>
       <td
         :colspan="treeData.children ? treeData.children.length * 2 : 1"
-        :class="{parentLevel: treeData.children, extend: treeData.children && treeData.extend}"
+        :class="{
+          parentLevel: treeData.children,
+          extend: treeData.children && treeData.extend,
+        }"
       >
         <center>
           <div
-            :class="{node: true, hasMate: treeData.mate}"
-            style="display: flex; justify-content: center;"
-            :style="{'width': (treeData.mate) && ((treeData.mate.length > 1) ? treeData.mate.length*145+'px':(treeData.mate.length == 1)?'224px':'100px')}"
+            :class="{ node: true, hasMate: treeData.mate }"
+            style="display: flex; justify-content: center"
+            :style="{
+              width:
+                treeData.mate &&
+                (treeData.mate.length > 1
+                  ? treeData.mate.length * 145 + 'px'
+                  : treeData.mate.length == 1
+                  ? '224px'
+                  : '100px'),
+            }"
           >
-            <div class="person" @click="$emit('click-node', {data:treeData, isMate:false})">
-              <div class="avat" :class="{'avat-exit': treeData.way_point_node}">
+            <div v-if="treeData.way_point_node" class="crown-man">
+              <i class="icofont-crown"></i>
+            </div>
+            <div
+              class="person"
+              @click="$emit('click-node', { data: treeData, isMate: false })"
+            >
+              <div
+                class="avat"
+                :class="{ 'avat-exit': treeData.way_point_node }"
+              >
                 <img
-                  :src="'data:image/png;base64, '+treeData.image_url"
+                  :src="'data:image/png;base64, ' + treeData.image_url"
                   v-if="treeData.image_url"
                   alt="Blood Line User"
                 />
                 <img src="../assets/dp.png" v-else alt="Blood Line User" />
               </div>
-              <div class="name">{{treeData.name}}</div>
+              <div class="name">{{ treeData.name }}</div>
             </div>
-            <div v-if="treeData.mate" style="display: flex;margin-left:20px">
+            <div v-if="treeData.mate" style="display: flex; margin-left: 20px">
               <div
                 class="person mate"
-                @click="$emit('click-node',{data:treeData.mate[index], isMate:true})"
+                @click="
+                  $emit('click-node', {
+                    data: treeData.mate[index],
+                    isMate: true,
+                  })
+                "
                 v-for="(mate, index) in treeData.mate"
                 :key="index"
               >
                 <div class="avat green-circle">
                   <img
-                    :src="'data:image/png;base64, '+mate.image_url"
+                    :src="'data:image/png;base64, ' + mate.image_url"
                     v-if="mate.image_url"
                     alt="Blood Line User"
                   />
                   <img src="../assets/dp.png" v-else alt="Blood Line User" />
                 </div>
-                <div class="name">{{mate.name}}</div>
+                <div class="name">{{ mate.name }}</div>
               </div>
             </div>
           </div>
-          <div class="extend_handle" v-if="treeData.children" @click="toggleExtend(treeData)"></div>
+          <div
+            class="extend_handle"
+            v-if="treeData.children"
+            @click="toggleExtend(treeData)"
+          ></div>
         </center>
       </td>
     </tr>
@@ -53,7 +82,10 @@
         class="childLevel"
       >
         <center>
-          <TreeChart :json="children" @click-node="$emit('click-node', $event)" />
+          <TreeChart
+            :json="children"
+            @click-node="$emit('click-node', $event)"
+          />
         </center>
       </td>
     </tr>
@@ -71,25 +103,25 @@ export default {
     return {
       treeData: {},
       num: 1,
-      img: this.images
+      img: this.images,
     };
   },
   watch: {
     json: {
-      handler: function(Props) {
-        let extendKey = jsonData => {
+      handler: function (Props) {
+        let extendKey = (jsonData) => {
           if (images1.all) {
             jsonData.image_url = images1.all[jsonData.id];
             if (jsonData.mate) {
-              for(let mate of jsonData.mate){
-                 mate.image_url = images1.all[mate.id];
+              for (let mate of jsonData.mate) {
+                mate.image_url = images1.all[mate.id];
               }
             }
           }
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
           if (Array.isArray(jsonData.children)) {
-            jsonData.children.forEach(c => {
+            jsonData.children.forEach((c) => {
               extendKey(c);
             });
           }
@@ -103,26 +135,35 @@ export default {
         }
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
-    toggleExtend: function(treeData) {
+    toggleExtend: function (treeData) {
       treeData.extend = !treeData.extend;
       this.$forceUpdate();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-.avat-exit{
-    width: 5em !important;
-    height: 5em !important;
-    -moz-box-shadow: 0px 2px 35px -1px rgba(224,103,103,1) !important;
-    -webkit-box-shadow: 0px 2px 35px -5px rgba(224,103,103,1) !important;
-    -moz-box-shadow: 0px 2px 35px -5px rgba(224,103,103,1) !important;
-    box-shadow: 0px 2px 35px -5px rgba(224,103,103,1) !important;
+.avat-exit {
+  width: 5em !important;
+  height: 5em !important;
+  -moz-box-shadow: 0px 2px 35px -1px rgba(224, 103, 103, 1) !important;
+  -webkit-box-shadow: 0px 2px 35px -5px rgba(224, 103, 103, 1) !important;
+  -moz-box-shadow: 0px 2px 35px -5px rgba(224, 103, 103, 1) !important;
+  box-shadow: 0px 2px 35px -5px rgba(224, 103, 103, 1) !important;
+}
+.crown-man {
+  transform: rotate(-50deg);
+  margin-left: -88px;
+  font-size: 40px;
+  position: absolute;
+  z-index: 10;
+  margin-top: -30px;
+  color: indianred;
 }
 .red-circle {
   border: 3px solid red !important;

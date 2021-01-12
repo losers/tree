@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div class="header-bg">
-      <h3 style="color: white">Subtree</h3>
-    </div>
-
     <div class="input_align">
       <vSelect
         :options="names"
@@ -68,11 +64,6 @@ export default {
       this.tree = Algos.getSubTree(Store.getters.getTreeData, this.p1.value);
     },
   },
-  mounted() {
-    setTimeout(() => {
-      document.querySelector(".header-bg").classList.add("width-100");
-    }, 100);
-  },
 };
 </script>
 
@@ -83,19 +74,5 @@ export default {
     align-items: center;
     justify-content: center;
   }
-}
-
-.header-bg {
-  background-color: indianred;
-  width: 0%;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 300ms ease-in;
-}
-
-.width-100 {
-  width: 100%;
 }
 </style>

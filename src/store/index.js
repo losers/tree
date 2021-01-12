@@ -32,7 +32,7 @@ export default new Vuex.Store({
     },
     setTreeData(state, treeData) {
       state.tree = treeData.data.tree;
-      state.title = treeData.data.meta;
+      state.title = treeData.data.meta[0].title;
       state.metadata = treeData.data.meta;
       state.is_session = treeData.data.has_session;
       state.view_only = treeData.data.view_only;

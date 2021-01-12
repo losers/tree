@@ -1,5 +1,45 @@
 <template>
   <div>
+    <!-- Top Navigation Bar -->
+    <div
+      class="navbar"
+      :style="{
+        'margin-left': !$device.mobile ? (isCollapsed ? '25px' : '150px') : '0',
+      }"
+    >
+      <!-- Drawer Icon for Mobile -->
+      <div class="drawer-icon" v-if="$device.mobile && !title.isClkd">
+        <side-drawer></side-drawer>
+      </div>
+
+      <!-- Main Title -->
+      <div v-if="!title.isClkd" class="title" @click="titleClk">
+        {{ storeTitle }}
+      </div>
+
+      <!-- Input Box -->
+      <div v-else>
+        <i class="icofont-close-line" @click="title.isClkd = false"></i>
+        <input
+          v-model="title.input"
+          class="titleInput"
+          :style="{ width: $device.mobile ? '70%' : '' }"
+          autofocus
+        />
+        <i
+          class="icofont-tick-mark"
+          v-if="!title.isUpdating"
+          @click="title.isUpdating = true"
+        ></i>
+        <div
+          v-else
+          class="spinner-border spinner-border-sm"
+          style="width: 1rem; height: 1rem; color: green"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Laptop Top Side Navigation Bar -->
     <div v-if="!$device.mobile">
       <SidebarMenu
         :menu="menu"
@@ -13,23 +53,20 @@
           ><i class="icofont-arrow-left"></i><i class="icofont-arrow-right"></i
         ></span>
       </SidebarMenu>
-      <div
-        class="navbar"
-        :style="{ 'margin-left': isCollapsed ? '0' : '150px' }"
-      >
-        hello World
-      </div>
+
       <router-view
-        style="transition: all 200ms linear"
+        style="
+          transition: all 200ms linear;
+          padding-top: 100px;
+          padding-bottom: 50px;
+        "
         :style="{ 'margin-left': isCollapsed ? '50px' : '300px' }"
       ></router-view>
     </div>
+
+    <!-- Mobile Top Navigation Bar -->
     <div v-else>
-      <div class="navbar">
-        <div class="drawer-icon"><side-drawer></side-drawer></div>
-        hello World
-      </div>
-      <router-view></router-view>
+      <router-view style="padding-top: 100px"></router-view>
     </div>
   </div>
 </template>
@@ -43,6 +80,7 @@ import SideDrawer from "@/components/t-party/SideDrawer";
 export default {
   mounted() {
     Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
+
     window.onscroll = function () {
       if (
         document.body.scrollTop > 80 ||
@@ -57,6 +95,13 @@ export default {
       }
     };
   },
+  computed: {
+    storeTitle: {
+      get() {
+        return Store.state.title;
+      },
+    },
+  },
   components: {
     SidebarMenu,
     SideDrawer,
@@ -64,6 +109,11 @@ export default {
   data() {
     return {
       isCollapsed: true,
+      title: {
+        isClkd: false,
+        isUpdating: false,
+        input: "",
+      },
       menu: [
         {
           header: true,
@@ -72,8 +122,8 @@ export default {
         },
         {
           href: "/",
-          title: "Bloodline",
-          icon: "fa fa-chart-area",
+          title: "Bloodline Families",
+          icon: "icofont-arrow-left",
         },
         {
           href: `/${this.$route.params.id}`,
@@ -122,13 +172,24 @@ export default {
   methods: {
     onToggleCollapse(collapsed) {
       this.isCollapsed = collapsed;
-      console.log(this.isCollapsed);
+    },
+    titleClk() {
+      this.title.isClkd = true;
+      this.title.input = `${this.storeTitle}`;
     },
   },
 };
 </script>
 
 <style scoped>
+.title {
+  width: 80%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 35px;
+  font-size: 25px;
+  text-align: center;
+}
 .navbar {
   background-color: white;
   padding: 20px;
@@ -145,8 +206,28 @@ export default {
   padding: 10px;
 }
 
-.drawer-icon{
-  float:left;
+.drawer-icon {
+  float: left;
+  font-size: 20px;
+}
+.titleInput {
+  padding: 5px;
+  color: indianred;
+  border-radius: 5px;
+  border: solid indianred 0.5px;
+  text-align: center;
+  margin: -6px 20px;
+  font-size: 25px;
+}
+.titleInput:focus {
+  outline: none !important;
+  border: solid indianred 0.5px !important;
+}
+.icofont-close-line {
+  font-size: 25px;
+}
+.icofont-tick-mark {
+  color: green;
   font-size: 20px;
 }
 </style>

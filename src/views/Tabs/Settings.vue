@@ -21,13 +21,13 @@
           ></div>
         </center>
       </div>
-      <div v-else style="padding: 100px">
-        <div
-          style="float: right; width: 300px; overflow: hidden; height: 20px"
-          v-if="!$device.mobile"
-        >
-          <p><strong>Created On :</strong> {{ data.created_at }}</p>
-        </div>
+
+      <!-- Settings Body -->
+      <div v-else :style="{padding: $device.mobile?'0 50px 50px 50px':'0 100px'}">
+        <p style="float: right">
+          <strong>Created On :</strong>
+          {{ new Date(data.created_at).toDateString() }}
+        </p>
         <h4>General Settings</h4>
         <form v-on:submit.prevent="sendData">
           <div class="form-inline row">
@@ -231,7 +231,7 @@ export default {
     Axios.get(ProdData.getHostURL() + "/tree/" + this.$route.params.id)
       .then((data) => {
         this.data = data.data.meta[0];
-        console.log(this.data);
+        console.log();
       })
       .catch((err) => (this.form.error = err))
       .finally(() => (this.form.loading = false));

@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "./views/Home.vue";
-import MainTree from "./views/Tabs/MainTree.vue";
-import Subtree from "./views/subtree/Subtree.vue";
+import MainTree from "./views/Tabs/MainTree/MainTree.vue";
+import Subtree from "./views/Tabs/MainTree/Subtree.vue";
 
 Vue.use(VueRouter);
 

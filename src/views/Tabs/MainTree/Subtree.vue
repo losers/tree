@@ -32,9 +32,9 @@
 
 <script>
 import Axios from "axios";
-import ProdData from "../../data.js";
+import ProdData from "@/data.js";
 import TreeChart from "@/components/TreeChart";
-import Store from "../../store/index";
+import Store from "@/store/index";
 
 export default {
   data() {

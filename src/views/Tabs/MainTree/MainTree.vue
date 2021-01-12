@@ -54,63 +54,16 @@
     <section v-else>
       <router-view></router-view>
       <div v-if="loading">
-        <router-link :to="{ name: 'Home' }" class="float-left mt-2 ml-1">
-          <i class="icofont-arrow-left"></i>
-          Back
-        </router-link>
         <center style="padding-top: 240px">
           <img src="@/assets/dna.gif" alt="Bloodline Loader" />
         </center>
       </div>
 
       <div v-else>
-        <!-- Tree Tilebar -->
-        <div v-if="$device.mobile" style="float: left">
-          <SideDrawer></SideDrawer>
-        </div>
-        <h3 style="color: indianred">{{ title[0].title }}</h3>
-        <!-- <div class="tree-titlebar"> -->
-
-        <!-- <center class="fam-name" :class="[{ 'f-26': $device.mobile }]">
-            {{ newTitle ? newTitle : title[0].title }}
-          </center> -->
-        <!-- <router-link :to="{ name: 'Home' }">
-            <i class="icofont-arrow-left"></i>
-            Back
-          </router-link> -->
-
-        <!-- <div class="tree-title flexy">
-            <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">
-              {{ newTitle ? newTitle : title[0].title }}
-            </div>
-            <div v-show="is_session && !view_only">
-              <i
-                class="icofont-edit ml-2"
-                @click="dualPage(0)"
-                style="font-size: 20px; cursor: pointer; color: indianred"
-              ></i>
-            </div> -->
-        <!-- </div> -->
-        <!-- <i
-            class="icofont-gear"
-            style="display: flex; align-items: center; margin-right: 5px"
-          >
-          <SideDrawer></SideDrawer>
-          </i> -->
-        <!-- <router-link
-            :to="{ name: 'Analytics' }"
-            style="display: flex; align-items: center; margin-right: 5px"
-            v-if="!$device.mobile"
-          >
-            <i class="icofont-gear" style="margin-right: 8px"></i>
-            <span v-if="!$device.mobile"> </span>
-          </router-link> -->
-        <!-- </div> -->
-
         <!-- Dual page for Add Root Edit form and  -->
         <DualPage
           :reference="dualPageData.reference"
-          :payload="title[0]"
+          :payload="metadata[0]"
           v-on:closed="dualPageClosed"
           v-if="dualPageData.showDualPage"
         ></DualPage>
@@ -167,15 +120,6 @@
                 + Add Person
               </button>
             </touch-ripple>
-            <!-- <button @click="dualPage(1)" class="my-super-cool-btn">
-              <div class="dots-container">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-              </div>
-              <span style="font-size: 18px; font-weight: 900">Add!</span>
-            </button>-->
           </div>
           <div v-else>
             <center>
@@ -209,7 +153,7 @@
           </div>
         </div>
 
-        <!-- Displays Tree Map -->
+        <!-- Displays Origial Tree Map -->
         <div v-else>
           <center>
             <div>
@@ -251,6 +195,8 @@
                 <tick></tick>
               </div>
             </div>
+
+            <!-- Tree -->
             <TreeChart
               :json="tempData"
               :images="images"
@@ -270,6 +216,8 @@
               </h4>
             </div>
           </center>
+
+          <!-- Share Button For Mobile -->
           <button
             @click="shareTree"
             class="btn bottombtn"
@@ -302,11 +250,7 @@ import DualPage from "@/modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
-// import { toJpeg } from "html-to-image";
 import Tick from "@/components/small/tick";
-
-import SideDrawer from "@/components/t-party/SideDrawer";
-
 export default {
   name: "MainTree",
   components: {
@@ -315,7 +259,6 @@ export default {
     DualPage,
     touchRipple,
     Tick,
-    SideDrawer,
   },
   data() {
     return {
@@ -331,7 +274,6 @@ export default {
       vloading: false,
       retry: false,
       sess: null,
-      newTitle: null,
       on_board: false,
       dualPageData: {
         showDualPage: false,
@@ -358,6 +300,7 @@ export default {
     };
   },
   computed: {
+    
     metadata: {
       get() {
         return Store.state.metadata;
@@ -389,11 +332,6 @@ export default {
           Store.dispatch("setStepNumber", 1);
         }
         return Store.state.tree;
-      },
-    },
-    title: {
-      get() {
-        return Store.state.title;
       },
     },
     view_only: {
@@ -524,7 +462,6 @@ export default {
     },
     openAuthBox: function () {
       this.authModal.show = true;
-      this.authModal.payload.title = Store.state.error.response.data[0].title;
       this.authModal.payload.surname =
         Store.state.error.response.data[0].surname;
     },
@@ -585,12 +522,9 @@ export default {
       this.dualPageData.reference = type;
     },
 
-    dualPageClosed(payload) {
+    dualPageClosed() {
       if (this.$device.mobile) {
         this.toggleBodyClass("removeClass", "mem-spec");
-      }
-      if (payload) {
-        this.newTitle = payload;
       }
       this.dualPageData.showDualPage = false;
     },
