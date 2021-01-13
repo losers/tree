@@ -1,30 +1,19 @@
 <template>
   <div>
     <div v-if="loader" class="load-cont">
-      <span class="spinner-border spinner-border-lg" style="margin-right: 8px"></span>
+      <span
+        class="spinner-border spinner-border-lg"
+        style="margin-right: 8px"
+      ></span>
     </div>
-    <div v-if="!loader">
-      <div class="tree-titlebar">
-        <router-link :to="{ name: 'Tree' }">
-          <i class="icofont-arrow-left"></i>
-          MainTree
-        </router-link>
-        <div class="tree-title flexy">
-          <div class="fam-name" :class="[{ 'f-26': $device.mobile }]">{{title}}</div>
-        </div>
-      </div>
-      <div>
-        <center>
-          <TreeChart
-            :json="tree"
-            :images="images"
-            :class="{ }"
-            @click-node="clickNode"
-            style="padding-top: 70px"
-          />
-        </center>
-      </div>
-    </div>
+    <center v-if="!loader" style="overflow: auto;" class="h100">
+      <TreeChart
+        :json="tree"
+        :images="images"
+        :class="{}"
+        @click-node="clickNode"
+      />
+    </center>
     <router-view></router-view>
   </div>
 </template>
@@ -40,65 +29,69 @@ export default {
   data() {
     return {
       loader: false,
-      title: "Subtree"
+      title: "Subtree",
     };
   },
   components: {
-    TreeChart
+    TreeChart,
   },
   computed: {
     images: {
       get() {
         return Store.state.images;
-      }
+      },
     },
     tree: {
       get() {
         return Store.state.subtree;
-      }
+      },
     },
     submemData: {
       get() {
         return Store.state.sub_member_data;
-      }
-    }
+      },
+    },
   },
   watch: {
     $route(to, from) {
-      let refresh = from.path.includes(this.$route.params.subtree_id) && to.path.includes(this.$route.params.subtree_id)?false:true;
+      let refresh =
+        from.path.includes(this.$route.params.subtree_id) &&
+        to.path.includes(this.$route.params.subtree_id)
+          ? false
+          : true;
       if (refresh) {
-        this.getData()
+        this.getData();
       }
-    }
+    },
   },
   methods: {
-    getData: function(){
+    getData: function () {
       let url = `${ProdData.getHostURL()}/subtree/${this.$route.params.id}/${
-          this.$route.params.subtree_id
-        }`;
-        this.loader = true;
-        Axios.get(url)
-          .then(data => {
-            data = data.data;
-            this.title = `${data.member_data.short_name}'s Tree`;
-            let payload = {};
-            payload.tree = data.tree_data.tree;
-            payload.member_data = data.member_data;
-            Store.dispatch("setSubtree", payload).then();
-          })
-          .catch(err => console.log(err))
-          .finally(() => (this.loader = false));
+        this.$route.params.subtree_id
+      }`;
+      this.loader = true;
+      Axios.get(url)
+        .then((data) => {
+          data = data.data;
+          this.title = `${data.member_data.short_name}'s Tree`;
+          let payload = {};
+          payload.tree = data.tree_data.tree;
+          payload.member_data = data.member_data;
+          Store.dispatch("setSubtree", payload).then();
+        })
+        .catch((err) => console.log(err))
+        .finally(() => (this.loader = false));
     },
-    clickNode: function(node) {
+    clickNode: function (node) {
       if (node.data.way_point_node) {
         if (this.submemData.subtree_id) {
           this.$router.push({
             name: "Subtrees",
-            params: { subtree_id: this.submemData.subtree_id }
+            params: { subtree_id: this.submemData.subtree_id },
           });
         } else {
           this.$router.push({
-            name: "Tree"
+            name: "Tree",
           });
         }
       } else {
@@ -106,20 +99,20 @@ export default {
           this.$router.push({
             name: "SubMemberData",
             params: { member: node.data.id },
-            query: { hasMate: true }
+            query: { hasMate: true },
           });
         } else {
           this.$router.push({
             name: "SubMemberData",
-            params: { member: node.data.id }
+            params: { member: node.data.id },
           });
         }
       }
-    }
+    },
   },
   mounted() {
     this.getData();
-  }
+  },
 };
 </script>
 
@@ -168,5 +161,14 @@ export default {
   background-color: white;
   display: flex;
   align-items: center;
+}
+.fixed-body {
+  position: fixed;
+  height: 83%;
+  width: 90%;
+  overflow: auto;
+  border-radius: 20px;
+  margin: 25% 5% 0px;
+  box-shadow: rgb(185 185 185 / 75%) 0px 0px 10px 0px;
 }
 </style>

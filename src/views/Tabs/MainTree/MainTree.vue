@@ -1,7 +1,7 @@
 <template>
   <div id="app" style="height: 100%" :class="[{ 'o-auto': $device.mobile }]">
     <!-- All errors are handeled here -->
-    <section v-if="errored" style="height: 100%">
+    <section v-if="errored" class="h100">
       <error
         v-if="errored.response.status == 404"
         :msg="errored.response.data"

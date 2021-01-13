@@ -45,7 +45,7 @@ const myrouter = new VueRouter({
                 },
                 {
                     path: 'partial-tree',
-                    name: "Subtree",
+                    name: "PartialTree",
                     component: () => import('./views/Tabs/PartialTree')
                 },
                 {
