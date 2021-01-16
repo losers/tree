@@ -1,135 +1,128 @@
 <template>
   <div id="app">
-    <div v-if="$route.params.member">
-      <section v-if="error">
-        <h3>Something went wrong {{ error }}</h3>
+    <section v-if="error">
+      <h3>Something went wrong {{ error }}</h3>
+    </section>
+    <section v-else style="margin-top: -35px">
+      <section v-if="payload.loading.main">
+        <center style="padding-top: 240px">
+          <img src="@/assets/dna.gif" alt="Bloodline Loader" />
+        </center>
       </section>
       <section v-else>
-        <section v-if="payload.loading.main">
-          <center style="padding-top: 240px">
-            <img src="@/assets/dna.gif" alt="Bloodline Loader" />
-          </center>
-        </section>
-        <section v-else>
-          <!-- Titlebar -->
-          <div class="timeline-titlebar">
-            <router-link
-              :to="{ name: 'MainTree', params: { id: $route.params.id } }"
-              class="float-left ml-1"
-            >
-              <i class="icofont-arrow-left"></i>
-              Back
-            </router-link>
+        <!-- Titlebar -->
+        <!-- <div class="timeline-titlebar">
+          <router-link
+            :to="{ name: 'MainTree', params: { id: $route.params.id } }"
+            class="float-left ml-1"
+          >
+            <i class="icofont-arrow-left"></i>
+            Back
+          </router-link>
+          <b class="timeline-title">{{ user.name }}'s Timeline</b>
+        </div> -->
+
+        <!-- Alert Modals -->
+        <transition name="fade">
+          <div
+            v-show="show_alert"
+            style="right: 10px; position: fixed; margin-top: 10px; z-index: 10"
+            class="alert float-right"
+            :class="success_alert ? 'alert-success' : 'alert-danger'"
+          >
+            <p v-if="success_alert">
+              <strong>Success!</strong>
+              {{ modal_msg }}.
+            </p>
+            <p v-else>
+              <strong>Error!</strong>
+              Something went wrong {{ modal_msg }}.
+            </p>
+          </div>
+        </transition>
+
+        <div class="row pt-5" style="margin: 0">
+          <div class="col-md-6 col-sm-12">
             <b class="timeline-title">{{ user.name }}'s Timeline</b>
-          </div>
 
-          <!-- Alert Modals -->
-          <transition name="fade">
-            <div
-              v-show="show_alert"
-              style="
-                right: 10px;
-                position: fixed;
-                margin-top: 10px;
-                z-index: 10;
-              "
-              class="alert float-right"
-              :class="success_alert ? 'alert-success' : 'alert-danger'"
-            >
-              <p v-if="success_alert">
-                <strong>Success!</strong>
-                {{ modal_msg }}.
-              </p>
-              <p v-else>
-                <strong>Error!</strong>
-                Something went wrong {{ modal_msg }}.
-              </p>
+            <div v-if="dataTimeline.length != 0">
+              <Timeline
+                class="mt-4 pb-5 mb-5"
+                :timeline-items="dataTimeline"
+                :unique-year="false"
+                :show-day-and-month="true"
+                :order="order"
+                :namesMap="namesMap"
+              />
             </div>
-          </transition>
 
-          <div class="row pt-5" style="margin: 0">
-            <div class="col-md-6 col-sm-12">
-              <div v-if="dataTimeline.length != 0">
-                <Timeline
-                  class="mt-5 pb-5 mb-5"
-                  :timeline-items="dataTimeline"
-                  :unique-year="false"
-                  :show-day-and-month="true"
-                  :order="order"
-                  :namesMap="namesMap"
-                />
+            <!-- No Timeline found -->
+            <div v-else class="timeline-intro col-md-10">
+              <div>
+                <i class="icofont-arrow-right"></i> Add events like BirthDay,
+                Anniversaries, etc.,
               </div>
-
-              <!-- No Timeline found -->
-              <div v-else class="timeline-intro col-md-10">
-                <div>
-                  <i class="icofont-arrow-right"></i> Add events like BirthDay,
-                  Anniversaries, etc.,
-                </div>
-                <div class="intro-text2">
-                  <i class="icofont-arrow-right"></i> Shared Events like Trips,
-                  Marriage, etc., can also be added and shared with
-                  corresponding people So that it will appear on their Timeline.
-                </div>
-                <div class="intro-text2">
-                  <i class="icofont-arrow-right"></i> Will send a notification everyone.
-                </div>
+              <div class="intro-text2">
+                <i class="icofont-arrow-right"></i> Shared Events like Trips,
+                Marriage, etc., can also be added and shared with corresponding
+                people So that it will appear on their Timeline.
               </div>
-
-              <div v-if="$device.mobile">
-                <!-- Swiper and modal -->
-                <DualPage
-                  v-if="showDualPage"
-                  :onlySwiper="true"
-                  :payload="payload"
-                  :reference="4"
-                  v-on:crudops="formEmit"
-                  ref="dualPageRef"
-                  v-on:closed="swiperDown"
-                ></DualPage>
-
-                <!-- Add Event Button for Mobile -->
-                <div
-                  v-if="!view_only"
-                  style="
-                    position: fixed;
-                    font-size: 20px;
-                    padding: 30px;
-                    bottom: 0px;
-                    left: 0;
-                    width: 100%;
-                    -webkit-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
-                    -moz-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
-                    box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
-                  "
-                >
-                  <button
-                    @click="wrapperUp"
-                    class="btn btn-success"
-                    style="width: 100%"
-                  >
-                    + Add Event
-                  </button>
-                </div>
+              <div class="intro-text2">
+                <i class="icofont-arrow-right"></i> Will send a notification
+                everyone.
               </div>
             </div>
 
-            <div
-              class="timeline_add_box"
-              v-if="!$device.mobile && !payload.loading.main && !view_only"
-            >
-              <TimelineForm
+            <div v-if="$device.mobile">
+              <!-- Swiper and modal -->
+              <DualPage
+                v-if="showDualPage"
+                :onlySwiper="true"
                 :payload="payload"
+                :reference="4"
                 v-on:crudops="formEmit"
-              ></TimelineForm>
+                ref="dualPageRef"
+                v-on:closed="swiperDown"
+              ></DualPage>
+
+              <!-- Add Event Button for Mobile -->
+              <div
+                v-if="!view_only"
+                style="
+                  position: fixed;
+                  font-size: 20px;
+                  padding: 30px;
+                  bottom: 0px;
+                  left: 0;
+                  width: 100%;
+                  -webkit-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
+                  -moz-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
+                  box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
+                "
+              >
+                <button
+                  @click="wrapperUp"
+                  class="btn btn-success"
+                  style="width: 100%"
+                >
+                  + Add Event
+                </button>
+              </div>
             </div>
           </div>
-        </section>
+
+          <div
+            class="timeline_add_box"
+            v-if="!$device.mobile && !payload.loading.main && !view_only"
+          >
+            <TimelineForm
+              :payload="payload"
+              v-on:crudops="formEmit"
+            ></TimelineForm>
+          </div>
+        </div>
       </section>
-    </div>
-    <div v-else>
-      <h3>No timeline</h3>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -450,7 +443,6 @@ export default {
   font-size: 30px;
   color: black;
   font-weight: bold;
-  flex: 1;
   margin: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -463,7 +455,7 @@ export default {
   position: fixed;
   border-radius: 20px;
   top: 20%;
-  right: 10%;
+  right: 5%;
   width: 650px;
   -webkit-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);

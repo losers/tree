@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-bottom: 30px">
+  <center style="padding-bottom: 30px">
     <table class="table table-borderless table-hover table-data">
       <tbody class="text-left" style="color: black">
         <tr v-if="data.mobile">
@@ -65,7 +65,7 @@
       >View Timeline</router-link
     ><br />
     <!-- <router-link :to="{name:'Profile', params:{member:id}}">See Profile</router-link> -->
-  </div>
+  </center>
 </template>
 
 <style scoped>

@@ -23,13 +23,16 @@
       </div>
 
       <!-- Settings Body -->
-      <div v-else :style="{padding: $device.mobile?'0 50px 50px 50px':'0 100px'}">
+      <div
+        v-else
+        :style="{ padding: $device.mobile ? '0 50px 50px 50px' : '0 200px' }"
+      >
         <p style="float: right">
           <strong>Created On :</strong>
           {{ new Date(data.created_at).toDateString() }}
         </p>
         <h4>General Settings</h4>
-        <form v-on:submit.prevent="sendData">
+        <form v-on:submit.prevent="updateSettings">
           <div class="form-inline row">
             <label
               class="col"
@@ -109,8 +112,9 @@
           >
             <div class="mb-2">Admin PIN and View-Only PIN cannot be same</div>
           </div>
-
-          <h4 style="margin-top: 40px">Contact Settings</h4>
+          <h4 class="contact-details">
+            Contact Details <span>(optional)</span>
+          </h4>
           <div class="form-inline row">
             <label
               for="name"
@@ -123,6 +127,7 @@
               type="text"
               class="form-control col-sm-9"
               id="name"
+              v-model="data.contact.name"
               placeholder="Your Name"
             />
           </div>
@@ -139,6 +144,7 @@
               type="email"
               class="form-control col-sm-9"
               id="email"
+              v-model="data.contact.email"
               placeholder="Your Email"
             />
           </div>
@@ -154,11 +160,11 @@
               <button
                 type="submit"
                 class="btn btn-success"
-                :disabled="updatingForm || data.pin == data.view_pin"
+                :disabled="form.isUpdating || data.pin == data.view_pin"
               >
                 <span
                   class="spinner-border spinner-border-sm"
-                  v-show="updatingForm"
+                  v-show="form.isUpdating"
                   style="margin-right: 8px"
                 ></span>
                 Update
@@ -166,7 +172,7 @@
             </div>
           </div>
           <div v-if="form.error" class="mt-3 text-danger">
-            <div class="mb-2">Surname {{ data.surname }}, already exists</div>
+            <div class="mb-2">Error : {{ form.error }}</div>
           </div>
         </form>
         <h4 style="color: red; margin-top: 40px">Danger Zone</h4>
@@ -210,6 +216,7 @@
 <script>
 import Axios from "axios";
 import ProdData from "@/data.js";
+import Store from "@/store/index";
 
 export default {
   data() {
@@ -217,26 +224,43 @@ export default {
       form: {
         error: false,
         loading: true,
+        isUpdating: false,
       },
       data: {
         contact: {},
-        pin: "1234",
+        pin: "",
       },
-      updatingForm: false,
       deletingFamily: false,
       deleteSurname: "",
     };
   },
   mounted() {
-    Axios.get(ProdData.getHostURL() + "/tree/" + this.$route.params.id)
+    Axios.get(ProdData.getHostURL() + "/meta/get/" + this.$route.params.id)
       .then((data) => {
-        this.data = data.data.meta[0];
-        console.log();
+        this.data = data.data;
       })
       .catch((err) => (this.form.error = err))
       .finally(() => (this.form.loading = false));
   },
   methods: {
+    updateSettings() {
+      this.form.isUpdating = true;
+      Axios.put(ProdData.getHostURL() + "/meta/update", {
+        title: this.data.title,
+        _id: this.data._id,
+        created_at: this.data.created_at,
+        pin: this.data.pin,
+        view_pin: this.data.view_pin,
+        contact: this.data.contact,
+      })
+        .then(() => {
+          if (Store.state.title != this.data.title) {
+            Store.dispatch("setTitle", this.data.title);
+          }
+        })
+        .catch((err) => (this.form.error = err))
+        .finally(() => (this.form.isUpdating = false));
+    },
     deleteFamily() {
       console.log("family de");
     },
@@ -245,6 +269,16 @@ export default {
 </script>
 
 <style scoped>
+.contact-details {
+  margin-top: 70px;
+  display: flex;
+  align-items: center;
+}
+.contact-details span {
+  margin-left: 10px;
+  font-size: 15px;
+  color: grey;
+}
 .danger-zone {
   background-color: rgba(255, 191, 191, 0.2);
   border: solid #ffb6b6 1px;

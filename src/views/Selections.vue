@@ -14,7 +14,7 @@
       >
         <router-link
           :to="{ name: 'MainTree', params: { id: $route.params.id } }"
-          ><i class="icofont-arrow-left"></i>back</router-link
+          ><i class="icofont-arrow-left"></i>Home</router-link
         >
       </div>
 
@@ -33,7 +33,11 @@
 
       <!-- Input Box -->
       <div v-else>
-        <i class="icofont-close-line cursor" v-if="!title.isUpdating" @click="title.isClkd = false"></i>
+        <i
+          class="icofont-close-line cursor"
+          v-if="!title.isUpdating"
+          @click="title.isClkd = false"
+        ></i>
         <input
           v-model="title.input"
           class="titleInput"
@@ -146,7 +150,6 @@ export default {
         document.documentElement.scrollTop > 80
       ) {
         //Scrolls Down
-        console.log("scrollll");
         document.querySelector(".navbar").classList.add("add-border");
         document.querySelector(".navbar").style.padding = "10px";
       } else {
@@ -158,11 +161,12 @@ export default {
   computed: {
     storeTitle: {
       get() {
-        if(!this.$route.params.subtree_id){
+        if (!this.$route.params.subtree_id) {
           return Store.state.title;
-        }
-        else{
-          return Store.state.subtree_meta.title ? Store.state.subtree_meta.title: `${Store.state.sub_member_data.short_name}'s Tree`;
+        } else {
+          return Store.state.subtree_meta.title
+            ? Store.state.subtree_meta.title
+            : `${Store.state.sub_member_data.short_name}'s Tree`;
         }
       },
     },
@@ -239,39 +243,41 @@ export default {
           href: `/${this.$route.params.id}/settings`,
           title: "Settings",
           icon: "icofont-gear",
+          // disabled: Store.state.is_session,
         },
       ],
     };
   },
 
   methods: {
-    titleUpdate(){
+    titleUpdate() {
       this.title.isUpdating = true;
-      let url = `${ProdData.getHostURL()}/meta/${this.$route.params.id}/update-title`;
+      let url = `${ProdData.getHostURL()}/meta/${
+        this.$route.params.id
+      }/update-title`;
       let params = {
-        title: this.title.input
+        title: this.title.input,
       };
-      if(this.$route.params.subtree_id){
+      if (this.$route.params.subtree_id) {
         params.subtree_id = this.$route.params.subtree_id;
       }
       Axios.put(url, params)
-      .then((data) => {
-        this.toggleTitleClick()
-        data = data.data;
-        if(!this.$route.params.subtree_id){
-          Store.dispatch("setTitle", data);
-        }
-        else{
-          Store.state.subtree_meta.title = data;
-        }
-      })
-      .catch((err) => (console.log(err)))
-      .finally(() => (this.title.isUpdating = false));
+        .then((data) => {
+          this.toggleTitleClick();
+          data = data.data;
+          if (!this.$route.params.subtree_id) {
+            Store.dispatch("setTitle", data);
+          } else {
+            Store.state.subtree_meta.title = data;
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => (this.title.isUpdating = false));
     },
     onToggleCollapse(collapsed) {
       this.isCollapsed = collapsed;
     },
-    toggleTitleClick(){
+    toggleTitleClick() {
       this.title.isClkd = !this.title.isClkd;
     },
     titleClk() {
@@ -283,7 +289,7 @@ export default {
 </script>
 
 <style scoped>
-.cursor{
+.cursor {
   cursor: pointer;
 }
 .title {

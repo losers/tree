@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <center>
     <div class="mx-auto col-12" v-if="hasCookie && !viewOnly">
       <button
         @click="addMember(0)"
@@ -17,7 +17,9 @@
         @click="goToSubTree()"
         class="col-10 btn btn-warning mb-3"
         v-show="data.linked_tree"
+        style="background-color: #0083a0; color: white"
       >
+        <i class="icofont-tree p2" style="font-size: 15px"></i>
         View Parent Tree
       </button>
 
@@ -61,7 +63,7 @@
         </button>
       </span>
     </div>
-  </div>
+  </center>
 </template>
 
 <script>
@@ -80,11 +82,13 @@ export default {
     };
   },
   props: ["cookeyStatus", "data", "hasMate", "viewOnly"],
-  mounted(){
-  },
+  mounted() {},
   methods: {
-    goToSubTree(){
-      this.$router.push({ name: "Subtrees", params: { subtree_id: this.data.linked_tree } });
+    goToSubTree() {
+      this.$router.push({
+        name: "Subtrees",
+        params: { subtree_id: this.data.linked_tree },
+      });
     },
     addMember(num) {
       this.$emit("actionsAddMember", num);
@@ -92,7 +96,7 @@ export default {
     deleteSwipe() {
       this.$emit("actionsDeleteSwipe");
     },
-    reArrange(){
+    reArrange() {
       this.$emit("actionsReArrange");
     },
     validate() {

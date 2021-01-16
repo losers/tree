@@ -294,12 +294,12 @@ export default {
       }
       this.view_pin = this.payload.view_pin;
       this.editFormLoading = true;
-      Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
-        .then((data) => {
-          this.pin = data.data.pin;
-        })
-        .catch((err) => (this.editFormErrored = err))
-        .finally(() => (this.editFormLoading = false));
+      // Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
+      //   .then((data) => {
+      //     this.pin = data.data.pin;
+      //   })
+      //   .catch((err) => (this.editFormErrored = err))
+      //   .finally(() => (this.editFormLoading = false));
     } else {
       this.editFormLoading = false;
       this.editFormErrored = false;

@@ -26,17 +26,17 @@
               ><li><i class="icofont-ui-calendar"></i>Events</li></router-link
             >
 
-            <router-link :to="{ name: 'Subtree' }">
+            <!-- <router-link :to="{ name: 'Subtree' }">
               <li><i class="icofont-site-map"></i>Subtrees</li></router-link
-            >
+            > -->
 
-            <router-link :to="{ name: 'Timeline' }"
+            <!-- <router-link :to="{ name: 'Timeline' }"
               ><li><i class="icofont-sand-clock"></i>Timeline</li></router-link
-            >
+            > -->
 
-            <router-link :to="{ name: 'Records' }"
+            <!-- <router-link :to="{ name: 'Records' }"
               ><li><i class="icofont-listine-dots"></i>Records</li></router-link
-            >
+            > -->
 
             <router-link :to="{ name: 'Settings' }"
               ><li><i class="icofont-gear"></i>Settings</li></router-link
@@ -109,6 +109,7 @@ a {
 .fadeMe {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
 .drawer {
   width: 100%;
   height: 100%;
@@ -132,7 +133,9 @@ a {
   width: 30%;
   height: 100%;
 }
-
+.icofont-navigation-menu{
+  font-size: 25px;
+}
 ul {
   margin-top: 25px;
   transform: translateX(-200%);
