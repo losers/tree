@@ -28,12 +28,12 @@
         <div class="title-text">
           {{ storeTitle }}
         </div>
-        <i class="icofont-ui-user-group" style="font-size: 30px"></i>101
+        <!-- <i class="icofont-ui-user-group" style="font-size: 30px"></i>101 -->
       </div>
 
       <!-- Input Box -->
       <div v-else>
-        <i class="icofont-close-line" @click="title.isClkd = false"></i>
+        <i class="icofont-close-line cursor" v-if="!title.isUpdating" @click="title.isClkd = false"></i>
         <input
           v-model="title.input"
           class="titleInput"
@@ -41,9 +41,9 @@
           autofocus
         />
         <i
-          class="icofont-tick-mark"
+          class="icofont-check cursor"
           v-if="!title.isUpdating"
-          @click="title.isUpdating = true"
+          @click="titleUpdate"
         ></i>
         <div
           v-else
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Subtree Title Space-->
-      <div v-if="$route.params.subtree_id" style="width: 100%; height: 50px">
+      <!-- <div v-if="$route.params.subtree_id" style="width: 100%; height: 50px">
         <center>
           <i style="font-size: 25px" class="icofont-arrow-down"></i>
         </center>
@@ -84,7 +84,7 @@
             autofocus
           />
           <i
-            class="icofont-tick-mark"
+            class="icofont-tick-mark cursor"
             v-if="!subTitle.isUpdating"
             @click="subTitle.isUpdating = true"
           ></i>
@@ -95,18 +95,18 @@
           ></div>
           </center>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Laptop Top Side Navigation Bar -->
     <div v-if="!$device.mobile">
       <SidebarMenu
         :menu="menu"
-        :theme="'white-theme'"
+        :theme="'black-theme'"
         @toggle-collapse="onToggleCollapse"
         :collapsed="true"
         :width="'300px'"
-        style="box-shadow: 1px 0px 4px 0px rgba(135, 135, 135, 1)"
+        style="box-shadow: 2px 0px 10px 0px rgba(135, 135, 135, 1)"
       >
         <span slot="toggle-icon"
           ><i class="icofont-arrow-left"></i><i class="icofont-arrow-right"></i
@@ -133,6 +133,8 @@ import Store from "../store/index";
 import { SidebarMenu } from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 import SideDrawer from "@/components/t-party/SideDrawer";
+import Axios from "axios";
+import ProdData from "../data";
 
 export default {
   mounted() {
@@ -156,7 +158,12 @@ export default {
   computed: {
     storeTitle: {
       get() {
-        return Store.state.title;
+        if(!this.$route.params.subtree_id){
+          return Store.state.title;
+        }
+        else{
+          return Store.state.subtree_meta.title ? Store.state.subtree_meta.title: `${Store.state.sub_member_data.short_name}'s Tree`;
+        }
       },
     },
     subtreeTitle: {
@@ -185,12 +192,12 @@ export default {
       menu: [
         {
           header: true,
-          title: "Main Navigation",
+          title: "Bloodline",
           hiddenOnCollapse: true,
         },
         {
           href: "/",
-          title: "Bloodline Families",
+          title: "All Families",
           icon: "icofont-arrow-left",
         },
         {
@@ -206,28 +213,28 @@ export default {
         {
           href: `/${this.$route.params.id}/partial-tree`,
           title: "Partial Tree",
-          icon: "icofont-newsvine",
+          icon: "icofont-site-map",
         },
         {
           href: `/${this.$route.params.id}/events`,
           title: "Events",
           icon: "icofont-ui-calendar",
         },
-        {
-          href: `/${this.$route.params.id}/subtree`,
-          title: "Subtree",
-          icon: "icofont-site-map",
-        },
-        {
-          href: `/${this.$route.params.id}/timeline`,
-          title: "Timeline",
-          icon: "icofont-sand-clock",
-        },
-        {
-          href: `/${this.$route.params.id}/records`,
-          title: "Records",
-          icon: "icofont-listine-dots",
-        },
+        // {
+        //   href: `/${this.$route.params.id}/subtree`,
+        //   title: "Subtree",
+        //   icon: "icofont-site-map",
+        // },
+        // {
+        //   href: `/${this.$route.params.id}/timeline`,
+        //   title: "Timeline",
+        //   icon: "icofont-sand-clock",
+        // },
+        // {
+        //   href: `/${this.$route.params.id}/records`,
+        //   title: "Records",
+        //   icon: "icofont-listine-dots",
+        // },
         {
           href: `/${this.$route.params.id}/settings`,
           title: "Settings",
@@ -238,8 +245,34 @@ export default {
   },
 
   methods: {
+    titleUpdate(){
+      this.title.isUpdating = true;
+      let url = `${ProdData.getHostURL()}/meta/${this.$route.params.id}/update-title`;
+      let params = {
+        title: this.title.input
+      };
+      if(this.$route.params.subtree_id){
+        params.subtree_id = this.$route.params.subtree_id;
+      }
+      Axios.put(url, params)
+      .then((data) => {
+        this.toggleTitleClick()
+        data = data.data;
+        if(!this.$route.params.subtree_id){
+          Store.dispatch("setTitle", data);
+        }
+        else{
+          Store.state.subtree_meta.title = data;
+        }
+      })
+      .catch((err) => (console.log(err)))
+      .finally(() => (this.title.isUpdating = false));
+    },
     onToggleCollapse(collapsed) {
       this.isCollapsed = collapsed;
+    },
+    toggleTitleClick(){
+      this.title.isClkd = !this.title.isClkd;
     },
     titleClk() {
       this.title.isClkd = true;
@@ -250,6 +283,9 @@ export default {
 </script>
 
 <style scoped>
+.cursor{
+  cursor: pointer;
+}
 .title {
   width: 80%;
   height: 35px;
@@ -299,10 +335,12 @@ export default {
 }
 .icofont-close-line {
   font-size: 25px;
+  font-weight: bold;
 }
-.icofont-tick-mark {
+
+.icofont-check {
   color: green;
-  font-size: 20px;
+  font-size: 30px;
 }
 
 .back-btn {

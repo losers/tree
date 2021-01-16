@@ -24,7 +24,8 @@ export default new Vuex.Store({
       2: true  // Website
     },
     subtree:{},
-    sub_member_data: {}
+    sub_member_data: {},
+    subtree_meta: {}
   },
   mutations: {
     setImages(state, imagesData) {
@@ -67,12 +68,18 @@ export default new Vuex.Store({
     setSubtree(state, subtree ) {
       state.subtree = subtree;
     },
+    setTitle(state, title ) {
+      state.title = title;
+    },
     setSubMemberData(state,  sub_member_data) {
       state.sub_member_data = sub_member_data;
     },
     setPromo(state, promoNo) {
       state.promos[promoNo] = false;
-    }
+    },
+    setSubtreeMeta(state,  subtree_data) {
+      state.subtree_meta = subtree_data;
+    },
   },
   actions: {
     async treeSetup(state, surname) {
@@ -119,6 +126,12 @@ export default new Vuex.Store({
         family_id: state.state.title[0]._id,
         stepper: step
       });
+    },
+    async setTitle(state, title) {
+      state.commit('setTitle', title);
+    },
+    async setSubtreeMeta(state, subtreeData) {
+      state.commit('setSubtreeMeta', subtreeData);
     },
   },
   getters: {

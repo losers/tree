@@ -78,6 +78,8 @@ export default {
           payload.tree = data.tree_data.tree;
           payload.member_data = data.member_data;
           Store.dispatch("setSubtree", payload).then();
+          delete data.tree_data.tree;
+          Store.dispatch("setSubtreeMeta", data.tree_data);
         })
         .catch((err) => console.log(err))
         .finally(() => (this.loader = false));

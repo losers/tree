@@ -23,16 +23,10 @@
             }"
           >
             <div v-if="treeData.way_point_node" class="crown-man">
-              <i class="icofont-crown"></i>
+              <!-- <i class="icofont-crown"></i> -->
             </div>
-            <div
-              class="person"
-              @click="$emit('click-node', { data: treeData, isMate: false })"
-            >
-              <div
-                class="avat"
-                :class="{ 'avat-exit': treeData.way_point_node }"
-              >
+            <div class="person" @click="$emit('click-node', { data: treeData, isMate: false })">
+              <div class="avat" :class="{ 'avat-exit': treeData.way_point_node }">
                 <img
                   :src="'data:image/png;base64, ' + treeData.image_url"
                   v-if="treeData.image_url"
@@ -41,6 +35,10 @@
                 <img src="../assets/dp.png" v-else alt="Blood Line User" />
               </div>
               <div class="name">{{ treeData.name }}</div>
+              <i
+                class="icofont-long-arrow-left object"
+                v-if="treeData.way_point_node"
+              ></i>
             </div>
             <div v-if="treeData.mate" style="display: flex; margin-left: 20px">
               <div
@@ -66,11 +64,7 @@
               </div>
             </div>
           </div>
-          <div
-            class="extend_handle"
-            v-if="treeData.children"
-            @click="toggleExtend(treeData)"
-          ></div>
+          <div class="extend_handle" v-if="treeData.children" @click="toggleExtend(treeData)"></div>
         </center>
       </td>
     </tr>
@@ -82,10 +76,7 @@
         class="childLevel"
       >
         <center>
-          <TreeChart
-            :json="children"
-            @click-node="$emit('click-node', $event)"
-          />
+          <TreeChart :json="children" @click-node="$emit('click-node', $event)" />
         </center>
       </td>
     </tr>
@@ -103,13 +94,13 @@ export default {
     return {
       treeData: {},
       num: 1,
-      img: this.images,
+      img: this.images
     };
   },
   watch: {
     json: {
-      handler: function (Props) {
-        let extendKey = (jsonData) => {
+      handler: function(Props) {
+        let extendKey = jsonData => {
           if (images1.all) {
             jsonData.image_url = images1.all[jsonData.id];
             if (jsonData.mate) {
@@ -121,7 +112,7 @@ export default {
           jsonData.extend =
             jsonData.extend === void 0 ? true : !!jsonData.extend;
           if (Array.isArray(jsonData.children)) {
-            jsonData.children.forEach((c) => {
+            jsonData.children.forEach(c => {
               extendKey(c);
             });
           }
@@ -135,19 +126,39 @@ export default {
         }
       },
       immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
-    toggleExtend: function (treeData) {
+    toggleExtend: function(treeData) {
       treeData.extend = !treeData.extend;
       this.$forceUpdate();
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
+.icofont-long-arrow-left {
+  color: indianred !important;
+  font-size: 40px;
+  top: -89px;
+  margin-left: -150px;
+}
+.object {
+  animation: MoveUpDown 1s linear infinite;
+  position: relative;
+  color: rgb(132, 129, 129);
+}
+@keyframes MoveUpDown {
+  0%,
+  100% {
+    left: -5px;
+  }
+  50% {
+    left: 0px;
+  }
+}
 .avat-exit {
   width: 5em !important;
   height: 5em !important;
