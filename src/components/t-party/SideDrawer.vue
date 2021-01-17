@@ -55,9 +55,7 @@
               ><li><i class="icofont-listine-dots"></i>Records</li></router-link
             > -->
 
-            <router-link
-              :to="{ name: 'Settings' }"
-              v-if="!viewOnly"
+            <router-link :to="{ name: 'Settings' }" v-if="isEditable"
               ><li>
                 <i class="icofont-gear drawer-icons"></i>Settings
               </li></router-link
@@ -105,9 +103,9 @@ export default {
       .addEventListener("click", this.closeMenu, false);
   },
   computed: {
-    viewOnly: {
+    isEditable: {
       get() {
-        return Store.state.view_only;
+        return Store.getters.getIsEditable;
       },
     },
   },
