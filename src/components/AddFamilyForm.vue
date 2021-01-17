@@ -120,7 +120,7 @@
               class="mt-3 text-warning"
             >
               <div class="mb-2">
-                {{ payload ? "Admin " : "" }}pin can be easily guessed.
+                Warning: Pin can be easily guessed.
               </div>
             </div>
             <div class="form-inline row" v-if="payload">
@@ -338,18 +338,6 @@ export default {
           })
           .finally(() => (this.loading = false));
       }
-    },
-    deleteFamily() {
-      this.loading = true;
-      Axios.delete(ProdData.getHostURL() + "/meta", {
-        data: { surname: this.errSurname },
-      })
-        .then((data) => console.log(data))
-        .catch((err) => console.log(err))
-        .finally(() => {
-          this.goBack();
-          this.$router.push({ name: "Home" });
-        });
     },
     goBack() {
       this.$emit("close");

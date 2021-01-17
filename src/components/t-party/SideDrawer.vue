@@ -4,26 +4,43 @@
       <div class="drawer row">
         <div class="app-menu">
           <ul class="menu-links">
+            <div style="color: grey" class="bloodline-title">BLOODLINE</div>
+            <router-link
+              :to="{
+                name: 'Home',
+              }"
+              ><li>
+                <i class="icofont-arrow-left drawer-icons"></i>All Families
+              </li></router-link
+            >
             <router-link
               :to="{
                 name: 'MainTree',
                 params: { id: $route.params.id },
               }"
-              ><li><i class="icofont-tree"></i>Main Tree</li></router-link
+              ><li>
+                <i class="icofont-tree drawer-icons"></i>Main Tree
+              </li></router-link
             >
             <router-link
               :to="{
                 name: 'RelationFinder',
               }"
-              ><li><i class="icofont-search-2"></i>Relation Finder</li>
+              ><li>
+                <i class="icofont-search-2 drawer-icons"></i>Relation Finder
+              </li>
             </router-link>
 
             <router-link :to="{ name: 'PartialTree' }">
-              <li><i class="icofont-newsvine"></i>Partial Tree</li></router-link
+              <li>
+                <i class="icofont-newsvine drawer-icons"></i>Partial Tree
+              </li></router-link
             >
 
             <router-link :to="{ name: 'Events' }"
-              ><li><i class="icofont-ui-calendar"></i>Events</li></router-link
+              ><li>
+                <i class="icofont-ui-calendar drawer-icons"></i>Events
+              </li></router-link
             >
 
             <!-- <router-link :to="{ name: 'Subtree' }">
@@ -39,7 +56,9 @@
             > -->
 
             <router-link :to="{ name: 'Settings' }"
-              ><li><i class="icofont-gear"></i>Settings</li></router-link
+              ><li>
+                <i class="icofont-gear drawer-icons"></i>Settings
+              </li></router-link
             >
           </ul>
         </div>
@@ -98,13 +117,24 @@ export default {
   margin: 0;
   transition: all 200ms linear;
 }
-.router-link-exact-active {
-  font-weight: bold;
-  color: red;
+.bloodline-title {
+  color: grey;
+  font-size: 18px;
+  margin: 15px 20px;
+}
+.router-link-exact-active li {
+  border-left: solid red 5px;
+  background-color: black;
+}
+.drawer-icons {
+  border-radius: 5px;
+  background-color: black;
+  margin-right: 15px;
+  font-size: 20px;
 }
 a {
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 15px;
+  color: white;
+  font-size: 18px;
 }
 .fadeMe {
   background-color: rgba(0, 0, 0, 0.3);
@@ -122,7 +152,7 @@ a {
   transform: translateX(0) !important;
 }
 .app-menu {
-  background-color: #fff;
+  background-color: #2a2a2e;
   width: 70%;
   height: 100%;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
@@ -133,11 +163,10 @@ a {
   width: 30%;
   height: 100%;
 }
-.icofont-navigation-menu{
-  font-size: 25px;
+.icofont-navigation-menu {
+  font-size: 30px;
 }
 ul {
-  margin-top: 25px;
   transform: translateX(-200%);
   transition: all 700ms linear;
   padding: 0;
@@ -149,7 +178,6 @@ li {
   margin-bottom: 5px;
   padding: 10px;
   text-align: center;
-  border-bottom: solid rgb(204, 204, 204) 1px;
   display: flex;
   justify-content: start;
   align-items: center;

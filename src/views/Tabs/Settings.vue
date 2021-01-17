@@ -262,7 +262,15 @@ export default {
         .finally(() => (this.form.isUpdating = false));
     },
     deleteFamily() {
-      console.log("family de");
+      this.deletingFamily = true;
+      Axios.delete(ProdData.getHostURL() + "/meta", {
+        data: { surname: this.$route.params.id },
+      })
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err))
+        .finally(() => {
+          this.$router.push({ name: "Home" });
+        });
     },
   },
 };

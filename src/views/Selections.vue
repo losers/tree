@@ -108,7 +108,6 @@
         :menu="menu"
         :theme="'black-theme'"
         @toggle-collapse="onToggleCollapse"
-        :collapsed="true"
         :width="'300px'"
         style="box-shadow: 2px 0px 10px 0px rgba(135, 135, 135, 1)"
       >
@@ -143,7 +142,6 @@ import ProdData from "../data";
 export default {
   mounted() {
     Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
-
     window.onscroll = function () {
       if (
         document.body.scrollTop > 80 ||
@@ -151,10 +149,10 @@ export default {
       ) {
         //Scrolls Down
         document.querySelector(".navbar").classList.add("add-border");
-        document.querySelector(".navbar").style.padding = "10px";
+        document.querySelector(".navbar").style.padding = "10px 0";
       } else {
         document.querySelector(".navbar").classList.remove("add-border");
-        document.querySelector(".navbar").style.padding = "20px";
+        document.querySelector(".navbar").style.padding = "20px 5px";
       }
     };
   },
@@ -182,7 +180,7 @@ export default {
   },
   data() {
     return {
-      isCollapsed: true,
+      isCollapsed: false,
       title: {
         isClkd: false,
         isUpdating: false,
@@ -243,7 +241,7 @@ export default {
           href: `/${this.$route.params.id}/settings`,
           title: "Settings",
           icon: "icofont-gear",
-          // disabled: Store.state.is_session,
+          disabled: Store.state.view_only,
         },
       ],
     };
@@ -308,7 +306,7 @@ export default {
 }
 .navbar {
   background-color: white;
-  padding: 20px;
+  padding: 20px 5px;
   color: indianred;
   position: fixed;
   width: 100%;
@@ -350,14 +348,7 @@ export default {
 }
 
 .back-btn {
-  border: 1px solid indianred;
-  padding: 5px 0px;
-  border-radius: 10px;
   width: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 4px 0px rgb(255 0 0 / 75%);
 }
 a {
   color: indianred !important;
