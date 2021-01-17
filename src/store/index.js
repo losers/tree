@@ -25,7 +25,7 @@ export default new Vuex.Store({
     },
     subtree:{},
     sub_member_data: {},
-    subtree_meta: {}
+    subtree_meta: {},
   },
   mutations: {
     setImages(state, imagesData) {
@@ -137,6 +137,9 @@ export default new Vuex.Store({
   getters: {
     getSubTree: (state) => {
       return state.subtree;
+    },
+    getIsEditable:(state)=>{
+      return !state.view_only && state.is_session;
     },
     getIsLoading: (state) => {
       return state.loading;

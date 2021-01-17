@@ -31,75 +31,33 @@
         <!-- <i class="icofont-ui-user-group" style="font-size: 30px"></i>101 -->
       </div>
 
-      <!-- Input Box -->
+      <!-- Title Update Input Box -->
       <div v-else>
-        <i
-          class="icofont-close-line cursor"
-          v-if="!title.isUpdating"
-          @click="title.isClkd = false"
-        ></i>
+        <!-- Cross Icon -->
+        <i class="icofont-close-line cursor" @click="title.isClkd = false"></i>
+
+        <!-- Input Box -->
         <input
           v-model="title.input"
           class="titleInput"
           :style="{ width: $device.mobile ? '70%' : '' }"
           autofocus
         />
+
+        <!-- Ticker Icon -->
         <i
           class="icofont-check cursor"
           v-if="!title.isUpdating"
           @click="titleUpdate"
         ></i>
+
+        <!-- Loader Circular -->
         <div
           v-else
           class="spinner-border spinner-border-sm"
           style="width: 1rem; height: 1rem; color: green"
         ></div>
       </div>
-
-      <!-- Subtree Title Space-->
-      <!-- <div v-if="$route.params.subtree_id" style="width: 100%; height: 50px">
-        <center>
-          <i style="font-size: 25px" class="icofont-arrow-down"></i>
-        </center>
-        <div
-          v-if="!subTitle.isClkd"
-          @click="subTitle.isClkd = true"
-          class="subtree-titlebg"
-        >
-          <div class="subtree-title">
-            {{
-              subtreeTitle.children
-                ? subtreeTitle.children[0].name
-                : "Test name"
-            }}'s Family Tree
-          </div>
-          <div class="subtree-members">
-            <i class="icofont-ui-user-group" style="font-size: 30px"></i>101
-          </div>
-        </div>
-        <div v-else>
-          <center>
-          <i class="icofont-close-line" @click="subTitle.isClkd = false"></i>
-          <input
-            v-model="subTitle.input"
-            class="titleInput"
-            :style="{ width: $device.mobile ? '70%' : '' }"
-            style="height: 30px"
-            autofocus
-          />
-          <i
-            class="icofont-tick-mark cursor"
-            v-if="!subTitle.isUpdating"
-            @click="subTitle.isUpdating = true"
-          ></i>
-          <div
-            v-else
-            class="spinner-border spinner-border-sm"
-            style="width: 1rem; height: 1rem; color: green"
-          ></div>
-          </center>
-        </div>
-      </div> -->
     </div>
 
     <!-- Laptop Top Side Navigation Bar -->
@@ -132,7 +90,7 @@
 </template>
 
 <script>
-import Store from "../store/index";
+import Store from "@/store/index";
 import { SidebarMenu } from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 import SideDrawer from "@/components/t-party/SideDrawer";
@@ -171,6 +129,11 @@ export default {
     subtreeTitle: {
       get() {
         return Store.state.subtree;
+      },
+    },
+    isEditable: {
+      get() {
+        return Store.getters.getIsEditable;
       },
     },
   },
@@ -241,7 +204,10 @@ export default {
           href: `/${this.$route.params.id}/settings`,
           title: "Settings",
           icon: "icofont-gear",
-          disabled: Store.state.view_only,
+          // disabled: !Store.state.is_session,
+          // badge: {
+          //   class: !this.isEditable ? "icofont-lock" : "",
+          // },
         },
       ],
     };
@@ -279,8 +245,10 @@ export default {
       this.title.isClkd = !this.title.isClkd;
     },
     titleClk() {
-      this.title.isClkd = true;
-      this.title.input = `${this.storeTitle}`;
+      if (this.isEditable) {
+        this.title.isClkd = true;
+        this.title.input = `${this.storeTitle}`;
+      }
     },
   },
 };

@@ -1,7 +1,13 @@
 <template>
   <div>
     <section v-if="form.error">
-      {{ form.error }}
+      <center>
+        <img
+          src="@/assets/no-data.png"
+          style="height: 140px; margin-top: 70px"
+        />
+        <h4 style="color: black; margin-top: 30px">You dont have access buddy</h4>
+      </center>
     </section>
     <section v-else>
       <div
