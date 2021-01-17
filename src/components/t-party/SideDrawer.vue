@@ -55,7 +55,9 @@
               ><li><i class="icofont-listine-dots"></i>Records</li></router-link
             > -->
 
-            <router-link :to="{ name: 'Settings' }"
+            <router-link
+              :to="{ name: 'Settings' }"
+              v-if="!viewOnly"
               ><li>
                 <i class="icofont-gear drawer-icons"></i>Settings
               </li></router-link
@@ -76,14 +78,14 @@
 
 
 <script>
+import Store from "@/store/index";
+
 export default {
   methods: {
     openMenu() {
       document.querySelector(".drawer").classList.add("drawer-trasform");
       document.querySelector(".menu").classList.add("fadeMe");
       document.querySelector("ul").classList.add("animateMe");
-
-      console.log("done");
     },
     closeMenu() {
       document.querySelector(".drawer").classList.remove("drawer-trasform");
@@ -101,6 +103,13 @@ export default {
     document
       .querySelector(".bg-menu")
       .addEventListener("click", this.closeMenu, false);
+  },
+  computed: {
+    viewOnly: {
+      get() {
+        return Store.state.view_only;
+      },
+    },
   },
 };
 </script>
