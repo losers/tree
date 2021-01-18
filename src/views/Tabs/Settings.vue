@@ -166,7 +166,7 @@
               <button
                 type="submit"
                 class="btn btn-success"
-                :disabled="form.isUpdating || data.pin == data.view_pin"
+                :disabled="form.isUpdating || data.pin == data.view_pin || data.pin.length != 4"
               >
                 <span
                   class="spinner-border spinner-border-sm"
@@ -187,7 +187,7 @@
           <h6 class="mt-3">
             Please enter
             <code>{{ this.$route.params.id }}</code> in the input box to delete
-            this family tree permanently
+            this family tree permanently.
           </h6>
           <input
             class="form-control input-lg"

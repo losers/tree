@@ -63,13 +63,12 @@
                 Anniversaries, etc.,
               </div>
               <div class="intro-text2">
-                <i class="icofont-arrow-right"></i> Shared Events like Trips,
-                Marriage, etc., can also be added and shared with corresponding
+                <i class="icofont-arrow-right"></i> Events like Trips,
+                Marriage etc., can also be added and shared with corresponding
                 people So that it will appear on their Timeline.
               </div>
               <div class="intro-text2">
-                <i class="icofont-arrow-right"></i> Will send a notification
-                everyone.
+                <i class="icofont-arrow-right"></i> Notifications will be sent for all events on anniversaries.
               </div>
             </div>
 
