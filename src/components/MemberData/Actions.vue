@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <center>
     <div class="mx-auto col-12" v-if="hasCookie && !viewOnly">
       <button
         @click="addMember(0)"
         class="col-10 btn btn-warning mb-3"
-        v-show="!data.parent_id"
+        v-show="!data.parent_id || (data.is_mate && !data.linked_tree)"
       >
         + Add Parent
       </button>
@@ -14,12 +14,26 @@
       </button>
 
       <button
+        @click="goToSubTree()"
+        class="col-10 btn btn-warning mb-3"
+        v-show="data.linked_tree"
+        style="background-color: #0083a0; color: white"
+      >
+        <i class="icofont-tree p2" style="font-size: 15px"></i>
+        View Parent Tree
+      </button>
+
+      <button
         v-show="!data.is_mate"
         @click="addMember('gender')"
         class="col-10 btn btn-primary mb-3"
       >
         + Add {{ data.gender == "1" ? "Wife" : "Husband" }}
       </button>
+
+      <!-- <button @click="reArrange" class="col-10 btn btn-warning mb-3" style="color:white">
+        + Rearrange 
+      </button> -->
 
       <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
         <i class="icofont-ui-delete"></i> Delete
@@ -49,7 +63,7 @@
         </button>
       </span>
     </div>
-  </div>
+  </center>
 </template>
 
 <script>
@@ -68,12 +82,22 @@ export default {
     };
   },
   props: ["cookeyStatus", "data", "hasMate", "viewOnly"],
+  mounted() {},
   methods: {
+    goToSubTree() {
+      this.$router.push({
+        name: "Subtrees",
+        params: { subtree_id: this.data.linked_tree },
+      });
+    },
     addMember(num) {
       this.$emit("actionsAddMember", num);
     },
     deleteSwipe() {
       this.$emit("actionsDeleteSwipe");
+    },
+    reArrange() {
+      this.$emit("actionsReArrange");
     },
     validate() {
       this.vloading = true;

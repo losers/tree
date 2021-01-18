@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="main-title">
-      <div class="header">Today's Events</div>
-      <div class="today">- {{ date.display }}</div>
+      <div class="header" :class="{ 'f-19': $device.mobile }">Today's Events</div>
+      <div class="today" :class="{ 'f-16': $device.mobile }">- {{ date.display }}</div>
     </div>
     <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
@@ -18,20 +18,11 @@
     </div>
     <!-- All Boxes List -->
     <div class="row" v-else style="padding-bottom: 50px">
-      <div
-        class="col-xs-12 col-sm-4 event-cont"
-        v-for="(event, index) in events"
-        :key="index"
-      >
+      <div class="col-xs-12 col-sm-4 event-cont" v-for="(event, index) in events" :key="index">
         <!---------------- Birthday event --------------->
         <div class="event" v-if="event.type == 1">
           <!-- Background -->
-          <img
-            src="@/assets/events/birthdaybg.png"
-            alt=" Birthday"
-            width="100%"
-            height="120"
-          />
+          <img src="@/assets/events/bday.png" alt=" Birthday" width="" height="120" />
 
           <!-- Event Body -->
           <div class="event-body">
@@ -58,12 +49,22 @@
 
               <router-link
                 :to="{
+                  name: 'SubMemberData',
+                  params: { subtree_id: event.subtree_id, member: event._id },
+                }"
+                class="btn mt-2 event-btn"
+                v-if="event.subtree_id"
+              >View Profile</router-link>
+
+              <router-link
+                :to="{
                   name: 'MemberData',
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-                >View Profile</router-link
-              >
+                v-else
+              >View Profile</router-link>
+
             </center>
           </div>
         </div>
@@ -72,12 +73,7 @@
         <div class="event death" v-if="event.type == 2">
           <!-- Background -->
           <div class="memorial-bg">
-            <img
-              src="@/assets/events/candle.jpeg"
-              alt=" Birthday"
-              width="50px"
-              height="120"
-            />
+            <img src="@/assets/events/candle.jpeg" alt=" Birthday" width="50px" height="120" />
           </div>
 
           <!-- Event body with DP -->
@@ -109,8 +105,7 @@
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-                >View Profile</router-link
-              >
+              >View Profile</router-link>
             </center>
           </div>
         </div>
@@ -138,12 +133,11 @@
             <div class="timeline-content">{{ event.content }}</div>
             <router-link
               :to="{
-                name: 'TimelinePerson',
+                name: 'PersonTimeline',
                 params: { id: $route.params.id, member: event._id },
               }"
               class="btn event-btn"
-              >View Timeline</router-link
-            >
+            >View Timeline</router-link>
           </div>
         </div>
       </div>
@@ -152,6 +146,12 @@
 </template>
 
 <style scoped>
+.f-19{
+  font-size: 19px !important;
+}
+.f-16{
+  font-size: 16px !important;
+}
 .death {
   background-color: black;
   color: white;
@@ -263,6 +263,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0px 20px;
 }
 .event-cont {
   padding: 20px;
@@ -280,38 +281,38 @@
 import ProdData from "@/data.js";
 import axios from "axios";
 import moment from "moment";
-import { getNormalDisplayDate, getAPIFormat } from "../../util/helper";
-import Store from "../../store/index";
+import { getNormalDisplayDate, getAPIFormat } from "@/util/helper";
+import Store from "@/store/index";
 export default {
   name: "Events",
   data() {
     return {
       date: {
         display: getNormalDisplayDate(),
-        api: getAPIFormat(),
+        api: getAPIFormat()
       },
       loading: true,
-      store: {},
+      store: {}
     };
   },
   filters: {
-    anivCalc: function (value) {
+    anivCalc: function(value) {
       let a = moment(value);
       let b = moment();
       return b.diff(a, "years");
-    },
+    }
   },
   mounted() {
     this.store = Store;
     let eventsUrl = `${ProdData.getHostURL()}/events/?date=${this.date.api}`;
     axios
       .get(eventsUrl)
-      .then((response) => {
+      .then(response => {
         this.events = response.data;
       })
       .finally(() => {
         this.loading = false;
       });
-  },
+  }
 };
 </script>

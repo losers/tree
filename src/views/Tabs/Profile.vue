@@ -14,7 +14,7 @@
         </div>
         <div v-else>
           <img
-            src="../assets/profile.png"
+            src="@/assets/profile.png"
             alt="Family Tree Loading"
             class="image mx-auto"
             style="border-radius: 50%;width: 150px;"

@@ -71,7 +71,7 @@ export default {
     checkFunc() {
       this.goBack();
       Store.dispatch("setStepNumber", 3);
-      this.$router.push({ name: "Analytics" });
+      this.$router.push({ name: "RelationFinder" });
     }
   }
 };

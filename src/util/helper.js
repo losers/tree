@@ -45,3 +45,23 @@ export function getAPIFormat(date){
     today.unshift(temp);
     return today.join("-");
 }
+
+
+export function setExitNodeInfo(tree, memberData){
+    if(tree == null){
+        return;
+    }
+    
+    if(tree.way_point_node){
+        tree.name = memberData.short_name;
+        tree.exit_link =  memberData.subtree_id;
+        return;
+    }
+    else{
+        if(tree.children){
+            for(let child of tree.children){
+                setExitNodeInfo(child, memberData);
+            }
+        }
+    }
+}

@@ -17,7 +17,7 @@
     <center>
       <img
         v-if="!selected"
-        src="../../assets/tree_gen.jpg"
+        src="@/assets/tree_gen.jpg"
         class="mt-5"
         height="300px"
         alt="Blood Line Helper"
@@ -30,8 +30,8 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import Store from "../../store/index";
-import Algos from "../../algos/analytics/relation-finder";
+import Store from "@/store/index";
+import Algos from "@/algos/analytics/relation-finder";
 import TreeChart from "@/components/TreeChart";
 
 export default {

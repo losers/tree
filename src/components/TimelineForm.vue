@@ -1,6 +1,6 @@
 <template>
   <form class="p-5" v-on:submit.prevent="formEmit(0)">
-    <h3 style="margin-bottom: 40px">
+    <h3 style="margin-bottom: 20px">
       {{ payload.formData.isEdit ? "Update" : "Create" }} Event
     </h3>
     <div class="row" style="align-items: center">

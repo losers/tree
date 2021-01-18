@@ -2,9 +2,7 @@
   <div id="app-delete" class="p-4">
     <h3 class="text-danger mx-auto mt-4">Delete {{payload.name}}?</h3>
     <ul class="text-danger mt-4">
-      <li class="mb-3" v-if="payload.is_mate">
-        It will delete {{payload.name}}'s node.
-      </li>
+      <li class="mb-3" v-if="payload.is_mate">It will delete {{payload.name}}'s node.</li>
       <li class="mb-3" v-else>
         It will also delete all of
         <span v-if="payload.gender == 1">his</span>
@@ -50,25 +48,57 @@ export default {
   methods: {
     onActionConfirmed() {
       this.loading = true;
-      axios
-        .delete(
-          ProdData.getHostURL() +
-            "/tree/" +
-            this.$route.params.id +
-            "/person/" +
-            this.$route.params.member
-        )
-        .then(treeData => {
-          this.$emit("close");
-          Store.dispatch("treeOnlySetup", treeData.data).then(() => {
-            this.$router.push({
-              name: "MainTree",
-              id: this.surname
+
+      //Subtree Deletion
+      if (this.$route.params.subtree_id) {
+        console.log("Subtree Deletion");
+        let url = `${ProdData.getHostURL()}/subtree/${this.$route.params.id}/${
+          this.$route.params.subtree_id
+        }/${this.$route.params.member}`;
+        axios
+          .delete(url)
+          .then(res => {
+            this.$emit("close");
+            if (res.data.name) {
+              this.$router.push({
+                name: "Subtrees",
+                params: { subtree_id: this.$route.params.subtree_id }
+              });
+            }
+            else{
+              this.$router.push({
+                name: "Tree"
+              });
+            }
+            let payload = {};
+            payload.tree = res.data;
+            Store.dispatch("setSubtree", payload).then();
+          })
+          .catch(err => (this.err = err))
+          .finally(() => (this.loading = false));
+      }
+      //MainTree Deletion
+      else {
+        axios
+          .delete(
+            ProdData.getHostURL() +
+              "/tree/" +
+              this.$route.params.id +
+              "/person/" +
+              this.$route.params.member
+          )
+          .then(treeData => {
+            this.$emit("close");
+            Store.dispatch("treeOnlySetup", treeData.data).then(() => {
+              this.$router.push({
+                name: "MainTree",
+                id: this.surname
+              });
             });
-          });
-        })
-        .catch(err => (this.err = err))
-        .finally(() => (this.loading = false));
+          })
+          .catch(err => (this.err = err))
+          .finally(() => (this.loading = false));
+      }
     },
     close() {
       this.$emit("close");

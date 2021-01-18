@@ -62,7 +62,7 @@
         </p>
 
         <div class="row">
-          <label class="d-none d-sm-block col-md-4"> Short Name: </label>
+          <label class="d-none d-sm-block col-md-4">Short Name:</label>
           <input
             type="text"
             class="form-control col-md-7 col-sm-12"
@@ -101,9 +101,13 @@
             v-model="is_alive"
             :value="is_alive"
             :sync="true"
-            class="flexy"
+            style="height: 40px"
+            class="flexy col-xs-2"
           />
-          <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
+          <div
+            class="form-inline col-md-6 col-xs-12"
+            v-show="!is_alive"
+          >
             <md-datepicker
               v-model="data.died_on"
               required="true"
@@ -364,15 +368,29 @@ export default {
         this.data.short_name = this.data.name;
       }
       if (this.payload.memData) {
-        //Update
-        Axios.put(
-          ProdData.getHostURL() + "/tree/" + this.$route.params.id + "/person",
-          this.data
-        )
-          .then(() => {
-            this.goBack();
-          })
-          .catch((errr) => console.log(errr));
+        if (this.$route.params.subtree_id) {
+          let url = `${ProdData.getHostURL()}/subtree/${
+            this.$route.params.id
+          }/${this.$route.params.subtree_id}/${this.data._id}`;
+          Axios.put(url, this.data)
+            .then(() => {
+              this.goBack();
+            })
+            .catch((errr) => console.log(errr));
+        } else {
+          //Update
+          Axios.put(
+            ProdData.getHostURL() +
+              "/tree/" +
+              this.$route.params.id +
+              "/person",
+            this.data
+          )
+            .then(() => {
+              this.goBack();
+            })
+            .catch((errr) => console.log(errr));
+        }
       } else {
         //ADDING Member
         if (this.payload.type == "gender") {
@@ -408,6 +426,9 @@ export default {
   top: 5px;
   margin-bottom: 0px;
 } */
+.md-field {
+  margin: 0px;
+}
 .flexy {
   display: flex;
   align-items: center;

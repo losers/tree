@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import ProdData from "../data.js";
 import Algos from "../algos/analytics/relation-finder";
+import { setExitNodeInfo } from "../util/helper";
 
 Vue.use(Vuex)
 
@@ -21,7 +22,10 @@ export default new Vuex.Store({
     promos: {
       1: true, //Relation Finder
       2: true  // Website
-    }
+    },
+    subtree:{},
+    sub_member_data: {},
+    subtree_meta: {},
   },
   mutations: {
     setImages(state, imagesData) {
@@ -29,7 +33,7 @@ export default new Vuex.Store({
     },
     setTreeData(state, treeData) {
       state.tree = treeData.data.tree;
-      state.title = treeData.data.meta;
+      state.title = treeData.data.meta[0].title;
       state.metadata = treeData.data.meta;
       state.is_session = treeData.data.has_session;
       state.view_only = treeData.data.view_only;
@@ -61,9 +65,21 @@ export default new Vuex.Store({
     setMetaData(state, metaData) {
       state.metadata = metaData;
     },
+    setSubtree(state, subtree ) {
+      state.subtree = subtree;
+    },
+    setTitle(state, title ) {
+      state.title = title;
+    },
+    setSubMemberData(state,  sub_member_data) {
+      state.sub_member_data = sub_member_data;
+    },
     setPromo(state, promoNo) {
       state.promos[promoNo] = false;
-    }
+    },
+    setSubtreeMeta(state,  subtree_data) {
+      state.subtree_meta = subtree_data;
+    },
   },
   actions: {
     async treeSetup(state, surname) {
@@ -92,14 +108,39 @@ export default new Vuex.Store({
     async setMetaData(state, metaData) {
       state.commit('setMetaData', metaData);
     },
+    async setSubtree(state, payload) {
+      if(payload.member_data){
+        setExitNodeInfo(payload.tree, payload.member_data);
+        state.commit('setSubMemberData', payload.member_data);
+      }
+      else{
+        if(payload.tree.name)
+          setExitNodeInfo(payload.tree, state.state.sub_member_data);
+        else
+          state.commit('setSubMemberData', {});
+      }
+      state.commit('setSubtree', payload.tree);
+    },
     async setStepNumber(state, step) {
       axios.put(ProdData.getHostURL() + "/meta/stepper", {
         family_id: state.state.title[0]._id,
         stepper: step
       });
     },
+    async setTitle(state, title) {
+      state.commit('setTitle', title);
+    },
+    async setSubtreeMeta(state, subtreeData) {
+      state.commit('setSubtreeMeta', subtreeData);
+    },
   },
   getters: {
+    getSubTree: (state) => {
+      return state.subtree;
+    },
+    getIsEditable:(state)=>{
+      return !state.view_only && state.is_session;
+    },
     getIsLoading: (state) => {
       return state.loading;
     },

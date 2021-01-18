@@ -8,7 +8,7 @@
     <div class="matter">
       Visit
       <span class="indian-red">www.bloodline.ga</span> on bigger screens like Laptop/Desktop to have an awesome view of your Family tree.
-      <div class="extra">Everything is Cloud Based. No need to create new tree in another device.</div>
+      <div class="extra">Everything is stored in Cloud. No need to create new tree in another device.</div>
     </div>
     <div class="actions">
       <button @click="goBack" class="btn btn-default">Ignore it</button>
@@ -75,7 +75,7 @@ export default {
     },
     checkFunc() {
       this.goBack();
-      this.$router.push({ name: "Analytics" });
+      // this.$router.push({ name: "Analytics" });
     }
   }
 };
