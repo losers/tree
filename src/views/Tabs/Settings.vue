@@ -244,6 +244,9 @@ export default {
     Axios.get(ProdData.getHostURL() + "/meta/get/" + this.$route.params.id)
       .then((data) => {
         this.data = data.data;
+        if(!this.data.contact){
+          this.data.contact = {};
+        }
       })
       .catch((err) => (this.form.error = err))
       .finally(() => (this.form.loading = false));
