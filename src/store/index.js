@@ -123,7 +123,7 @@ export default new Vuex.Store({
     },
     async setStepNumber(state, step) {
       axios.put(ProdData.getHostURL() + "/meta/stepper", {
-        family_id: state.state.title[0]._id,
+        family_id: state.state.metadata[0]._id,
         stepper: step
       });
     },
