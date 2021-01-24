@@ -81,6 +81,11 @@ const myrouter = new VueRouter({
                     component: () => import('./views/Tabs/Records.vue'),
                 },
                 {
+                    path: "donations",
+                    name: "Donations",
+                    component: () => import('./views/Tabs/Donations.vue'),
+                },
+                {
                     path: 'settings',
                     name: "Settings",
                     component: () => import('./views/Tabs/Settings.vue')
