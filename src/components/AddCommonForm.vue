@@ -427,7 +427,7 @@ export default {
   padding: 5px 20px;
   color: rgb(150, 150, 150);
 }
-.bottom-bar {
+/* .bottom-bar {
   position: absolute;
   bottom: 110px;
   padding: 10px 40px;
@@ -437,7 +437,7 @@ export default {
   z-index: 10;
   left: 0;
   box-shadow: 0px -1px 4px 0px rgba(222, 222, 222, 1);
-}
+} */
 .md-field {
   margin: 0px;
 }
