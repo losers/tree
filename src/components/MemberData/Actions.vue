@@ -34,8 +34,8 @@
       <button
         @click="reArrange"
         v-if="!data.is_mate && data.parent_id"
-        class="col-10 btn btn-warning mb-3"
-        style="color: white"
+        class="col-10 btn mb-3"
+        style="color: white; background-color: #e0a600"
       >
         <i class="icofont-exchange"></i> Swap Siblings
       </button>
