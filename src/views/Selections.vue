@@ -200,6 +200,11 @@ export default {
         //   title: "Records",
         //   icon: "icofont-listine-dots",
         // },
+        // {
+        //   href: `/${this.$route.params.id}/donations`,
+        //   title: "Donations",
+        //   icon: "icofont-ui-love text-danger",
+        // },
         {
           href: `/${this.$route.params.id}/settings`,
           title: "Settings",

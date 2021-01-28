@@ -537,7 +537,7 @@ export default {
   overflow: auto;
 }
 .padt340 {
-  padding-top: 340px;
+  padding-top: 200px;
 }
 .desk-intro-text {
   font-size: 28px;

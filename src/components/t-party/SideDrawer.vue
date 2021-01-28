@@ -51,8 +51,11 @@
               ><li><i class="icofont-sand-clock"></i>Timeline</li></router-link
             > -->
 
-            <!-- <router-link :to="{ name: 'Records' }"
-              ><li><i class="icofont-listine-dots"></i>Records</li></router-link
+            <!-- <router-link :to="{ name: 'Donations' }"
+              ><li>
+                <i class="icofont-ui-love text-danger drawer-icons"></i
+                >Donations
+              </li></router-link
             > -->
 
             <router-link :to="{ name: 'Settings' }" v-if="isEditable"
@@ -83,12 +86,12 @@ export default {
     openMenu() {
       document.querySelector(".drawer").classList.add("drawer-trasform");
       document.querySelector(".menu").classList.add("fadeMe");
-      document.querySelector("ul").classList.add("animateMe");
+      // document.querySelector("ul").classList.add("animateMe");
     },
     closeMenu() {
       document.querySelector(".drawer").classList.remove("drawer-trasform");
       document.querySelector(".menu").classList.remove("fadeMe");
-      document.querySelector("ul").classList.remove("animateMe");
+      // document.querySelector("ul").classList.remove("animateMe");
     },
   },
   mounted() {
@@ -174,8 +177,8 @@ a {
   font-size: 30px;
 }
 ul {
-  transform: translateX(-200%);
-  transition: all 700ms linear;
+  /* transform: translateX(-200%); */
+  /* transition: all 700ms linear; */
   padding: 0;
 }
 
@@ -193,7 +196,7 @@ li {
 i {
   padding: 10px;
 }
-.animateMe {
+/* .animateMe {
   transform: translateX(0);
-}
+} */
 </style>

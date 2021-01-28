@@ -334,9 +334,33 @@ function findRelationName(subTree, genders, p1Id, p2Id, relationType = "western"
     return relations[relationLev][sameLane][p2.gender];
 }
 
+
+function getAllSibligs(tree, target, parentTree) {
+    if (tree == null) {
+        return;
+    }
+    if(tree.id == target){
+        let arr = [];
+        for(let eachChild of parentTree.children){
+            arr.push(eachChild.name);
+        }
+        return arr;
+    }
+    if(tree.children){
+        for (let eachChild of tree.children){
+            let x = getAllSibligs(eachChild, target, tree);
+            if(x){
+                return x;
+            }
+        }
+    }
+    return false;
+}
+
 module.exports.getAllGuys = getAllGuys;
 module.exports.getRelationTree = getRelationTree;
 module.exports.getSubTree = getSubTree;
 module.exports.getAllIds = getAllIds;
 module.exports.findRelationName = findRelationName;
 module.exports.getPersonById = getPersonById;
+module.exports.getAllSibligs = getAllSibligs;

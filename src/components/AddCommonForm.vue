@@ -51,17 +51,24 @@
       </div>
 
       <!-- Optional Params -->
-      <div v-if="!payload.is_root">
-        <hr class="mt-5 mb-3" style="background-color: white" />
-        <p style="margin-top: -29px">
-          <center>
-            <span style="background-color: white; padding: 20px; color: #969696"
-              >Optional Details</span
-            >
-          </center>
-        </p>
+      <div
+        @click="show_optional_data = !show_optional_data"
+        class="mt-3 d-flex justify-content-end"
+        v-if="$device.mobile"
+      >
+        <a href="#"> {{ show_optional_data ? "-" : "+" }} Extra Details</a>
+      </div>
 
-        <div class="row">
+      <!-- Extra Details -->
+      <div
+        :style="{ display: show_optional_data ? 'block' : 'none' }"
+        style="margin-top: 30px"
+      >
+        <hr class="mt-5" style="background-color: white" />
+        <center style="margin-top: -29px">
+          <span class="optional-heading"> Optional Details </span>
+        </center>
+        <div class="row mt-4">
           <label class="d-none d-sm-block col-md-4">Short Name:</label>
           <input
             type="text"
@@ -104,10 +111,7 @@
             style="height: 40px"
             class="flexy col-xs-2"
           />
-          <div
-            class="form-inline col-md-6 col-xs-12"
-            v-show="!is_alive"
-          >
+          <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
             <md-datepicker
               v-model="data.died_on"
               required="true"
@@ -233,7 +237,10 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-between mt-5">
+      <div
+        class="d-flex justify-content-between mt-5"
+        :class="{ 'bottom-bar': $device.mobile }"
+      >
         <button type="submit" class="btn btn-primary" :disabled="loading">
           <span
             class="spinner-border spinner-border-sm"
@@ -283,6 +290,7 @@ export default {
         selected: {},
         options: [],
       },
+      show_optional_data: !this.$device.mobile || this.payload.memData,
       countries: ProdData.countries,
     };
   },
@@ -306,19 +314,6 @@ export default {
       .querySelector(".md-input")
       .setAttribute("onfocus", "blur()");
 
-    this.$material.locale.startYear = 1000;
-    
-    if(!this.payload.is_root){
-      document
-        .querySelector(".md-datepicker")
-        .querySelector(".md-input")
-        .setAttribute("onfocus", "blur()");
-      document
-        .querySelector("#demise")
-        .querySelector(".md-input")
-        .setAttribute("onfocus", "blur()");
-    }
-    
     //Editing
     if (this.payload.memData) {
       this.data = this.payload.memData;
@@ -425,6 +420,22 @@ export default {
 .cus.md-field label{
   top: 5px;
   margin-bottom: 0px;
+} */
+.optional-heading {
+  background-color: white;
+  padding: 5px 20px;
+  color: rgb(150, 150, 150);
+}
+/* .bottom-bar {
+  position: absolute;
+  bottom: 110px;
+  padding: 10px 40px;
+  width: 100%;
+  background-color: white;
+  margin: 0 !important;
+  z-index: 10;
+  left: 0;
+  box-shadow: 0px -1px 4px 0px rgba(222, 222, 222, 1);
 } */
 .md-field {
   margin: 0px;
