@@ -1,7 +1,7 @@
 <template>
   <center>
     <div class="col-10">
-      <h3>Members</h3>
+      <h3>Siblings</h3>
       <draggable
         class="list-group"
         tag="ul"
@@ -32,42 +32,91 @@
 
 <script>
 import draggable from "vuedraggable";
+import Algos from "@/algos/analytics/relation-finder";
+import Store from "@/store/index";
+import Axios from "axios";
+import ProdData from "../data.js";
 
 export default {
   components: {
     draggable,
   },
+  props: ["payload"],
+  mounted(){
+    let allSiblings;
+    if(this.$route.params.subtree_id){
+      allSiblings = Algos.getAllSibligs(Store.state.subtree, this.$route.params.member, Store.state.subtree);
+    }
+    else{
+      allSiblings = Algos.getAllSibligs(Store.state.tree, this.$route.params.member, Store.state.tree);
+    }
+    for(let i = 0; i < allSiblings.length; i++){
+      this.list.push( {
+        name: allSiblings[i],
+        order: i+1
+      });
+    }
+  },
   data() {
     return {
-      list: [
-        {
-          name: "Member 1",
-          order: 1,
-        },
-        {
-          name: "Member 2",
-          order: 2,
-        },
-        {
-          name: "Member 3",
-          order: 3,
-        },
-        {
-          name: "Member 4",
-          order: 4,
-        },
-
-        {
-          name: "Member 5",
-          order: 5,
-        },
-      ],
+      list: [],
       drag: false,
     };
   },
   methods: {
     finalList() {
-      console.log(this.list);
+      let isChanged = false;
+      for(let i=0; i < this.list.length; i++){
+        if(this.list[i].order != i+1){
+          isChanged = true;
+          break;
+        }
+      }
+      if(isChanged){
+        let payload = {};
+        payload.id = this.$route.params.member;
+        payload.order = [];
+
+        for(let i=0; i < this.list.length; i++){
+          payload.order.push(this.list[i].order-1);
+        }
+        
+        let url;
+        if(this.$route.params.subtree_id){
+          url = `${ProdData.getHostURL()}/subtree/${this.$route.params.id}/${this.$route.params.subtree_id}/person/swap`;
+        }
+        else{
+          url = `${ProdData.getHostURL()}/tree/${this.$route.params.id}/person/swap`;
+        }
+        
+        Axios.put(url,payload)
+        .then((data) => {
+          if(!this.$route.params.subtree_id){
+            this.$emit("close");
+            this.$router.push({
+              name: "MainTree"
+            });
+            Store.dispatch("treeOnlySetup", data.data).then();
+          }
+          else{
+            this.$emit("close");
+            this.$router.push({
+              name: "Subtrees",
+              params: { subtree_id: this.$route.params.subtree_id }
+            });
+            let payload = {};
+            payload.tree = data.data;
+            Store.dispatch("setSubtree", payload).then();
+          }
+        })
+        .catch((errr) => console.log(errr));
+      }
+      else{
+        this.$emit("close");
+        this.$router.push({
+          name: "MainTree"
+        });
+      }
     },
     close() {
       this.$emit("close");
@@ -82,6 +131,10 @@ export default {
         ghostClass: "ghost",
       };
     },
+    getAllChilds() {
+      return {
+      }
+    }
   },
 };
 </script>
