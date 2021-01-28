@@ -51,14 +51,13 @@
       </div>
 
       <!-- Optional Params -->
-      <center>
-        <div
-          class="btn btn-success mt-5"
-          @click="show_optional_data = !show_optional_data"
-        >
-          <b> {{ show_optional_data ? "-" : "+" }} Extra Details</b>
-        </div>
-      </center>
+      <div
+        @click="show_optional_data = !show_optional_data"
+        class="mt-3 d-flex justify-content-end"
+        v-if="$device.mobile"
+      >
+        <a href="#"> {{ show_optional_data ? "-" : "+" }} Extra Details</a>
+      </div>
 
       <!-- Extra Details -->
       <div
@@ -291,7 +290,7 @@ export default {
         selected: {},
         options: [],
       },
-      show_optional_data: false,
+      show_optional_data: !this.$device.mobile || this.payload.memData,
       countries: ProdData.countries,
     };
   },
@@ -315,19 +314,6 @@ export default {
       .querySelector(".md-input")
       .setAttribute("onfocus", "blur()");
 
-    this.$material.locale.startYear = 1000;
-    
-    if(!this.payload.is_root){
-      document
-        .querySelector(".md-datepicker")
-        .querySelector(".md-input")
-        .setAttribute("onfocus", "blur()");
-      document
-        .querySelector("#demise")
-        .querySelector(".md-input")
-        .setAttribute("onfocus", "blur()");
-    }
-    
     //Editing
     if (this.payload.memData) {
       this.data = this.payload.memData;
