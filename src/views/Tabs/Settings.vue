@@ -211,26 +211,6 @@ export default {
     };
   },
   mounted() {
-    // let url1 = `${ProdData.getHostURL()}/pay/${this.$route.params.id}/profile`;
-    // Axios.post(url1, {})
-    //   .then(data => {
-    //     console.log(data);
-    //   })
-    //   .catch(err => console.log(err))
-    //   .finally(() => console.log("daskna"));
-    if (this.$route.query.paymentId && this.$route.query.PayerID) {
-      let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
-      let params = {
-        payment_id: this.$route.query.paymentId,
-        payer_id: this.$route.query.PayerID
-      };
-      Axios.put(url, params)
-        .then(data => {
-          console.log(data.data);
-        })
-        .catch(err => console.log(err))
-        .finally(() => console.log("Placeholder"));
-    }
     Axios.get(ProdData.getHostURL() + "/meta/get/" + this.$route.params.id)
       .then(data => {
         this.data = data.data;
@@ -242,15 +222,6 @@ export default {
       .finally(() => (this.form.loading = false));
   },
   methods: {
-    initiatePaymentGateway() {
-      let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
-      Axios.post(url, {})
-        .then(data => {
-          window.open(data.data.url, "_self");
-        })
-        .catch(err => console.log(err))
-        .finally(() => console.log("daskna"));
-    },
     updateSettings() {
       this.form.isUpdating = true;
       Axios.put(ProdData.getHostURL() + "/meta/update", {

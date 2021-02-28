@@ -25,8 +25,11 @@
           <h4>Your Family Donations :</h4>
           <h1>0</h1>
         </div>
+        
+        {{country.currency.symbol}} <input type="text" v-model="amount"/> 
+        
         <touch-ripple
-          @click.native="donate()"
+          @click.native="initiatePaymentGateway()"
           :speed="1.1"
           style="
             position: absolute;
@@ -58,14 +61,63 @@
 
 <script>
 import { touchRipple } from "vue-touch-ripple";
+import Axios from "axios";
+import ProdData from "@/data.js";
+import currencyToSymbolMap from 'currency-symbol-map/map'
 
 export default {
   components: {
     touchRipple,
   },
+  data(){
+    return {
+      amount: 10,
+      country: {
+        country_code: null,
+        currency: {
+          code: null,
+          symbol: null
+        }
+      }
+    }
+  },
+  mounted(){
+      // To Get Location Info
+      
+      let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}/donation-info`;
+      Axios.get(url)
+      .then(data => {
+          this.country.country_code = data.data.loc_info.country_code;
+          this.country.currency.code = data.data.loc_info.currency_code;
+          this.country.currency.symbol = currencyToSymbolMap[this.country.currency.code];
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+         
+      });
+  },
   methods: {
-    donate() {
-      console.log("donating satted");
+    initiatePaymentGateway() {
+      //Create Profile
+      // let url1 = `${ProdData.getHostURL()}/pay/${this.$route.params.id}/profile`;
+      // Axios.post(url1, {})
+      //   .then(data => {
+      //     console.log(data);
+      //   })
+      //   .catch(err => console.log(err))
+      //   .finally(() => console.log("daskna"));
+
+      let payload = {};
+      payload.amount = this.amount;
+      payload.currency = this.country.currency.code === "INR"?"CAD":this.country.currency.code;
+      console.log(payload);
+      let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
+      Axios.post(url, payload)
+        .then(data => {
+          window.open(data.data.url, "_self");
+        })
+        .catch(err => console.log(err))
+        .finally(() => console.log("daskna"));
     },
   },
 };
