@@ -156,7 +156,7 @@
           <vSelect
             :options="countries"
             placeholder="Select Country"
-            v-model="data.country"
+            v-model="data.countries.data.name"
             class="mb-3 col-md-7 col-sm-12 p-0"
           ></vSelect>
         </div>
