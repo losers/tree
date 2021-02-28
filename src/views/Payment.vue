@@ -1,65 +1,76 @@
 <template>
-  <center>
-    <div v-show="isProcessing">
-      <h2>Payment is processing...</h2>
-      <img src="../assets/pay-processing.png" height="200px" /><br />
-      <div
-        class="spinner-border"
-        style="height: 50px; width: 50px; color: black; margin-top: 80px"
-        role="status"
-      ></div>
+    <div class="con">
+        <center>
+            <div v-if="paymentProcessing">
+                <div
+                class="spinner-border spinner-border-sm"
+                style="width: 3.5rem; height: 3.5rem; color: green;"
+                ></div>
+                <h4 class="processing">Processing your Payment</h4>
+            </div>
+            <div v-else>
+                <tick></tick>
+                <h4 class="processing">Payment Success</h4>
+                <h5 class="sub">Thank you</h5>
+                <h6 class="redirect">You will be redirected to bloodline. if not redirected <a class="click-here">click here.</a></h6>
+            </div>
+        </center>
     </div>
-
-    <!-- Payment Success UI -->
-    <div v-show="!isProcessing" class="success-box mt-5">
-      <h2 class="text-success">Payment Success</h2>
-      <img src="../assets/pay-success.jpg" height="250px" /><br />
-      <div class="col-4 msg">
-        <span style="color: red"> 43 </span>
-        <img src="../assets/b-coin.svg" height="20px" /> coins added to your
-        family
-      </div>
-      <div class="goto-btn btn btn-success mt-3">Go to My Family</div>
-    </div>
-    <button @click="animation" class="mt-5">success</button>
-  </center>
 </template>
-
-<script>
-import bomb from "../call-confetti";
-export default {
-  data() {
-    return {
-      isProcessing: true,
-    };
-  },
-  mounted() {
-    setTimeout(() => {
-      this.isProcessing = false;
-      bomb.realistic();
-      setTimeout(() => {
-        document.querySelector(".success-box").style.transform = "scale(1.1)";
-      }, 100);
-    }, 3000);
-  },
-  methods: {
-    animation() {
-      bomb.realistic();
-      this.image = "../assets/pay-success.png";
-    },
-  },
-};
-</script>
-
 <style scoped>
-.msg {
-  background: rgb(207, 207, 207);
-  border-radius: 10px;
-  padding: 20px;
-}
-.success-box {
-  transition: 1s all;
-}
-.goto-btn {
-}
+    .redirect{
+        margin-top: 100px;
+        color: grey;
+        font-size: 12px;
+    }
+
+    .redirect .click-here{
+        color: blue;
+        text-decoration: underline;
+    }
+    .sub{
+        color: grey;
+        font-size: 14px;
+    }
+    .con{
+        padding-top: 200px;
+    }
+    .processing{
+        color: black;
+        margin-top: 20px;
+    }
 </style>
+<script>
+import ProdData from "@/data.js";
+import Axios from "axios";
+import Tick from "@/components/small/tick";
+export default {
+    name: "Payment",
+    components: {Tick},
+    data(){
+        return {
+            paymentProcessing: true
+        }
+    },
+    mounted(){
+        if (this.$route.query.paymentId && this.$route.query.PayerID) {
+            let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
+            url = `${ProdData.getHostURL()}/pay/test`;
+            let params = {
+                payment_id: this.$route.query.paymentId,
+                payer_id: this.$route.query.PayerID
+            };
+            Axios.put(url, params)
+            .then(data => {
+                setTimeout(() => {
+                    this.$router.push({ name: "MainTree", params: { id: data.data.surname } });
+                }, 5000);
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                this.paymentProcessing = false;
+            });
+        }
+    }
+}
+</script>
