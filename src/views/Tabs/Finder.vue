@@ -120,7 +120,9 @@
           />
           <label for="kannada" class="form-check-label">Kannada</label>
         </div>
-        <TreeChart :json="tree" :images="images" style="padding-top: 40px" />
+        <div style="width: 100%; overflow: auto">
+          <TreeChart :json="tree" :images="images" style="padding-top: 40px" />
+        </div>
       </div>
     </center>
   </div>

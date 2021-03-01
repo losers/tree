@@ -22,7 +22,9 @@
         height="300px"
         alt="Blood Line Helper"
       />
-      <TreeChart :json="tree" :images="images" style="padding-top: 70px" />
+      <div style="width: 100%; overflow: auto">
+        <TreeChart :json="tree" :images="images" style="padding-top: 70px" />
+      </div>
     </center>
   </div>
 </template>
