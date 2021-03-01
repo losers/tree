@@ -27,11 +27,6 @@ const myrouter = new VueRouter({
             component: () => import("./views/Error.vue")
         },
         {
-            path: "/payment",
-            name: "Payment",
-            component: () => import("./views/Payment.vue")
-        },
-        {
             path: "/:id",
             name: "MainTree",
             redirect: "/:id/",
