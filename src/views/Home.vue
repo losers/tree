@@ -133,7 +133,7 @@
             ></TabBar>
 
             <!-- All Families List and Search Bar-->
-            <div v-show="!$route.hash">
+            <div v-if="!$route.hash">
               <!-- Search Bar -->
               <form
                 v-on:submit.prevent="search"
@@ -172,7 +172,7 @@
                   </div>
                 </center>
               </div>
-              
+
               <!-- All Families List -->
               <div v-else v-for="data in info" :key="data.id">
                 <div
@@ -250,12 +250,13 @@
                 </div>
               </div>
             </div>
-            <div v-show="$route.hash == '#special'">
-              <center>
-                <h3>Demos Families List</h3>
-              </center>
+
+            <div v-if="$route.hash == '#demo'">
+              <DemoFamilies></DemoFamilies>
             </div>
-            <div v-show="$route.hash == '#super'"><Temp></Temp></div>
+            <div v-if="$route.hash == '#super'">
+              <SuperFamilies></SuperFamilies>
+            </div>
           </center>
         </div>
         <div v-if="info.length === 0 && !s_load">
@@ -380,15 +381,6 @@ a:hover {
   -webkit-text-fill-color: transparent;
 }
 
-@keyframes animStar {
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-2000px);
-  }
-}
-
 .my-btn {
   cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"),
     auto !important;
@@ -407,7 +399,9 @@ import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import TabBar from "../components/TabBar";
 import ProdData from "../data.js";
-import Temp from "./Temp";
+import SuperFamilies from "./SuperFamilies";
+import DemoFamilies from "./DemoFamilies";
+
 export default {
   data() {
     return {
@@ -437,7 +431,8 @@ export default {
     touchRipple,
     VueTyper,
     TabBar,
-    Temp,
+    SuperFamilies,
+    DemoFamilies,
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id, contact) {

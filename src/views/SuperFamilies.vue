@@ -1,10 +1,9 @@
 <template>
   <div>
     <h2>Special Families</h2>
-    <div class="row d-flex justify-content-around">
-      <div class="col-3 spl-box-outside" style="background: red">
+    <div class="row col-sm-12 col-md-12 d-flex justify-content-around">
+      <div class="col-sm-10 col-md-3 spl-box-outside" style="background: red">
         <i class="icofont-badge" style="color: white"></i>
-
         <div class="spl-box-inside">
           <center class="mt-3">
             <h4>Medam Mega Family</h4>
@@ -20,11 +19,11 @@
           </abbr>
         </div>
       </div>
-      <div class="col-3 spl-box-outside" style="background: indianred">
+      <div class="col-sm-10 col-md-3 spl-box-outside" style="background: indianred">
         <i class="icofont-badge" style="color: white"></i>
         <div class="spl-box-inside">hello</div>
       </div>
-      <div class="col-3 spl-box-outside" style="background: #25248a">
+      <div class="col-sm-10 col-md-3 spl-box-outside" style="background: #25248a">
         <i class="icofont-badge" style="color: white"></i>
         <div class="spl-box-inside">hello</div>
       </div>

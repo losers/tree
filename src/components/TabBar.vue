@@ -1,5 +1,5 @@
 <template>
-  <div style="position:sticky;top:0;">
+  <div style="position: sticky; top: 0; z-index: 100">
     <nav class="tabs" :style="{ width: $device.mobile ? '90%' : '400px' }">
       <div
         class="selector"
@@ -11,9 +11,7 @@
       <router-link to="" class="active"
         ><i class="icofont-people"></i>All</router-link
       >
-      <router-link to="#special"
-        ><i class="icofont-star"></i>Special</router-link
-      >
+      <router-link to="#demo"><i class="icofont-star"></i>Demo</router-link>
       <router-link to="#super"
         ><i class="icofont-thunder-light"></i>Super</router-link
       >

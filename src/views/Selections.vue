@@ -61,7 +61,7 @@
     </div>
 
     <!-- Laptop Top Side Navigation Bar -->
-    <div v-if="!$device.mobile">
+    <div v-if="!$device.mobile" class="h-100">
       <SidebarMenu
         :menu="menu"
         :theme="'black-theme'"
@@ -101,16 +101,20 @@ export default {
   mounted() {
     Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
     window.onscroll = function () {
-      if (
-        document.body.scrollTop > 80 ||
-        document.documentElement.scrollTop > 80
-      ) {
-        //Scrolls Down
-        document.querySelector(".navbar").classList.add("add-border");
-        document.querySelector(".navbar").style.padding = "10px 0";
-      } else {
-        document.querySelector(".navbar").classList.remove("add-border");
-        document.querySelector(".navbar").style.padding = "20px 5px";
+      try {
+        if (
+          document.body.scrollTop > 80 ||
+          document.documentElement.scrollTop > 80
+        ) {
+          //Scrolls Down
+          document.querySelector(".navbar").classList.add("add-border");
+          document.querySelector(".navbar").style.padding = "10px 0";
+        } else {
+          document.querySelector(".navbar").classList.remove("add-border");
+          document.querySelector(".navbar").style.padding = "20px 5px";
+        }
+      } catch (error) {
+        console.log();
       }
     };
   },

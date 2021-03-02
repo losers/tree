@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="initiatePaymentGateway">Paypal</button>
     <section v-if="form.error">
       <center>
         <img src="@/assets/no-data.png" style="height: 140px; margin-top: 70px" />
