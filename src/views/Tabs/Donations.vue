@@ -128,11 +128,11 @@
       </div>
 
       <!-- Donations Found -->
-      <div v-if="transactions.length > 0">
+      <div v-if="transactions.length > 0" class="col-12">
         <i class="text-muted ml-3">Total Donations : <strong>{{ transactions.length }}</strong></i>
 
         <!-- Donation Transactions -->
-        <div class="d-flex" style="overflow: auto">
+        <div class="d-flex col-12" style="overflow: auto">
           <div
             v-for="transaction in transactions"
             :key="transaction['_id']"

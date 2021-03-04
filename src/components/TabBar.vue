@@ -1,5 +1,5 @@
 <template>
-  <div style="position: sticky; top: 0; z-index: 100">
+  <div style="position: sticky; top: 0; z-index: 10">
     <nav class="tabs" :style="{ width: $device.mobile ? '90%' : '400px' }">
       <div
         class="selector"

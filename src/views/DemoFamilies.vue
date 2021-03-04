@@ -5,14 +5,15 @@
     >
       <h5>How to create Demo Families ?</h5>
       <div>
-        <strong class="mr-2">Step 1:</strong> Create a normal family tree by clicking above
-        green button.
+        <strong class="mr-2">Step 1:</strong> Create a normal family tree
       </div>
       <div>
-        <strong class="mr-2">Step 2:</strong> Send family tree name to
+        <strong class="mr-2">Step 2:</strong> Send name to
         <i>bloodline.helpline@gmail.com</i>
       </div>
-      <div><strong class="mr-2">Step 3:</strong> Thats it. Your Demo tree will go live and will be listed below</div>
+      <div class="mt-2">
+        <strong class="mr-2">Thats it, Your Demo Family will go live</strong> 
+      </div>
     </div>
     <!-- Search Bar -->
     <form
@@ -56,63 +57,76 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class="container div-box"
+        class=""
         :style="{
-          'border-radius': '10px',
-          'margin-top': $device.mobile ? '20px' : '30px',
+          'border-radius': '20px',
+          margin: $device.mobile ? '20px' : '30px 100px 0 100px',
         }"
       >
-        <i
-          class="icofont-unlocked rounded-lg"
-          :class="{
-            'bigscreen-lock': !$device.mobile,
-            'mobile-lock': $device.mobile,
-          }"
-          data-toggle="tooltip"
-          title="UnLocked"
-        ></i>
+        <div class="clickable-box" @click="goto(data.surname)">
+          <i
+            class="icofont-unlocked rounded-lg"
+            :class="{
+              'bigscreen-lock': !$device.mobile,
+              'mobile-lock': $device.mobile,
+            }"
+            data-toggle="tooltip"
+            title="UnLocked"
+          ></i>
 
-        <!-- Family Title Box -->
-        <div style="width: 85%">
-          <a
-            class="title"
-            :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
-          >
-            {{ data.title }}
-          </a>
+          <!-- Family Title Box -->
+          <div style="width: 85%">
+            <a
+              class="title"
+              :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
+            >
+              {{ data.title }}
+            </a>
+          </div>
+
+          <!-- Family Surname -->
+          <p class="surname">Surname : {{ data.surname }}</p>
         </div>
-
-        <!-- Family Surname -->
-        <p class="surname">Surname : {{ data.surname }}</p>
 
         <!-- Contributors List -->
+
         <div
-          class="col-sm-12 contri col-md-6 p-2"
-          style="z-index: 10; transition: 1s all"
+          class="contri p-2"
+          style="z-index: 10; transition: 1s all; overflow-y: scroll"
           @click="toggle(data.surname)"
+          v-if="$device.mobile"
         >
           <b class="h5"
-            >Contributors :
+            >Contributors
             {{ data.contributors ? data.contributors.length : 0 }}</b
           >
-          <table class="table table-striped mt-2 text-muted">
-            <tr v-for="helper in data.contributors" :key="helper.$index">
-              <td>
-                {{ helper.name }}
-              </td>
-              <td>
-                {{ helper.email }}
-              </td>
-              <td>
-                {{ helper.facebook }}
-              </td>
-            </tr>
-          </table>
+          <div
+            v-for="(helper, i) in data.contributors"
+            :key="i"
+            style="float-left"
+            class="d-flex"
+          >
+            {{ i + 1 }} - {{ helper.name }}
+          </div>
         </div>
-        <button @click="goto(data.surname)" class="btn btn-success mt-3">
-          <strong class="font-weight-bold mr-2"> View </strong>
-          <i class="icofont-share-alt"></i>
-        </button>
+        <div
+          v-else
+          class="contri p-2 d-flex align-items-center justify-content-between"
+        >
+          <div>
+            <b class="mr-2"
+              >Contributors (
+              {{ data.contributors ? data.contributors.length : 0 }} ) -
+            </b>
+            <span v-for="helper in data.contributors" :key="helper.$index"
+              >{{ helper.name }},
+            </span>
+          </div>
+          <div>
+            <i class="icofont-clock-time"></i>
+            Last Updated: {{ new Date(data.updated_at).toDateString() }}
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -355,9 +369,10 @@ export default {
 }
 
 /* All Normal Families */
-.div-box {
-  cursor: pointer;
+.clickable-box {
   padding: 20px;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
   word-break: break-word;
   -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
@@ -377,15 +392,15 @@ export default {
 }
 
 .contri {
-  border: solid grey 1px;
-  border-radius: 10px;
+  background: grey;
+  border-radius: 0 0 10px 10px;
   max-height: 40px;
-  overflow: hidden;
-  color: grey;
+
+  color: white;
 }
 .contri:hover {
   max-height: 100px !important;
-  overflow-y: scroll;
+
   box-shadow: 2px 2px 5px 2px rgba(171, 171, 171, 1);
 }
 </style>
