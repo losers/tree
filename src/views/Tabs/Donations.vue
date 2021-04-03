@@ -196,6 +196,7 @@ export default {
       isMounted: false,
       isTransacting: false,
       transactions: [],
+      r_key:"",
       country: {
         country_code: null,
         currency: {
@@ -215,6 +216,7 @@ export default {
       .then((data) => {
         this.country.country_code = data.data.loc_info.country_code;
         this.country.currency.code = data.data.loc_info.currency_code;
+        this.r_key = data.data.loc_info.key;
         this.country.currency.symbol =
           currencyToSymbolMap[this.country.currency.code];
         data.data.prev_transactions.forEach((transaction) => {
@@ -234,6 +236,12 @@ export default {
       });
   },
   methods: {
+    razorVerifyPayment(response){
+      this.$router.push({
+        name: "Payment",
+        query: { paymentId: response.razorpay_payment_id, PayerID: response.razorpay_order_id, currency: "INR", signature: response.razorpay_signature }
+      });
+    },
     initiatePaymentGateway() {
       //Create Profile
       // let url1 = `${ProdData.getHostURL()}/pay/${this.$route.params.id}/profile`;
@@ -251,13 +259,34 @@ export default {
         payload.amount = this.amount;
         payload.currency =
           this.country.currency.code === "INR"
-            ? "CAD"
+            ? "INR" //Change Here - 1
             : this.country.currency.code;
-        console.log(payload);
         let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
         Axios.post(url, payload)
           .then((data) => {
-            window.open(data.data.url, "_self");
+            if(this.country.currency.code === "INR"){ //Change Here - 2
+              var orderId= data.data.id;
+              var options = {
+                  "key": this.r_key,
+                  "currency": "INR",
+                  "name": "BloodLine",
+                  "description": "Water the Family tree to Grow",
+                  "image": "https://bloodline.ga/lib/images/logo.png",
+                  "order_id": orderId,
+                  "handler": (response) => {
+                      this.razorVerifyPayment(response);
+                  },
+                  "theme": {
+                      "color": "#227254"
+                  }
+              };
+
+              var rzp1 = new window.Razorpay(options);
+              rzp1.open();
+            }
+            else{
+              window.open(data.data.url, "_self");
+            }
           })
           .catch((err) => console.log(err))
           .finally(() => (this.isTransacting = false));

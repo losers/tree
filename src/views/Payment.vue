@@ -15,7 +15,7 @@
         <h4 class="mt-4 text-success">Payment Success</h4>
         <h5 class="sub">Thank you</h5>
         <h6 class="redirect">
-          You will be redirected to bloodline. if not redirected
+          You will be redirected to Bloodline. if not redirected
           <a class="click-here">click here.</a>
         </h6>
       </div>
@@ -54,6 +54,14 @@ export default {
       paymentProcessing: true,
     };
   },
+  methods: {
+    redirectToPage(surname){
+        this.$router.push({
+            name: "Donations",
+            params: { id: surname },
+        });
+    }
+  },
   mounted() {
     if (this.$route.query.paymentId && this.$route.query.PayerID) {
       let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
@@ -62,13 +70,14 @@ export default {
         payment_id: this.$route.query.paymentId,
         payer_id: this.$route.query.PayerID,
       };
+      if(this.$route.query.currency){ //For RazorPay Case
+        params.currency = this.$route.query.currency;
+        params.signature = this.$route.query.signature;
+      }
       Axios.put(url, params)
         .then((data) => {
           setTimeout(() => {
-            this.$router.push({
-              name: "MainTree",
-              params: { id: data.data.surname },
-            });
+            this.redirectToPage(data.data.surname)
           }, 5000);
         })
         .catch((err) => console.log(err))
