@@ -26,7 +26,7 @@
             <div style="background: white; padding: 5px; border-radius: 5px">
               <abbr title="43 Bloodline Coins">
                 <b style="color: red">43</b>
-                <img src="../assets/b-coin.svg" height="30px" />
+                <img src="@/assets/b-coin.svg" height="30px" />
               </abbr>
             </div>
           </div>

@@ -155,7 +155,7 @@
 
 <script>
 import axios from "axios";
-import ProdData from "../data.js";
+import ProdData from "@/data.js";
 
 export default {
   mounted() {
