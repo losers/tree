@@ -20,24 +20,43 @@
     <link rel="stylesheet" href="lib/css/style.css">
 
     <!-- Unused CSS -->
-    <!-- <link href="lib/css/bootstrap-toggle.min.css" rel="stylesheet"> -->
+    <link href="lib/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+    <!-- Unused JS -->
+    <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
+    <script src="lib/js/bootstrap.min.js" defer></script>   
+    <script src="lib/plugins/slider/slider.js" defer></script>
+    <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
 
     <!-- JS -->
     <script src="lib/plugins/gsap/TimelineLite.min.js" defer></script>
     <script src="lib/plugins/gsap/TweenLite.min.js" defer></script>
     <script src="lib/plugins/gsap/EasePack.min.js" defer></script>
     <script src="lib/plugins/gsap/CSSPlugin.min.js" defer></script>
-    <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
+    <!-- <script src="lib/plugins/jQurey/jquery.min.js" defer></script> -->
     <script src="lib/plugins/wow-js/wow.min.js" defer></script>
     <script src="lib/js/main.js" defer></script>
 
-    <!-- Unused JS -->
-    <!-- <script src="lib/js/bootstrap.min.js" defer></script> -->
-    <!-- <script src="lib/plugins/slider/slider.js" defer></script> -->
-    <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
+    
 </head>
 
 <body id="home">
+
+    <script>
+        (function(d,t) {
+          var BASE_URL="https://app.chatwoot.com";
+          var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+          g.src=BASE_URL+"/packs/js/sdk.js";
+          s.parentNode.insertBefore(g,s);
+          g.onload=function(){
+            window.chatwootSDK.run({
+              websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
+              baseUrl: BASE_URL
+            })
+          }
+        })(document,"script");
+      </script>
+      
     <!--Header Section Start-->
     <section class="top-bar animated-header">
         <div class="container">
@@ -50,6 +69,7 @@
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <h4>Bloodline</h4>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto" style="align-items: center;">
                         <li class="nav-item">
@@ -238,7 +258,7 @@
                         <h5 class="mt-5 mb-5">( OR )</h5>
                         <h5>
                             <i class="fa fa-lg fa-envelope-o social" style="font-size: 20px;"></i>
-                            bloodline.helpline@gmail.com</i>
+                            hello@bloodline.app</i>
                         </h5>
                         <div align="center" class="socialbtns wow fadeInDown">
                             <ul style="padding-inline-start: 0px;">
@@ -268,7 +288,7 @@
 
     <!-- Footer Section Start -->
     <footer id="footer">
-        <p class="copyright" style="text-align: center;">Developed with <i class="fa fa-heart" aria-hidden="true"
+        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart" aria-hidden="true"
                 style="color: red;"></i> by <strong>Losers</strong><br>
         </p>
     </footer>
