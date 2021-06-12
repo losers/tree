@@ -998,6 +998,10 @@ article {
   margin-top: -25px;
 }
 
+#footer{
+  padding: 10px;
+}
+
 a.social {
   font-size: 40px;
 }
