@@ -7,6 +7,13 @@
       </button>
     </form>
 
+    <DualPage
+      :payload="authPayload"
+      :reference="5"
+      v-if="showAuthBox == true"
+      v-on:closed="showAuthBox = false"
+    ></DualPage>
+    
     <!-- Loader -->
     <div v-if="loading">
       <center style="padding-top: 80px">
@@ -64,6 +71,7 @@
 <script>
 import axios from "axios";
 import ProdData from "@/data.js";
+import DualPage from "@/modals/DualPage";
 
 export default {
   name: "AllFamiliesList",
@@ -76,8 +84,13 @@ export default {
       hasNext: {},
       searchText: "",
       loading: true,
-      loadingMore: false
+      loadingMore: false,
+      showAuthBox: false,
+      authPayload: {},
     };
+  },
+  components: {
+    DualPage,
   },
   methods: {
     getAllList(page) {
@@ -102,6 +115,33 @@ export default {
     loadMore() {
       this.loadingMore = true;
       this.getAllList(this.nextPage);
+    },
+    search() {
+      if (this.searchText) {
+        this.s_load = true;
+        axios
+          .get(ProdData.getHostURL() + "/meta/search?text=" + this.searchText)
+          .then(response => {
+            this.info = response.data.list;
+            this.curFamily = response.data.cur_family;
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => (this.s_load = false));
+      } else {
+        this.getAllList();
+      }
+    },
+    showAuth(surname, title, isCeleb, family_id, contact) {
+      if (family_id === this.curFamily || isCeleb) {
+        location.href = `/app/${surname}`;
+      } else {
+        this.authPayload.surname = surname;
+        this.authPayload.title = title;
+        this.authPayload.contact = contact;
+        this.showAuthBox = true;
+      }
     }
   },
   mounted(){

@@ -173,13 +173,13 @@
 </style>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import DualPage from "@/modals/DualPage";
 import { touchRipple } from "vue-touch-ripple";
 import { VueTyper } from "vue-typer";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import TabBar from "./components/TabBar";
-import ProdData from "@/data.js";
+// import ProdData from "@/data.js";
 import SuperFamilies from "./layout/Super";
 import DemoFamilies from "./layout/Demo";
 import AllFamilies from "./layout/All";
@@ -268,23 +268,23 @@ export default {
     //     })
     //     .finally(() => (this.loadingMore = false));
     // },
-    search() {
-      if (this.text) {
-        this.s_load = true;
-        axios
-          .get(ProdData.getHostURL() + "/meta/search?text=" + this.text)
-          .then(response => {
-            this.info = response.data.list;
-            this.curFamily = response.data.cur_family;
-          })
-          .catch(error => {
-            console.log(error);
-          })
-          .finally(() => (this.s_load = false));
-      } else {
-        this.getAllList();
-      }
-    }
+    // search() {
+    //   if (this.text) {
+    //     this.s_load = true;
+    //     axios
+    //       .get(ProdData.getHostURL() + "/meta/search?text=" + this.text)
+    //       .then(response => {
+    //         this.info = response.data.list;
+    //         this.curFamily = response.data.cur_family;
+    //       })
+    //       .catch(error => {
+    //         console.log(error);
+    //       })
+    //       .finally(() => (this.s_load = false));
+    //   } else {
+    //     this.getAllList();
+    //   }
+    // }
     // getAllList() {
     //   axios
     //     .get(ProdData.getHostURL() + "/meta")
