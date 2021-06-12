@@ -3,16 +3,14 @@
 @import url(http://fonts.googleapis.com/css?family=Glegoo);
 @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 @media screen and (max-width: 600px) {
-  .support_bot {
-    visibility: hidden;
-    clear: both;
-    float: left;
-    margin: 10px auto 5px 20px;
-    width: 28%;
-    display: none;
-  }
   .socialbtns ul{
     margin: 30px;
+  }
+  .home-banner{
+    text-align: center;
+  }
+  .youtube-video{
+    display: none;
   }
 }
 body {
@@ -43,9 +41,28 @@ p {
   font-size: 16px;
   font-weight: 300;
 }
-
+a{
+  color: #ff6363;
+}
 a:hover {
+  color: #c55151;
   text-decoration: none;
+}
+.feather-chevrons-down{
+  color: red;
+  animation: MoveUpDown 1s linear infinite;
+  font-size: 30px;
+  height: 50px;
+  width: 50px;
+}
+
+@keyframes MoveUpDown {
+  0%, 100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: 10px;
+  }
 }
 #hero-area{
   height: 100%;
@@ -92,7 +109,7 @@ a:hover {
 .social-share a {
   font-size: 20px;
   color: #fff;
-  background: #007bff;
+  background: #ff6363;
   padding: 4px 10px;
   display: inline-block;
 }
@@ -102,7 +119,7 @@ a:hover {
   background-size: cover;
   padding: 120px 0 25px 0;
   position: relative;
-  background: #007bff;
+  background: #ff6363;
   color: #fff;
 }
 
@@ -151,7 +168,7 @@ a:hover {
 }
 
 .block h1{
-  color: #007bff;
+  color: #ff6363;
 }
 
 /*=== MEDIA QUERY ===*/
@@ -162,13 +179,13 @@ a:hover {
   background: #fff;
   color: #fff;
   transition: all 0.2s ease-out 0s;
-  padding: 15px 0;
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 5px 0;
+  box-shadow: 0 0 10px 0 rgb(0, 0, 0, 0.2);
   z-index: 10;
 }
 
 .top-bar.animated-header {
-  padding: 20px 0;
+  padding: 10px 0;
   background: #fff;
   box-shadow: none;
 }
@@ -195,7 +212,7 @@ a:hover {
 }
 
 .navbar .nav-item .nav-link:hover {
-  color: #007bff !important;
+  color: #ff6363 !important;
 }
 
 .navbar .nav-item:last-child .nav-link {
@@ -245,7 +262,7 @@ a:hover {
 }
 
 .dropdown-item:hover {
-  color: #007bff !important;
+  color: #ff6363 !important;
   background: transparent;
 }
 
@@ -302,7 +319,7 @@ a:hover {
 }
 
 #call-to-query {
-  background: #007bff;
+  background: #ff6363;
   background-size: cover;
   background-attachment: fixed;
   padding: 80px 0;
@@ -314,7 +331,7 @@ a:hover {
 #call-to-query .block .btn-contact {
   background: #fff;
   border: 2px solid #fff;
-  color: #007bff;
+  color: #ff6363;
   padding: 15px 34px;
   margin-top: 20px;
   font-size: 12px;
@@ -326,11 +343,11 @@ a:hover {
 
 #call-to-query .block .btn-contact:hover {
   color: #fff;
-  background: #007bff;
+  background: #ff6363;
 }
 
 #call-to-action {
-  background: #007bff;
+  background: #ff6363;
   background-size: cover;
   background-attachment: fixed;
   padding: 80px 0;
@@ -360,7 +377,7 @@ a:hover {
 #call-to-action .block .btn-contact {
   background: #fff;
   border: 2px solid #fff;
-  color: #007bff;
+  color: #ff6363;
   padding: 15px 34px;
   margin-top: 20px;
   font-size: 12px;
@@ -376,7 +393,7 @@ a:hover {
 
 #call-to-action .block .btn-contact:hover {
   color: #fff;
-  background: #007bff;
+  background: #ff6363;
 }
 
 #about {
@@ -421,7 +438,7 @@ a:hover {
 }
 
 .about-feature .about-feature-1 {
-  background: #007bff;
+  background: #ff6363;
 }
 
 .about-feature .about-feature-2 {
@@ -560,8 +577,8 @@ figure .buttons {
 }
 
 figure .buttons a:hover {
-  background: #007bff;
-  border-color: #007bff;
+  background: #ff6363;
+  border-color: #ff6363;
 }
 
 figure .buttons a:focus {
@@ -579,7 +596,7 @@ figure figcaption h4 {
 }
 
 figure figcaption h4 a {
-  color: #007bff;
+  color: #ff6363;
 }
 
 figure figcaption p {
@@ -619,7 +636,7 @@ figure figcaption p {
 #feature .icon {
   text-decoration: none;
   color: #fff;
-  background-color: #007bff;
+  background-color: #ff6363;
   height: 100px;
   text-align: center;
   width: 100px;
@@ -635,7 +652,7 @@ figure figcaption p {
 
 .wrapper_404 h1 {
   font-size: 200px;
-  color: #007bff;
+  color: #ff6363;
   line-height: 1;
 }
 
@@ -697,15 +714,15 @@ article {
 }
 
 .blog-content .btn-details {
-  color: #007bff;
+  color: #ff6363;
   padding: 0;
-  background: #007bff;
+  background: #ff6363;
   color: #fff;
   padding: 8px 18px;
   border-radius: 0;
   margin-top: 15px;
   border: 1px solid #fff;
-  box-shadow: 0px 0px 0px 1px #007bff;
+  box-shadow: 0px 0px 0px 1px #ff6363;
 }
 
 .blog-post-image {
@@ -784,7 +801,7 @@ article {
 }
 
 .sidebar .recent-post ul li a:hover {
-  color: #007bff;
+  color: #ff6363;
 }
 
 .sidebar .recent-post time {
@@ -812,9 +829,9 @@ article {
 #contact-section .contact-form .btn-send {
   color: #fff;
   outline: none;
-  background: #007bff;
+  background: #ff6363;
   transition: all linear .2s;
-  border-color: #007bff;
+  border-color: #ff6363;
   border-radius: 0;
 }
 
@@ -860,7 +877,7 @@ article {
 
 #contact-section .address i, #contact-section .email i, #contact-section .phone i {
   font-size: 45px;
-  color: #007bff;
+  color: #ff6363;
 }
 
 #contact-section .address h5, #contact-section .email h5, #contact-section .phone h5 {
@@ -875,7 +892,7 @@ article {
 /* Get started Button */
 
 .button {
-  background-color: #007bff;
+  background-color: #ff6363;
   border: none;
   display: inline-block;
   font-family: 'Montserrat', sans-serif;
@@ -930,7 +947,7 @@ article {
   z-index: 1;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
-  background: #007bff;
+  background: #ff6363;
   -webkit-transition: background 0.1s ease-out;
   transition: background 0.1s ease-out;
 }
@@ -954,7 +971,7 @@ article {
   width: 25px;
   height: 25px;
   border-radius: 15px;
-  background: #007bff;
+  background: #ff6363;
   -webkit-transition: background 0.1s ease-out;
   transition: background 0.1s ease-out;
 }
@@ -981,12 +998,7 @@ article {
   margin-top: -25px;
 }
 
-#footer{
-  margin: 20px 0;
-}
-
 a.social {
-
   font-size: 40px;
 }
 

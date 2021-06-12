@@ -9,7 +9,7 @@
       </div>
       <div>
         <strong class="mr-2">Step 2:</strong> Send name to
-        <i>bloodline.helpline@gmail.com</i>
+        <i>hello@bloodline.app</i>
       </div>
       <div class="mt-2">
         <strong class="mr-2">Thats it, Your Demo Family will go live</strong> 
