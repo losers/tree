@@ -346,54 +346,39 @@ a:hover {
   background: #ff6363;
 }
 
-#call-to-action {
+#contact {
   background: #ff6363;
   background-size: cover;
   background-attachment: fixed;
   padding: 80px 0;
   text-align: center;
   position: relative;
-  color: #fff;
 }
 
-#call-to-action .block {
+.bottom-links > a{
+  font-size: 20px;
+  color: white !important;
+}
+.bottom-links > a:hover{
+  text-decoration: underline;
+}
+
+#contact .block {
   position: relative;
   z-index: 9;
   color: #fff;
 }
 
-#call-to-action .block h2 {
+#contact .block h2 {
   margin-bottom: 15px;
   color: #fff;
 }
 
-#call-to-action .block p {
+#contact .block p {
   font-size: 15px;
   font-weight: 300;
   font-family: 'Roboto', sans-serif;
   margin-top: 20px;
-}
-
-#call-to-action .block .btn-contact {
-  background: #fff;
-  border: 2px solid #fff;
-  color: #ff6363;
-  padding: 15px 34px;
-  margin-top: 20px;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  border-radius: 0;
-  transition: all linear .2s;
-}
-
-#call-to-action .block .btn-contact i {
-  margin-right: 10px;
-}
-
-#call-to-action .block .btn-contact:hover {
-  color: #fff;
-  background: #ff6363;
 }
 
 #about {
@@ -824,15 +809,6 @@ article {
 
 #contact-section .contact-form {
   margin-top: 42px;
-}
-
-#contact-section .contact-form .btn-send {
-  color: #fff;
-  outline: none;
-  background: #ff6363;
-  transition: all linear .2s;
-  border-color: #ff6363;
-  border-radius: 0;
 }
 
 #contact-section input {

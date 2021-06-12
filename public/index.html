@@ -23,7 +23,7 @@
 
     <!-- Unused JS -->
     <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
-    <script src="lib/js/bootstrap.min.js" defer></script>   
+    <script src="lib/js/bootstrap.min.js" defer></script>
     <script src="lib/plugins/slider/slider.js" defer></script>
     <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
 
@@ -36,26 +36,26 @@
     <script src="lib/plugins/wow-js/wow.min.js" defer></script>
     <script src="lib/js/main.js" defer></script>
 
-    
+
 </head>
 
 <body id="home">
 
     <script>
-        (function(d,t) {
-          var BASE_URL="https://app.chatwoot.com";
-          var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-          g.src=BASE_URL+"/packs/js/sdk.js";
-          s.parentNode.insertBefore(g,s);
-          g.onload=function(){
-            window.chatwootSDK.run({
-              websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
-              baseUrl: BASE_URL
-            })
-          }
-        })(document,"script");
-      </script>
-      
+        (function (d, t) {
+            var BASE_URL = "https://app.chatwoot.com";
+            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            g.src = BASE_URL + "/packs/js/sdk.js";
+            s.parentNode.insertBefore(g, s);
+            g.onload = function () {
+                window.chatwootSDK.run({
+                    websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
+                    baseUrl: BASE_URL
+                })
+            }
+        })(document, "script");
+    </script>
+
     <!--Header Section Start-->
     <section class="top-bar animated-header">
         <div class="container">
@@ -80,7 +80,7 @@
                             <a class="nav-link" href="#features">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#call-to-action">Contact</a>
+                            <a class="nav-link" href="#contact">Contact</a>
                         </li>
                         <li class="nav-item ml-2">
                             <a class="btn btn-danger" href="/app/">Get Started</a>
@@ -132,8 +132,8 @@
                 </div>
             </div>
             <div class="youtube-video col-md-6">
-                <iframe width="500" height="290" src="https://www.youtube.com/embed/MmfxQ7wHEcQ"
-                    title="YouTube video player" frameborder="0"
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/MmfxQ7wHEcQ?controls=0"
+                    title="Bloodline Intro" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
             </div>
@@ -247,20 +247,20 @@
     </div>
 
     <!--Call To Action Section Start -->
-    <section id="call-to-action">
+    <section id="contact">
         <div class="container">
             <div class="col-md-12">
                 <div class="block">
-                    <h4 class="mt-3 wow fadeInDown">
+                    <h4 class="mt-2 wow fadeInDown">
                         <strong>hello@bloodline.app</strong>
                         <!-- <i class="fa fa-lg fa-envelope-o social"> </i> -->
                     </h4>
-                    <div class="mt-5 wow fadeInDown">
+                    <div class="mt-4 wow fadeInDown">
                         <a href="https://play.google.com/store/apps/details?id=com.losersteam.bloodline">
                             <img src="./lib/images/google-play.jpeg"
-                                style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 75%);" height="70px"></a>
+                                style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 75%);" height="50px"></a>
                     </div>
-                    <div align="center" class="socialbtns wow fadeInDown">
+                    <div align="center" class="socialbtns wow fadeInDown mb-5">
                         <ul style="padding-inline-start: 0px;">
                             <li><a href="https://www.instagram.com/bloodline.app/" target="_blank"
                                     class="fa fa-lg fa-instagram social"></a></li>
@@ -276,8 +276,10 @@
                                     class="fa fa-lg fa-telegram social"></a></li>
                         </ul>
                     </div>
-                    <div class="row justify-content-around">
-                        
+                    <div class="bottom-links wow fadeInDown row justify-content-around">
+                        <a href="#features">Features</a>
+                        <a href="https://blog.bloodline.app" target="_blank">Blog</a>
+                        <a href="https://github.com/losers/tree/projects/2" target="_blank">Roadmap</a>
                     </div>
                 </div>
             </div>
@@ -286,8 +288,8 @@
 
     <!-- Footer Section Start -->
     <footer id="footer">
-        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart" aria-hidden="true"
-                style="color: red;"></i> by <strong>Losers</strong><br>
+        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart"
+                aria-hidden="true" style="color: red;"></i> by <strong>Losers</strong><br>
         </p>
     </footer>
 </body>
