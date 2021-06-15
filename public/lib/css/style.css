@@ -49,7 +49,7 @@ a:hover {
   text-decoration: none;
 }
 .feather-chevrons-down{
-  color: red;
+  color: #eb9797;
   animation: MoveUpDown 1s linear infinite;
   font-size: 30px;
   height: 50px;
@@ -189,7 +189,17 @@ a:hover {
   background: #fff;
   box-shadow: none;
 }
+.nav-title{
+  font-size: 20px;
+  color: red;
+  display: block;
+  letter-spacing: 1.5px;
+}
 
+/* This class will toggles  */
+.header-hide{
+  display: none;
+}
 .navbar {
   border: 0;
   border-radius: 0;
@@ -350,7 +360,7 @@ a:hover {
   background: #ff6363;
   background-size: cover;
   background-attachment: fixed;
-  padding: 80px 0;
+  padding: 50px 0;
   text-align: center;
   position: relative;
 }
