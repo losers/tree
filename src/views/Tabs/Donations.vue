@@ -17,7 +17,7 @@
       :style="{ margin: $device.mobile ? '10px' : '0 100px' }"
     >
       <!-- Donations Main Card -->
-      <div class="theme-gery-bg row donation-card">
+      <div class="theme-gery-bg row m-0 donation-card">
         <!-- Donations BG Image -->
         <div class="col-sm-12 col-md-6 p-5" v-if="!$device.mobile">
           <img src="@/assets/donate-bg.jpg" width="100%" />
@@ -34,39 +34,57 @@
               <i class="icofont-gift"></i> Donation Box
             </center>
             <div class="row m-3 align-items-center">
-              <div class="col-5 theme-primary-color">
-                <span>Amount ( {{ country.currency.symbol }} )</span>
+              <div v-if="!$device.mobile" class="col-3 theme-primary-color">
+                <span>Amount: </span>
               </div>
-              <input
-                class="col-7 form-control amount-input-box theme-primary-color"
-                placeholder="Enter Amount"
-                type="text"
-                v-model="amount"
-              />
+              <div class="col-sm-12 col-md-9 input-group align-items-center">
+                <select
+                  class="form-control select-currency col-4"
+                  data-role="select-dropdown"
+                >
+                  <option selected>{{ country.currency.symbol }}</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Thr</option>
+                </select>
+                <input
+                  class="
+                    form-control
+                    amount-input-box
+                    theme-primary-color
+                    col-8
+                  "
+                  placeholder="Enter Amount"
+                  type="number"
+                  v-model="amount"
+                />
+              </div>
             </div>
 
             <!-- Donate Btn -->
             <!-- <touch-ripple
-            @click.native="initiatePaymentGateway()"
-          > -->
-            <div class="donation-btn theme-primary-bg">
+            
+            > -->
+            <div
+              @click="initiatePaymentGateway()"
+              class="donation-btn theme-primary-bg"
+            >
               <center>
-                <i class="icofont-ui-love mr-1" style="color: indianred"></i>
+                <i class="icofont-ui-love mr-1"></i>
                 <strong> Donate Now </strong>
+                <span
+                  v-if="isTransacting"
+                  class="spinner-border spinner-border-sm ml-2"
+                  style="
+                    width: 1rem;
+                    height: 1rem;
+                    color: white;
+                    right: 10px;
+                    bottom: 10px;
+                  "
+                ></span>
               </center>
             </div>
-            <div
-              v-if="isTransacting"
-              class="spinner-border spinner-border-sm"
-              style="
-                width: 1rem;
-                height: 1rem;
-                color: red;
-                position: absolute;
-                right: 10px;
-                bottom: 10px;
-              "
-            ></div>
           </div>
 
           <!-- F.A.Q s -->
@@ -99,11 +117,11 @@
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
               >
-                <div class="card-body p-3">
-                  <p class="theme-primary-color">
+                <div class="card-body p-0">
+                  <span class="theme-primary-color">
                     Bloodline work on Donations. Donating families will become
                     <strong>Super Families.</strong>
-                  </p>
+                  </span>
                 </div>
               </div>
             </div>
@@ -133,7 +151,9 @@
                 aria-labelledby="headingTwo"
                 data-parent="#accordion"
               >
-                <div class="card-body p-3 theme-primary-color">Bloodline Coins</div>
+                <div class="card-body p-0 theme-primary-color">
+                  Bloodline Coins
+                </div>
               </div>
             </div>
           </div>
@@ -144,46 +164,77 @@
       <div
         v-if="transactions.length > 0"
         class="col-12 mt-5 mb-5 donations-history-box"
+        :style="{
+          padding: $device.mobile ? '10px' : '20px 40px',
+        }"
       >
         <i class="text-muted ml-3"
           >Total Donations : <strong>{{ transactions.length }}</strong></i
         >
 
         <!-- Donation Transactions lV2 box -->
-        <div class="d-flex history-carousel-box col-12" style="overflow: auto">
-          <div
-            v-for="transaction in transactions"
-            :key="transaction['_id']"
-            class="col-3 p-0"
-          >
-            <center class="transaction-box">
-              <!-- Amount -->
-              <div
-                style="font-size: 44px; font-weight: 600"
-                class="theme-primary-color"
-              >
-                <!-- {{ transaction["symbol"] }} -->
-                {{ country.currency.symbol
-                }}{{ transaction["transactions"][0]["amount"]["total"] }}
-              </div>
+        <div class="d-flex align-items-center history-carousel-box col-12">
+          <div v-if="!$device.mobile" class="col-1">
+            <i
+              class="icofont-rounded-left theme-primary-bg"
+              onClick="(function(){document.getElementById('histories').scrollLeft -= 200})();"
+            ></i>
+          </div>
+          <div class="col-sm-12 col-md-10 d-flex" id="histories">
+            <div
+              v-for="transaction in transactions"
+              :key="transaction['_id']"
+              class="col-sm-12 col-md-3 p-0"
+            >
+              <center class="transaction-box">
+                <!-- Amount -->
+                <div class="theme-primary-color">
+                  <!-- {{ transaction["symbol"] }} -->
+                  <span style="font-size: 30px; font-weight: 600">{{
+                    country.currency.symbol
+                  }}</span>
+                  <span style="font-size: 44px; font-weight: 600"
+                    >{{ transaction["transactions"][0]["amount"]["total"] }}
+                  </span>
+                </div>
 
-              <!-- User Name-->
-              <div class="text-muted">
-                {{
-                  "  " +
-                  transaction["payer"]["payer_info"]["first_name"] +
-                  " " +
-                  transaction["payer"]["payer_info"]["last_name"]
-                }}
-              </div>
-              <!-- Date Time -->
-              <!-- <div style="color: grey; font-size: 14px">
-                <i class="icofont-ui-calendar"></i>
-                {{ new Date(transaction["create_time"]).toDateString() }}
-              </div> -->
-            </center>
+                <!-- User Name-->
+                <div
+                  class="text-muted"
+                  style="
+                    width: 80%;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                  "
+                >
+                  {{
+                    "  " +
+                    transaction["payer"]["payer_info"]["first_name"] +
+                    " " +
+                    transaction["payer"]["payer_info"]["last_name"]
+                  }}
+                </div>
+                <!-- Date Time -->
+                <div class="mt-2" style="color: grey; font-size: 12px">
+                  <!-- <i class="icofont-ui-calendar"></i> -->
+                  Sep 14, 2021
+                  <!-- {{ new Date(transaction["create_time"]).toDateString() }} -->
+                </div>
+              </center>
+            </div>
+          </div>
+          <div v-if="!$device.mobile" class="col-1">
+            <i
+              class="icofont-rounded-right theme-primary-bg"
+              onClick="(function(){document.getElementById('histories').scrollLeft += 200})();"
+            ></i>
           </div>
         </div>
+      </div>
+
+      <div v-else>
+        <h3>Shower some love by doing some Donations</h3>
       </div>
     </div>
   </div>
@@ -332,12 +383,14 @@ export default {
     },
     initiatePaymentGateway() {
       //Create Profile
-      // let url1 = `${ProdData.getHostURL()}/pay/${this.$route.params.id}/profile`;
+      // let url1 = `${ProdData.getHostURL()}/pay/${
+      //   this.$route.params.id
+      // }/profile`;
       // Axios.post(url1, {})
-      //   .then(data => {
+      //   .then((data) => {
       //     console.log(data);
       //   })
-      //   .catch(err => console.log(err))
+      //   .catch((err) => console.log(err))
       //   .finally(() => console.log("daskna"));
 
       let payload = {};
@@ -389,9 +442,16 @@ export default {
   box-shadow: 0px 0px 5px 0px rgb(226 226 226);
   border-radius: 21px;
 }
+.select-currency {
+  border: none;
+  box-shadow: 0 0 3px 0 #eb9797;
+  color: #eb9797;
+  border-radius: 15px 0px 0px 15px;
+  padding: 0px 10px;
+}
 .amount-input-box {
   border-radius: 12px;
-  box-shadow: 0 0px 3px 0 #eb9797;
+  box-shadow: 0 0 3px 0 #eb9797;
   border: none;
   text-align: center;
 }
@@ -400,22 +460,19 @@ export default {
   color: #eb9797;
 }
 .card-header {
-  background-color: white;
+  background-color: transparent;
+  border-bottom: none;
   border-radius: 20px;
+  color: #7979e8;
+  text-decoration: underline;
+  padding: 4px;
 }
+
 .btn.focus,
 .btn:focus {
   box-shadow: none;
 }
-.collapse {
-  background-color: white;
-  margin-top: -20px;
-  padding-top: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
 .donations-history-box {
-  padding: 20px 40px;
   border-radius: 21px;
   background-color: #f6f6f6;
 }
@@ -433,6 +490,21 @@ export default {
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
   background-color: #ffffff;
 }
+.icofont-rounded-left,
+.icofont-rounded-right {
+  border-radius: 50%;
+  color: white;
+  padding: 5px;
+  font-size: 30px;
+}
+#histories {
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+#histories::-webkit-scrollbar {
+  display: none;
+}
+
 .donation-box {
   color: white;
   border-radius: 21px;
