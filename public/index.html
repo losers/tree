@@ -12,11 +12,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>lib/images/favicon.ico">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="lib/plugins/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="lib/plugins/animate-css/animate.css">
-    <link rel="stylesheet" href="lib/plugins/slider/slider.css">
     <link rel="stylesheet" href="lib/css/style.css">
 
     <!-- Unused CSS -->
@@ -24,7 +23,7 @@
 
     <!-- Unused JS -->
     <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
-    <script src="lib/js/bootstrap.min.js" defer></script>   
+    <script src="lib/js/bootstrap.min.js" defer></script>
     <script src="lib/plugins/slider/slider.js" defer></script>
     <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
 
@@ -37,39 +36,40 @@
     <script src="lib/plugins/wow-js/wow.min.js" defer></script>
     <script src="lib/js/main.js" defer></script>
 
-    
+
 </head>
 
 <body id="home">
 
     <script>
-        (function(d,t) {
-          var BASE_URL="https://app.chatwoot.com";
-          var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-          g.src=BASE_URL+"/packs/js/sdk.js";
-          s.parentNode.insertBefore(g,s);
-          g.onload=function(){
-            window.chatwootSDK.run({
-              websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
-              baseUrl: BASE_URL
-            })
-          }
-        })(document,"script");
-      </script>
-      
+        (function (d, t) {
+            var BASE_URL = "https://app.chatwoot.com";
+            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            g.src = BASE_URL + "/packs/js/sdk.js";
+            s.parentNode.insertBefore(g, s);
+            g.onload = function () {
+                window.chatwootSDK.run({
+                    websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
+                    baseUrl: BASE_URL
+                })
+            }
+        })(document, "script");
+    </script>
+
     <!--Header Section Start-->
     <section class="top-bar animated-header">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#" style="flex: 1;">
+                <a class="navbar-brand row" href="#">
                     <img src="./lib/images/logo.png" alt="logo" height="40px">
                 </a>
+                <span class="nav-title header-hide wow fadeInUp" data-wow-delay=".3s"
+                    data-wow-duration="500ms">Bloodline</span>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <h4>Bloodline</h4>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto" style="align-items: center;">
                         <li class="nav-item">
@@ -81,10 +81,10 @@
                             <a class="nav-link" href="#features">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#call-to-action">Contact</a>
+                            <a class="nav-link" href="#contact">Contact</a>
                         </li>
                         <li class="nav-item ml-2">
-                            <a class="btn btn-primary" href="/app/">Get Started</a>
+                            <a class="btn btn-danger" href="/app/">Get Started</a>
                         </li>
                     </ul>
                 </div>
@@ -93,24 +93,13 @@
     </section>
 
     <!--Slider Section Start-->
-    <section id="hero-area">
-        <div class="col-md-12 text-center">
-            <div class="block wow fadeInUp" data-wow-delay=".3s">
-                <section class="cd-intro">
-                    <h1 class="wow fadeInUp animated cd-headline slide" data-wow-delay=".4s">
-                        <span>Welcome to Bloodline</span><br>
-                        <span class="cd-words-wrapper">
-                            <b class="is-visible">FATHER</b>
-                            <b>UNCLE</b>
-                            <b>MOTHER</b>
-                            <b>నాన్న</b>
-                            <b>BROTHER</b>
-                            <b>ಹೆಂಡತಿ</b>
-                            <b>SISTER-IN-LAW</b>
-                            <b>AUNTY</b>
-                        </span>
-                    </h1>
-                </section>
+    <section id="hero-area" style="background-image: url(./lib/images/home_bg.jpg);">
+        <div class="block wow fadeInUp container home-banner row align-items-center" style="margin: auto;"
+            data-wow-delay=".3s">
+            <div class="col-md-6">
+                <h1 class="wow fadeInUp animated cd-headline slide">
+                    <span>Welcome to Bloodline</span><br>
+                </h1>
                 <h2 class="wow fadeInUp animated mb-5">
                     Build your <strong>family tree</strong> and work on your way upwards,<br>Who knows you may reach
                     Adam and Eve.
@@ -143,6 +132,22 @@
                     </span>
                 </div>
             </div>
+            <div class="youtube-video col-md-6">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/MmfxQ7wHEcQ?controls=0"
+                    title="Bloodline Intro" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+
+            <center style="width: 100%;" class="mt-4"><a href="#features">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather-chevrons-down">
+                        <polyline points="7 13 12 18 17 13"></polyline>
+                        <polyline points="7 6 12 11 17 6"></polyline>
+                    </svg></a>
+            </center>
+
         </div>
     </section>
 
@@ -171,8 +176,9 @@
                     <div class="img1"></div>
                 </div>
             </div>
+
         </div>
-        
+
         <!-- Relation Finder Info -->
         <div class="row" id="about">
             <div class="col-md-6 m-auto">
@@ -242,44 +248,41 @@
     </div>
 
     <!--Call To Action Section Start -->
-    <section id="call-to-action">
+    <section id="contact">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="block">
-                        <h2 class="wow fadeInDown pb-3" style="font-size: 35px!important;" data-wow-delay=".3s"
-                            data-wow-duration="500ms">Any Problems ?
-                        </h2>
-                        <h4 class="wow fadeInDown" data-wow-delay=".7s" data-wow-duration="500ms">Ping our Support Bot
-                            (@BloodlineAppBot) at Telegram.</h4>
-                        <a href="https://t.me/bloodlineappbot" target="_black" style="margin-top: 30px!important;"
-                            class="btn btn-default btn-contact wow fadeInDown" data-wow-delay=".7s"
-                            data-wow-duration="500ms">Start Conversation</a>
-                        <h5 class="mt-5 mb-5">( OR )</h5>
-                        <h5>
-                            <i class="fa fa-lg fa-envelope-o social" style="font-size: 20px;"></i>
-                            hello@bloodline.app</i>
-                        </h5>
-                        <div align="center" class="socialbtns wow fadeInDown">
-                            <ul style="padding-inline-start: 0px;">
-                                <li><a href="https://www.instagram.com/blood_line_app/" target="_blank"
-                                        class="fa fa-lg fa-instagram social"></a></li>
-                                <li><a href="https://www.facebook.com/blineapp" target="_blank"
-                                        class="fa fa-lg fa-facebook social"></a></li>
-                                <li><a href="https://twitter.com/blood_line_app" target="_blank"
-                                        class="fa fa-lg fa-twitter social"></a></li>
-                                <li><a href="https://github.com/loserscorp/tree/issues" target="_blank"
-                                        class="fa fa-lg fa-github social"></a></li>
-                                <li><a href="https://www.linkedin.com/company/bloodlineapp" target="_blank"
-                                        class="fa fa-lg fa-linkedin-square social"></a></li>
-                                <li><a href="https://t.me/bloodlineapp" target="_blank"
-                                        class="fa fa-lg fa-telegram social"></a></li>
-                            </ul>
-                        </div>
-                        <div class="support_bot">
-                            <img class="wow fadeInDown" data-wow-delay=".7s" data-wow-duration="500ms"
-                                style="position: absolute;left: 0;top:0;z-index: 2;" src="./lib/images/support_bot.png"
-                                height="200px" class="float-left"></div>
+            <div class="col-md-12">
+                <div class="block">
+                    <h4 class="mt-2 wow fadeInDown">
+                        <strong>hello@bloodline.app</strong>
+                        <!-- <i class="fa fa-lg fa-envelope-o social"> </i> -->
+                    </h4>
+                    <div class="mt-4 wow fadeInDown">
+                        <a href="https://play.google.com/store/apps/details?id=com.losersteam.bloodline">
+                            <img src="./lib/images/google-play.jpeg"
+                                style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 75%);" height="50px"></a>
+                    </div>
+                    <div align="center" class="socialbtns wow fadeInDown mb-5">
+                        <ul style="padding-inline-start: 0px;">
+                            <li><a href="https://www.instagram.com/bloodline.app/" target="_blank"
+                                    class="fa fa-lg fa-instagram social"></a></li>
+                            <li><a href="https://www.facebook.com/bloodlineapp" target="_blank"
+                                    class="fa fa-lg fa-facebook social"></a></li>
+                            <li><a href="https://twitter.com/bloodlineapp" target="_blank"
+                                    class="fa fa-lg fa-twitter social"></a></li>
+                            <li><a href="https://github.com/losers/tree/issues" target="_blank"
+                                    class="fa fa-lg fa-github social"></a></li>
+                            <li><a href="https://www.linkedin.com/company/bloodlineapp" target="_blank"
+                                    class="fa fa-lg fa-linkedin-square social"></a></li>
+                            <li><a href="https://t.me/bloodlineapp" target="_blank"
+                                    class="fa fa-lg fa-telegram social"></a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-links wow fadeInDown row justify-content-around">
+                        <a href="#features">Features</a>
+                        <a href="https://blog.bloodline.app" target="_blank">Blog</a>
+                        <a href="https://github.com/losers/tree/projects/2" target="_blank">Roadmap</a>
+                        <a href="https://www.youtube.com/channel/UCKO-JUbSvs4IzuSvOnKJeDg" target="_blank
+                        ">Video Source</a>
                     </div>
                 </div>
             </div>
@@ -288,8 +291,8 @@
 
     <!-- Footer Section Start -->
     <footer id="footer">
-        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart" aria-hidden="true"
-                style="color: red;"></i> by <strong>Losers</strong><br>
+        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart"
+                aria-hidden="true" style="color: red;"></i> by <strong>Losers</strong><br>
         </p>
     </footer>
 </body>

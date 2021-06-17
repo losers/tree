@@ -3,17 +3,31 @@
 </template>
 
 <style>
-
-.mem-spec, .mem-spec #app{
+.theme-primary-color {
+  color: #eb9797;
+}
+.theme-primary-bg {
+  background-color: #eb9797;
+}
+.theme-gery-bg {
+  background-color: #f6f6f6;
+}
+.mem-spec,
+.mem-spec #app {
   overflow: hidden;
 }
 @keyframes rocking {
-  0%,100% {transform: rotateZ(-10deg);}
-  50%     {transform: rotateZ(10deg);}
+  0%,
+  100% {
+    transform: rotateZ(-10deg);
+  }
+  50% {
+    transform: rotateZ(10deg);
+  }
 }
 
 .vue-typer {
-  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 .vue-typer .custom.char.typed {
   background: -webkit-linear-gradient(white, #38495a);
@@ -50,9 +64,9 @@
 }
 .vue-typer .custom.caret.selecting {
   display: inline-block;
-  background-color: #E91E63;
+  background-color: #e91e63;
 }
-.vue-typer .custom.caret.idle.pre-erase{
+.vue-typer .custom.caret.idle.pre-erase {
   background-color: #009688;
 }
 </style>
