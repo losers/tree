@@ -8,8 +8,8 @@
         <strong class="mr-2">Step 1:</strong> Create a normal family tree
       </div>
       <div>
-        <strong class="mr-2">Step 2:</strong> Send name to
-        <i>bloodline.helpline@gmail.com</i>
+        <strong class="mr-2">Step 2:</strong> Send surname to
+        <i>hello@bloodline.app</i>
       </div>
       <div class="mt-2">
         <strong class="mr-2">Thats it, Your Demo Family will go live</strong> 
@@ -42,7 +42,7 @@
       </button>
     </form>
     <!-- Loader -->
-    <div v-if="s_load">
+    <div v-if="loading">
       <center style="padding-top: 80px">
         <div
           class="spinner-border"
@@ -159,182 +159,179 @@ import ProdData from "@/data.js";
 
 export default {
   mounted() {
-    console.log("demo");
-    setTimeout(() => {
-      this.s_load = false;
-    }, 1000);
+    this.getAllList();
   },
   methods: {
     goto(surname) {
       location.href = `/app/${surname}`;
     },
-    // toggle(surname) {
-    //   var tempDom = document.querySelector(".toggle-" + surname);
-    //   console.log(surname + "togg");
-    //   if (tempDom.classList.contains("expand-list")) {
-    //     tempDom.classList.remove("expand-list");
-    //   } else {
-    //     tempDom.classList.add("expand-list");
-    //   }
-    // },
-    loadMore() {
-      this.loadingMore = true;
+    getAllList(page) {
+      let url = `${ProdData.getHostURL()}/meta?type=2`;
+      if(page){
+        url += `?page=${page}`;
+      }
       axios
-        .get(ProdData.getHostURL() + "/meta?page=" + this.nextPage)
-        .then((response) => {
+        .get(url)
+        .then(response => {
           this.info = this.info.concat(response.data.list);
+          this.curFamily = response.data.cur_family;
+          this.totalFamilies = response.data.total_families;
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch((error) => {
+        .catch(error => {
           this.errored = error;
-          console.log(error);
         })
-        .finally(() => (this.loadingMore = false));
+        .finally(() => (this.loading = false,this.loadingMore = false));
+    },
+    loadMore() {
+      this.loadingMore = true;
+      this.getAllList(this.nextPage);
     },
   },
   data() {
     return {
-      s_load: true,
+      loading: true,
       loadingMore: false,
       nextPage: 0,
       hasNext: true,
       text: "",
-      totalFamilies: 10,
-      info: [
-        {
-          _id: "5eadbe333003860004f01f3b",
-          title: "Medam Mega Family",
-          surname: "medam",
-          created_at: "2020-05-02T18:38:42.905Z",
-          updated_at:
-            "Sat Dec 12 2020 17:57:17 GMT+0000 (Coordinated Universal Time)",
-          __v: 0,
-          is_private: true,
-          contact: {
-            name: "Jai",
-            email: "saijayaprakash.m@gmail.com",
-          },
-          view_pin: "8754",
-          id: "5eadbe333003860004f01f3b",
-          contributors: [
-            {
-              name: "Test Raja",
-              email: "gmail",
-              facebook: "fb",
-            },
-            {
-              name: "Test Raja 2",
-              email: "gmail",
-              facebook: "fb",
-            },
-            {
-              name: "Test Raja 3",
-              email: "gmail",
-              facebook: "fb",
-            },
-          ],
-        },
-        {
-          _id: "5eaed7b68a99f20004393d2c",
-          title: "Nehru's Family",
-          surname: "nehru",
-          celeb: true,
-          created_at: "2020-05-03T14:39:50.048Z",
-          updated_at: "2020-05-03T14:39:50.048Z",
-          __v: 0,
-          is_private: true,
-          id: "5eaed7b68a99f20004393d2c",
-        },
-        {
-          _id: "5eb24baec3bb7d000477a8ab",
-          title: "Royal Sowlam's Family",
-          surname: "sowlam",
-          created_at: "2020-05-06T05:31:25.775Z",
-          updated_at: "2020-05-06T05:31:25.775Z",
-          __v: 0,
-          is_private: true,
-          id: "5eb24baec3bb7d000477a8ab",
-        },
-        {
-          _id: "5eb3a7022f36df0004b2830f",
-          title: "Chitrala Family",
-          surname: "chitrala",
-          created_at: "2020-05-07T06:13:22.567Z",
-          updated_at:
-            "Tue Jan 19 2021 16:42:56 GMT+0000 (Coordinated Universal Time)",
-          __v: 0,
-          is_private: true,
-          contact: {
-            name: "Varun Kumar",
-            email: "varunkumarmedam@gmail.com",
-          },
-          view_pin: "8765",
-          id: "5eb3a7022f36df0004b2830f",
-        },
-        {
-          _id: "5eb7f696e56f9e00046d0133",
-          title: "Nakirikanti",
-          surname: "nakirikanti",
-          created_at: "2020-05-10T12:41:58.263Z",
-          updated_at: "2020-05-13T12:23:09.788Z",
-          __v: 0,
-          is_private: true,
-          id: "5eb7f696e56f9e00046d0133",
-        },
-        {
-          _id: "5eb81791e56f9e00046d019c",
-          title: "Maddirala",
-          surname: "maddirala",
-          created_at: "2020-05-10T15:02:40.724Z",
-          updated_at: "2020-05-10T15:22:15.779Z",
-          __v: 0,
-          is_private: true,
-          id: "5eb81791e56f9e00046d019c",
-        },
-        {
-          _id: "5eba47038111f400040a1726",
-          title: "KKC family",
-          surname: "kavali",
-          created_at: "2020-05-12T06:49:38.996Z",
-          updated_at: "2020-05-13T12:22:32.966Z",
-          __v: 0,
-          is_private: true,
-          id: "5eba47038111f400040a1726",
-        },
-        {
-          _id: "5eba4f548111f400040a173c",
-          title: "Chaitu's Family",
-          surname: "annam",
-          created_at: "2020-05-12T07:25:08.452Z",
-          updated_at:
-            "Mon Sep 28 2020 11:58:06 GMT+0000 (Coordinated Universal Time)",
-          __v: 0,
-          is_private: true,
-          id: "5eba4f548111f400040a173c",
-        },
-        {
-          _id: "5ed13cdc95786200044dd600",
-          title: "Stark Family",
-          surname: "stark",
-          celeb: true,
-          created_at: "2020-05-29T16:48:27.741Z",
-          updated_at: "2020-05-29T18:39:22.553Z",
-          __v: 0,
-          is_private: true,
-          id: "5ed13cdc95786200044dd600",
-        },
-        {
-          _id: "5edefbf64e74a700044bd658",
-          title: "Royal Komma's Family",
-          surname: "komma",
-          created_at: "2020-06-09T03:03:17.895Z",
-          updated_at: "2020-06-09T03:03:17.895Z",
-          __v: 0,
-          is_private: true,
-          id: "5edefbf64e74a700044bd658",
-        },
-      ],
+      totalFamilies: 0,
+      info: []
+      // info: [
+      //   {
+      //     _id: "5eadbe333003860004f01f3b",
+      //     title: "Medam Mega Family",
+      //     surname: "medam",
+      //     created_at: "2020-05-02T18:38:42.905Z",
+      //     updated_at:
+      //       "Sat Dec 12 2020 17:57:17 GMT+0000 (Coordinated Universal Time)",
+      //     __v: 0,
+      //     is_private: true,
+      //     contact: {
+      //       name: "Jai",
+      //       email: "saijayaprakash.m@gmail.com",
+      //     },
+      //     view_pin: "8754",
+      //     id: "5eadbe333003860004f01f3b",
+      //     contributors: [
+      //       {
+      //         name: "Test Raja",
+      //         email: "gmail",
+      //         facebook: "fb",
+      //       },
+      //       {
+      //         name: "Test Raja 2",
+      //         email: "gmail",
+      //         facebook: "fb",
+      //       },
+      //       {
+      //         name: "Test Raja 3",
+      //         email: "gmail",
+      //         facebook: "fb",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     _id: "5eaed7b68a99f20004393d2c",
+      //     title: "Nehru's Family",
+      //     surname: "nehru",
+      //     celeb: true,
+      //     created_at: "2020-05-03T14:39:50.048Z",
+      //     updated_at: "2020-05-03T14:39:50.048Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5eaed7b68a99f20004393d2c",
+      //   },
+      //   {
+      //     _id: "5eb24baec3bb7d000477a8ab",
+      //     title: "Royal Sowlam's Family",
+      //     surname: "sowlam",
+      //     created_at: "2020-05-06T05:31:25.775Z",
+      //     updated_at: "2020-05-06T05:31:25.775Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5eb24baec3bb7d000477a8ab",
+      //   },
+      //   {
+      //     _id: "5eb3a7022f36df0004b2830f",
+      //     title: "Chitrala Family",
+      //     surname: "chitrala",
+      //     created_at: "2020-05-07T06:13:22.567Z",
+      //     updated_at:
+      //       "Tue Jan 19 2021 16:42:56 GMT+0000 (Coordinated Universal Time)",
+      //     __v: 0,
+      //     is_private: true,
+      //     contact: {
+      //       name: "Varun Kumar",
+      //       email: "varunkumarmedam@gmail.com",
+      //     },
+      //     view_pin: "8765",
+      //     id: "5eb3a7022f36df0004b2830f",
+      //   },
+      //   {
+      //     _id: "5eb7f696e56f9e00046d0133",
+      //     title: "Nakirikanti",
+      //     surname: "nakirikanti",
+      //     created_at: "2020-05-10T12:41:58.263Z",
+      //     updated_at: "2020-05-13T12:23:09.788Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5eb7f696e56f9e00046d0133",
+      //   },
+      //   {
+      //     _id: "5eb81791e56f9e00046d019c",
+      //     title: "Maddirala",
+      //     surname: "maddirala",
+      //     created_at: "2020-05-10T15:02:40.724Z",
+      //     updated_at: "2020-05-10T15:22:15.779Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5eb81791e56f9e00046d019c",
+      //   },
+      //   {
+      //     _id: "5eba47038111f400040a1726",
+      //     title: "KKC family",
+      //     surname: "kavali",
+      //     created_at: "2020-05-12T06:49:38.996Z",
+      //     updated_at: "2020-05-13T12:22:32.966Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5eba47038111f400040a1726",
+      //   },
+      //   {
+      //     _id: "5eba4f548111f400040a173c",
+      //     title: "Chaitu's Family",
+      //     surname: "annam",
+      //     created_at: "2020-05-12T07:25:08.452Z",
+      //     updated_at:
+      //       "Mon Sep 28 2020 11:58:06 GMT+0000 (Coordinated Universal Time)",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5eba4f548111f400040a173c",
+      //   },
+      //   {
+      //     _id: "5ed13cdc95786200044dd600",
+      //     title: "Stark Family",
+      //     surname: "stark",
+      //     celeb: true,
+      //     created_at: "2020-05-29T16:48:27.741Z",
+      //     updated_at: "2020-05-29T18:39:22.553Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5ed13cdc95786200044dd600",
+      //   },
+      //   {
+      //     _id: "5edefbf64e74a700044bd658",
+      //     title: "Royal Komma's Family",
+      //     surname: "komma",
+      //     created_at: "2020-06-09T03:03:17.895Z",
+      //     updated_at: "2020-06-09T03:03:17.895Z",
+      //     __v: 0,
+      //     is_private: true,
+      //     id: "5edefbf64e74a700044bd658",
+      //   },
+      // ],
     };
   },
 };
