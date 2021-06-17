@@ -194,7 +194,7 @@
                     country.currency.symbol
                   }}</span>
                   <span style="font-size: 44px; font-weight: 600"
-                    >{{ transaction["transactions"][0]["amount"]["total"] }}
+                    >{{ transaction }}
                   </span>
                 </div>
 
@@ -209,10 +209,7 @@
                   "
                 >
                   {{
-                    "  " +
-                    transaction["payer"]["payer_info"]["first_name"] +
-                    " " +
-                    transaction["payer"]["payer_info"]["last_name"]
+                    "  "
                   }}
                 </div>
                 <!-- Date Time -->
@@ -252,83 +249,7 @@ export default {
       view_only: "",
       isMounted: false,
       isTransacting: false,
-      transactions: [
-        {
-          transactions: [
-            {
-              amount: {
-                total: "100",
-              },
-            },
-          ],
-          payer: {
-            payer_info: {
-              first_name: "Varun",
-              last_name: "Kumar",
-            },
-          },
-        },
-        {
-          transactions: [
-            {
-              amount: {
-                total: "100",
-              },
-            },
-          ],
-          payer: {
-            payer_info: {
-              first_name: "Varun",
-              last_name: "Kumar",
-            },
-          },
-        },
-        {
-          transactions: [
-            {
-              amount: {
-                total: "100",
-              },
-            },
-          ],
-          payer: {
-            payer_info: {
-              first_name: "Varun",
-              last_name: "Kumar",
-            },
-          },
-        },
-        {
-          transactions: [
-            {
-              amount: {
-                total: "100",
-              },
-            },
-          ],
-          payer: {
-            payer_info: {
-              first_name: "Varun",
-              last_name: "Kumar",
-            },
-          },
-        },
-        {
-          transactions: [
-            {
-              amount: {
-                total: "100",
-              },
-            },
-          ],
-          payer: {
-            payer_info: {
-              first_name: "Varun",
-              last_name: "Kumar",
-            },
-          },
-        },
-      ],
+      transactions: [],
       r_key: "",
       country: {
         country_code: null,
@@ -342,34 +263,36 @@ export default {
   mounted() {
     this.isMounted = true;
     // To Get Location Info
-    // let url = `${ProdData.getHostURL()}/pay/${
-    //   this.$route.params.id
-    // }/donation-info`;
-    // Axios.get(url)
-    //   .then((data) => {
-    //     this.country.country_code = data.data.loc_info.country_code;
-    //     this.country.currency.code = data.data.loc_info.currency_code;
-    //     this.r_key = data.data.loc_info.key;
-    //     console.log(this.country.currency.code);
-    //     this.country.currency.symbol =
-    //       currencyToSymbolMap[this.country.currency.code];
-    //     data.data.prev_transactions.forEach((transaction) => {
-    //       if (transaction["state"] == "approved") {
-    //         transaction.symbol =
-    //           currencyToSymbolMap[
-    //             transaction["transactions"][0]["amount"]["currency"]
-    //           ];
-    //         this.transactions.push(transaction);
-    //       }
-    //     });
-    //     // console.log(this.transactions);
-    //   })
-    //   .catch((err) => console.log(err))
-    //   .finally(() => {
-    //     this.isMounted = true;
-    //   });
+    let url = `${ProdData.getHostURL()}/pay/${
+      this.$route.params.id
+    }/donation-info`;
+    Axios.get(url)
+      .then((data) => {
+        this.country.country_code = data.data.loc_info.country_code;
+        this.country.currency.code = this.getValidCurrencyCode(data.data.loc_info.currency_code);
+        this.r_key = data.data.loc_info.key;
+        this.country.currency.symbol = currencyToSymbolMap[this.country.currency.code];
+        data.data.prev_transactions.forEach((transaction) => {
+          if (transaction["state"] == "approved") {
+            transaction.symbol =
+              currencyToSymbolMap[
+                transaction["currency"]
+              ];
+            this.transactions.push(transaction);
+          }
+        });
+        console.log(this.transactions);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        this.isMounted = true;
+      });
   },
   methods: {
+    getValidCurrencyCode(currencyCode){
+      let acceptedCurrencies = new Set(ProdData.supportedCurrencies);
+      return acceptedCurrencies.has(currencyCode)?currencyCode:"USD"
+    },
     razorVerifyPayment(response) {
       this.$router.push({
         name: "Payment",
