@@ -64,8 +64,7 @@ export default {
   },
   mounted() {
     if (this.$route.query.paymentId && this.$route.query.PayerID) {
-      let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
-      url = `${ProdData.getHostURL()}/pay/test`;
+      let url = `${ProdData.getHostURL()}/pay/`;
       let params = {
         payment_id: this.$route.query.paymentId,
         payer_id: this.$route.query.PayerID,
@@ -76,6 +75,7 @@ export default {
       }
       Axios.put(url, params)
         .then((data) => {
+          console.log(data);
           setTimeout(() => {
             this.redirectToPage(data.data.surname)
           }, 5000);

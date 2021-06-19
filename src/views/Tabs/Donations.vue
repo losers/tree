@@ -191,10 +191,10 @@
                 <div class="theme-primary-color">
                   <!-- {{ transaction["symbol"] }} -->
                   <span style="font-size: 30px; font-weight: 600">{{
-                    country.currency.symbol
+                     transaction.currency
                   }}</span>
                   <span style="font-size: 44px; font-weight: 600"
-                    >{{ transaction }}
+                    >{{ transaction.name }}
                   </span>
                 </div>
 
@@ -272,16 +272,7 @@ export default {
         this.country.currency.code = this.getValidCurrencyCode(data.data.loc_info.currency_code);
         this.r_key = data.data.loc_info.key;
         this.country.currency.symbol = currencyToSymbolMap[this.country.currency.code];
-        data.data.prev_transactions.forEach((transaction) => {
-          if (transaction["state"] == "approved") {
-            transaction.symbol =
-              currencyToSymbolMap[
-                transaction["currency"]
-              ];
-            this.transactions.push(transaction);
-          }
-        });
-        console.log(this.transactions);
+        this.transactions = data.data.prev_transactions;
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -290,6 +281,8 @@ export default {
   },
   methods: {
     getValidCurrencyCode(currencyCode){
+      //Change Here For Country Change
+      // return currencyCode?"CAD":"CAD"; 
       let acceptedCurrencies = new Set(ProdData.supportedCurrencies);
       return acceptedCurrencies.has(currencyCode)?currencyCode:"USD"
     },
@@ -321,22 +314,18 @@ export default {
       if (this.amount > 0) {
         this.isTransacting = true;
         payload.amount = this.amount;
-        payload.currency =
-          this.country.currency.code === "INR"
-            ? "INR" //Change Here - 1
-            : this.country.currency.code;
+        payload.currency = this.country.currency.code;
         let url = `${ProdData.getHostURL()}/pay/${this.$route.params.id}`;
         Axios.post(url, payload)
           .then((data) => {
             if (this.country.currency.code === "INR") {
-              //Change Here - 2
               var orderId = data.data.id;
               var options = {
                 key: this.r_key,
                 currency: "INR",
                 name: "BloodLine",
                 description: "Water the Family tree to Grow",
-                image: "https://bloodline.ga/lib/images/logo.png",
+                image: "https://bloodline.app/lib/images/logo.png",
                 order_id: orderId,
                 handler: (response) => {
                   this.razorVerifyPayment(response);
