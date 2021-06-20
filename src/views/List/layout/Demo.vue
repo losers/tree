@@ -1,7 +1,15 @@
 <template>
   <div>
     <div
-      class="col-sm-12 col-md-9 text-muted guidelines mb-3 d-flex flex-column justify-content-start align-items-start"
+      class="
+        col-sm-12 col-md-9
+        text-muted
+        mb-3
+        d-flex
+        flex-column
+        justify-content-start
+        align-items-start
+      "
     >
       <h5>How to create Demo Families ?</h5>
       <div>
@@ -12,7 +20,7 @@
         <i>hello@bloodline.app</i>
       </div>
       <div class="mt-2">
-        <strong class="mr-2">Thats it, Your Demo Family will go live</strong> 
+        <strong class="mr-2">Thats it, Your Demo Family will go live</strong>
       </div>
     </div>
     <!-- Search Bar -->
@@ -31,14 +39,14 @@
         :class="{ 'desktop-search': $device.mobile }"
         v-model="text"
         :placeholder="`Find in ${totalFamilies} Demo families..`"
-        class="form-control input-lg rounded-lg float-left"
+        class="form-control input-lg float-left search-bar"
       />
       <button
         type="submit"
-        class="btn btn-danger btn-sm rounded-lg"
-        style="float: right; margin-right: 10px; margin-top: -38px"
+        class="btn"
+        style="float: right; margin-right: 10px; margin-top: -40px"
       >
-        <i class="icofont-search-2"></i> Search
+        <i class="icofont-search-2"></i>
       </button>
     </form>
     <!-- Loader -->
@@ -86,47 +94,30 @@
 
           <!-- Family Surname -->
           <p class="surname">Surname : {{ data.surname }}</p>
-        </div>
 
-        <!-- Contributors List -->
-
-        <div
-          class="contri p-2"
-          style="z-index: 10; transition: 1s all; overflow-y: scroll"
-          @click="toggle(data.surname)"
-          v-if="$device.mobile"
-        >
-          <b class="h5"
-            >Contributors
-            {{ data.contributors ? data.contributors.length : 0 }}</b
-          >
-          <div
-            v-for="(helper, i) in data.contributors"
-            :key="i"
-            style="float-left"
-            class="d-flex"
-          >
-            {{ i + 1 }} - {{ helper.name }}
-          </div>
-        </div>
-        <div
-          v-else
-          class="contri p-2 d-flex align-items-center justify-content-between"
-        >
-          <div>
-            <b class="mr-2"
-              >Contributors (
-              {{ data.contributors ? data.contributors.length : 0 }} ) -
-            </b>
-            <span v-for="helper in data.contributors" :key="helper.$index"
-              >{{ helper.name }},
+          <div v-if="data.contras">
+            <span v-if="$device.mobile"
+              ><i class="icofont-edit text-muted mr-2"></i
+            ></span>
+            <span v-else>Contributors: </span>
+            <span v-for="(contra, i) in data.contras.slice(0, 1)" :key="i">
+              <a :href="contra.link" @click.stop target="_blank">{{
+                contra.name
+              }}</a
+              >,
+            </span>
+            <span
+              style="color: #287efb"
+              v-if="data.contras.length > 1"
+              @click.stop
+              @click.self="showContributorsModel"
+            >
+              +{{ data.contras.length - 1 }} more
             </span>
           </div>
-          <div>
-            <i class="icofont-clock-time"></i>
-            Last Updated: {{ new Date(data.updated_at).toDateString() }}
-          </div>
         </div>
+
+      
       </div>
     </div>
     <div
@@ -165,24 +156,27 @@ export default {
     goto(surname) {
       location.href = `/app/${surname}`;
     },
+    showContributorsModel() {
+      console.log("cdkvdfv");
+    },
     getAllList(page) {
       let url = `${ProdData.getHostURL()}/meta?type=2`;
-      if(page){
+      if (page) {
         url += `?page=${page}`;
       }
       axios
         .get(url)
-        .then(response => {
+        .then((response) => {
           this.info = this.info.concat(response.data.list);
           this.curFamily = response.data.cur_family;
           this.totalFamilies = response.data.total_families;
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch(error => {
+        .catch((error) => {
           this.errored = error;
         })
-        .finally(() => (this.loading = false,this.loadingMore = false));
+        .finally(() => ((this.loading = false), (this.loadingMore = false)));
     },
     loadMore() {
       this.loadingMore = true;
@@ -197,17 +191,15 @@ export default {
       hasNext: true,
       text: "",
       totalFamilies: 0,
-      info: []
+      info: [],
     };
   },
 };
 </script>
 
 <style scoped>
-.guidelines {
-  border: solid grey 1px;
-  border-radius: 10px;
-  padding: 10px;
+.btn:focus {
+  box-shadow: none;
 }
 .bigscreen-lock {
   color: white;
@@ -263,7 +255,6 @@ export default {
 }
 .contri:hover {
   max-height: 100px !important;
-
-  box-shadow: 2px 2px 5px 2px rgba(171, 171, 171, 1);
+  box-shadow: 0px 2px 5px 0px rgb(255, 184, 184);
 }
 </style>

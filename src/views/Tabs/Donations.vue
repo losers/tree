@@ -2,6 +2,7 @@
   <div class="h-100">
     <!-- Page Loader -->
     <div
+      key="loader"
       v-if="!isMounted"
       class="h-100 d-flex justify-content-center align-items-center"
     >
@@ -10,93 +11,162 @@
         style="width: 2.5rem; height: 2.5rem; color: indianred"
       ></div>
     </div>
-
-    <div
-      v-else
-      class="pb-3"
-      :style="{ margin: $device.mobile ? '10px' : '0 100px' }"
-    >
-      <!-- Donations Main Card -->
-      <div class="theme-gery-bg row m-0 donation-card">
-        <!-- Donations BG Image -->
-        <div class="col-sm-12 col-md-6 p-5" v-if="!$device.mobile">
-          <img src="@/assets/donate-bg.jpg" width="100%" />
-        </div>
-
-        <!-- Donations Right Side Content -->
-        <div class="col-sm-12 col-md-6">
-          <!-- Donation Box -->
-          <div class="donation-box mt-3 p-3">
-            <center
-              class="theme-primary-color"
-              style="font-size: 20px; font-weight: bold"
-            >
-              <i class="icofont-gift"></i> Donation Box
-            </center>
-            <div class="row m-3 align-items-center">
-              <div v-if="!$device.mobile" class="col-3 theme-primary-color">
-                <span>Amount: </span>
-              </div>
-              <div class="col-sm-12 col-md-9 input-group align-items-center">
-                <select
-                  class="form-control select-currency col-4"
-                  data-role="select-dropdown"
-                >
-                  <option selected>{{ country.currency.symbol }}</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Thr</option>
-                </select>
-                <input
-                  class="
-                    form-control
-                    amount-input-box
-                    theme-primary-color
-                    col-8
-                  "
-                  placeholder="Enter Amount"
-                  type="number"
-                  v-model="amount"
-                />
-              </div>
-            </div>
-
-            <!-- Donate Btn -->
-            <!-- <touch-ripple
-            
-            > -->
-            <div
-              @click="initiatePaymentGateway()"
-              class="donation-btn theme-primary-bg"
-            >
-              <center>
-                <i class="icofont-ui-love mr-1"></i>
-                <strong> Donate Now </strong>
-                <span
-                  v-if="isTransacting"
-                  class="spinner-border spinner-border-sm ml-2"
-                  style="
-                    width: 1rem;
-                    height: 1rem;
-                    color: white;
-                    right: 10px;
-                    bottom: 10px;
-                  "
-                ></span>
-              </center>
-            </div>
+    <transition name="fade">
+      <div
+        key="data"
+        v-if="isMounted"
+        class="pb-3"
+        :style="{ margin: $device.mobile ? '10px' : '0 100px' }"
+      >
+        <!-- Donations Main Card -->
+        <div class="theme-gery-bg row m-0 donation-card">
+          <!-- Donations BG Image -->
+          <div class="col-sm-12 col-md-6 p-4" v-if="!$device.mobile">
+            <img src="@/assets/donations_her.png" width="80%" />
           </div>
 
-          <!-- F.A.Q s -->
-          <center class="mt-3 text-muted">
-            <h5>F.A.Q s</h5>
-          </center>
+          <!-- Donations Right Side Content -->
+          <div
+            class="col-sm-12 m-auto col-md-6"
+            :class="{ 'p-2': $device.mobile }"
+          >
+            <!-- Donation Box -->
+            <div class="donation-box p-3">
+              <center
+                class="theme-primary-color"
+                style="font-size: 20px; font-weight: bold"
+              >
+                <i class="icofont-gift"></i> Donation Box
+              </center>
+              <div class="row m-3 align-items-center">
+                <div v-if="!$device.mobile" class="col-3 theme-primary-color">
+                  <span>Amount: </span>
+                </div>
+                <div class="col-sm-12 col-md-9 input-group align-items-center">
+                  <select
+                    class="form-control select-currency col-4"
+                    data-role="select-dropdown"
+                  >
+                    <option :value="country.currency.code" selected>
+                      {{ currencyToSymbolMap[country.currency.code] }}
+                    </option>
+                    <option
+                      v-for="cur in supportedCurrencies"
+                      :key="cur"
+                      :value="cur"
+                    >
+                      {{ currencyToSymbolMap[cur] }}
+                    </option>
+                  </select>
+                  <input
+                    class="
+                      form-control
+                      amount-input-box
+                      theme-primary-color
+                      col-8
+                    "
+                    placeholder="Enter Amount"
+                    type="number"
+                    v-model="amount"
+                  />
+                </div>
+              </div>
+
+              <!-- Donate Btn -->
+              <div
+                @click="initiatePaymentGateway()"
+                class="donation-btn theme-primary-bgdark"
+              >
+                <center>
+                  <i class="icofont-ui-love mr-1"></i>
+                  <strong> Donate Now </strong>
+                  <span
+                    v-if="isTransacting"
+                    class="spinner-border spinner-border-sm ml-2"
+                    style="
+                      width: 1rem;
+                      height: 1rem;
+                      color: white;
+                      right: 10px;
+                      bottom: 10px;
+                    "
+                  ></span>
+                </center>
+              </div>
+            </div>
+            <div class="col-6 m-auto pt-4">
+              <img src="@/assets/cards.png" />
+              <img src="@/assets/powered_by_paypal.png" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Donations Main History Card -->
+        <div
+          v-if="transactions.length > 0"
+          class="col-12 mt-5 mb-5 donations-history-box"
+          :style="{
+            padding: $device.mobile ? '10px' : '20px 40px',
+          }"
+        >
+          <i class="text-muted ml-3"
+            >Total Donations : <strong>{{ transactions.length }}</strong></i
+          >
+
+          <!-- Donation Transactions lV2 box -->
+          <div class="d-flex align-items-center history-carousel-box col-12">
+            <div v-if="!$device.mobile" class="col-1">
+              <i
+                class="icofont-rounded-left theme-primary-bg"
+                onClick="(function(){document.getElementById('histories').scrollLeft -= 200})();"
+              ></i>
+            </div>
+            <div class="col-sm-12 col-md-10 d-flex" id="histories">
+              <div
+                v-for="transaction in transactions"
+                :key="transaction['_id']"
+                class="col-sm-12 col-md-3 p-0"
+              >
+                <center class="transaction-box">
+                  <!-- Amount -->
+                  <div class="theme-primary-color">
+                    <span style="font-size: 20px" class="font-weight-bold">
+                      {{ currencyToSymbolMap[transaction.currency] }}</span
+                    >
+                    <span style="font-size: 25px" class="font-weight-bold"
+                      >{{ transaction.amount }}
+                    </span>
+                  </div>
+
+                  <!-- User Name-->
+                  <div class="text-muted transaction-username">
+                    {{ transaction.name }}
+                  </div>
+                </center>
+              </div>
+            </div>
+            <div v-if="!$device.mobile" class="col-1">
+              <i
+                class="icofont-rounded-right theme-primary-bg"
+                onClick="(function(){document.getElementById('histories').scrollLeft += 200})();"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <div v-else>
+          <h3>Shower some love by doing some Donations</h3>
+        </div>
+
+        <!-- F.A.Q s -->
+        <div class="theme-gery-bg p-3" :class="{'pl-5':!$device.mobile, 'pl-4':$device.mobile}">
+          <h5 class="mt-3 text-muted">F.A.Q s</h5>
           <div id="accordion">
             <!-- Card 1 -->
             <div class="mb-1">
               <!-- Card 1 Btn -->
               <button
-                class="btn p-0 collapsed w-100"
+                class="btn p-0 collapsed w-100 text-left"
                 data-toggle="collapse"
                 data-target="#collapseOne"
                 aria-expanded="false"
@@ -117,11 +187,9 @@
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
               >
-                <div class="card-body p-0">
-                  <span class="theme-primary-color">
-                    Bloodline work on Donations. Donating families will become
-                    <strong>Super Families.</strong>
-                  </span>
+                <div class="card-body p-0 text-muted">
+                  Bloodline work on Donations. Donating families will become
+                  <strong>Super Families.</strong>
                 </div>
               </div>
             </div>
@@ -130,7 +198,7 @@
             <div>
               <!-- Card 2 Btn -->
               <button
-                class="btn p-0 collapsed w-100"
+                class="btn p-0 collapsed w-100 text-left"
                 data-toggle="collapse"
                 data-target="#collapseTwo"
                 aria-expanded="false"
@@ -151,89 +219,18 @@
                 aria-labelledby="headingTwo"
                 data-parent="#accordion"
               >
-                <div class="card-body p-0 theme-primary-color">
-                  Bloodline Coins
+                <div class="card-body p-0 text-muted">
+                  As a token of gratitude, we credit
+                  <strong>B - Coins</strong> for each donation you made. More
+                  <strong>B - Coins</strong> for each donation you made. More
+                  coins, more the family go up
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Donations Main History Card -->
-      <div
-        v-if="transactions.length > 0"
-        class="col-12 mt-5 mb-5 donations-history-box"
-        :style="{
-          padding: $device.mobile ? '10px' : '20px 40px',
-        }"
-      >
-        <i class="text-muted ml-3"
-          >Total Donations : <strong>{{ transactions.length }}</strong></i
-        >
-
-        <!-- Donation Transactions lV2 box -->
-        <div class="d-flex align-items-center history-carousel-box col-12">
-          <div v-if="!$device.mobile" class="col-1">
-            <i
-              class="icofont-rounded-left theme-primary-bg"
-              onClick="(function(){document.getElementById('histories').scrollLeft -= 200})();"
-            ></i>
-          </div>
-          <div class="col-sm-12 col-md-10 d-flex" id="histories">
-            <div
-              v-for="transaction in transactions"
-              :key="transaction['_id']"
-              class="col-sm-12 col-md-3 p-0"
-            >
-              <center class="transaction-box">
-                <!-- Amount -->
-                <div class="theme-primary-color">
-                  <!-- {{ transaction["symbol"] }} -->
-                  <span style="font-size: 30px; font-weight: 600">{{
-                     transaction.currency
-                  }}</span>
-                  <span style="font-size: 44px; font-weight: 600"
-                    >{{ transaction.name }}
-                  </span>
-                </div>
-
-                <!-- User Name-->
-                <div
-                  class="text-muted"
-                  style="
-                    width: 80%;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    white-space: nowrap;
-                  "
-                >
-                  {{
-                    "  "
-                  }}
-                </div>
-                <!-- Date Time -->
-                <div class="mt-2" style="color: grey; font-size: 12px">
-                  <!-- <i class="icofont-ui-calendar"></i> -->
-                  Sep 14, 2021
-                  <!-- {{ new Date(transaction["create_time"]).toDateString() }} -->
-                </div>
-              </center>
-            </div>
-          </div>
-          <div v-if="!$device.mobile" class="col-1">
-            <i
-              class="icofont-rounded-right theme-primary-bg"
-              onClick="(function(){document.getElementById('histories').scrollLeft += 200})();"
-            ></i>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <h3>Shower some love by doing some Donations</h3>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -251,6 +248,8 @@ export default {
       isTransacting: false,
       transactions: [],
       r_key: "",
+      supportedCurrencies: ProdData.supportedCurrencies,
+      currencyToSymbolMap,
       country: {
         country_code: null,
         currency: {
@@ -261,7 +260,6 @@ export default {
     };
   },
   mounted() {
-    this.isMounted = true;
     // To Get Location Info
     let url = `${ProdData.getHostURL()}/pay/${
       this.$route.params.id
@@ -269,9 +267,13 @@ export default {
     Axios.get(url)
       .then((data) => {
         this.country.country_code = data.data.loc_info.country_code;
-        this.country.currency.code = this.getValidCurrencyCode(data.data.loc_info.currency_code);
+        this.country.currency.code = this.getValidCurrencyCode(
+          data.data.loc_info.currency_code
+        );
+        console.log(this.country.currency.code);
         this.r_key = data.data.loc_info.key;
-        this.country.currency.symbol = currencyToSymbolMap[this.country.currency.code];
+        this.country.currency.symbol =
+          currencyToSymbolMap[this.country.currency.code];
         this.transactions = data.data.prev_transactions;
       })
       .catch((err) => console.log(err))
@@ -280,11 +282,11 @@ export default {
       });
   },
   methods: {
-    getValidCurrencyCode(currencyCode){
+    getValidCurrencyCode(currencyCode) {
       //Change Here For Country Change
-      // return currencyCode?"CAD":"CAD"; 
+      // return currencyCode?"CAD":"CAD";
       let acceptedCurrencies = new Set(ProdData.supportedCurrencies);
-      return acceptedCurrencies.has(currencyCode)?currencyCode:"USD"
+      return acceptedCurrencies.has(currencyCode) ? currencyCode : "USD";
     },
     razorVerifyPayment(response) {
       this.$router.push({
@@ -359,7 +361,7 @@ export default {
   box-shadow: 0 0 3px 0 #eb9797;
   color: #eb9797;
   border-radius: 15px 0px 0px 15px;
-  padding: 0px 10px;
+  padding-left: 20px;
 }
 .amount-input-box {
   border-radius: 12px;
@@ -370,6 +372,12 @@ export default {
 .amount-input-box:active {
   border: none;
   color: #eb9797;
+}
+.transaction-username {
+  width: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .card-header {
   background-color: transparent;

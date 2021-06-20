@@ -65,7 +65,10 @@
             @click="showNotifications"
           ></i>
           <!-- Bloodline Title -->
-          <div id="title">
+          <div
+            id="title"
+            :style="{ 'padding-top': $device.mobile ? '20px' : '50px' }"
+          >
             <div class="help" v-if="$device.mobile">
               <i
                 class="icofont-chat"
@@ -78,18 +81,25 @@
               :style="{
                 'font-size': $device.mobile ? '40px' : '50px',
               }"
-            >BloodLine</span>
+              >BloodLine</span
+            >
             <br />
           </div>
 
           <!-- Typer for Big Devices -->
           <center v-show="!$device.mobile">
-            <vue-typer :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"></vue-typer>
+            <vue-typer
+              :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"
+            ></vue-typer>
           </center>
 
           <!-- Create Family Button -->
           <center class="mt-3">
-            <touch-ripple @click.native="addFamilyBtn" class="button-box" :speed="1.1">
+            <touch-ripple
+              @click.native="addFamilyBtn"
+              class="button-box"
+              :speed="1.1"
+            >
               <button class="btn btn-success my-btn">+ Your Family Tree</button>
             </touch-ripple>
           </center>
@@ -98,7 +108,11 @@
         <!-- Popups -->
 
         <!-- 1 - For Creating a Tree -->
-        <DualPage :reference="0" v-if="showModal == true" v-on:closed="showModal = false"></DualPage>
+        <DualPage
+          :reference="0"
+          v-if="showModal == true"
+          v-on:closed="showModal = false"
+        ></DualPage>
 
         <!-- 2 - For Entering PIN -->
         <DualPage
@@ -120,7 +134,9 @@
         <div style="background: #f9f9f9; padding: 40px 0px">
           <center>
             <!-- Tab Bar -->
-            <TabBar style="position: sticky; top: 10px; margin-bottom: 30px"></TabBar>
+            <TabBar
+              style="position: sticky; top: 10px; margin-bottom: 30px"
+            ></TabBar>
 
             <!-- All Families List and Search Bar-->
             <div v-if="!$route.hash">
@@ -143,12 +159,41 @@
   </div>
 </template>
 
+<style>
+.search-bar {
+  padding: 5px 20px;
+  border-radius: 26px;
+  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
+}
+.search-bar:focus {
+  outline: none;
+  border: solid rgb(211, 211, 211) 0.5px;
+  padding: 5px 20px;
+  border-radius: 26px;
+  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
+  /* box-shadow: 0 3px 6px 0 rgb(255, 234, 234) !important; */
+}
+</style>
+
 <style scoped>
+.help {
+  position: fixed;
+  bottom: 20px;
+  background: #cd5c5c;
+  border-radius: 50%;
+  color: #fff;
+  right: 20px;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
 #title {
   left: 0;
   right: 0;
   top: 30px;
-  padding-top: 50px;
   color: #fff;
   text-align: center;
   font-family: "lato", sans-serif;
@@ -199,9 +244,9 @@ export default {
       hasNext: false,
       loadingMore: false,
       helper: {
-        show: false
+        show: false,
       },
-      notificationsIcon: false
+      notificationsIcon: false,
     };
   },
   components: {
@@ -211,7 +256,7 @@ export default {
     TabBar,
     SuperFamilies,
     DemoFamilies,
-    AllFamilies
+    AllFamilies,
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id, contact) {
@@ -315,7 +360,7 @@ export default {
       // console.log();
     }
     // this.getAllList();
-  }
+  },
 };
 </script>
 

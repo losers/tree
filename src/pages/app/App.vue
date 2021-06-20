@@ -9,9 +9,39 @@
 .theme-primary-bg {
   background-color: #eb9797;
 }
+.theme-primary-bgdark {
+  background: #ff5d5d;
+}
 .theme-gery-bg {
   background-color: #f6f6f6;
+  border-radius: 20px;
 }
+.vsm--link_exact-active {
+  -webkit-box-shadow: 3px 0px 0px 0px #ff5d5d inset !important;
+  box-shadow: 3px 0px 0px 0px #ff5d5d inset !important;
+}
+/* App Leve Animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateY(500px);
+  opacity: 0;
+}
+
+/**********************  Animations Css ended ***********************/
 .mem-spec,
 .mem-spec #app {
   overflow: hidden;

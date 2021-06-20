@@ -1,18 +1,23 @@
 <template>
   <div>
     <div
-      class="col-sm-12 col-md-9 text-muted guidelines mb-3 d-flex flex-column justify-content-start align-items-start"
+      class="
+        col-sm-12 col-md-9
+        text-muted
+        mb-3
+        d-flex
+        flex-column
+        justify-content-start
+        align-items-start
+      "
     >
-      <h5>How to create Super Families ?</h5>
-      <div>
-        <strong class="mr-2">Step 1:</strong> Create a normal family tree
-      </div>
-      <div>
-        <strong class="mr-2">Step 2:</strong> Send surname to
-        <i>hello@bloodline.app</i>
-      </div>
+      <h5>What are Super Families ?</h5>
       <div class="mt-2">
-        <strong class="mr-2">Thats it, Your Demo Family will go live</strong> 
+        Families who donate and support Bloodline become super families
+      </div>
+      <div>
+        For more, write to
+        <strong>hello@bloodline.app</strong>
       </div>
     </div>
     <!-- Search Bar -->
@@ -30,17 +35,23 @@
         style="height: 45px"
         :class="{ 'desktop-search': $device.mobile }"
         v-model="text"
-        :placeholder="`Find in ${totalFamilies} Super families..`"
-        class="form-control input-lg rounded-lg float-left"
+        :placeholder="`Find in ${totalFamilies} Demo families..`"
+        class="form-control input-lg float-left search-bar"
       />
       <button
         type="submit"
-        class="btn btn-danger btn-sm rounded-lg"
-        style="float: right; margin-right: 10px; margin-top: -38px"
+        class="btn"
+        style="float: right; margin-right: 10px; margin-top: -40px"
       >
-        <i class="icofont-search-2"></i> Search
+        <i class="icofont-search-2"></i>
       </button>
     </form>
+    <DualPage
+      :payload="authPayload"
+      :reference="5"
+      v-if="showAuthBox == true"
+      v-on:closed="showAuthBox = false"
+    ></DualPage>
     <!-- Loader -->
     <div v-if="loading">
       <center style="padding-top: 80px">
@@ -57,76 +68,45 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class=""
+        class="container div-box"
         :style="{
-          'border-radius': '20px',
-          margin: $device.mobile ? '20px' : '30px 100px 0 100px',
+          'border-radius': '10px',
+          'margin-top': $device.mobile ? '20px' : '30px',
         }"
+        :class="{
+          'cur-family': curFamily == data._id,
+          'normal-family': curFamily != data._id,
+        }"
+        @click="
+          showAuth(data.surname, data.title, data.celeb, data._id, data.contact)
+        "
       >
-        <div class="clickable-box" @click="goto(data.surname)">
-          <i
-            class="icofont-lock rounded-lg"
-            :class="{
-              'bigscreen-lock': !$device.mobile,
-              'mobile-lock': $device.mobile,
-            }"
-            data-toggle="tooltip"
-            title="UnLocked"
-          ></i>
+        
+        <i
+          class="icofont-lock rounded-lg"
+          :class="{
+            'bigscreen-lock': !$device.mobile,
+            'mobile-lock': $device.mobile,
+          }"
+          data-toggle="tooltip"
+          title="Locked"
+        ></i>
 
-          <!-- Family Title Box -->
-          <div style="width: 85%">
-            <a
-              class="title"
-              :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
-            >
-              {{ data.title }}
-            </a>
-          </div>
-
-          <!-- Family Surname -->
-          <p class="surname">Surname : {{ data.surname }}</p>
-        </div>
-
-        <!-- Contributors List -->
-
-        <div
-          class="contri p-2"
-          style="z-index: 10; transition: 1s all; overflow-y: scroll"
-          @click="toggle(data.surname)"
-          v-if="$device.mobile"
-        >
-          <b class="h5"
-            >Contributors
-            {{ data.contributors ? data.contributors.length : 0 }}</b
+        <!-- Family Title Box -->
+        <div style="width: 85%">
+          <div class="award-bg theme-primary-bgdark"
+          :style="{'right':$device.mobile?'15px':'150px'}"
           >
-          <div
-            v-for="(helper, i) in data.contributors"
-            :key="i"
-            style="float-left"
-            class="d-flex"
+            <i class="icofont-badge h5"></i>
+          </div>
+          <a
+            class="title"
+            :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
           >
-            {{ i + 1 }} - {{ helper.name }}
-          </div>
+            {{ data.title }}
+          </a>
         </div>
-        <div
-          v-else
-          class="contri p-2 d-flex align-items-center justify-content-between"
-        >
-          <div>
-            <b class="mr-2"
-              >Contributors (
-              {{ data.contributors ? data.contributors.length : 0 }} ) -
-            </b>
-            <span v-for="helper in data.contributors" :key="helper.$index"
-              >{{ helper.name }},
-            </span>
-          </div>
-          <div>
-            <i class="icofont-clock-time"></i>
-            Last Updated: {{ new Date(data.updated_at).toDateString() }}
-          </div>
-        </div>
+        <p class="surname">Surname : {{ data.surname }}</p>
       </div>
     </div>
     <div
@@ -156,33 +136,47 @@
 <script>
 import axios from "axios";
 import ProdData from "@/data.js";
+import DualPage from "@/modals/DualPage";
 
 export default {
   mounted() {
     this.getAllList();
   },
+  components: {
+    DualPage,
+  },
   methods: {
     goto(surname) {
       location.href = `/app/${surname}`;
     },
+    showAuth(surname, title, isCeleb, family_id, contact) {
+      if (family_id === this.curFamily || isCeleb) {
+        location.href = `/app/${surname}`;
+      } else {
+        this.authPayload.surname = surname;
+        this.authPayload.title = title;
+        this.authPayload.contact = contact;
+        this.showAuthBox = true;
+      }
+    },
     getAllList(page) {
       let url = `${ProdData.getHostURL()}/meta?type=3`;
-      if(page){
+      if (page) {
         url += `?page=${page}`;
       }
       axios
         .get(url)
-        .then(response => {
+        .then((response) => {
           this.info = this.info.concat(response.data.list);
           this.curFamily = response.data.cur_family;
           this.totalFamilies = response.data.total_families;
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
-        .catch(error => {
+        .catch((error) => {
           this.errored = error;
         })
-        .finally(() => (this.loading = false,this.loadingMore = false));
+        .finally(() => ((this.loading = false), (this.loadingMore = false)));
     },
     loadMore() {
       this.loadingMore = true;
@@ -197,7 +191,8 @@ export default {
       hasNext: true,
       text: "",
       totalFamilies: 0,
-      info: []
+      info: [],
+      authPayload: {},
     };
   },
 };

@@ -11,14 +11,14 @@
         :class="{ 'desktop-search': $device.mobile }"
         v-model="searchText"
         :placeholder="`Find in ${totalFamilies} families..`"
-        class="form-control input-lg rounded-lg float-left"
+        class="form-control input-lg search-bar float-left"
       />
       <button
         type="submit"
-        class="btn btn-danger btn-sm rounded-lg"
-        style="float: right; margin-right: 10px; margin-top: -38px"
+        class="btn"
+        style="float: right; margin-right: 10px; margin-top: -40px"
       >
-        <i class="icofont-search-2"></i> Search
+        <i class="icofont-search-2"></i>
       </button>
     </form>
 
@@ -28,7 +28,7 @@
       v-if="showAuthBox == true"
       v-on:closed="showAuthBox = false"
     ></DualPage>
-    
+
     <!-- Loader -->
     <div v-if="loading">
       <center style="padding-top: 80px">
@@ -81,15 +81,18 @@
 
         <!-- Family Title Box -->
         <div style="width: 85%">
-          <div class="award-bg">
+          <div
+            class="award-bg theme-primary-bgdark"
+            :style="{ right: $device.mobile ? '15px' : '150px' }"
+          >
             <i class="icofont-badge h5"></i>
           </div>
-          <a
+          <span
             class="title"
             :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
           >
             {{ data.title }}
-          </a>
+          </span>
         </div>
         <p class="surname">Surname : {{ data.surname }}</p>
       </div>
@@ -171,11 +174,11 @@ export default {
         this.s_load = true;
         axios
           .get(ProdData.getHostURL() + "/meta/search?text=" + this.searchText)
-          .then(response => {
+          .then((response) => {
             this.info = response.data.list;
             this.curFamily = response.data.cur_family;
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           })
           .finally(() => (this.s_load = false));
@@ -192,7 +195,7 @@ export default {
         this.authPayload.contact = contact;
         this.showAuthBox = true;
       }
-    }
+    },
   },
   mounted() {
     this.getAllList();
@@ -200,35 +203,66 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+/* Access Famili */
+.cur-family {
+  background-color: black;
+}
+.cur-family .surname {
+  color: rgb(216, 216, 216);
+}
+.cur-family .title {
+  color: rgb(216, 216, 216) !important;
+}
+/* All Normal Families */
+.normal-family {
+  background: white;
+}
 .award-bg {
-  background: red;
   display: inline-block;
-  height: 65px;
+  height: 60px;
   margin-top: -25px;
   position: absolute;
   padding-top: 20px;
-  right: 150px;
-  width: 40px;
+  width: 30px;
   color: white;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   box-shadow: 0px 0px 5px 0px rgb(255 0 0 / 75%);
 }
 .award-bg::after {
-  border-top: 20px solid red;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
+  border-top: 15px solid #ff5d5d;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
   content: "";
   height: 0;
   left: 0;
   position: absolute;
-  top: 65px;
-  width: 40px;
+  top: 60px;
+  width: 30px;
 }
+
+.div-box {
+  cursor: pointer;
+  padding: 20px;
+  word-break: break-word;
+  -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
+}
+</style>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 .search-box {
   background: #f9f9f9;
-  box-shadow: rgb(241 241 241) 0px 5px 10px 0px;
   height: 40px;
 }
 .bigscreen-lock {
@@ -278,36 +312,12 @@ export default {
   color: black;
 }
 
-/* Access Famili */
-.cur-family {
-  background-color: black;
-  color: white;
-}
-.cur-family .surname {
-  color: #c7c7c7;
-}
-.cur-family .title {
-  color: white !important;
-}
-
-/* All Normal Families */
-.normal-family {
-  background: white;
-}
-.div-box {
-  cursor: pointer;
-  padding: 20px;
-  word-break: break-word;
-  -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-}
 a:hover {
   text-decoration: none !important;
 }
 .title {
   font-weight: bold;
-  color: #6a6a6a !important;
+  color: #6a6a6a;
 }
 /* a:not([href]) {
   color: #a0a0a0;
