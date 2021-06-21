@@ -193,6 +193,7 @@ export default {
       totalFamilies: 0,
       info: [],
       authPayload: {},
+      showAuthBox:false,
     };
   },
 };

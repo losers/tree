@@ -220,9 +220,7 @@
 
           <div class="mt-5">
             Any Trouble ?
-            <a href="mailto:bloodline.helpline@gmail.com"
-              >bloodline.helpline@gmail.com</a
-            >
+            <a href="mailto:hello@bloodline.app">hello@bloodline.app</a>
           </div>
         </div>
       </transition>
@@ -312,6 +310,7 @@ export default {
   border: solid #ffb6b6 1px;
   border-radius: 10px;
   padding: 20px;
+  margin: 10px -25px;
 }
 
 .form-inline {
