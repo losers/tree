@@ -90,7 +90,7 @@
             src="@/assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
             style="margin-top: 160px"
-            alt="Blood Line Helper"
+            alt="Bloodline Helper"
             v-if="!$device.mobile"
           />
           <!-- Page Content -->
@@ -103,7 +103,7 @@
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
             >
-              Let's add members to Family Tree
+              Add yourself and start creating your family tree
             </h5>
           </div>
           <!-- Add Root Button -->
@@ -117,7 +117,7 @@
                 class="btn btn-success my-btn"
                 style="font-weight: bolder; font-size: 17px"
               >
-                + Add Person
+                + Add Me
               </button>
             </touch-ripple>
           </div>
@@ -212,7 +212,7 @@
                 ></i>
               </center>
               <h4 style="color: #848181">
-                Click on this person to add Parents / Children etc.,
+                Click on you to add your Parents / Children etc.,
               </h4>
             </div>
           </center>
@@ -251,6 +251,8 @@ import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
 import Tick from "@/components/small/tick";
+import bomb from "@/bomb";
+
 export default {
   name: "MainTree",
   components: {
@@ -319,6 +321,9 @@ export default {
     numOfMemebers: {
       get() {
         if (Store.state.allMembers) {
+          if(Store.state.allMembers.length == 1){
+            bomb.fireworks();
+          }
           return Store.state.allMembers.length;
         }
         return 0;

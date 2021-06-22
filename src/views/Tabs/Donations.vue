@@ -154,12 +154,50 @@
           </div>
         </div>
 
-        <div v-else>
-          <h3>Shower some love by doing some Donations</h3>
+        <div class="mt-4 mb-4 theme-gery-bg p-5" v-else>
+          <h3>
+            <span class="text-muted mr-3" :style="{}"> {{$device.mobile?'Donate and Unlock ':'Make a Donation and Unlock this'}} </span>
+            <span
+              class="award-bg theme-primary-bgdark"
+            >
+              <i class="icofont-badge h5"></i>
+            </span>
+          </h3>
         </div>
+        <!-- <div
+          :style="{
+            'border-radius': '20px',
+            margin: $device.mobile ? '20px' : '30px 100px',
+          }"
+          v-else
+        >
+        
+          <div class="clickable-box">
+            <i
+              class="icofont-unlocked rounded-lg"
+              :class="{
+                'bigscreen-lock': !$device.mobile,
+                'mobile-lock': $device.mobile,
+              }"
+              data-toggle="tooltip"
+              title="UnLocked"
+            ></i>
+
+              <span
+                class="title"
+                :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
+              >
+                Title
+              </span>
+            <p class="surname">Surname : Surname</p>
+          </div>
+        </div> -->
 
         <!-- F.A.Q s -->
-        <div class="theme-gery-bg p-3" :class="{'pl-5':!$device.mobile, 'pl-4':$device.mobile}">
+        <div
+          class="theme-gery-bg p-3"
+          :class="{ 'pl-5': !$device.mobile, 'pl-4': $device.mobile }"
+        >
           <h5 class="mt-3 text-muted">F.A.Q s</h5>
           <div id="accordion">
             <!-- Card 1 -->
@@ -352,6 +390,30 @@ export default {
 </script>
 
 <style scoped>
+/* .bigscreen-lock {
+  color: white;
+  font-size: 25px;
+  background: #6a6a6a;
+  padding: 10px;
+  float: left;
+  left: 25px;
+  box-shadow: 0px 5px 18px -12px rgb(0 0 0 / 75%);
+}
+
+.surname {
+  font-size: 20px;
+  font-weight: bold;
+  color: #a4a4a4;
+}
+.clickable-box {
+  padding: 20px;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  word-break: break-word;
+  box-shadow: 0px 0px 18px -12px rgb(0 0 0 / 75%);
+  background: white;
+  text-align: center;
+} */
 .donation-card {
   box-shadow: 0px 0px 5px 0px rgb(226 226 226);
   border-radius: 21px;
