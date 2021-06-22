@@ -1,300 +1,310 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
-<head>
-    <title>Bloodline</title>
-    <meta charset="utf-8">
-    <meta name="description" content="Blood Line helps in building Family Tree for Everyone with lifetime free access.">
-    <meta name="keywords"
-        content="Family Tree,familytree,Family tree creator online,Blood Line,bloodline,blood line app,blood line website" />
-    <meta charset="UTF-8">
-    <meta name="robots" content="index, follow">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>lib/images/favicon.ico">
+    <head>
+        <title>Bloodline</title>
+        <meta charset="utf-8">
+        <meta name="description"
+            content="Blood Line helps in building Family Tree for Everyone with lifetime free access.">
+        <meta name="keywords"
+            content="Family Tree,familytree,Family tree creator online,Blood Line,bloodline,blood line app,blood line website" />
+        <meta charset="UTF-8">
+        <meta name="robots" content="index, follow">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <link rel="icon" href="<%= BASE_URL %>lib/images/favicon.ico">
+        <!-- CSS -->
+        <link rel="stylesheet" href="lib/plugins/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/plugins/animate-css/animate.css">
+        <link rel="stylesheet" href="lib/css/style.css">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="lib/plugins/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/plugins/animate-css/animate.css">
-    <link rel="stylesheet" href="lib/css/style.css">
+        <!-- Unused CSS -->
+        <link href="lib/css/bootstrap-toggle.min.css" rel="stylesheet">
 
-    <!-- Unused CSS -->
-    <link href="lib/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <!-- Unused JS -->
+        <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
+        <script src="lib/js/bootstrap.min.js" defer></script>
+        <script src="lib/plugins/slider/slider.js" defer></script>
+        <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
 
-    <!-- Unused JS -->
-    <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
-    <script src="lib/js/bootstrap.min.js" defer></script>
-    <script src="lib/plugins/slider/slider.js" defer></script>
-    <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
+        <!-- JS -->
+        <script src="lib/plugins/gsap/TimelineLite.min.js" defer></script>
+        <script src="lib/plugins/gsap/TweenLite.min.js" defer></script>
+        <script src="lib/plugins/gsap/EasePack.min.js" defer></script>
+        <script src="lib/plugins/gsap/CSSPlugin.min.js" defer></script>
+        <!-- <script src="lib/plugins/jQurey/jquery.min.js" defer></script> -->
+        <script src="lib/plugins/wow-js/wow.min.js" defer></script>
+        <script src="lib/js/main.js" defer></script>
+        <script type="text/javascript"
+            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <!-- JS -->
-    <script src="lib/plugins/gsap/TimelineLite.min.js" defer></script>
-    <script src="lib/plugins/gsap/TweenLite.min.js" defer></script>
-    <script src="lib/plugins/gsap/EasePack.min.js" defer></script>
-    <script src="lib/plugins/gsap/CSSPlugin.min.js" defer></script>
-    <!-- <script src="lib/plugins/jQurey/jquery.min.js" defer></script> -->
-    <script src="lib/plugins/wow-js/wow.min.js" defer></script>
-    <script src="lib/js/main.js" defer></script>
+    </head>
 
+    <body id="home">
 
-</head>
-
-<body id="home">
-
-    <script>
-        (function (d, t) {
-            var BASE_URL = "https://app.chatwoot.com";
-            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-            g.src = BASE_URL + "/packs/js/sdk.js";
-            s.parentNode.insertBefore(g, s);
-            g.onload = function () {
-                window.chatwootSDK.run({
-                    websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
-                    baseUrl: BASE_URL
-                })
+        <script>
+            (function (d, t) {
+                var BASE_URL = "https://app.chatwoot.com";
+                var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+                g.src = BASE_URL + "/packs/js/sdk.js";
+                s.parentNode.insertBefore(g, s);
+                g.onload = function () {
+                    window.chatwootSDK.run({
+                        websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
+                        baseUrl: BASE_URL
+                    })
+                }
+            })(document, "script");
+        </script>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
             }
-        })(document, "script");
-    </script>
-
-    <!--Header Section Start-->
-    <section class="top-bar animated-header">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand row" href="#">
-                    <img src="./lib/images/logo.png" alt="logo" height="40px">
-                </a>
-                <span class="nav-title header-hide wow fadeInUp" data-wow-delay=".3s"
-                    data-wow-duration="500ms">Bloodline</span>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto" style="align-items: center;">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#home">Home
-                                <span class="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#features">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contact">Contact</a>
-                        </li>
-                        <li class="nav-item ml-2">
-                            <a class="btn btn-danger" href="/app/">Get Started</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </section>
-
-    <!--Slider Section Start-->
-    <section id="hero-area" style="background-image: url(./lib/images/home_bg.jpg);">
-        <div class="block wow fadeInUp container home-banner row align-items-center" style="margin: auto;"
-            data-wow-delay=".3s">
-            <div class="col-md-6">
-                <h1 class="wow fadeInUp animated cd-headline slide">
-                    <span>Welcome to Bloodline</span><br>
-                </h1>
-                <h2 class="wow fadeInUp animated mb-5">
-                    Build your <strong>family tree</strong> and work on your way upwards,<br>Who knows you may reach
-                    Adam and Eve.
-                </h2>
-                <div class="test">
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="goo">
-                        <defs>
-                            <filter id="goo">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                                <feColorMatrix in="blur" mode="matrix"
-                                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
-                                <feComposite in="SourceGraphic" in2="goo" />
-                            </filter>
-                        </defs>
-                    </svg>
-
-                    <span class="button--bubble__container">
-                        <a href="/app/" class="button button--bubble">
-                            Get Started
-                        </a>
-                        <span class="button--bubble__effect-container">
-                            <span class="circle top-left"></span>
-                            <span class="circle top-left"></span>
-                            <span class="circle top-left"></span>
-                            <span class="button effect-button"></span>
-                            <span class="circle bottom-right"></span>
-                            <span class="circle bottom-right"></span>
-                            <span class="circle bottom-right"></span>
-                        </span>
-                    </span>
-                </div>
-            </div>
-            <div class="youtube-video col-md-6">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/MmfxQ7wHEcQ?controls=0"
-                    title="Bloodline Intro" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-            </div>
-
-            <center style="width: 100%;" class="mt-4"><a href="#features">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather-chevrons-down">
-                        <polyline points="7 13 12 18 17 13"></polyline>
-                        <polyline points="7 6 12 11 17 6"></polyline>
-                    </svg></a>
-            </center>
-
-        </div>
-    </section>
-
-    <!-- About Section Start -->
-    <div class="container" id="features">
-        <div class="row" id="about">
-            <div class=" col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Family Tree
-                    </h1>
-                    <ul
-                        style="margin-top: 30px;margin-bottom: 30px;list-style: circle!important;line-height: 28px;color: #727272;font-size: 16px;font-weight: 300;">
-                        <li>Completely Free</li>
-                        <li>Add Unlimited People</li>
-                        <li>No Signup / Signin process</li>
-                        <li>Private Data (Mobile No., Email etc.,) will not be shown to others</li>
-                    </ul>
-                    <a href="/app/nehru" target="_blank">See how <i class="fa fa-long-arrow-right ml-2"
-                            aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/family_tree.jpeg" alt="familytree">
-                    <div class="img1"></div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Relation Finder Info -->
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Relation Finder
-                    </h1>
-                    <p>
-                        As the name itself is pretty much self explanatory no need of further definitions. The only
-                        thing you need to know is, It supports English, తెలుగు, മലയാളം, தமிழ் and more are coming very
-                        soon.
-                    </p>
-                    <a href="/app/nehru/analytics/relation-finder" target="_blank">See how <i
-                            class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/relation_finder.jpeg" alt="relation_finder">
-                </div>
-            </div>
-        </div>
-
-        <!-- Subtree Info -->
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Sub Tree
-                    </h1>
-                    <p>
-                        You can view any branch of your huge family tree seperately.
-                        Confused? Take a look at below example.
-                    </p>
-                    <a href="/app/nehru/analytics/subtree" target="_blank">See how <i
-                            class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/subtree.jpeg">
-                </div>
-            </div>
-        </div>
-
-        <!-- Timeline Info -->
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Timeline
-                    </h1>
-                    <p>
-                        Create a <strong>Timeline</strong> for any individual and can share the
-                        common events like your trips and occations with multiple members in your family.
-                    </p>
-                    <!-- <a href="#">See how <i class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a> -->
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/timeline.jpg" alt="Bloodline_Timeline">
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <!--Call To Action Section Start -->
-    <section id="contact">
-        <div class="container">
-            <div class="col-md-12">
-                <div class="block">
-                    <h4 class="mt-2 wow fadeInDown">
-                        <strong>hello@bloodline.app</strong>
-                        <!-- <i class="fa fa-lg fa-envelope-o social"> </i> -->
-                    </h4>
-                    <div class="mt-4 wow fadeInDown">
-                        <a href="https://play.google.com/store/apps/details?id=com.losersteam.bloodline">
-                            <img src="./lib/images/google-play.jpeg"
-                                style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 75%);" height="50px"></a>
-                    </div>
-                    <div align="center" class="socialbtns wow fadeInDown mb-5">
-                        <ul style="padding-inline-start: 0px;">
-                            <li><a href="https://www.instagram.com/bloodline.app/" target="_blank"
-                                    class="fa fa-lg fa-instagram social"></a></li>
-                            <li><a href="https://www.facebook.com/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-facebook social"></a></li>
-                            <li><a href="https://twitter.com/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-twitter social"></a></li>
-                            <li><a href="https://github.com/losers/tree/issues" target="_blank"
-                                    class="fa fa-lg fa-github social"></a></li>
-                            <li><a href="https://www.linkedin.com/company/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-linkedin-square social"></a></li>
-                            <li><a href="https://t.me/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-telegram social"></a></li>
+        </script>
+        <!--Header Section Start-->
+        <section class="top-bar animated-header">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand row" href="#">
+                        <img src="./lib/images/logo.png" alt="logo" height="40px">
+                    </a>
+                    <span class="nav-title header-hide wow fadeInUp" data-wow-delay=".3s"
+                        data-wow-duration="500ms">Bloodline</span>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto" style="align-items: center;">
+                            <div id="google_translate_element" style="height: 40px;overflow: hidden;"></div>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#home">Home
+                                    <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#features">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#contact">Contact</a>
+                            </li>
+                            <li class="nav-item ml-2">
+                                <a class="btn btn-danger" href="/app/">Get Started</a>
+                            </li>
                         </ul>
                     </div>
-                    <div class="bottom-links wow fadeInDown row justify-content-around">
-                        <a href="#features">Features</a>
-                        <a href="https://blog.bloodline.app" target="_blank">Blog</a>
-                        <a href="https://github.com/losers/tree/projects/2" target="_blank">Roadmap</a>
-                        <a href="https://www.youtube.com/channel/UCKO-JUbSvs4IzuSvOnKJeDg" target="_blank
-                        ">Video Source</a>
+                </nav>
+            </div>
+        </section>
+
+        <!--Slider Section Start-->
+        <section id="hero-area" style="background-image: url(./lib/images/home_bg.jpg);">
+            <div class="block wow fadeInUp container home-banner row align-items-center" style="margin: auto;"
+                data-wow-delay=".3s">
+                <div class="col-md-6">
+                    <h1 class="wow fadeInUp animated cd-headline slide">
+                        <span>Welcome to Bloodline</span><br>
+                    </h1>
+                    <h2 class="wow fadeInUp animated mb-5">
+                        Build your <strong>family tree</strong> and work on your way upwards,<br>Who knows you may reach
+                        Adam and Eve.
+                    </h2>
+
+                    <div class="test">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="goo">
+                            <defs>
+                                <filter id="goo">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                                    <feColorMatrix in="blur" mode="matrix"
+                                        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+                                    <feComposite in="SourceGraphic" in2="goo" />
+                                </filter>
+                            </defs>
+                        </svg>
+
+                        <span class="button--bubble__container">
+                            <a href="/app/" class="button button--bubble">
+                                Get Started
+                            </a>
+                            <span class="button--bubble__effect-container">
+                                <span class="circle top-left"></span>
+                                <span class="circle top-left"></span>
+                                <span class="circle top-left"></span>
+                                <span class="button effect-button"></span>
+                                <span class="circle bottom-right"></span>
+                                <span class="circle bottom-right"></span>
+                                <span class="circle bottom-right"></span>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="youtube-video col-md-6">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/MmfxQ7wHEcQ?controls=0"
+                        title="Bloodline Intro" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+
+                <center style="width: 100%;" class="mt-4"><a href="#features">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather-chevrons-down">
+                            <polyline points="7 13 12 18 17 13"></polyline>
+                            <polyline points="7 6 12 11 17 6"></polyline>
+                        </svg></a>
+                </center>
+
+            </div>
+        </section>
+
+        <!-- About Section Start -->
+        <div class="container" id="features">
+            <div class="row" id="about">
+                <div class=" col-md-6 m-auto">
+                    <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <h1>
+                            Family Tree
+                        </h1>
+                        <ul
+                            style="margin-top: 30px;margin-bottom: 30px;list-style: circle!important;line-height: 28px;color: #727272;font-size: 16px;font-weight: 300;">
+                            <li>Completely Free</li>
+                            <li>Add Unlimited People</li>
+                            <li>No Signup / Signin process</li>
+                            <li>Private Data (Mobile No., Email etc.,) will not be shown to others</li>
+                        </ul>
+                        <a href="/app/nehru" target="_blank">See how <i class="fa fa-long-arrow-right ml-2"
+                                aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <img src="./lib/images/family_tree.jpeg" alt="familytree">
+                        <div class="img1"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Relation Finder Info -->
+            <div class="row" id="about">
+                <div class="col-md-6 m-auto">
+                    <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <h1>
+                            Relation Finder
+                        </h1>
+                        <p>
+                            As the name itself is pretty much self explanatory no need of further definitions. The only
+                            thing you need to know is, It supports English, తెలుగు, മലയാളം, தமிழ் and more are coming
+                            very
+                            soon.
+                        </p>
+                        <a href="/app/nehru/analytics/relation-finder" target="_blank">See how <i
+                                class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <img src="./lib/images/relation_finder.jpeg" alt="relation_finder">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subtree Info -->
+            <div class="row" id="about">
+                <div class="col-md-6 m-auto">
+                    <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <h1>
+                            Sub Tree
+                        </h1>
+                        <p>
+                            You can view any branch of your huge family tree seperately.
+                            Confused? Take a look at below example.
+                        </p>
+                        <a href="/app/nehru/analytics/subtree" target="_blank">See how <i
+                                class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <img src="./lib/images/subtree.jpeg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Info -->
+            <div class="row" id="about">
+                <div class="col-md-6 m-auto">
+                    <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <h1>
+                            Timeline
+                        </h1>
+                        <p>
+                            Create a <strong>Timeline</strong> for any individual and can share the
+                            common events like your trips and occations with multiple members in your family.
+                        </p>
+                        <!-- <a href="#">See how <i class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a> -->
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
+                        <img src="./lib/images/timeline.jpg" alt="Bloodline_Timeline">
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+        </div>
 
-    <!-- Footer Section Start -->
-    <footer id="footer">
-        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart"
-                aria-hidden="true" style="color: red;"></i> by <strong>Losers</strong><br>
-        </p>
-    </footer>
-</body>
+        <!--Call To Action Section Start -->
+        <section id="contact">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="block">
+                        <h4 class="mt-2 wow fadeInDown">
+                            <strong>hello@bloodline.app</strong>
+                            <!-- <i class="fa fa-lg fa-envelope-o social"> </i> -->
+                        </h4>
+                        <div class="mt-4 wow fadeInDown">
+                            <a href="https://play.google.com/store/apps/details?id=com.losersteam.bloodline">
+                                <img src="./lib/images/google-play.jpeg"
+                                    style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 75%);" height="50px"></a>
+                        </div>
+                        <div align="center" class="socialbtns wow fadeInDown mb-5">
+                            <ul style="padding-inline-start: 0px;">
+                                <li><a href="https://www.instagram.com/bloodline.app/" target="_blank"
+                                        class="fa fa-lg fa-instagram social"></a></li>
+                                <li><a href="https://www.facebook.com/bloodlineapp" target="_blank"
+                                        class="fa fa-lg fa-facebook social"></a></li>
+                                <li><a href="https://twitter.com/bloodlineapp" target="_blank"
+                                        class="fa fa-lg fa-twitter social"></a></li>
+                                <li><a href="https://github.com/losers/tree/issues" target="_blank"
+                                        class="fa fa-lg fa-github social"></a></li>
+                                <li><a href="https://www.linkedin.com/company/bloodlineapp" target="_blank"
+                                        class="fa fa-lg fa-linkedin-square social"></a></li>
+                                <li><a href="https://t.me/bloodlineapp" target="_blank"
+                                        class="fa fa-lg fa-telegram social"></a></li>
+                            </ul>
+                        </div>
+                        <div class="bottom-links wow fadeInDown row justify-content-around">
+                            <a href="#features">Features</a>
+                            <a href="https://blog.bloodline.app" target="_blank">Blog</a>
+                            <a href="https://github.com/losers/tree/projects/2" target="_blank">Roadmap</a>
+                            <a href="https://www.youtube.com/channel/UCKO-JUbSvs4IzuSvOnKJeDg" target="_blank
+                        ">Video Source</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section Start -->
+        <footer id="footer">
+            <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart"
+                    aria-hidden="true" style="color: red;"></i> by <strong>Losers</strong><br>
+            </p>
+        </footer>
+
+
+    </body>
 
 </html>

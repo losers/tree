@@ -13,6 +13,23 @@
     display: none;
   }
 }
+
+.goog-te-banner-frame{
+  display: none !important;
+}
+
+.goog-te-combo{
+  height: 30px;
+  width: 230px;
+  border-radius: 10px;
+  padding: 5px;
+  background: white;
+  border:solid 1px #ff6363;
+  color: #ff6363;
+  font-size: 15px;
+  margin: 10px;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   height: 100%;
