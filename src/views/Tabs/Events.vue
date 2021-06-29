@@ -31,9 +31,9 @@
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images && store.state.images[event._id]"
-                alt="Blood Line User"
+                alt="Bloodline User"
               />
-              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              <img src="@/assets/dp.png" v-else alt="Bloodline User" />
             </div>
 
             <!-- Event Content -->
@@ -84,9 +84,9 @@
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images && store.state.images[event._id]"
-                alt="Blood Line User"
+                alt="Bloodline User"
               />
-              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              <img src="@/assets/dp.png" v-else alt="Bloodline User" />
             </div>
 
             <!-- Event Content -->
@@ -122,9 +122,9 @@
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images && store.state.images[event._id]"
-                alt="Blood Line User"
+                alt="Bloodline User"
               />
-              <img src="@/assets/dp.png" v-else alt="Blood Line User" />
+              <img src="@/assets/dp.png" v-else alt="Bloodline User" />
             </div>
             <div class="name" style="margin-left: 120px">{{ event.name }}</div>
           </div>

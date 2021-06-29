@@ -45,7 +45,7 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class="container div-box"
+        class="container div-box d-flex align-items-start justify-content-between"
         :style="{
           'border-radius': '10px',
           'margin-top': $device.mobile ? '20px' : '30px',
@@ -58,6 +58,7 @@
           showAuth(data.surname, data.title, data.celeb, data._id, data.contact)
         "
       >
+        <!-- Lock and Unlock Symbol -->
         <i
           class="icofont-unlocked rounded-lg"
           :class="{
@@ -79,22 +80,21 @@
           v-else
         ></i>
 
-        <!-- Family Title Box -->
-        <div style="width: 85%">
-          <div
-            class="award-bg theme-primary-bgdark"
-            :style="{ right: $device.mobile ? '15px' : '150px' }"
-          >
-            <i class="icofont-badge h5"></i>
-          </div>
+        <div>
           <span
             class="title"
             :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
           >
             {{ data.title }}
           </span>
+          <p class="surname">Surname : {{ data.surname }}</p>
         </div>
-        <p class="surname">Surname : {{ data.surname }}</p>
+
+        <div
+          class="award-bg theme-primary-bgdark"
+        >
+          <i class="icofont-badge h5"></i>
+        </div>
       </div>
     </div>
     <div
@@ -222,9 +222,10 @@ export default {
   display: inline-block;
   height: 60px;
   margin-top: -25px;
-  position: absolute;
   padding-top: 20px;
+  padding-left: 4px;
   width: 30px;
+  text-align: center;
   color: white;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
@@ -236,9 +237,9 @@ export default {
   border-right: 15px solid transparent;
   content: "";
   height: 0;
-  left: 0;
-  position: absolute;
-  top: 60px;
+  left: -24px;
+  position: relative;
+  top: 52px;
   width: 30px;
 }
 
