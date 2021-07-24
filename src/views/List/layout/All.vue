@@ -1,10 +1,6 @@
 <template>
   <div>
-    <form
-      v-on:submit.prevent="search"
-      :style="{ width: $device.mobile ? '90%' : '80%' }"
-      class="search-box"
-    >
+    <form v-on:submit.prevent="search" class="search-box container">
       <input
         type="text"
         style="height: 45px"
@@ -45,11 +41,13 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class="container div-box d-flex align-items-start justify-content-between"
-        :style="{
-          'border-radius': '10px',
-          'margin-top': $device.mobile ? '20px' : '30px',
-        }"
+        class="
+          container
+          family-box
+          d-flex
+          align-items-start
+          justify-content-between
+        "
         :class="{
           'cur-family': curFamily == data._id,
           'normal-family': curFamily != data._id,
@@ -90,9 +88,7 @@
           <p class="surname">Surname : {{ data.surname }}</p>
         </div>
 
-        <div
-          class="award-bg theme-primary-bgdark"
-        >
+        <div class="award-bg theme-primary-bgdark">
           <i class="icofont-badge h5"></i>
         </div>
       </div>
@@ -218,6 +214,9 @@ export default {
 .normal-family {
   background: white;
 }
+.search-box {
+  height: 40px;
+}
 .award-bg {
   display: inline-block;
   height: 60px;
@@ -243,10 +242,12 @@ export default {
   width: 30px;
 }
 
-.div-box {
+.family-box {
   cursor: pointer;
   padding: 20px;
   word-break: break-word;
+  border-radius: "10px";
+  margin-top: 25px;
   -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
@@ -260,11 +261,6 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
-}
-
-.search-box {
-  background: #f9f9f9;
-  height: 40px;
 }
 .bigscreen-lock {
   color: white;

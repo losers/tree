@@ -1,5 +1,5 @@
 <template>
-  <div style="position: sticky; top: 0; z-index: 10">
+  <div class="tab-bar">
     <nav class="tabs" :style="{ width: $device.mobile ? '90%' : '400px' }">
       <div
         class="selector theme-primary-bgdark"
@@ -43,6 +43,11 @@ export default {
 };
 </script>
 <style scoped>
+.tab-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 .tabs {
   display: flex;
   justify-content: space-between;

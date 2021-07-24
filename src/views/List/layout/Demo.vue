@@ -2,8 +2,8 @@
   <div>
     <div
       class="
-        col-sm-12 col-md-9
         text-muted
+        container
         mb-3
         d-flex
         flex-column
@@ -24,15 +24,7 @@
       </div>
     </div>
     <!-- Search Bar -->
-    <form
-      v-on:submit.prevent="search"
-      :style="{ width: $device.mobile ? '90%' : '80%' }"
-      style="
-        background: #f9f9f9;
-        box-shadow: rgb(241 241 241) 0px 5px 10px 0px;
-        height: 40px;
-      "
-    >
+    <form v-on:submit.prevent="search" class="search-box container">
       <input
         type="text"
         style="height: 45px"
@@ -65,59 +57,55 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class=""
+        class="container family-box normal-family"
         :style="{
-          'border-radius': '20px',
           margin: $device.mobile ? '20px' : '30px 100px 0 100px',
         }"
+        @click="goto(data.surname)"
       >
-        <div class="clickable-box" @click="goto(data.surname)">
-          <i
-            class="icofont-unlocked rounded-lg"
-            :class="{
-              'bigscreen-lock': !$device.mobile,
-              'mobile-lock': $device.mobile,
-            }"
-            data-toggle="tooltip"
-            title="UnLocked"
-          ></i>
+        <i
+          class="icofont-unlocked rounded-lg"
+          :class="{
+            'bigscreen-lock': !$device.mobile,
+            'mobile-lock': $device.mobile,
+          }"
+          data-toggle="tooltip"
+          title="UnLocked"
+        ></i>
 
-          <!-- Family Title Box -->
-          <div style="width: 85%">
-            <a
-              class="title"
-              :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
-            >
-              {{ data.title }}
-            </a>
-          </div>
-
-          <!-- Family Surname -->
-          <p class="surname">Surname : {{ data.surname }}</p>
-
-          <div v-if="data.contras">
-            <span v-if="$device.mobile"
-              ><i class="icofont-edit text-muted mr-2"></i
-            ></span>
-            <span v-else>Contributors: </span>
-            <span v-for="(contra, i) in data.contras.slice(0, 1)" :key="i">
-              <a :href="contra.link" @click.stop target="_blank">{{
-                contra.name
-              }}</a
-              >,
-            </span>
-            <span
-              style="color: #287efb"
-              v-if="data.contras.length > 1"
-              @click.stop
-              @click.self="showContributorsModel"
-            >
-              +{{ data.contras.length - 1 }} more
-            </span>
-          </div>
+        <!-- Family Title Box -->
+        <div style="width: 85%">
+          <a
+            class="title"
+            :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
+          >
+            {{ data.title }}
+          </a>
         </div>
 
-      
+        <!-- Family Surname -->
+        <p class="surname">Surname : {{ data.surname }}</p>
+
+        <div v-if="data.contras">
+          <span v-if="$device.mobile"
+            ><i class="icofont-edit text-muted mr-2"></i
+          ></span>
+          <span v-else>Contributors: </span>
+          <span v-for="(contra, i) in data.contras.slice(0, 1)" :key="i">
+            <a :href="contra.link" @click.stop target="_blank">{{
+              contra.name
+            }}</a
+            >,
+          </span>
+          <span
+            style="color: #287efb"
+            v-if="data.contras.length > 1"
+            @click.stop
+            @click.self="showContributorsModel"
+          >
+            +{{ data.contras.length - 1 }} more
+          </span>
+        </div>
       </div>
     </div>
     <div
@@ -221,18 +209,6 @@ export default {
   font-weight: bolder;
   border: solid black 1px;
   color: black;
-}
-
-/* All Normal Families */
-.clickable-box {
-  padding: 20px;
-  border-radius: 10px 10px 0 0;
-  cursor: pointer;
-  word-break: break-word;
-  -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  background: white;
 }
 
 .title {

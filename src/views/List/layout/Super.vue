@@ -2,7 +2,7 @@
   <div>
     <div
       class="
-        col-sm-12 col-md-9
+        container
         text-muted
         mb-3
         d-flex
@@ -21,15 +21,7 @@
       </div>
     </div>
     <!-- Search Bar -->
-    <form
-      v-on:submit.prevent="search"
-      :style="{ width: $device.mobile ? '90%' : '80%' }"
-      style="
-        background: #f9f9f9;
-        box-shadow: rgb(241 241 241) 0px 5px 10px 0px;
-        height: 40px;
-      "
-    >
+    <form v-on:submit.prevent="search" class="search-box container">
       <input
         type="text"
         style="height: 45px"
@@ -68,11 +60,13 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class="container div-box"
-        :style="{
-          'border-radius': '10px',
-          'margin-top': $device.mobile ? '20px' : '30px',
-        }"
+        class="
+          container
+          family-box
+          d-flex
+          align-items-start
+          justify-content-between
+        "
         :class="{
           'cur-family': curFamily == data._id,
           'normal-family': curFamily != data._id,
@@ -81,7 +75,17 @@
           showAuth(data.surname, data.title, data.celeb, data._id, data.contact)
         "
       >
-        
+        <!-- Lock and Unlock Symbol -->
+        <i
+          class="icofont-unlocked rounded-lg"
+          :class="{
+            'bigscreen-lock': !$device.mobile,
+            'mobile-lock': $device.mobile,
+          }"
+          data-toggle="tooltip"
+          title="UnLocked"
+          v-if="data.celeb"
+        ></i>
         <i
           class="icofont-lock rounded-lg"
           :class="{
@@ -90,23 +94,22 @@
           }"
           data-toggle="tooltip"
           title="Locked"
+          v-else
         ></i>
 
-        <!-- Family Title Box -->
-        <div style="width: 85%">
-          <div class="award-bg theme-primary-bgdark"
-          :style="{'right':$device.mobile?'15px':'150px'}"
-          >
-            <i class="icofont-badge h5"></i>
-          </div>
-          <a
+        <div>
+          <span
             class="title"
             :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
           >
             {{ data.title }}
-          </a>
+          </span>
+          <p class="surname">Surname : {{ data.surname }}</p>
         </div>
-        <p class="surname">Surname : {{ data.surname }}</p>
+
+        <div class="award-bg theme-primary-bgdark">
+          <i class="icofont-badge h5"></i>
+        </div>
       </div>
     </div>
     <div
@@ -193,7 +196,7 @@ export default {
       totalFamilies: 0,
       info: [],
       authPayload: {},
-      showAuthBox:false,
+      showAuthBox: false,
     };
   },
 };
