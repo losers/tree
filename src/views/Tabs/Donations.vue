@@ -27,8 +27,14 @@
 
           <!-- Donations Right Side Content -->
           <div
-            class="col-sm-12 m-auto col-md-6"
+            class="col-sm-12 col-md-6"
             :class="{ 'p-2': $device.mobile }"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: space-evenly;
+              align-items: center;
+            "
           >
             <!-- Donation Box -->
             <div class="donation-box p-3">
@@ -94,7 +100,7 @@
                 </center>
               </div>
             </div>
-            <div class="col-6 m-auto pt-4">
+            <div style="max-width: 50%" :class="{ 'mt-4': $device.mobile }">
               <img src="@/assets/cards.png" />
               <img src="@/assets/powered_by_paypal.png" />
             </div>
@@ -156,10 +162,14 @@
 
         <div class="mt-4 mb-4 theme-gery-bg p-5" v-else>
           <h3>
-            <span class="text-muted mr-3" :style="{}"> {{$device.mobile?'Donate and Unlock ':'Make a Donation and Unlock this'}} </span>
-            <span
-              class="award-bg theme-primary-bgdark"
-            >
+            <span class="text-muted mr-3" :style="{}">
+              {{
+                $device.mobile
+                  ? "Donate and Unlock "
+                  : "Make a Donation and Unlock this"
+              }}
+            </span>
+            <span class="award-bg theme-primary-bgdark">
               <i class="icofont-badge h5"></i>
             </span>
           </h3>
