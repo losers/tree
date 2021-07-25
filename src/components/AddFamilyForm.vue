@@ -349,6 +349,7 @@ export default {
     makeSmall() {
       this.surname = this.surname.toLowerCase();
       this.surname = this.surname.split(" ").join("");
+      this.surname = this.surname.replace(/[~`!@#$%^&*()+=/{}[\];:'"<>.?]/g, ''); //accepts , - _ character
     },
   },
 };

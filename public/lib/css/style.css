@@ -21,6 +21,10 @@ body {
   width: 100%;
 }
 
+.home-banner{
+  height: 90%;
+}
+
 html {
   min-height: 100% !important;
   height: 100%;
@@ -289,7 +293,6 @@ a:hover {
 #hero-area {
   background-size: cover;
   background-attachment: fixed;
-  padding: 230px 0;
   color: #fff;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   position: relative;

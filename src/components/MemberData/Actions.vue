@@ -46,6 +46,15 @@
     </div>
     <div v-else>
       <span class="col-4">
+        <button
+          @click="goToSubTree()"
+          class="col-10 btn btn-warning mb-3"
+          v-show="data.linked_tree"
+          style="background-color: #0083a0; color: white"
+        >
+          <i class="icofont-tree p2" style="font-size: 15px"></i>
+          View Parent Tree
+        </button>
         <input
           class="form-control input-sm"
           placeholder="Enter Admin Key to Edit"

@@ -1,5 +1,5 @@
 <template>
-  <div style="position: sticky; top: 0; z-index: 10">
+  <div class="tab-bar">
     <nav class="tabs" :style="{ width: $device.mobile ? '90%' : '400px' }">
       <div
         class="selector theme-primary-bgdark"
@@ -11,7 +11,10 @@
       <router-link to="" class="active"
         ><i class="icofont-people"></i>All</router-link
       >
-      <router-link to="#demo"><i class="icofont-star"></i>Demo</router-link>
+      <router-link to="#demo"
+        ><i class="icofont-light-bulb"></i
+        >Demo</router-link
+      >
       <router-link to="#super"
         ><i class="icofont-thunder-light"></i>Super</router-link
       >
@@ -43,6 +46,14 @@ export default {
 };
 </script>
 <style scoped>
+.icofont-light-bulb {
+  font-size: 18px;
+}
+.tab-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 .tabs {
   display: flex;
   justify-content: space-between;
@@ -59,7 +70,6 @@ export default {
 
 .tabs .router-link-active {
   text-decoration: none;
-  text-transform: uppercase;
   display: inline-block;
   position: relative;
   z-index: 1;
