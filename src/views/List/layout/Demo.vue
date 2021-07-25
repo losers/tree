@@ -57,10 +57,14 @@
     <!-- All Families List -->
     <div v-else v-for="data in info" :key="data.id">
       <div
-        class="container family-box normal-family"
-        :style="{
-          margin: $device.mobile ? '20px' : '30px 100px 0 100px',
-        }"
+        class="
+          container
+          family-box
+          d-flex
+          align-items-start
+          justify-content-between
+          normal-family
+        "
         @click="goto(data.surname)"
       >
         <i
@@ -74,24 +78,28 @@
         ></i>
 
         <!-- Family Title Box -->
-        <div style="width: 85%">
-          <a
+        <div>
+          <span
             class="title"
             :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
           >
             {{ data.title }}
-          </a>
-        </div>
+          </span>
+          <!-- Family Surname -->
+          <!-- <p class="surname">Surname : {{ data.surname }}</p> -->
 
-        <!-- Family Surname -->
-        <p class="surname">Surname : {{ data.surname }}</p>
-
-        <div v-if="data.contras">
-          <span v-if="$device.mobile"
-            ><i class="icofont-edit text-muted mr-2"></i
-          ></span>
-          <span v-else>Contributors: </span>
-          <span v-for="(contra, i) in data.contras.slice(0, 1)" :key="i">
+          <div v-if="data.contras" class="mt-3">
+            <span v-if="$device.mobile"
+              ><i class="icofont-edit text-muted mr-2"></i
+            ></span>
+            <span class="text-muted" v-else>Contributors: </span>
+            <span v-for="(contra, i) in data.contras" :key="i">
+              <a :href="contra.link" @click.stop target="_blank">{{
+                contra.name
+              }}</a
+              >,
+            </span>
+            <!-- <span v-for="(contra, i) in data.contras.slice(0, 1)" :key="i">
             <a :href="contra.link" @click.stop target="_blank">{{
               contra.name
             }}</a
@@ -104,8 +112,10 @@
             @click.self="showContributorsModel"
           >
             +{{ data.contras.length - 1 }} more
-          </span>
+          </span> -->
+          </div>
         </div>
+        <div></div>
       </div>
     </div>
     <div
