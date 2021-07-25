@@ -6,12 +6,12 @@ export const Promotional = {
     },
     Website : {
         Name: "Website",
-        Threshold: 20,
+        Threshold: 15,
         Reference: 8
     },
     Donation: {
         Name: "Donation",
-        Threshold: 10,
+        Threshold: 20,
         Reference: 10
     }
 }

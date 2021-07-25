@@ -16,7 +16,7 @@
         <h5 class="sub">Thank you</h5>
         <h6 class="redirect">
           You will be redirected to Bloodline. if not redirected
-          <a class="click-here">click here.</a>
+          <a class="click-here" @click="redirectToPage(surname)">click here.</a>
         </h6>
       </div>
     </center>
@@ -51,14 +51,15 @@ export default {
   components: { Tick },
   data() {
     return {
+      surname: "",
       paymentProcessing: true,
     };
   },
   methods: {
-    redirectToPage(surname){
+    redirectToPage(){
         this.$router.push({
             name: "Donations",
-            params: { id: surname },
+            params: { id: this.surname },
         });
     }
   },
@@ -75,9 +76,9 @@ export default {
       }
       Axios.put(url, params)
         .then((data) => {
-          console.log(data);
+          this.surname = data.data.surname;
           setTimeout(() => {
-            this.redirectToPage(data.data.surname)
+            this.redirectToPage()
           }, 5000);
         })
         .catch((err) => console.log(err))

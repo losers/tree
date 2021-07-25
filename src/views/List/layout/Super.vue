@@ -27,14 +27,14 @@
         style="height: 45px"
         :class="{ 'desktop-search': $device.mobile }"
         v-model="text"
-        :placeholder="`Find in ${totalFamilies} Demo families..`"
+        :placeholder="`Find in ${totalFamilies} Super families..`"
         class="form-control input-lg float-left search-bar"
       />
       <button
         type="submit"
         class="btn"
         style="float: right; margin-right: 10px; margin-top: -40px"
-      >
+ge    >
         <i class="icofont-search-2"></i>
       </button>
     </form>

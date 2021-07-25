@@ -13,11 +13,11 @@
     >
       <h5>How to create Demo Families ?</h5>
       <div>
-        <strong class="mr-2">Step 1:</strong> Create a normal family tree
+        <strong class="mr-2">1. </strong> Create a normal family tree.
       </div>
       <div>
-        <strong class="mr-2">Step 2:</strong> Send surname to
-        <i>hello@bloodline.app</i>
+        <strong class="mr-2">2. </strong> Email surname to
+        <i>hello@bloodline.app</i> along with your details.
       </div>
       <div class="mt-2">
         <strong class="mr-2">Thats it, Your Demo Family will go live</strong>

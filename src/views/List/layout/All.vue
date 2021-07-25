@@ -88,7 +88,7 @@
           <p class="surname">Surname : {{ data.surname }}</p>
         </div>
 
-        <div class="award-bg theme-primary-bgdark">
+        <div class="award-bg theme-primary-bgdark" v-if="data.b_coins && data.b_coins > 0">
           <i class="icofont-badge h5"></i>
         </div>
       </div>
