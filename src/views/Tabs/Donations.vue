@@ -46,16 +46,17 @@
                   <select
                     class="form-control select-currency col-4"
                     data-role="select-dropdown"
+                    v-model="country.currency.code"
                   >
                     <option :value="country.currency.code" selected>
-                      {{ currencyToSymbolMap[country.currency.code] }}
+                      {{country.currency.code}} ( {{ currencyToSymbolMap[country.currency.code] }} )
                     </option>
                     <option
                       v-for="cur in supportedCurrencies"
                       :key="cur"
                       :value="cur"
                     >
-                      {{ currencyToSymbolMap[cur] }}
+                      {{cur}} ( {{ currencyToSymbolMap[cur] }} )
                     </option>
                   </select>
                   <input
@@ -154,44 +155,17 @@
           </div>
         </div>
 
-        <div class="mt-4 mb-4 theme-gery-bg p-5" v-else>
+        <div class="mt-4 mb-4 theme-gery-bg p-5 tc-center" v-else>
           <h3>
-            <span class="text-muted mr-3" :style="{}"> {{$device.mobile?'Donate and Unlock ':'Make a Donation and Unlock this'}} </span>
-            <span
+             <span
               class="award-bg theme-primary-bgdark"
             >
               <i class="icofont-badge h5"></i>
             </span>
+            <span class="text-muted mr-3" :style="{}"> {{$device.mobile?'Donate and Unlock ':'Unlock a Super Family Badge by making a donation.'}} </span>
           </h3>
         </div>
-        <!-- <div
-          :style="{
-            'border-radius': '20px',
-            margin: $device.mobile ? '20px' : '30px 100px',
-          }"
-          v-else
-        >
         
-          <div class="clickable-box">
-            <i
-              class="icofont-unlocked rounded-lg"
-              :class="{
-                'bigscreen-lock': !$device.mobile,
-                'mobile-lock': $device.mobile,
-              }"
-              data-toggle="tooltip"
-              title="UnLocked"
-            ></i>
-
-              <span
-                class="title"
-                :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
-              >
-                Title
-              </span>
-            <p class="surname">Surname : Surname</p>
-          </div>
-        </div> -->
 
         <!-- F.A.Q s -->
         <div
@@ -226,8 +200,8 @@
                 data-parent="#accordion"
               >
                 <div class="card-body p-0 text-muted">
-                  Bloodline work on Donations. Donating families will become
-                  <strong>Super Families.</strong>
+                  Bloodline follows a policy of No-ADS, No Premium Plans.<br/>
+                  Donations is the only source of revenue to run this website. If you like our work, please support us by donating. 
                 </div>
               </div>
             </div>
@@ -246,7 +220,7 @@
                   class="card-header font-weight-bold theme-primary-color"
                   id="headingTwo"
                 >
-                  What is B - Coins
+                  What is the minimum amount to unlock 'Super Family Badge' ?
                 </div>
               </button>
 
@@ -258,10 +232,7 @@
                 data-parent="#accordion"
               >
                 <div class="card-body p-0 text-muted">
-                  As a token of gratitude, we credit
-                  <strong>B - Coins</strong> for each donation you made. More
-                  <strong>B - Coins</strong> for each donation you made. More
-                  coins, more the family go up
+                  There is no minimum limit to unlock Super Family Badge. As a token of gratitude for donation we honor your family with badge.
                 </div>
               </div>
             </div>
@@ -304,11 +275,9 @@ export default {
     }/donation-info`;
     Axios.get(url)
       .then((data) => {
-        this.country.country_code = data.data.loc_info.country_code;
         this.country.currency.code = this.getValidCurrencyCode(
           data.data.loc_info.currency_code
         );
-        console.log(this.country.currency.code);
         this.r_key = data.data.loc_info.key;
         this.country.currency.symbol =
           currencyToSymbolMap[this.country.currency.code];
@@ -390,6 +359,9 @@ export default {
 </script>
 
 <style scoped>
+.tc-center{
+  text-align: center;
+}
 /* .bigscreen-lock {
   color: white;
   font-size: 25px;
@@ -423,7 +395,11 @@ export default {
   box-shadow: 0 0 3px 0 #eb9797;
   color: #eb9797;
   border-radius: 15px 0px 0px 15px;
-  padding-left: 20px;
+  /* padding-left: 20px; */
+
+  padding-left: 0px;
+  font-size: 10px;
+  height: 38px;
 }
 .amount-input-box {
   border-radius: 12px;

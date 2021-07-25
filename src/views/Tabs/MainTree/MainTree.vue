@@ -69,19 +69,7 @@
         ></DualPage>
 
         <!-- Promotional Pages -->
-        <DualPage
-          :payload="promo.relationFinder"
-          :reference="7"
-          v-if="numOfMemebers == 5 && promo.relationFinder.show"
-          v-on:closed="promo.relationFinder.show = false"
-        ></DualPage>
-
-        <DualPage
-          :payload="promo.relationFinder"
-          :reference="8"
-          v-if="numOfMemebers == 20 && promo.website.show && $device.mobile"
-          v-on:closed="promo.website.show = false"
-        ></DualPage>
+        <Promotional :numOfMembers="numOfMembers"/>
 
         <!-- Called When No data is found -->
         <div v-if="tempData == undefined">
@@ -163,7 +151,7 @@
                 @click="puppyDownload"
                 id="download-pic"
                 :disabled="puppyData.loader"
-                v-if="!puppyData.downloaded && numOfMemebers > 1"
+                v-if="!puppyData.downloaded && numOfMembers > 1"
               >
                 <i class="icofont-download" v-if="!puppyData.loader"></i>
                 <div
@@ -176,7 +164,7 @@
 
               <!-- Downloaded Successfully -->
               <div
-                v-else-if="numOfMemebers > 1"
+                v-else-if="numOfMembers > 1"
                 class="download-tree-pic-body"
                 style="position: absolute; top: 85px; z-index: 10; right: 10px"
               >
@@ -247,6 +235,7 @@ import Error from "@/views/Error";
 import Store from "@/store/index";
 import ProData from "@/data.js";
 import DualPage from "@/modals/DualPage";
+import Promotional from  "@/components/Promotional";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
@@ -261,6 +250,7 @@ export default {
     DualPage,
     touchRipple,
     Tick,
+    Promotional
   },
   data() {
     return {
@@ -291,14 +281,6 @@ export default {
         browser: "",
         main_show: false,
       },
-      promo: {
-        relationFinder: {
-          show: Store.state.promos[1],
-        },
-        website: {
-          show: Store.state.promos[2],
-        },
-      },
     };
   },
   computed: {
@@ -318,7 +300,7 @@ export default {
         return Store.state.images;
       },
     },
-    numOfMemebers: {
+    numOfMembers: {
       get() {
         if (Store.state.allMembers) {
           if(Store.state.allMembers.length == 1){
@@ -380,7 +362,7 @@ export default {
       this.puppyData.loader = true;
       let params = {};
       params.family_id = this.metadata[0]._id;
-      params.members = this.numOfMemebers;
+      params.members = this.numOfMembers;
       // let puppyUrl = ProData.getHostURL() + "/puppy/";
       // axios
       //   .post(puppyUrl, params)

@@ -6,17 +6,22 @@
       <p class="tip">Quick Tip</p>
     </center>
     <div class="matter">
-      By using
-      <span class="indian-red">Relation Finder</span> you can find Relation between any 2 persons in the entire tree.
+      Visit
+      <span class="indian-red">www.bloodline.app</span> on bigger screens like Laptop/Desktop to have an awesome view of your Family tree.
+      <div class="extra">Everything is stored in Cloud. No need to create new tree in another device.</div>
     </div>
     <div class="actions">
-      <button @click="checkFunc" class="btn btn-success">Check it out</button>
       <button @click="goBack" class="btn btn-default">Ignore it</button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.extra {
+  font-size: 12px;
+  color: grey;
+  margin-top: 20px;
+}
 .icofont-gear {
   color: dodgerblue;
 }
@@ -60,18 +65,19 @@
 </style>
 
 <script>
-import Store from "../../store/index";
+import Store from "@/store/index";
+import {Promotional} from "@/util/constants";
+
 export default {
-  name: "RelationFinder",
+  name: "Website",
   methods: {
     goBack() {
-      Store.commit("setPromo", 1);
+      Store.commit("setPromo", Promotional.Website.Name);
       this.$emit("close");
     },
     checkFunc() {
       this.goBack();
-      Store.dispatch("setStepNumber", 3);
-      this.$router.push({ name: "RelationFinder" });
+      // this.$router.push({ name: "Analytics" });
     }
   }
 };

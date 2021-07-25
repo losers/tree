@@ -45,9 +45,11 @@ import DeleteMember from "../components/DeleteMember"; //3
 import TimelineForm from "../components/TimelineForm";
 import AuthForm from "../components/AuthForm";
 import Helper from "../components/Helper"; //6
-import RelationFinderPromo from "../components/promotional/RelationFinder"; //7
-import WebsitePromo from "../components/promotional/Website"; //8
+import RelationFinderPromo from "../components/Promotional/Pages/RelationFinder.vue"; //7
+import WebsitePromo from "../components/Promotional/Pages/Website.vue"; //8
 import ReArrageMembers from "../components/ReArrange"; //9
+import DonationPromo from "../components/Promotional/Pages/Donation.vue"; //10
+
 import Vue from "vue";
 // import BottomModal from "./BottomModal.vue";
 Vue.use(BottomModal);
@@ -70,6 +72,7 @@ export default {
         RelationFinderPromo,
         WebsitePromo,
         ReArrageMembers,
+        DonationPromo
       ],
       selectedComponent: "",
     };
