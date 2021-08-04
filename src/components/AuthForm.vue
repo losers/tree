@@ -3,13 +3,26 @@
     <h4 class="title">{{ payload.title }}</h4>
     <div class="col-sm-12 padt0 pad15">
       <form v-on:submit.prevent="validate" @keyup.enter.prevent="validate">
-        <input
-          class="form-control input-sm"
-          placeholder="Enter PIN to unlock"
-          v-model="key"
-          onkeypress="if(this.value.length==4) return false;"
-          type="number"
-        />
+        <div class="input-group">
+          <input
+            class="form-control input-sm"
+            placeholder="Enter PIN to unlock"
+            v-model="key"
+            onkeypress="if(this.value.length==4) return false;"
+            type="number"
+            max="9999"
+            :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
+          />
+          <div class="input-group-append">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              @click="isPinHide = !isPinHide"
+            >
+              <i :class="isPinHide ? 'icofont-eye-blocked' : 'icofont-eye'"></i>
+            </button>
+          </div>
+        </div>
         <div v-if="payload.contact" class="contact-box">
           <div class="contact">Contact Details :</div>
           <div v-if="payload.contact && payload.contact.email">
@@ -77,6 +90,7 @@ export default {
       key: "",
       retry: false,
       vloading: false,
+      isPinHide: true,
     };
   },
   methods: {
