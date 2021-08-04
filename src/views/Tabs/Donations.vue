@@ -77,6 +77,7 @@
                     type="number"
                     v-model="amount"
                     onkeypress="return event.charCode != 45"
+                    min="1"
                   />
                 </div>
               </div>
