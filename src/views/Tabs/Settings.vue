@@ -51,7 +51,7 @@
               >
               <input
                 type="text"
-                class="form-control col-sm-9"
+                class="form-control col-sm-10"
                 id="title"
                 placeholder="Display Title"
                 required
@@ -69,7 +69,7 @@
               <input
                 v-model="data.surname"
                 type="text"
-                class="form-control col-sm-9"
+                class="form-control col-sm-10"
                 disabled
                 required
               />
@@ -82,15 +82,34 @@
                 v-if="!$device.mobile"
                 >Admin PIN :</label
               >
-              <input
-                v-model="data.pin"
-                type="number"
-                class="form-control col-sm-9"
-                id="pin"
-                placeholder="Update 4 digit Admin PIN"
-                onkeypress="if(this.value.length==4) return false;"
-                required
-              />
+              <div class="col-sm-10 input-group p-0">
+                <input
+                  v-model="data.pin"
+                  type="number"
+                  class="form-control"
+                  id="pin"
+                  placeholder="Update 4 digit Admin PIN"
+                  onkeypress="if(this.value.length==4) return false;"
+                  max="9999"
+                  :style="{
+                    '-webkit-text-security': isPinHide.admin ? 'disc' : '',
+                  }"
+                  required
+                />
+                <div class="input-group-append">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    @click="isPinHide.admin = !isPinHide.admin"
+                  >
+                    <i
+                      :class="
+                        isPinHide.admin ? 'icofont-eye-blocked' : 'icofont-eye'
+                      "
+                    ></i>
+                  </button>
+                </div>
+              </div>
             </div>
             <div
               v-if="data.pin == '1234' || data.pin == '0000'"
@@ -106,14 +125,33 @@
                 v-if="!$device.mobile"
                 >View-Only PIN :</label
               >
-              <input
-                v-model="data.view_pin"
-                type="number"
-                class="form-control col-sm-9"
-                id="view-pin"
-                placeholder="Create 4 Digit View-Only PIN"
-                onkeypress="if(this.value.length==4) return false;"
-              />
+              <div class="col-sm-10 input-group p-0">
+                <input
+                  v-model="data.view_pin"
+                  type="number"
+                  class="form-control"
+                  id="view-pin"
+                  placeholder="Create 4 Digit View-Only PIN"
+                  onkeypress="if(this.value.length==4) return false;"
+                  max="9999"
+                  :style="{
+                    '-webkit-text-security': isPinHide.view ? 'disc' : '',
+                  }"
+                />
+                <div class="input-group-append">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    @click="isPinHide.view = !isPinHide.view"
+                  >
+                    <i
+                      :class="
+                        isPinHide.view ? 'icofont-eye-blocked' : 'icofont-eye'
+                      "
+                    ></i>
+                  </button>
+                </div>
+              </div>
             </div>
             <div
               v-if="data.view_pin == data.pin && data.pin"
@@ -135,7 +173,7 @@
               >
               <input
                 type="text"
-                class="form-control col-sm-9"
+                class="form-control col-sm-10"
                 id="name"
                 v-model="data.contact.name"
                 placeholder="Your Name"
@@ -152,7 +190,7 @@
               >
               <input
                 type="email"
-                class="form-control col-sm-9"
+                class="form-control col-sm-10"
                 id="email"
                 v-model="data.contact.email"
                 placeholder="Your Email"
@@ -244,6 +282,10 @@ export default {
       data: {
         contact: {},
         pin: "",
+      },
+      isPinHide: {
+        admin: true,
+        view: true,
       },
       deletingFamily: false,
       deleteSurname: "",
