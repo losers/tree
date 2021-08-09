@@ -152,6 +152,19 @@
                   <div class="text-muted transaction-username">
                     {{ transaction.name }}
                   </div>
+
+                  <p
+                    class="mt-2 text-primary"
+                    v-if="!$device.mobile"
+                    @click="
+                      () => {
+                        $modal.show('showInfo');
+                        transactionIns = transaction;
+                      }
+                    "
+                  >
+                    More
+                  </p>
                 </center>
               </div>
             </div>
@@ -169,7 +182,7 @@
             <span class="award-bg theme-primary-bgdark">
               <i class="icofont-badge h5"></i>
             </span>
-            <span class="text-muted mr-3" :style="{}">
+            <span class="text-muted mr-3">
               {{
                 $device.mobile
                   ? "Donate and Unlock "
@@ -255,6 +268,27 @@
         </div>
       </div>
     </transition>
+    <modal name="showInfo" :draggable="true" height="auto">
+      <div class="p-3 text-muted">
+        <h4 class="text-center mb-3">Transaction Details</h4>
+        <!-- Username -->
+        <div class="m-3">
+          <i class="icofont-ui-user mr-2"></i>
+          {{ transactionIns.name }}
+        </div>
+        <div class="m-3">
+          <span style="font-size: 20px" class="font-weight-bold mr-2">
+            {{ currencyToSymbolMap[transactionIns.currency] }}</span
+          >
+          <span style="font-size: 25px" class="font-weight-bold"
+            >{{ transactionIns.amount }}
+          </span>
+        </div>
+        <div class="m-3">
+          <i class="icofont-clock-time mr-2"></i> Aug 08, 2021
+        </div>
+      </div>
+    </modal>
   </div>
 </template>
 
@@ -271,6 +305,7 @@ export default {
       isMounted: false,
       isTransacting: false,
       transactions: [],
+      transactionIns: {},
       r_key: "",
       supportedCurrencies: ProdData.supportedCurrencies,
       currencyToSymbolMap,
@@ -371,6 +406,22 @@ export default {
           .catch((err) => console.log(err))
           .finally(() => (this.isTransacting = false));
       }
+    },
+    showMoreInfo() {
+      console.log("sdsfdsf");
+      this.$modal.show(
+        "example",
+        {
+          payload: "adsadasd",
+        },
+        {
+          height: "auto",
+          draggable: true,
+          clickToClose: true,
+          scrollable: true,
+        },
+        {}
+      );
     },
   },
 };
