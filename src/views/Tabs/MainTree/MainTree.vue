@@ -235,7 +235,7 @@ import Error from "@/views/Error";
 import Store from "@/store/index";
 import ProData from "@/data.js";
 import DualPage from "@/modals/DualPage";
-import Promotional from  "@/components/Promotional";
+import Promotional from  "@/components/promotional";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
@@ -520,6 +520,12 @@ export default {
 </script>
 
 <style>
+.vsm--mobile-bg{
+  background: #ff5d5d !important;
+}
+.vsm--link_hover > i{
+  background-color: #ff5d5d !important;
+}
 .o-auto {
   overflow: auto;
 }

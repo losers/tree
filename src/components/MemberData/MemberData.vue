@@ -463,6 +463,9 @@ export default {
 </script>
 
 <style>
+.vicp-img{
+  max-width: none;
+}
 .badge {
   position: absolute;
   right: -10px;
