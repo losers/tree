@@ -40,7 +40,7 @@
         src="@/assets/finder.jpg"
         style="margin-top: 70px"
         height="250px"
-        alt="Blood Line Helper"
+        alt="Bloodline Helper"
       />
       <div v-else-if="same">
         <img
@@ -48,7 +48,7 @@
           height="300px"
           width="200px"
           class="mt-5 pt-5"
-          alt="Blood Line Helper"
+          alt="Bloodline Helper"
         />
         <h3 style="margin-top: 60px">L.H.S = R.H.S</h3>
         <h6>Hence Proved</h6>
@@ -120,7 +120,9 @@
           />
           <label for="kannada" class="form-check-label">Kannada</label>
         </div>
-        <TreeChart :json="tree" :images="images" style="padding-top: 40px" />
+        <div style="width: 100%; overflow: auto">
+          <TreeChart :json="tree" :images="images" style="padding-top: 40px" />
+        </div>
       </div>
     </center>
   </div>

@@ -3,7 +3,7 @@ var data = {};
 data.getHostURL = function () {
     return "/api";
 }
-
+data.supportedCurrencies = ["AUD", "BRL", "CAD", "CNY", "CZK", "DKK", "EUR", "HKD", "HUF", "ILS", "JPY", "MYR", "MXN", "TWD", "NZD", "NOK", "PHP", "PLN", "GBP", "RUB", "SGD", "SEK", "CHF", "THB", "USD", "INR"]
 data.relations = {};
 data.relations.western = {
     "3": {
@@ -457,5 +457,6 @@ data.countries = [
     "Zimbabwe",
     "Åland Islands"
 ];
+
 
 export default data;

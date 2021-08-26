@@ -30,9 +30,9 @@
                 <img
                   :src="'data:image/png;base64, ' + treeData.image_url"
                   v-if="treeData.image_url"
-                  alt="Blood Line User"
+                  alt="Bloodline User"
                 />
-                <img src="../assets/dp.png" v-else alt="Blood Line User" />
+                <img src="../assets/dp.png" v-else alt="Bloodline User" />
               </div>
               <div class="name">{{ treeData.name }}</div>
               <i
@@ -56,9 +56,9 @@
                   <img
                     :src="'data:image/png;base64, ' + mate.image_url"
                     v-if="mate.image_url"
-                    alt="Blood Line User"
+                    alt="Bloodline User"
                   />
-                  <img src="../assets/dp.png" v-else alt="Blood Line User" />
+                  <img src="../assets/dp.png" v-else alt="Bloodline User" />
                 </div>
                 <div class="name">{{ mate.name }}</div>
               </div>

@@ -20,9 +20,11 @@
         src="@/assets/tree_gen.jpg"
         class="mt-5"
         height="300px"
-        alt="Blood Line Helper"
+        alt="Bloodline Helper"
       />
-      <TreeChart :json="tree" :images="images" style="padding-top: 70px" />
+      <div style="width: 100%; overflow: auto">
+        <TreeChart :json="tree" :images="images" style="padding-top: 70px" />
+      </div>
     </center>
   </div>
 </template>

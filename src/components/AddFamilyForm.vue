@@ -69,14 +69,16 @@
                 v-if="!$device.mobile"
                 >Display Title :</label
               >
-              <input
-                type="text"
-                class="form-control col-sm-8"
-                id="title"
-                placeholder="Display Title"
-                required
-                v-model="title"
-              />
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control w-100"
+                  id="title"
+                  placeholder="Display Title"
+                  required
+                  v-model="title"
+                />
+              </div>
             </div>
             <div class="form-inline row">
               <label
@@ -86,16 +88,18 @@
                 v-if="!$device.mobile"
                 >Surname :</label
               >
-              <input
-                v-model="surname"
-                type="text"
-                class="form-control col-sm-8"
-                id="surname"
-                :disabled="payload"
-                placeholder="Enter Surname"
-                @input="makeSmall"
-                required
-              />
+              <div class="col-sm-8">
+                <input
+                  v-model="surname"
+                  type="text"
+                  class="form-control w-100"
+                  id="surname"
+                  :disabled="payload"
+                  placeholder="Enter Surname"
+                  @input="makeSmall"
+                  required
+                />
+              </div>
             </div>
             <div class="form-inline row">
               <label
@@ -105,23 +109,36 @@
                 v-if="!$device.mobile"
                 >{{ payload ? "Admin" : "Create" }} PIN :</label
               >
-              <input
-                v-model="pin"
-                type="number"
-                class="form-control col-sm-8"
-                id="pin"
-                :placeholder="pin_placeholder"
-                onkeypress="if(this.value.length==4) return false;"
-                required
-              />
+              <div class="col-sm-8 input-group">
+                <input
+                  v-model="pin"
+                  type="number"
+                  class="form-control input-sm mr-0"
+                  id="pin"
+                  :placeholder="pin_placeholder"
+                  onkeypress="if(this.value.length==4) return false;"
+                  max="9999"
+                  :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
+                  required
+                />
+                <div class="input-group-append mt-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    @click="isPinHide = !isPinHide"
+                  >
+                    <i
+                      :class="isPinHide ? 'icofont-eye-blocked' : 'icofont-eye'"
+                    ></i>
+                  </button>
+                </div>
+              </div>
             </div>
             <div
               v-if="pin == '1234' || pin == '0000'"
               class="mt-3 text-warning"
             >
-              <div class="mb-2">
-                Warning: Pin can be easily guessed.
-              </div>
+              <div class="mb-2">Warning: Pin can be easily guessed.</div>
             </div>
             <div class="form-inline row" v-if="payload">
               <label
@@ -131,14 +148,29 @@
                 v-if="!$device.mobile"
                 >View-Only PIN :</label
               >
-              <input
-                v-model="view_pin"
-                type="number"
-                class="form-control col-sm-8"
-                id="view-pin"
-                placeholder="Create 4 Digit View-Only PIN"
-                onkeypress="if(this.value.length==4) return false;"
-              />
+              <div class="col-sm-8 input-group">
+                <input
+                  v-model="view_pin"
+                  type="number"
+                  class="form-control input-sm mr-0"
+                  id="view-pin"
+                  placeholder="Create 4 Digit View-Only PIN"
+                  onkeypress="if(this.value.length==4) return false;"
+                  max="9999"
+                  :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
+                />
+                <div class="input-group-append mt-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    @click="isPinHide = !isPinHide"
+                  >
+                    <i
+                      :class="isPinHide ? 'icofont-eye-blocked' : 'icofont-eye'"
+                    ></i>
+                  </button>
+                </div>
+              </div>
             </div>
             <div v-if="view_pin == pin && pin" class="mt-3 text-danger">
               <div class="mb-2">Admin PIN and View-Only PIN cannot be same</div>
@@ -210,7 +242,11 @@
                   <span>{{ payload ? "Update" : "Create" }}</span>
                 </button>
 
-                <button type="button" class="btn btn-default ml-3" @click="goBack">
+                <button
+                  type="button"
+                  class="btn btn-default ml-3"
+                  @click="goBack"
+                >
                   Cancel
                 </button>
               </div>
@@ -273,6 +309,7 @@ export default {
       loading: false,
       pin_placeholder: "",
       pin: "",
+      isPinHide: true,
       view_pin: "",
       isDelete: false,
       errSurname: null,
@@ -349,6 +386,10 @@ export default {
     makeSmall() {
       this.surname = this.surname.toLowerCase();
       this.surname = this.surname.split(" ").join("");
+      this.surname = this.surname.replace(
+        /[\\~`!@#$%^&*()+=/{}[\];:'"<>.?]/g,
+        ""
+      ); //accepts , - _ character
     },
   },
 };

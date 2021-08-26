@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "./views/Home.vue";
+import List from "./views/List";
+import Payment from "./views/Payment.vue";
 import MainTree from "./views/Tabs/MainTree/MainTree.vue";
 import Subtree from "./views/Tabs/MainTree/Subtree.vue";
 
@@ -13,7 +14,12 @@ const myrouter = new VueRouter({
         {
             path: "/",
             name: "Home",
-            component: Home,
+            component: List,
+        },
+        {
+            path: "/payment-confirm",
+            name: "Payment",
+            component: Payment,
         },
         {
             path: "/error",

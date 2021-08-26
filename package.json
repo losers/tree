@@ -17,6 +17,7 @@
     "typeface-comfortaa": "^1.1.4",
     "vue": "^2.6.11",
     "vue-bottom-dialog": "^1.0.5",
+    "vue-confetti": "^2.2.1",
     "vue-device-detector": "^1.1.3",
     "vue-grid-layout": "^2.3.7",
     "vue-gridster": "^1.0.7",
@@ -34,7 +35,8 @@
     "vue-typer": "^1.2.0",
     "vuedraggable": "^2.24.3",
     "vuetable-2": "^2.0.0-beta.4",
-    "vuex": "^3.3.0"
+    "vuex": "^3.3.0",
+    "currency-symbol-map": "^5.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

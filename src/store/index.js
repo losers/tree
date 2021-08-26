@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-import ProdData from "../data.js";
+import ProdData from "@/data.js";
 import Algos from "../algos/analytics/relation-finder";
-import { setExitNodeInfo } from "../util/helper";
+import { setExitNodeInfo } from "@/util/helper";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -20,8 +20,9 @@ export default new Vuex.Store({
     metadata: {},
     view_only: null,
     promos: {
-      1: true, //Relation Finder
-      2: true  // Website
+      "RelationFinder": true, //Relation Finder
+      "Website": true,  // Website
+      "Donation": true  //Donation Promo
     },
     subtree:{},
     sub_member_data: {},
@@ -74,8 +75,8 @@ export default new Vuex.Store({
     setSubMemberData(state,  sub_member_data) {
       state.sub_member_data = sub_member_data;
     },
-    setPromo(state, promoNo) {
-      state.promos[promoNo] = false;
+    setPromo(state, promoName) {
+      state.promos[promoName] = false;
     },
     setSubtreeMeta(state,  subtree_data) {
       state.subtree_meta = subtree_data;

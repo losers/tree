@@ -3,20 +3,27 @@
     <span class="close-btn" @click="goBack">x</span>
     <center class="tip-header">
       <img src="@/assets/tip.jpg" alt="Tip for family tree" width="50" />
-      <p class="tip">Quick Tip</p>
+      <p class="tip">Quick Info</p>
     </center>
     <div class="matter">
-      Visit
-      <span class="indian-red">www.bloodline.ga</span> on bigger screens like Laptop/Desktop to have an awesome view of your Family tree.
-      <div class="extra">Everything is stored in Cloud. No need to create new tree in another device.</div>
+      Bloodline is 
+      <span class="indian-red">Free</span> Forever. If you like our work please support us by donating.
+      <div class="extra">We run this website completly on donations.</div>
     </div>
     <div class="actions">
-      <button @click="goBack" class="btn btn-default">Ignore it</button>
+        <button @click="checkFunc" class="btn btn-success">
+            Donate
+            <i class="icofont-heart-alt"></i>
+        </button>
+        <button @click="goBack" class="btn btn-default">Ignore it</button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.icofont-heart-alt{
+    color: red;
+}
 .extra {
   font-size: 12px;
   color: grey;
@@ -65,17 +72,19 @@
 </style>
 
 <script>
-import Store from "../../store/index";
+import Store from "@/store/index";
+import {Promotional} from "@/util/constants";
+
 export default {
-  name: "Website",
+  name: "DonationPromo",
   methods: {
     goBack() {
-      Store.commit("setPromo", 2);
+      Store.commit("setPromo", Promotional.Donation.Name);
       this.$emit("close");
     },
     checkFunc() {
       this.goBack();
-      // this.$router.push({ name: "Analytics" });
+      this.$router.push({ name: "Donations" });
     }
   }
 };

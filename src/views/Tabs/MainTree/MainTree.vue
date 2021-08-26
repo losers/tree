@@ -69,19 +69,7 @@
         ></DualPage>
 
         <!-- Promotional Pages -->
-        <DualPage
-          :payload="promo.relationFinder"
-          :reference="7"
-          v-if="numOfMemebers == 5 && promo.relationFinder.show"
-          v-on:closed="promo.relationFinder.show = false"
-        ></DualPage>
-
-        <DualPage
-          :payload="promo.relationFinder"
-          :reference="8"
-          v-if="numOfMemebers == 20 && promo.website.show && $device.mobile"
-          v-on:closed="promo.website.show = false"
-        ></DualPage>
+        <Promotional :numOfMembers="numOfMembers"/>
 
         <!-- Called When No data is found -->
         <div v-if="tempData == undefined">
@@ -90,7 +78,7 @@
             src="@/assets/stickman_family.jpg"
             class="col-xs-12 col-sm-7"
             style="margin-top: 160px"
-            alt="Blood Line Helper"
+            alt="Bloodline Helper"
             v-if="!$device.mobile"
           />
           <!-- Page Content -->
@@ -103,7 +91,7 @@
                 { 'desk-intro-text': !$device.mobile, padt340: $device.mobile },
               ]"
             >
-              Let's add members to Family Tree
+              Add yourself and start creating your family tree
             </h5>
           </div>
           <!-- Add Root Button -->
@@ -117,7 +105,7 @@
                 class="btn btn-success my-btn"
                 style="font-weight: bolder; font-size: 17px"
               >
-                + Add Person
+                + Add Me
               </button>
             </touch-ripple>
           </div>
@@ -163,7 +151,7 @@
                 @click="puppyDownload"
                 id="download-pic"
                 :disabled="puppyData.loader"
-                v-if="!puppyData.downloaded && numOfMemebers > 1"
+                v-if="!puppyData.downloaded && numOfMembers > 1"
               >
                 <i class="icofont-download" v-if="!puppyData.loader"></i>
                 <div
@@ -176,7 +164,7 @@
 
               <!-- Downloaded Successfully -->
               <div
-                v-else-if="numOfMemebers > 1"
+                v-else-if="numOfMembers > 1"
                 class="download-tree-pic-body"
                 style="position: absolute; top: 85px; z-index: 10; right: 10px"
               >
@@ -212,7 +200,7 @@
                 ></i>
               </center>
               <h4 style="color: #848181">
-                Click on this person to add Parents / Children etc.,
+                Click on you to add your Parents / Children etc.,
               </h4>
             </div>
           </center>
@@ -247,10 +235,13 @@ import Error from "@/views/Error";
 import Store from "@/store/index";
 import ProData from "@/data.js";
 import DualPage from "@/modals/DualPage";
+import Promotional from  "@/components/promotional";
 import { touchRipple } from "vue-touch-ripple";
 import "vue-touch-ripple/dist/vue-touch-ripple.css";
 import * as htmlToImage from "html-to-image";
 import Tick from "@/components/small/tick";
+import bomb from "@/bomb";
+
 export default {
   name: "MainTree",
   components: {
@@ -259,6 +250,7 @@ export default {
     DualPage,
     touchRipple,
     Tick,
+    Promotional
   },
   data() {
     return {
@@ -289,14 +281,6 @@ export default {
         browser: "",
         main_show: false,
       },
-      promo: {
-        relationFinder: {
-          show: Store.state.promos[1],
-        },
-        website: {
-          show: Store.state.promos[2],
-        },
-      },
     };
   },
   computed: {
@@ -316,9 +300,12 @@ export default {
         return Store.state.images;
       },
     },
-    numOfMemebers: {
+    numOfMembers: {
       get() {
         if (Store.state.allMembers) {
+          if(Store.state.allMembers.length == 1){
+            bomb.fireworks();
+          }
           return Store.state.allMembers.length;
         }
         return 0;
@@ -375,7 +362,7 @@ export default {
       this.puppyData.loader = true;
       let params = {};
       params.family_id = this.metadata[0]._id;
-      params.members = this.numOfMemebers;
+      params.members = this.numOfMembers;
       // let puppyUrl = ProData.getHostURL() + "/puppy/";
       // axios
       //   .post(puppyUrl, params)
@@ -533,6 +520,12 @@ export default {
 </script>
 
 <style>
+.vsm--mobile-bg{
+  background: #ff5d5d !important;
+}
+.vsm--link_hover > i{
+  background-color: #ff5d5d !important;
+}
 .o-auto {
   overflow: auto;
 }

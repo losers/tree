@@ -17,7 +17,7 @@ module.exports = {
                 filename: 'index.html',
             },
             app: {
-                entry: 'src/pages/list/list.js',
+                entry: 'src/pages/app/app.js',
                 template: 'public/app.html',
                 filename: 'app.html',
             }
