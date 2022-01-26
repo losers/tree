@@ -261,7 +261,7 @@ export default {
     AllFamilies,
   },
   created() {
-    const locale = "sw";
+    const locale = "en"; // try changing value to sw
     this.$i18n.locale = locale;
     localStorage.setItem("locale", locale); // save in local to work even after a refresh
   },
