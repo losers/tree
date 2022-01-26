@@ -100,7 +100,9 @@
               class="button-box"
               :speed="1.1"
             >
-              <button class="btn btn-success my-btn">+ Your Family Tree</button>
+              <button class="btn btn-success my-btn">
+                + {{ $t("your_family_tree") }}
+              </button>
             </touch-ripple>
           </center>
         </div>
@@ -257,6 +259,11 @@ export default {
     SuperFamilies,
     DemoFamilies,
     AllFamilies,
+  },
+  created() {
+    const locale = "sw";
+    this.$i18n.locale = locale;
+    localStorage.setItem("locale", locale); // save in local to work even after a refresh
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id, contact) {

@@ -9,6 +9,7 @@ import VModal from "vue-js-modal";
 import store from '../../store'
 import '../../..//node_modules/timeline-vuejs/dist/timeline-vuejs.css'
 import linkify from "vue-linkify";
+import i18n from '@/i18n';
 
 Vue.directive("linkified", linkify);
 Vue.use(VueParticles)
@@ -24,5 +25,6 @@ axios.defaults.withCredentials = true;
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount('#app')

@@ -2,6 +2,14 @@
   <router-view></router-view>
 </template>
 
+<script>
+export default {
+  name: "MainApp",
+  created() {
+    this.$i18n.locale = localStorage.getItem("locale") ?? "en";  // check if locale is already assigned
+  },
+};
+</script>
 <style>
 .theme-primary-color {
   color: #eb9797;
