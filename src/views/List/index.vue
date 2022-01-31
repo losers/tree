@@ -69,13 +69,6 @@
             id="title"
             :style="{ 'padding-top': $device.mobile ? '20px' : '50px' }"
           >
-            <div class="help" v-if="$device.mobile">
-              <i
-                class="icofont-chat"
-                style="margin-right: -10px; font-size: 35px"
-                @click="helperFunc"
-              ></i>
-            </div>
             <span
               style="font-weight: 500; color: white"
               :style="{
@@ -132,6 +125,14 @@
           v-on:closed="helper.show = false"
         ></DualPage>
 
+        <!-- 4 - Shows list of lanuages -->
+        <DualPage
+          :payload="{}"
+          :reference="11"
+          v-if="helper.showLanguages == true"
+          v-on:closed="helper.showLanguages = false"
+        ></DualPage>
+
         <!-- All Families List View -->
         <div style="background: #f9f9f9; padding: 40px 0px">
           <center>
@@ -155,6 +156,13 @@
         </div>
       </div>
 
+      <div class="bottom-btn move-right-20" v-if="$device.mobile">
+        <i class="icofont-chat" style="font-size: 32px" @click="helperFunc"></i>
+      </div>
+
+      <div class="bottom-btn move-left-20" v-if="$device.mobile">
+        <i class="icofont-world" style="font-size: 32px" @click="helper.showLanguages = true" ></i >
+      </div>
       <!-- Surname Tree -->
       <router-view></router-view>
     </section>
@@ -178,19 +186,24 @@
 </style>
 
 <style scoped>
-.help {
+.bottom-btn {
   position: fixed;
   bottom: 20px;
   background: #cd5c5c;
   border-radius: 50%;
   color: #fff;
-  right: 20px;
   height: 60px;
   width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+}
+.move-right-20 {
+  right: 20px;
+}
+.move-left-20 {
+  left: 20px;
 }
 #title {
   left: 0;
@@ -247,6 +260,7 @@ export default {
       loadingMore: false,
       helper: {
         show: false,
+        showLanguages: false,
       },
       notificationsIcon: false,
     };
@@ -259,11 +273,6 @@ export default {
     SuperFamilies,
     DemoFamilies,
     AllFamilies,
-  },
-  created() {
-    const locale = "en"; // try changing value to sw
-    this.$i18n.locale = locale;
-    localStorage.setItem("locale", locale); // save in local to work even after a refresh
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id, contact) {
