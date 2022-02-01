@@ -11,16 +11,16 @@
         align-items-start
       "
     >
-      <h5>How to create Demo Families ?</h5>
+      <h5>{{ $t("how_to_create_demo_families") }}</h5>
       <div>
-        <strong class="mr-2">1. </strong> Create a normal family tree.
+        <strong class="mr-2">1. </strong> {{ $t("create_normal_famiy_tree") }}.
       </div>
       <div>
         <strong class="mr-2">2. </strong> Email surname to
-        <i>hello@bloodline.app</i> along with your details.
+        <i>hello@bloodline.app</i> {{ $t("along_with_details") }}.
       </div>
       <div class="mt-2">
-        <strong class="mr-2">Thats it, Your Demo Family will go live</strong>
+        <strong class="mr-2">{{ $t("thats_it_demo_live") }}</strong>
       </div>
     </div>
     <!-- Search Bar -->
@@ -30,7 +30,7 @@
         style="height: 45px"
         :class="{ 'desktop-search': $device.mobile }"
         v-model="text"
-        :placeholder="`Find in ${totalFamilies} Demo families..`"
+        :placeholder="`${$t('find_in')} ${totalFamilies} ${$t('families')}..`"
         class="form-control input-lg float-left search-bar"
       />
       <button
@@ -92,7 +92,7 @@
             <span v-if="$device.mobile"
               ><i class="icofont-edit text-muted mr-2"></i
             ></span>
-            <span class="text-muted" v-else>Contributors: </span>
+            <span class="text-muted" v-else>{{ $t("contributors") }}: </span>
             <span v-for="(contra, i) in data.contras" :key="i">
               <a :href="contra.link" @click.stop target="_blank">{{
                 contra.name

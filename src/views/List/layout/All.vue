@@ -6,7 +6,7 @@
         style="height: 45px"
         :class="{ 'desktop-search': $device.mobile }"
         v-model="searchText"
-        :placeholder="`Find in ${totalFamilies} families..`"
+        :placeholder="`${$t('find_in')} ${totalFamilies} ${$t('families')}..`"
         class="form-control input-lg search-bar float-left"
       />
       <button
@@ -74,7 +74,7 @@
             'mobile-lock': $device.mobile,
           }"
           data-toggle="tooltip"
-          title="Locked"
+          :title="$t('locked')"
           v-else
         ></i>
 
@@ -85,10 +85,13 @@
           >
             {{ data.title }}
           </span>
-          <p class="surname">Surname : {{ data.surname }}</p>
+          <p class="surname">{{ $t("surname") }} : {{ data.surname }}</p>
         </div>
 
-        <div class="award-bg theme-primary-bgdark" v-if="data.b_coins && data.b_coins > 0">
+        <div
+          class="award-bg theme-primary-bgdark"
+          v-if="data.b_coins && data.b_coins > 0"
+        >
           <i class="icofont-badge h5"></i>
         </div>
         <div v-else></div>

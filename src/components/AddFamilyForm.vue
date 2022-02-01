@@ -1,272 +1,162 @@
 <template>
   <div class="FormData p-5">
-    <h3 v-if="!created && !isDelete && !payload">
+    <h3 class="mb-4">
       <span>Creating a Family Tree</span>
       <span class="close-btn" v-if="!$device.mobile" @click="goBack">x</span>
       <span v-if="surname" class="ml-1">for {{ surname }}</span>
     </h3>
-    <h3 v-if="!created && !isDelete && payload">
-      Update Details
-      <span class="close-btn" v-if="!$device.mobile" @click="goBack">x</span>
-    </h3>
+
     <transition name="fade" mode="out-in">
-      <!-- UI will be displayed after clking delete button -->
-      <div v-if="isDelete && !created">
-        <h3>
-          Delete Family Permanently
-          <span class="close-btn" @click="goBack">x</span>
-        </h3>
-        <h6 class="mt-3">
-          Please enter
-          <code>{{ surname }}</code> in the input box to delete this family tree
-          permanently
-        </h6>
-        <input class="form-control input-sm" type="text" v-model="errSurname" />
-        <button
-          :disabled="errSurname != surname || loading"
-          class="btn btn-danger"
-          @click="deleteFamily"
-        >
-          <span
-            class="spinner-border spinner-border-sm"
-            v-show="loading"
-            style="margin-right: 8px"
-          ></span
-          >Delete Permanently
-        </button>
-
-        <button type="button" class="btn btn-default" @click="goBack">
-          <span>Cancel</span>
-        </button>
-      </div>
-
       <!-- Displays for editing and Creating Meta Data -->
-      <form v-on:submit.prevent="sendData" v-else-if="!created">
-        <section v-if="editFormErrored && payload">
-          {{ editFormErrored }}
-        </section>
-        <section v-else>
+      <form v-on:submit.prevent="sendData">
+        <section>
+          <div class="form-inline row">
+            <label
+              for="title"
+              class="col"
+              style="justify-content: left"
+              v-if="!$device.mobile"
+              >{{ $t("display_title") }} :</label
+            >
+            <input
+              type="text"
+              class="form-control col-sm-7"
+              id="title"
+              :placeholder="$t('display_title')"
+              required
+              v-model="title"
+            />
+          </div>
+          <div class="form-inline row">
+            <label
+              for="nickname"
+              class="col"
+              style="justify-content: left"
+              v-if="!$device.mobile"
+              >{{ $t("surname") }} :</label
+            >
+            <input
+              v-model="surname"
+              type="text"
+              class="form-control col-sm-7"
+              id="surname"
+              placeholder="Enter Surname"
+              @input="makeSmall"
+              required
+            />
+          </div>
+          <div class="form-inline row">
+            <label
+              for="pin"
+              class="col"
+              style="justify-content: left"
+              v-if="!$device.mobile"
+              >Create PIN :</label
+            >
+            <input
+              v-model="pin"
+              type="number"
+              class="form-control col-sm-7"
+              id="pin"
+              placeholder="Create 4 digit PIN"
+              onkeypress="if(this.value.length==4) return false;"
+              max="9999"
+              :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-outline-secondary pin-btn"
+              @click="isPinHide = !isPinHide"
+            >
+              <i :class="isPinHide ? 'icofont-eye-blocked' : 'icofont-eye'"></i>
+            </button>
+          </div>
+          <div v-if="pin == '1234' || pin == '0000'" class="mt-3 text-warning">
+            <div class="mb-2">Warning: Pin can be easily guessed.</div>
+          </div>
+
+          <!-- Optional Header -->
+          <hr class="mt-5 mb-3" style="background-color: white" />
+          <p style="margin-top: -29px">
+            <center>
+              <span
+                style="background-color: white; padding: 20px; color: #969696"
+                >{{ $t("optional") + " " + $t("contact_details") }}</span
+              >
+            </center>
+          </p>
+          <div style="font-size: 12px; color: rgb(160, 160, 160)">
+            This helps your relatives to contact you.
+          </div>
+          <div class="form-inline row">
+            <label
+              for="name"
+              class="col"
+              style="justify-content: left"
+              v-if="!$device.mobile"
+              >{{ $t("your_name") }} :</label
+            >
+            <input
+              v-model="contact.name"
+              type="text"
+              class="form-control col-sm-7"
+              id="name"
+              :placeholder="$t('your_name')"
+            />
+          </div>
+
+          <div class="form-inline row">
+            <label
+              for="email"
+              class="col"
+              style="justify-content: left"
+              v-if="!$device.mobile"
+              >{{ $t("your_email") }} :</label
+            >
+            <input
+              v-model="contact.email"
+              type="email"
+              class="form-control col-sm-7"
+              id="email"
+              :placeholder="$t('your_email')"
+            />
+          </div>
           <div
-            v-if="editFormLoading && payload"
             style="
-              font-size: 20px;
-              justify-content: center;
               display: flex;
-              margin-top: 60px;
-              color: indianred;
+              margin-top: 30px;
+              justify-content: space-between;
             "
           >
-            <div
-              class="spinner-border spinner-border-sm"
-              style="width: 5rem; height: 5rem"
-            ></div>
-          </div>
-          <span v-if="!editFormLoading">
-            <div class="form-inline row">
-              <label
-                class="col"
-                style="justify-content: left"
-                v-if="!$device.mobile"
-                >Display Title :</label
+            <div>
+              <button
+                type="submit"
+                class="btn btn-success"
+                :disabled="pin.length != 4 || loading || pin == view_pin"
               >
-              <div class="col-sm-8">
-                <input
-                  type="text"
-                  class="form-control w-100"
-                  id="title"
-                  placeholder="Display Title"
-                  required
-                  v-model="title"
-                />
-              </div>
-            </div>
-            <div class="form-inline row">
-              <label
-                for="nickname"
-                class="col"
-                style="justify-content: left"
-                v-if="!$device.mobile"
-                >Surname :</label
-              >
-              <div class="col-sm-8">
-                <input
-                  v-model="surname"
-                  type="text"
-                  class="form-control w-100"
-                  id="surname"
-                  :disabled="payload"
-                  placeholder="Enter Surname"
-                  @input="makeSmall"
-                  required
-                />
-              </div>
-            </div>
-            <div class="form-inline row">
-              <label
-                for="pin"
-                class="col"
-                style="justify-content: left"
-                v-if="!$device.mobile"
-                >{{ payload ? "Admin" : "Create" }} PIN :</label
-              >
-              <div class="col-sm-8 input-group">
-                <input
-                  v-model="pin"
-                  type="number"
-                  class="form-control input-sm mr-0"
-                  id="pin"
-                  :placeholder="pin_placeholder"
-                  onkeypress="if(this.value.length==4) return false;"
-                  max="9999"
-                  :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
-                  required
-                />
-                <div class="input-group-append mt-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    @click="isPinHide = !isPinHide"
-                  >
-                    <i
-                      :class="isPinHide ? 'icofont-eye-blocked' : 'icofont-eye'"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="pin == '1234' || pin == '0000'"
-              class="mt-3 text-warning"
-            >
-              <div class="mb-2">Warning: Pin can be easily guessed.</div>
-            </div>
-            <div class="form-inline row" v-if="payload">
-              <label
-                for="view-pin"
-                class="col"
-                style="justify-content: left"
-                v-if="!$device.mobile"
-                >View-Only PIN :</label
-              >
-              <div class="col-sm-8 input-group">
-                <input
-                  v-model="view_pin"
-                  type="number"
-                  class="form-control input-sm mr-0"
-                  id="view-pin"
-                  placeholder="Create 4 Digit View-Only PIN"
-                  onkeypress="if(this.value.length==4) return false;"
-                  max="9999"
-                  :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
-                />
-                <div class="input-group-append mt-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    @click="isPinHide = !isPinHide"
-                  >
-                    <i
-                      :class="isPinHide ? 'icofont-eye-blocked' : 'icofont-eye'"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div v-if="view_pin == pin && pin" class="mt-3 text-danger">
-              <div class="mb-2">Admin PIN and View-Only PIN cannot be same</div>
-            </div>
-            <!-- Optional Header -->
-            <hr class="mt-5 mb-3" style="background-color: white" />
-            <p style="margin-top: -29px">
-              <center>
                 <span
-                  style="background-color: white; padding: 20px; color: #969696"
-                  >Optional Contact Details</span
-                >
-              </center>
-            </p>
-            <div style="font-size: 12px; color: rgb(160, 160, 160)">
-              This helps your relatives to contact you.
-            </div>
-            <div class="form-inline row">
-              <label
-                for="name"
-                class="col"
-                style="justify-content: left"
-                v-if="!$device.mobile"
-                >Your Name :</label
-              >
-              <input
-                v-model="contact.name"
-                type="text"
-                class="form-control col-sm-8"
-                id="name"
-                placeholder="Your Name"
-              />
-            </div>
-
-            <div class="form-inline row">
-              <label
-                for="email"
-                class="col"
-                style="justify-content: left"
-                v-if="!$device.mobile"
-                >Your Email :</label
-              >
-              <input
-                v-model="contact.email"
-                type="email"
-                class="form-control col-sm-8"
-                id="email"
-                placeholder="Your Email"
-              />
-            </div>
-            <div
-              style="
-                display: flex;
-                margin-top: 30px;
-                justify-content: space-between;
-              "
-            >
-              <div>
-                <button
-                  type="submit"
-                  class="btn btn-success"
-                  :disabled="pin.length != 4 || loading || pin == view_pin"
-                >
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    v-show="loading"
-                    style="margin-right: 8px"
-                  ></span>
-                  <span>{{ payload ? "Update" : "Create" }}</span>
-                </button>
-
-                <button
-                  type="button"
-                  class="btn btn-default ml-3"
-                  @click="goBack"
-                >
-                  Cancel
-                </button>
-              </div>
+                  class="spinner-border spinner-border-sm"
+                  v-show="loading"
+                  style="margin-right: 8px"
+                ></span>
+                <span>Create</span>
+              </button>
 
               <button
                 type="button"
-                v-show="payload"
-                class="btn btn-danger"
-                @click="
-                  isDelete = true;
-                  created = false;
-                "
+                class="btn btn-default ml-3"
+                @click="goBack"
               >
-                Delete
+                {{ $t("cancel") }}
               </button>
             </div>
-            <div v-if="errored" class="mt-3 text-danger">
-              <div class="mb-2">Surname {{ surname }}, already exists</div>
+          </div>
+          <div v-if="errored" class="mt-3 text-danger">
+            <div class="mb-2">
+              {{ $t("surname") }} {{ surname }}, already exists
             </div>
-          </span>
+          </div>
         </section>
       </form>
 
@@ -291,15 +181,10 @@
 
 <script>
 import Axios from "axios";
-// import Tick from "./small/tick.vue";
 import ProdData from "../data.js";
 
 export default {
   name: "AddFamilyForm",
-  components: {
-    // Tick
-  },
-  props: ["payload"],
   data() {
     return {
       surname: null,
@@ -307,7 +192,6 @@ export default {
       created: false,
       errored: null,
       loading: false,
-      pin_placeholder: "",
       pin: "",
       isPinHide: true,
       view_pin: "",
@@ -321,60 +205,24 @@ export default {
       },
     };
   },
-  mounted() {
-    this.pin_placeholder = `Create 4 Digit ${this.payload ? "Admin" : ""} PIN`;
-    if (this.payload) {
-      this.title = this.payload.title;
-      this.surname = this.payload.surname;
-      if (this.payload.contact) {
-        this.contact = this.payload.contact;
-      }
-      this.view_pin = this.payload.view_pin;
-      this.editFormLoading = true;
-      // Axios.get(ProdData.getHostURL() + "/meta/get/" + this.payload._id)
-      //   .then((data) => {
-      //     this.pin = data.data.pin;
-      //   })
-      //   .catch((err) => (this.editFormErrored = err))
-      //   .finally(() => (this.editFormLoading = false));
-    } else {
-      this.editFormLoading = false;
-      this.editFormErrored = false;
-    }
-  },
+
   methods: {
     sendData() {
       this.loading = true;
-      if (this.payload) {
-        Axios.put(ProdData.getHostURL() + "/meta/update", {
-          title: this.title,
-          _id: this.payload._id,
-          created_at: this.payload.created_at,
-          pin: this.pin,
-          view_pin: this.view_pin,
-          contact: this.contact,
+
+      Axios.post(ProdData.getHostURL() + "/meta/add", {
+        title: this.title,
+        surname: this.surname,
+        pin: this.pin,
+        contact: this.contact,
+      })
+        .then(() => {
+          this.goFamily();
         })
-          .then(() => {
-            this.loading = false;
-            this.$emit("close", this.title);
-          })
-          .catch((err) => (this.errored = err));
-      } else {
-        Axios.post(ProdData.getHostURL() + "/meta/add", {
-          title: this.title,
-          surname: this.surname,
-          pin: this.pin,
-          contact: this.contact,
+        .catch((err) => {
+          this.errored = err;
         })
-          .then(() => {
-            this.goFamily();
-            // this.created = true;
-          })
-          .catch((err) => {
-            this.errored = err;
-          })
-          .finally(() => (this.loading = false));
-      }
+        .finally(() => (this.loading = false));
     },
     goBack() {
       this.$emit("close");
@@ -396,6 +244,11 @@ export default {
 </script>
 
 <style scoped>
+.pin-btn {
+  position: absolute;
+  right: 45px;
+  border: none;
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;

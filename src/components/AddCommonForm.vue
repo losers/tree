@@ -143,7 +143,7 @@
           />
         </div>
         <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Address :</label>
+          <label class="d-none d-sm-flex col-md-4">{{$t('address')}} :</label>
           <input
             type="text"
             class="form-control col-md-7 col-sm-12"

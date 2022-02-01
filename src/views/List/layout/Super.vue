@@ -11,12 +11,12 @@
         align-items-start
       "
     >
-      <h5>What are Super Families ?</h5>
+      <h5>{{ $t("what_are") + " " + $t("super") + " " + $t("families") }} ?</h5>
       <div class="mt-2">
-        Families who donate and support Bloodline become super families
+        {{ $t("families_who_donate") }}
       </div>
       <div>
-        For more, write to
+        {{ $t("find_more_write_to") }}
         <strong>hello@bloodline.app</strong>
       </div>
     </div>
@@ -27,14 +27,14 @@
         style="height: 45px"
         :class="{ 'desktop-search': $device.mobile }"
         v-model="text"
-        :placeholder="`Find in ${totalFamilies} Super families..`"
+        :placeholder="`${$t('find_in')} ${totalFamilies} ${$t('families')}..`"
         class="form-control input-lg float-left search-bar"
       />
       <button
         type="submit"
         class="btn"
         style="float: right; margin-right: 10px; margin-top: -40px"
-ge    >
+      >
         <i class="icofont-search-2"></i>
       </button>
     </form>
@@ -93,7 +93,7 @@ ge    >
             'mobile-lock': $device.mobile,
           }"
           data-toggle="tooltip"
-          title="Locked"
+          :title="$t('locked')"
           v-else
         ></i>
 
@@ -104,7 +104,7 @@ ge    >
           >
             {{ data.title }}
           </span>
-          <p class="surname">Surname : {{ data.surname }}</p>
+          <p class="surname">{{ $t("surname") }} : {{ data.surname }}</p>
         </div>
 
         <div class="award-bg theme-primary-bgdark">

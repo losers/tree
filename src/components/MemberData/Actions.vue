@@ -10,7 +10,7 @@
       </button>
 
       <button @click="addMember(1)" class="col-10 btn btn-success mb-3">
-        + Add Child
+        + {{ $t("add_child") }}
       </button>
 
       <button

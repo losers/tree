@@ -9,14 +9,13 @@
         }"
       ></div>
       <router-link to="" class="active"
-        ><i class="icofont-people"></i>All</router-link
+        ><i class="icofont-people"></i>{{ $t("all") }}</router-link
       >
       <router-link to="#demo"
-        ><i class="icofont-light-bulb"></i
-        >Demo</router-link
+        ><i class="icofont-light-bulb"></i>{{ $t("demo") }}</router-link
       >
       <router-link to="#super"
-        ><i class="icofont-thunder-light"></i>Super</router-link
+        ><i class="icofont-thunder-light"></i>{{ $t("super") }}</router-link
       >
     </nav>
   </div>

@@ -82,7 +82,11 @@
           <!-- Typer for Big Devices -->
           <center v-show="!$device.mobile">
             <vue-typer
-              :text="['Decode Your DNA !', 'Find your Roots !', 'Have Fun !']"
+              :text="[
+                $t('decode_your_dna'),
+                $t('find_your_roots'),
+                $t('have_fun'),
+              ]"
             ></vue-typer>
           </center>
 
@@ -160,8 +164,12 @@
         <i class="icofont-chat" style="font-size: 32px" @click="helperFunc"></i>
       </div>
 
-      <div class="bottom-btn move-left-20" v-if="$device.mobile">
-        <i class="icofont-world" style="font-size: 32px" @click="helper.showLanguages = true" ></i >
+      <div class="bottom-btn move-left-20">
+        <i
+          class="icofont-world"
+          style="font-size: 32px"
+          @click="helper.showLanguages = true"
+        ></i>
       </div>
       <!-- Surname Tree -->
       <router-view></router-view>

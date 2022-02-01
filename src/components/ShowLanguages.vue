@@ -1,29 +1,37 @@
 <template>
   <center>
     <div class="col-10 mt-5">
-      <h3>Select a Language</h3>
-      <div
-        class="d-flex"
-        v-for="language in languagesList"
-        :key="language.value"
-      >
-        <input
-          class="col-1"
-          type="radio"
-          name="language"
-          v-model="selectedLanguage"
-          :value="language.value"
-          id="male"
-          required
-        />
-
-        <p for="male" class="ml-2" style="color: black">
+      <h4 class="mb-4">Select a Language</h4>
+      <div v-for="language in languagesList" :key="language.value">
+        <label class="d-flex align-items-center listLabel">
           {{ language.name }}
-        </p>
+          <input
+            class="col-1"
+            type="radio"
+            name="language"
+            v-model="selectedLanguage"
+            :value="language.value"
+            id="lang"
+            required
+          />
+          <span></span>
+        </label>
       </div>
-      <div class="row justify-content-between mt-5 mb-3">
-        <button class="btn btn-success" @click="activateLanguage">
+      <div class="row justify-content-between mt-5 mb-4">
+        <button
+          class="btn btn-success"
+          @click="activateLanguage"
+          :disabled="selectedLanguage == initialLanguage"
+        >
           Switch
+          {{
+            selectedLanguage != initialLanguage
+              ? "to " +
+                languagesList.filter(
+                  (lang) => lang.value == selectedLanguage
+                )[0]["name"]
+              : ""
+          }}
         </button>
         <button @click="close" class="btn btn-danger" type="button">
           Cancel
@@ -47,12 +55,14 @@ export default {
           value: "sw",
         },
       ],
+      initialLanguage: "",
       selectedLanguage: "",
     };
   },
   mounted() {
     // get active language
-    this.selectedLanguage = localStorage.getItem("locale") ?? "en";
+    this.initialLanguage = localStorage.getItem("locale") ?? "en";
+    this.selectedLanguage = this.initialLanguage;
   },
   methods: {
     activateLanguage() {
@@ -66,3 +76,34 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.listLabel {
+  padding: 10px 20px;
+  border: 2px solid rgb(228, 228, 228);
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row;
+  position: relative;
+}
+
+input[type="radio"] ~ span {
+  display: none;
+}
+input[type="radio"]:checked ~ span {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  border: 0.5px solid green;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px green;
+  color: green !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+input[type="radio"]:checked {
+  background: green;
+}
+</style>

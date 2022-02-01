@@ -80,7 +80,7 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >Admin PIN :</label
+                >{{ $t("admin_pin") }} :</label
               >
               <div class="col-sm-10 input-group p-0">
                 <input
@@ -160,8 +160,8 @@
               <div class="mb-2">Admin PIN and View-Only PIN cannot be same</div>
             </div>
             <h4 class="contact-details">
-              Contact Details
-              <span>(optional)</span>
+              {{ $t("contact_details") }}
+              <span>({{ $t(optional) }})</span>
             </h4>
             <div class="form-inline row">
               <label
@@ -169,14 +169,14 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >Your Name :</label
+                >{{ $t("your_name") }} :</label
               >
               <input
                 type="text"
                 class="form-control col-sm-10"
                 id="name"
                 v-model="data.contact.name"
-                placeholder="Your Name"
+                :placeholder="$t('your_name')"
               />
             </div>
 
@@ -186,14 +186,14 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >Your Email :</label
+                >{{ $t("your_email") }} :</label
               >
               <input
                 type="email"
                 class="form-control col-sm-10"
                 id="email"
                 v-model="data.contact.email"
-                placeholder="Your Email"
+                :placeholder="$t('your_email')"
               />
             </div>
             <div
@@ -219,7 +219,7 @@
                     v-show="form.isUpdating"
                     style="margin-right: 8px"
                   ></span>
-                  Update
+                  {{ $t("update") }}
                 </button>
               </div>
             </div>
@@ -227,13 +227,13 @@
               <div class="mb-2">Error : {{ form.error }}</div>
             </div>
           </form>
-          <h4 style="color: red; margin-top: 40px">Danger Zone</h4>
+          <h4 style="color: red; margin-top: 40px">{{ $t("danzer_zone") }}</h4>
           <div class="danger-zone">
-            <h5>Delete Family Permanently</h5>
+            <h5>{{ $t("delete_family_permanently") }}</h5>
             <h6 class="mt-3">
-              Please enter
-              <code>{{ this.$route.params.id }}</code> in the input box to
-              delete this family tree permanently.
+              {{ $t("please_enter") }}
+              <code>{{ this.$route.params.id }}</code>
+              {{ $t("in_the_input_delete_family") }}
             </h6>
             <input
               class="form-control input-lg"
@@ -257,7 +257,7 @@
           </div>
 
           <div class="mt-5">
-            Any Trouble ?
+            {{ $t("any_trouble") }}
             <a href="mailto:hello@bloodline.app">hello@bloodline.app</a>
           </div>
         </div>

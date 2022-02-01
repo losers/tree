@@ -122,7 +122,7 @@
                     aria-expanded="true"
                     aria-controls="collapseOne"
                   >
-                    <div class="card-header" id="headingOne">Actions</div>
+                    <div class="card-header" id="headingOne">{{$t('actions')}}</div>
                   </button>
 
                   <!-- Actions Body -->
