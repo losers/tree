@@ -42,11 +42,11 @@
                 class="theme-primary-color"
                 style="font-size: 20px; font-weight: bold"
               >
-                <i class="icofont-gift"></i> Donation Box
+                <i class="icofont-gift"></i> {{ $t("donation_box") }}
               </center>
               <div class="row m-3 align-items-center">
                 <div v-if="!$device.mobile" class="col-3 theme-primary-color">
-                  <span>Amount: </span>
+                  <span>{{ $t("amount") }}: </span>
                 </div>
                 <div class="col-sm-12 col-md-9 input-group align-items-center">
                   <select
@@ -120,7 +120,8 @@
           }"
         >
           <i class="text-muted ml-3"
-            >Total Donations : <strong>{{ transactions.length }}</strong></i
+            >{{ $t("total_donations") }} :
+            <strong>{{ transactions.length }}</strong></i
           >
 
           <!-- Donation Transactions lV2 box -->
@@ -163,7 +164,7 @@
                       }
                     "
                   >
-                    More
+                    {{ $t("more") }}
                   </p>
                 </center>
               </div>
@@ -213,7 +214,7 @@
                   class="card-header font-weight-bold theme-primary-color"
                   id="headingOne"
                 >
-                  Why Donate ?
+                  {{ $t("why_donate") }} ?
                 </div>
               </button>
 
@@ -225,9 +226,8 @@
                 data-parent="#accordion"
               >
                 <div class="card-body p-0 text-muted">
-                  Bloodline follows a policy of No-ADS, No Premium Plans.<br />
-                  Donations is the only source of revenue to run this website.
-                  If you like our work, please support us by donating.
+                  {{ $t("bloodline_follows_policy") }}<br />
+                  {{ $t("donations_only_source") }}
                 </div>
               </div>
             </div>
@@ -246,7 +246,7 @@
                   class="card-header font-weight-bold theme-primary-color"
                   id="headingTwo"
                 >
-                  What is the minimum amount to unlock 'Super Family Badge' ?
+                  {{ $t("what_is_minimum_amount") }} ?
                 </div>
               </button>
 
@@ -258,9 +258,7 @@
                 data-parent="#accordion"
               >
                 <div class="card-body p-0 text-muted">
-                  There is no minimum limit to unlock Super Family Badge. As a
-                  token of gratitude for donation we honor your family with
-                  badge.
+                  {{ $t("there_is_no_limit") }}
                 </div>
               </div>
             </div>

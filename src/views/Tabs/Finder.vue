@@ -13,18 +13,18 @@
       ></strong>
     </div> -->
     <div class="input_align">
-      <span class="mt-1" v-if="!$device.mobile">Person 1 :</span>
+      <span class="mt-1" v-if="!$device.mobile">{{ $t("person") }} 1 :</span>
       <vSelect
         :options="names"
         v-model="p1"
-        :placeholder="$device.mobile ? 'Person 1' : ''"
+        :placeholder="$device.mobile ? $t('person') + ' 1' : $t('select_person')"
         class="col-sm-10 col-md-3 myselect"
       ></vSelect>
-      <span class="mt-1" v-if="!$device.mobile">Person 2 :</span>
+      <span class="mt-1" v-if="!$device.mobile">{{ $t("person") }} 2 :</span>
       <vSelect
         :options="names"
         v-model="p2"
-        :placeholder="$device.mobile ? 'Person 2' : ''"
+        :placeholder="$device.mobile ? $t('person') + ' 2' : $t('select_person')"
         :class="[{ 'mb-2': $device.mobile, 'mt-2': $device.mobile }]"
         class="col-sm-10 col-md-3"
       ></vSelect>

@@ -37,23 +37,23 @@
           :style="{ padding: $device.mobile ? '0 50px 50px 50px' : '0 200px' }"
         >
           <p style="float: right">
-            <strong>Created On :</strong>
+            <strong>{{ $t("created_on") }} :</strong>
             {{ new Date(data.created_at).toDateString() }}
           </p>
-          <h4>General Settings</h4>
+          <h4>{{ $t("general_settings") }}</h4>
           <form v-on:submit.prevent="updateSettings">
             <div class="form-inline row">
               <label
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >Display Title :</label
+                >{{ $t("display_title") }} :</label
               >
               <input
                 type="text"
-                class="form-control col-sm-10"
+                class="form-control col-sm-8"
                 id="title"
-                placeholder="Display Title"
+                :placeholder="$t('display_title')"
                 required
                 v-model="data.title"
               />
@@ -64,12 +64,12 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >Surname :</label
+                >{{ $t("surname") }} :</label
               >
               <input
                 v-model="data.surname"
                 type="text"
-                class="form-control col-sm-10"
+                class="form-control col-sm-8"
                 disabled
                 required
               />
@@ -82,7 +82,7 @@
                 v-if="!$device.mobile"
                 >{{ $t("admin_pin") }} :</label
               >
-              <div class="col-sm-10 input-group p-0">
+              <div class="col-sm-8 input-group p-0">
                 <input
                   v-model="data.pin"
                   type="number"
@@ -123,9 +123,9 @@
                 class="col"
                 style="justify-content: left"
                 v-if="!$device.mobile"
-                >View-Only PIN :</label
+                >{{ $t("view_only_pin") }} :</label
               >
-              <div class="col-sm-10 input-group p-0">
+              <div class="col-sm-8 input-group p-0">
                 <input
                   v-model="data.view_pin"
                   type="number"
@@ -161,7 +161,7 @@
             </div>
             <h4 class="contact-details">
               {{ $t("contact_details") }}
-              <span>({{ $t(optional) }})</span>
+              <span>({{ $t("optional") }})</span>
             </h4>
             <div class="form-inline row">
               <label
@@ -173,7 +173,7 @@
               >
               <input
                 type="text"
-                class="form-control col-sm-10"
+                class="form-control col-sm-8"
                 id="name"
                 v-model="data.contact.name"
                 :placeholder="$t('your_name')"
@@ -190,7 +190,7 @@
               >
               <input
                 type="email"
-                class="form-control col-sm-10"
+                class="form-control col-sm-8"
                 id="email"
                 v-model="data.contact.email"
                 :placeholder="$t('your_email')"
@@ -252,7 +252,7 @@
                 v-show="deletingFamily"
                 style="margin-right: 8px"
               ></span
-              >Delete Permanently
+              >{{ $t("delete_family_permanently") }}
             </button>
           </div>
 

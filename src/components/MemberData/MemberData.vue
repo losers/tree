@@ -32,9 +32,13 @@
 
             <div class="middle" v-if="cookeyStatus && !view_only">
               <div class="member-txt">
-                <a class="btn" @click="show = true" style="color: white !important">
+                <a
+                  class="btn"
+                  @click="show = true"
+                  style="color: white !important"
+                >
                   <i class="icofont-edit"></i>
-                  Change
+                  {{ $t("change") }}
                 </a>
               </div>
             </div>
@@ -47,7 +51,10 @@
             :disabled="loadingUpload"
           >
             <span v-if="!doneUpload">
-              <span class="spinner-border spinner-border-sm" v-if="loadingUpload"></span>
+              <span
+                class="spinner-border spinner-border-sm"
+                v-if="loadingUpload"
+              ></span>
               <i class="icofont-cloud-upload" v-else></i>
               Upload Image
             </span>
@@ -122,7 +129,9 @@
                     aria-expanded="true"
                     aria-controls="collapseOne"
                   >
-                    <div class="card-header" id="headingOne">{{$t('actions')}}</div>
+                    <div class="card-header" id="headingOne">
+                      {{ $t("actions") }}
+                    </div>
                   </button>
 
                   <!-- Actions Body -->
@@ -159,7 +168,9 @@
                     aria-expanded="false"
                     aria-controls="collapseTwo"
                   >
-                    <div class="card-header" id="headingTwo">More Info</div>
+                    <div class="card-header" id="headingTwo">
+                      {{ $t("more_info") }}
+                    </div>
                   </button>
 
                   <!-- Info Body -->
@@ -181,7 +192,7 @@
             <!-- Tabbar for Laptops-->
             <tabs v-else :style="{ display: cookeyStatus ? 'block' : 'none' }">
               <tab
-                name="Actions"
+                :name="$t('actions')"
                 :class="{
                   'is-active': !cookeyStatus,
                 }"
@@ -199,7 +210,7 @@
                 ></Actions>
               </tab>
               <tab
-                name="More Info"
+                :name="$t('more_info')"
                 :class="{
                   'is-active': cookeyStatus,
                 }"
@@ -239,7 +250,7 @@ import Store from "@/store/index";
 
 Vue.use(VModal, {
   dynamic: true,
-  injectModalsContainer: true
+  injectModalsContainer: true,
 });
 
 export default {
@@ -251,7 +262,7 @@ export default {
     Tab,
     MoreInfo,
     DualPage,
-    Actions
+    Actions,
   },
   data() {
     return {
@@ -278,26 +289,26 @@ export default {
       parent_id: "",
       dualPage: {
         callForm: false,
-        ref: 2
+        ref: 2,
       },
-      payload: {}
+      payload: {},
     };
   },
   watch: {
     imageData: {
-      handler: function(val) {
+      handler: function (val) {
         if (val) {
           this.showUpload = true;
         }
-      }
-    }
+      },
+    },
   },
   computed: {
     view_only: {
       get() {
         return Store.state.view_only;
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.open = true;
@@ -312,7 +323,7 @@ export default {
       .get(
         ProdData.getHostURL() + "/tree/" + this.surname + "/person/" + this.id
       )
-      .then(data => {
+      .then((data) => {
         if (data.data.is_mate) {
           this.hasMate = true;
         }
@@ -326,7 +337,7 @@ export default {
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.errored = err;
       })
       .finally(() => {
@@ -342,7 +353,7 @@ export default {
           this.id +
           "/image"
       )
-      .then(data => {
+      .then((data) => {
         if (data.data.length != 0) {
           this.previewImage = "data:image/png;base64," + data.data[0][this.id];
           if (this.previewImage == "data:image/png;base64,undefined") {
@@ -368,8 +379,8 @@ export default {
         "/image";
       axios
         .post(this.url, params)
-        .then(function() {})
-        .catch(function() {})
+        .then(function () {})
+        .catch(function () {})
         .finally(() => {
           this.doneUpload = true;
           setTimeout(() => {
@@ -394,9 +405,9 @@ export default {
           quality: 0.2,
           maxWidth: 200,
           maxHeight: 200,
-          resize: true
+          resize: true,
         })
-        .then(data => {
+        .then((data) => {
           this.imageData = data[0].data;
           this.imageExists = true;
           this.previewImage = "data:image/png;base64, " + this.imageData;
@@ -408,13 +419,12 @@ export default {
       if (this.$route.params.subtree_id) {
         routerLink = {
           name: "Subtrees",
-          params: {subtree_id:  this.$route.params.subtree_id}
+          params: { subtree_id: this.$route.params.subtree_id },
         };
-      }
-      else{
+      } else {
         routerLink = {
           name: "MainTree",
-          params: { id: this.$route.params.id }
+          params: { id: this.$route.params.id },
         };
       }
       this.$router.push(routerLink);
@@ -454,16 +464,16 @@ export default {
       } else {
         el.classList.remove(className);
       }
-    }
+    },
   },
   destroyed() {
     this.toggleBodyClass("removeClass", "mem-spec");
-  }
+  },
 };
 </script>
 
 <style>
-.vicp-img{
+.vicp-img {
   max-width: none;
 }
 .badge {

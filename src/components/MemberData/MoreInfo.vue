@@ -62,7 +62,7 @@
     <router-link
       :to="{ name: 'PersonTimeline', params: { member: id } }"
       class="btn btn-default"
-      >View Timeline</router-link
+      >{{ $t("view_timeline") }}</router-link
     ><br />
     <!-- <router-link :to="{name:'Profile', params:{member:id}}">See Profile</router-link> -->
   </center>

@@ -40,7 +40,7 @@
               type="text"
               class="form-control col-sm-7"
               id="surname"
-              placeholder="Enter Surname"
+              :placeholder="$t('enter') + ' ' + $t('surname')"
               @input="makeSmall"
               required
             />
@@ -140,7 +140,7 @@
                   v-show="loading"
                   style="margin-right: 8px"
                 ></span>
-                <span>Create</span>
+                <span>{{ $t("create") }}</span>
               </button>
 
               <button

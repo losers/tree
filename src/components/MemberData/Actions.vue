@@ -6,11 +6,11 @@
         class="col-10 btn btn-warning mb-3"
         v-show="!data.parent_id || (data.is_mate && !data.linked_tree)"
       >
-        + Add Parent
+        + {{ $t("add") + " " + $t("parent") }}
       </button>
 
       <button @click="addMember(1)" class="col-10 btn btn-success mb-3">
-        + {{ $t("add_child") }}
+        + {{ $t("add") + " " + $t("child") }}
       </button>
 
       <button
@@ -28,7 +28,8 @@
         @click="addMember('gender')"
         class="col-10 btn btn-primary mb-3"
       >
-        + Add {{ data.gender == "1" ? "Wife" : "Husband" }}
+        +
+        {{ $t("add") }} {{ data.gender == "1" ? $t("wife") : $t("husband") }}
       </button>
 
       <button
@@ -37,11 +38,11 @@
         class="col-10 btn mb-3"
         style="color: white; background-color: #e0a600"
       >
-        <i class="icofont-exchange"></i> Swap Siblings
+        <i class="icofont-exchange"></i> {{ $t("swap_siblings") }}
       </button>
 
       <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
-        <i class="icofont-ui-delete"></i> Delete
+        <i class="icofont-ui-delete"></i> {{ $t("delete") }}
       </button>
     </div>
     <div v-else>

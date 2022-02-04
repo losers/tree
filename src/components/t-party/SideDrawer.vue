@@ -10,7 +10,8 @@
                 name: 'Home',
               }"
               ><li>
-                <i class="icofont-arrow-left drawer-icons"></i>All Families
+                <i class="icofont-arrow-left drawer-icons"></i>{{ $t("all") }}
+                {{ $t("families") }}
               </li></router-link
             >
             <router-link
@@ -19,7 +20,7 @@
                 params: { id: $route.params.id },
               }"
               ><li>
-                <i class="icofont-tree drawer-icons"></i>Main Tree
+                <i class="icofont-tree drawer-icons"></i>{{ $t("main_tree") }}
               </li></router-link
             >
             <router-link
@@ -27,19 +28,22 @@
                 name: 'RelationFinder',
               }"
               ><li>
-                <i class="icofont-search-2 drawer-icons"></i>Relation Finder
+                <i class="icofont-search-2 drawer-icons"></i
+                >{{ $t("relation_finder") }}
               </li>
             </router-link>
 
             <router-link :to="{ name: 'PartialTree' }">
               <li>
-                <i class="icofont-newsvine drawer-icons"></i>Partial Tree
+                <i class="icofont-newsvine drawer-icons"></i
+                >{{ $t("partial_tree") }}
               </li></router-link
             >
 
             <router-link :to="{ name: 'Events' }"
               ><li>
-                <i class="icofont-ui-calendar drawer-icons"></i>Events
+                <i class="icofont-ui-calendar drawer-icons"></i
+                >{{ $t("events") }}
               </li></router-link
             >
 
@@ -54,13 +58,13 @@
             <router-link :to="{ name: 'Donations' }"
               ><li>
                 <i class="icofont-ui-love text-danger drawer-icons"></i
-                >Donations
+                >{{ $t("donations") }}
               </li></router-link
             >
 
             <router-link :to="{ name: 'Settings' }" v-if="isEditable"
               ><li>
-                <i class="icofont-gear drawer-icons"></i>Settings
+                <i class="icofont-gear drawer-icons"></i>{{ $t("settings") }}
               </li></router-link
             >
           </ul>

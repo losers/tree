@@ -166,27 +166,27 @@ export default {
         },
         {
           href: "/",
-          title: "All Families",
+          title: this.$t("all") + " " + this.$t("families"),
           icon: "icofont-arrow-left",
         },
         {
           href: `/${this.$route.params.id}`,
-          title: "Main Tree",
+          title: this.$t("main_tree"),
           icon: "icofont-tree",
         },
         {
           href: `/${this.$route.params.id}/relation-finder`,
-          title: "Relation Finder",
+          title: this.$t("relation_finder"),
           icon: "icofont-search-2",
         },
         {
           href: `/${this.$route.params.id}/partial-tree`,
-          title: "Partial Tree",
+          title: this.$t('partial_tree'),
           icon: "icofont-site-map",
         },
         {
           href: `/${this.$route.params.id}/events`,
-          title: "Events",
+          title: this.$t('events'),
           icon: "icofont-ui-calendar",
         },
         // {
@@ -206,12 +206,12 @@ export default {
         // },
         {
           href: `/${this.$route.params.id}/donations`,
-          title: "Donations",
+          title: this.$t('donations'),
           icon: "icofont-ui-love text-danger",
         },
         {
           href: `/${this.$route.params.id}/settings`,
-          title: "Settings",
+          title: this.$t('settings'),
           icon: "icofont-gear",
           // disabled: !Store.state.is_session,
           // badge: {

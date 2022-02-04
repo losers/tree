@@ -1,18 +1,18 @@
 <template>
   <div class="FormData p-5">
     <h3 class="mb-3" style="color: black">
-      {{ payload.memData ? "Edit" : "Add" }} Member
+      {{ payload.memData ? "Edit" : $t("add") }} {{ $t("member") }}
     </h3>
     <form v-on:submit.prevent="sendData">
       <div class="row">
         <label class="d-none d-sm-block col-md-4">
-          <span class="text-warning mr-1">*</span>Name :
+          <span class="text-warning mr-1">*</span>{{ $t("name") }} :
         </label>
         <input
           type="text"
           class="form-control col-md-7 col-sm-12"
           v-model="data.name"
-          placeholder="Enter Full Name"
+          :placeholder="$t('enter_full_name')"
           required
         />
       </div>
@@ -31,8 +31,11 @@
             id="male"
             required
           />
-          <label for="male" class="form-check-label ml-2" style="color: black"
-            >Male</label
+          <label
+            for="male"
+            class="form-check-label ml-2"
+            style="color: black"
+            >{{ $t("male") }}</label
           >
         </div>
         <div class="form-check">
@@ -44,8 +47,11 @@
             v-model="data.gender"
             value="0"
           />
-          <label for="female" class="form-check-label ml-2" style="color: black"
-            >Female</label
+          <label
+            for="female"
+            class="form-check-label ml-2"
+            style="color: black"
+            >{{ $t("female") }}</label
           >
         </div>
       </div>
@@ -56,7 +62,9 @@
         class="mt-3 d-flex justify-content-end"
         v-if="$device.mobile"
       >
-        <a href="#"> {{ show_optional_data ? "-" : "+" }} Extra Details</a>
+        <a href="#">
+          {{ show_optional_data ? "-" : "+" }} {{ $t("extra_details") }}</a
+        >
       </div>
 
       <!-- Extra Details -->
@@ -66,10 +74,12 @@
       >
         <hr class="mt-5" style="background-color: white" />
         <center style="margin-top: -29px">
-          <span class="optional-heading"> Optional Details </span>
+          <span class="optional-heading"> {{ $t("optional_details") }} </span>
         </center>
         <div class="row mt-4">
-          <label class="d-none d-sm-block col-md-4">Short Name:</label>
+          <label class="d-none d-sm-block col-md-4"
+            >{{ $t("short_name") }}:</label
+          >
           <input
             type="text"
             class="form-control col-md-7 col-sm-12"
@@ -77,7 +87,7 @@
             v-model="data.short_name"
           />
         </div>
-        <p class="info">Short Name will be shown in Family Tree</p>
+        <p class="info">{{ $t("short_name_will_shown") }}</p>
 
         <div class="row" v-if="xtraParent.show">
           <label class="d-none d-sm-flex col-md-4">
@@ -98,12 +108,14 @@
             v-model="data.dob"
             :md-model-type="String"
           >
-            <label>Date of Birth</label>
+            <label>{{ $t("date_of_birth") }}</label>
           </md-datepicker>
         </div>
 
         <div class="row mb-2">
-          <label class="col-4 flexy" style="color: black">Is Alive :</label>
+          <label class="col-4 flexy" style="color: black"
+            >{{ $t("is_alive") }} :</label
+          >
           <toggle-button
             v-model="is_alive"
             :value="is_alive"
@@ -119,43 +131,43 @@
               id="demise"
               :md-model-type="String"
             >
-              <label>Date of Demise</label>
+              <label>{{ $t("date_of_demise") }}</label>
             </md-datepicker>
           </div>
         </div>
 
         <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Mobile :</label>
+          <label class="d-none d-sm-flex col-md-4">{{ $t("mobile") }} :</label>
           <input
             type="tel"
             class="form-control col-md-7 col-sm-12"
             v-model="data.mobile"
-            placeholder="Mobile Number"
+            :placeholder="$t('mobile_number')"
           />
         </div>
         <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Email :</label>
+          <label class="d-none d-sm-flex col-md-4">{{ $t("email") }} :</label>
           <input
             type="email"
             class="form-control col-md-7 col-sm-12"
             v-model="data.email"
-            placeholder="Email Id"
+            :placeholder="$t('email')"
           />
         </div>
         <div class="row">
-          <label class="d-none d-sm-flex col-md-4">{{$t('address')}} :</label>
+          <label class="d-none d-sm-flex col-md-4">{{ $t("address") }} :</label>
           <input
             type="text"
             class="form-control col-md-7 col-sm-12"
             v-model="data.address"
-            placeholder="Address"
+            :placeholder="$t('address')"
           />
         </div>
         <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Country :</label>
+          <label class="d-none d-sm-flex col-md-4">{{ $t("country") }} :</label>
           <vSelect
             :options="countries"
-            placeholder="Select Country"
+            :placeholder="$t('select_country')"
             v-model="data.country"
             class="mb-3 col-md-7 col-sm-12 p-0"
           ></vSelect>
@@ -163,7 +175,9 @@
 
         <!-- Description -->
         <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Description :</label>
+          <label class="d-none d-sm-flex col-md-4"
+            >{{ $t("description") }} :</label
+          >
           <textarea
             class="form-control col-md-7 col-sm-12"
             rows="3"
@@ -177,8 +191,9 @@
         <hr class="mt-5 mb-3" style="background-color: white" />
         <p style="margin-top: -29px">
           <center>
-            <span style="background-color: white; padding: 20px; color: #969696"
-              >Social Media</span
+            <span
+              style="background-color: white; padding: 20px; color: #969696"
+              >{{ $t("social_media") }}</span
             >
           </center>
         </p>
@@ -246,10 +261,10 @@
             class="spinner-border spinner-border-sm"
             v-show="loading"
           ></span>
-          Submit
+          {{ $t("submit") }}
         </button>
         <button type="button" @click="goBack" class="btn btn-danger">
-          Cancel
+          {{ $t("cancel") }}
         </button>
       </div>
       <div v-show="is_error" class="mt-3">{{ is_error }}</div>
