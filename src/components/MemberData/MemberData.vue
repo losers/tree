@@ -56,11 +56,11 @@
                 v-if="loadingUpload"
               ></span>
               <i class="icofont-cloud-upload" v-else></i>
-              Upload Image
+              {{ $t("upload_image") }}
             </span>
             <span v-else>
               <i class="icofont-tick-mark"></i>
-              Successfully Uploaded
+              {{ $t("successfully_uploaded") }}
             </span>
           </button>
 

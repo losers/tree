@@ -24,12 +24,12 @@
           </div>
         </div>
         <div v-if="payload.contact" class="contact-box">
-          <div class="contact">Contact Details :</div>
+          <div class="contact">{{ $t("contact_details") }} :</div>
           <div v-if="payload.contact && payload.contact.email">
-            Name : {{ payload.contact.name }}
+            {{ $t("name") }} : {{ payload.contact.name }}
           </div>
           <div v-if="payload.contact && payload.contact.email">
-            Email : {{ payload.contact.email }}
+            {{ $t("email") }} : {{ payload.contact.email }}
           </div>
         </div>
         <button
@@ -46,7 +46,7 @@
         </button>
 
         <button @click="goBack" class="btn mt-3 btn-default float-right">
-          Cancel
+          {{ $t("cancel") }}
         </button>
       </form>
     </div>

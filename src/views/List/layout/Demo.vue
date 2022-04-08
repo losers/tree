@@ -16,7 +16,7 @@
         <strong class="mr-2">1. </strong> {{ $t("create_normal_famiy_tree") }}.
       </div>
       <div>
-        <strong class="mr-2">2. </strong> Email surname to
+        <strong class="mr-2">2. </strong> {{ $t("email_surname_to") }}
         <i>hello@bloodline.app</i> {{ $t("along_with_details") }}.
       </div>
       <div class="mt-2">

@@ -89,7 +89,7 @@
               >
                 <center>
                   <i class="icofont-ui-love mr-1"></i>
-                  <strong> Donate Now </strong>
+                  <strong> {{ $t("donate_now") }}</strong>
                   <span
                     v-if="isTransacting"
                     class="spinner-border spinner-border-sm ml-2"
@@ -268,7 +268,7 @@
     </transition>
     <modal name="showInfo" :draggable="true" height="auto">
       <div class="p-3 text-muted">
-        <h4 class="text-center mb-3">Transaction Details</h4>
+        <h4 class="text-center mb-3">{{ $t("transaction_details") }}</h4>
         <!-- Username -->
         <div class="m-3">
           <i class="icofont-ui-user mr-2"></i>

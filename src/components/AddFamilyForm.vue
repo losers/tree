@@ -1,9 +1,9 @@
 <template>
   <div class="FormData p-5">
     <h3 class="mb-4">
-      <span>Creating a Family Tree</span>
+      <span v-if="!surname">{{ $t("creating_a_family_tree") }}</span>
       <span class="close-btn" v-if="!$device.mobile" @click="goBack">x</span>
-      <span v-if="surname" class="ml-1">for {{ surname }}</span>
+      <span v-if="surname">{{ $t("creating_tree_for") }} {{ surname }}</span>
     </h3>
 
     <transition name="fade" mode="out-in">
@@ -58,7 +58,7 @@
               type="number"
               class="form-control col-sm-7"
               id="pin"
-              placeholder="Create 4 digit PIN"
+              :placeholder="$t('create_4_pin')"
               onkeypress="if(this.value.length==4) return false;"
               max="9999"
               :style="{ '-webkit-text-security': isPinHide ? 'disc' : '' }"
@@ -73,7 +73,7 @@
             </button>
           </div>
           <div v-if="pin == '1234' || pin == '0000'" class="mt-3 text-warning">
-            <div class="mb-2">Warning: Pin can be easily guessed.</div>
+            <div class="mb-2">{{ $t("pin_easy_guessed") }}</div>
           </div>
 
           <!-- Optional Header -->
@@ -87,7 +87,7 @@
             </center>
           </p>
           <div style="font-size: 12px; color: rgb(160, 160, 160)">
-            This helps your relatives to contact you.
+            {{ $t("help_relatives_contact_you") }}
           </div>
           <div class="form-inline row">
             <label
@@ -154,7 +154,7 @@
           </div>
           <div v-if="errored" class="mt-3 text-danger">
             <div class="mb-2">
-              {{ $t("surname") }} {{ surname }}, already exists
+              {{ $t("surname") }} {{ surname }}, {{ $t("already_exists") }}
             </div>
           </div>
         </section>

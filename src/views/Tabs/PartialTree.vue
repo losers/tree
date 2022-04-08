@@ -10,7 +10,7 @@
       <br v-if="$device.mobile" />
       <center>
         <button class="btn btn-danger" @click="submit" :disabled="!p1">
-          Search
+          {{ $t("search") }}
         </button>
       </center>
     </div>

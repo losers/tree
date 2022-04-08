@@ -115,7 +115,7 @@
               v-if="data.pin == '1234' || data.pin == '0000'"
               class="mt-3 text-warning"
             >
-              <div class="mb-2">Admin pin can be easily guessed.</div>
+              <div class="mb-2">{{ $t("pin_easy_guessed") }}</div>
             </div>
             <div class="form-inline row">
               <label
@@ -131,7 +131,7 @@
                   type="number"
                   class="form-control"
                   id="view-pin"
-                  placeholder="Create 4 Digit View-Only PIN"
+                  :placeholder="$t('create_4_pin')"
                   onkeypress="if(this.value.length==4) return false;"
                   max="9999"
                   :style="{

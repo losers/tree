@@ -2,7 +2,7 @@
   <div>
     <div class="main-title">
       <div class="header" :class="{ 'f-19': $device.mobile }">
-        Today's Events
+        {{ $t("today") }}'s {{ $t("events") }}
       </div>
       <div class="today" :class="{ 'f-16': $device.mobile }">
         - {{ date.display }}
@@ -60,7 +60,7 @@
                   {{ event.dob | anivCalc }}
                   <span class="a-th">th</span>
                 </span>
-                Birth Anniversary
+                {{ $t("birth_anniversary") }}
               </div>
 
               <router-link
@@ -70,7 +70,7 @@
                 }"
                 class="btn mt-2 event-btn"
                 v-if="event.subtree_id"
-                >View Profile</router-link
+                >{{ $t("view_profile") }}</router-link
               >
 
               <router-link
@@ -80,7 +80,7 @@
                 }"
                 class="btn mt-2 event-btn"
                 v-else
-                >View Profile</router-link
+                >{{ $t("view_profile") }}</router-link
               >
             </center>
           </div>
@@ -119,7 +119,7 @@
                   {{ event.died_on | anivCalc }}
                   <span class="a-th">th</span>
                 </span>
-                Memorial day
+                {{ $t("memorial_day") }}
               </div>
               <router-link
                 :to="{
@@ -127,7 +127,7 @@
                   params: { id: $route.params.id, member: event._id },
                 }"
                 class="btn mt-2 event-btn"
-                >View Profile</router-link
+                >{{ $t("view_profile") }}</router-link
               >
             </center>
           </div>

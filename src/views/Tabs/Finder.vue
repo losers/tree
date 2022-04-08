@@ -17,20 +17,24 @@
       <vSelect
         :options="names"
         v-model="p1"
-        :placeholder="$device.mobile ? $t('person') + ' 1' : $t('select_person')"
+        :placeholder="
+          $device.mobile ? $t('person') + ' 1' : $t('select_person')
+        "
         class="col-sm-10 col-md-3 myselect"
       ></vSelect>
       <span class="mt-1" v-if="!$device.mobile">{{ $t("person") }} 2 :</span>
       <vSelect
         :options="names"
         v-model="p2"
-        :placeholder="$device.mobile ? $t('person') + ' 2' : $t('select_person')"
+        :placeholder="
+          $device.mobile ? $t('person') + ' 2' : $t('select_person')
+        "
         :class="[{ 'mb-2': $device.mobile, 'mt-2': $device.mobile }]"
         class="col-sm-10 col-md-3"
       ></vSelect>
       <center>
         <button class="btn btn-danger" @click="submit" :disabled="!(p1 && p2)">
-          Search
+          {{ $t("search") }}
         </button>
       </center>
     </div>
@@ -69,7 +73,7 @@
             :class="{ 'mt-3': $device.mobile }"
             @click="opts = !opts"
           >
-            Change Language
+            {{ $t("change_language") }}
           </button>
         </p>
         <div v-show="opts" style="padding: 10px">
