@@ -186,8 +186,8 @@
             <span class="text-muted mr-3">
               {{
                 $device.mobile
-                  ? "Donate and Unlock "
-                  : "Unlock a Super Family Badge by making a donation."
+                  ? $t("donate_and_unlock")
+                  : $t("unlock_badge_by_donation")
               }}
             </span>
           </h3>
@@ -198,7 +198,7 @@
           class="theme-gery-bg p-3"
           :class="{ 'pl-5': !$device.mobile, 'pl-4': $device.mobile }"
         >
-          <h5 class="mt-3 text-muted">F.A.Q s</h5>
+          <h5 class="mt-3 text-muted">{{$t("faq")}}</h5>
           <div id="accordion">
             <!-- Card 1 -->
             <div class="mb-1">

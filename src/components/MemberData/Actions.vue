@@ -74,7 +74,7 @@
             class="spinner-border spinner-border-sm"
             v-show="vloading"
           ></span>
-          {{ retry ? "Retry" : "Validate" }}
+          {{ retry ? $t("retry") : $t("validate") }}
         </button>
       </span>
     </div>

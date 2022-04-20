@@ -7,7 +7,7 @@
           style="height: 140px; margin-top: 70px"
         />
         <h4 style="color: black; margin-top: 30px">
-          You dont have access buddy
+          {{ $t("no_access_buddy") }}
         </h4>
       </center>
     </section>

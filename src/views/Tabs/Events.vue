@@ -2,7 +2,7 @@
   <div>
     <div class="main-title">
       <div class="header" :class="{ 'f-19': $device.mobile }">
-        {{ $t("today") }}'s {{ $t("events") }}
+        {{ $t("todays_events") }}
       </div>
       <div class="today" :class="{ 'f-16': $device.mobile }">
         - {{ date.display }}

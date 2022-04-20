@@ -42,7 +42,7 @@
             class="spinner-border spinner-border-sm"
             v-show="vloading"
           ></span>
-          {{ retry ? "Retry" : "Validate" }}
+          {{ retry ? $t("retry") : $t("validate") }}
         </button>
 
         <button @click="goBack" class="btn mt-3 btn-default float-right">
