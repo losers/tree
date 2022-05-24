@@ -6,7 +6,7 @@
         <div class="input-group">
           <input
             class="form-control input-sm"
-            placeholder="Enter PIN to unlock"
+            :placeholder="$t('enter_pin_unlock')"
             v-model="key"
             onkeypress="if(this.value.length==4) return false;"
             type="number"

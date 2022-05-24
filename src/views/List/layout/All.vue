@@ -107,7 +107,7 @@
         v-if="!loadingMore"
         class="btn load-more"
       >
-        Load more
+        {{$t('load_more')}}
         <i class="icofont-arrow-down ml-1"></i>
       </button>
       <div

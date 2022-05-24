@@ -8,14 +8,13 @@
     "
   >
     <h4 style="text-align: -webkit-center">
-      If you want any help from us or for any feedback or even for irritating us
-      we will be hearing you at
+      {{ $t("if_you_want_any_help") }}
     </h4>
     <a class="email"
-      ><span style="color: indianred">bloodline</span>.helpline@gmail.com</a
+      >hello@bloodline.app</a
     >
     <a
-      href="mailto:bloodline.helpline@gmail.com?subject=My thoughts over Bloodline App"
+      href="mailto:hello@bloodline.app?subject=My thoughts over Bloodline App"
       class="btn mt-3"
       style="
         border: solid 1px indianred;
@@ -24,7 +23,7 @@
         margin: 40px;
       "
     >
-      Write Now
+      {{ $t("write_now") }}
     </a>
 
     <a
