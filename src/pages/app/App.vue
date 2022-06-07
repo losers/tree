@@ -6,7 +6,15 @@
 export default {
   name: "MainApp",
   created() {
-    this.$i18n.locale = localStorage.getItem("locale") ?? "en";  // check if locale is already assigned
+    if (localStorage.getItem("locale"))
+      this.$i18n.locale = localStorage.getItem("locale");
+    else if (window.location.hostname == "beta.bloodline.app") {
+      localStorage.setItem("locale", "sw");
+      this.$i18n.locale = "sw";
+    } else if (window.location.hostname == "tz.bloodline.app") {
+      localStorage.setItem("locale", "sw");
+      this.$i18n.locale = "sw";
+    }
   },
 };
 </script>
