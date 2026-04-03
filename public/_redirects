@@ -1,3 +1,3 @@
 /   /index.html   200
 /app/*   /app.html   200!
-/api/* https://blineapi.vercel.app/:splat 200
+/api/* http://140.245.253.82:5173/:splat 200

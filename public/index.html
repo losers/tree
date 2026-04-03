@@ -1,306 +1,1001 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-
+<html lang="en">
 <head>
-    <title>Bloodline</title>
-    <meta charset="utf-8">
-    <meta name="description" content="Bloodline helps in building Family Tree for Everyone with lifetime free access.">
-    <meta name="keywords"
-        content="Family Tree,familytree,Family tree creator online,Bloodline,bloodline,Bloodline app,Bloodline website" />
-    <meta charset="UTF-8">
-    <meta name="robots" content="index, follow">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>lib/images/favicon.ico">
-    <!-- CSS -->
-    <link rel="stylesheet" href="lib/plugins/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/plugins/animate-css/animate.css">
-    <link rel="stylesheet" href="lib/css/style.css">
+<title>Bloodline — Build Your Family Tree</title>
+<meta charset="utf-8">
+<meta name="description" content="Bloodline — Build and explore your family tree, free forever.">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" href="<%= BASE_URL %>lib/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/plugins/bootstrap/bootstrap.min.css">
+<script src="lib/plugins/jQurey/jquery.min.js" defer></script>
+<script src="lib/js/bootstrap.min.js" defer></script>
 
-    <!-- Unused CSS -->
-    <link href="lib/css/bootstrap-toggle.min.css" rel="stylesheet">
+<style>
+/* ━━ RESET ━━ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#050816;color:#E2E8F0;overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:600}
+a{text-decoration:none;transition:all .2s ease}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:#050816}
+::-webkit-scrollbar-thumb{background:rgba(99,102,241,.5);border-radius:2px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-    <!-- Unused JS -->
-    <script src="lib/plugins/jQurey/jquery.min.js" defer></script>
-    <script src="lib/js/bootstrap.min.js" defer></script>
-    <script src="lib/plugins/slider/slider.js" defer></script>
-    <!-- <script src="lib/plugins/form-validation/jquery.validate.min.js" defer></script> -->
+/* ━━ CURSOR ━━ */
+#cd,#cr{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cd{width:7px;height:7px;background:#818CF8;transition:width .15s,height .15s,background .2s}
+#cr{width:36px;height:36px;border:1.5px solid rgba(99,102,241,.55);transition:width .25s,height .25s,border-color .2s;mix-blend-mode:screen}
+body.ch #cd{width:11px;height:11px;background:#67E8F9}
+body.ch #cr{width:52px;height:52px;border-color:rgba(6,182,212,.6)}
 
-    <!-- JS -->
-    <script src="lib/plugins/gsap/TimelineLite.min.js" defer></script>
-    <script src="lib/plugins/gsap/TweenLite.min.js" defer></script>
-    <script src="lib/plugins/gsap/EasePack.min.js" defer></script>
-    <script src="lib/plugins/gsap/CSSPlugin.min.js" defer></script>
-    <!-- <script src="lib/plugins/jQurey/jquery.min.js" defer></script> -->
-    <script src="lib/plugins/wow-js/wow.min.js" defer></script>
-    <script src="lib/js/main.js" defer></script>
+/* ━━ SHINY BUTTON — from 21st.dev ━━ */
+@property --ga{syntax:"<angle>";initial-value:0deg;inherits:false}
+@property --gap{syntax:"<angle>";initial-value:0deg;inherits:false}
+@property --gp{syntax:"<percentage>";initial-value:5%;inherits:false}
+@property --gs{syntax:"<color>";initial-value:white;inherits:false}
 
+.shiny-btn{
+  --bg:#050816;--dur:3s;--shadow:2px;
+  --tr:800ms cubic-bezier(.25,1,.5,1);
+  isolation:isolate;position:relative;overflow:hidden;cursor:none;
+  padding:13px 28px;font-family:'Inter',sans-serif;font-size:14px;
+  font-weight:500;border:1px solid transparent;border-radius:10px;
+  color:#fff;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+    conic-gradient(from calc(var(--ga) - var(--gap)),
+      transparent,#818CF8 var(--gp),#67E8F9 calc(var(--gp)*2),
+      #818CF8 calc(var(--gp)*3),transparent calc(var(--gp)*4)) border-box;
+  box-shadow:inset 0 0 0 1px rgba(129,140,248,.15),0 4px 20px rgba(99,102,241,.25);
+  transition:var(--tr);transition-property:--gap,--gp,--gs,box-shadow,transform;
+  animation:ga-spin var(--dur) linear infinite;
+}
+.shiny-btn::before{
+  content:'';pointer-events:none;position:absolute;
+  inset:0;border-radius:inherit;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(129,140,248,.12) 0%,transparent 55%);
+  transition:opacity .3s;opacity:0;z-index:1;
+}
+.shiny-btn::after{
+  content:'';pointer-events:none;position:absolute;
+  inset-inline-start:50%;inset-block-start:50%;
+  translate:-50% -50%;
+  width:100%;aspect-ratio:1;
+  background:linear-gradient(-50deg,transparent,#818CF8,transparent);
+  mask-image:radial-gradient(circle at bottom,transparent 40%,black);
+  opacity:.5;z-index:0;
+  animation:calc(var(--dur)*1.5) sh-spin linear infinite;
+}
+.shiny-btn span{position:relative;z-index:2;display:flex;align-items:center;gap:9px}
+.shiny-btn:hover{--gp:18%;--gap:95deg;box-shadow:inset 0 0 0 1px rgba(103,232,249,.2),0 8px 36px rgba(99,102,241,.55);transform:translateY(-2px)}
+.shiny-btn:hover::before{opacity:1}
+.shiny-btn:active{transform:translateY(0)}
+@keyframes ga-spin{to{--ga:360deg}}
+@keyframes sh-spin{to{rotate:360deg}}
+
+/* Pill variant (navbar CTA) */
+.shiny-pill{border-radius:100px;padding:9px 22px;font-size:13px}
+
+/* ━━ GLASS ━━ */
+.gl{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(24px) saturate(1.6);
+  -webkit-backdrop-filter:blur(24px) saturate(1.6);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 25px 50px rgba(0,0,0,0.4);
+}
+.gl-card{
+  background:rgba(255,255,255,0.045);
+  backdrop-filter:blur(28px) saturate(1.8);
+  -webkit-backdrop-filter:blur(28px) saturate(1.8);
+  border:1px solid rgba(255,255,255,0.09);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.13),inset 0 -1px 0 rgba(0,0,0,0.1),0 20px 60px rgba(0,0,0,0.5);
+  border-radius:20px;position:relative;overflow:hidden;
+  /* Liquid glass distortion filter — from 21st.dev Liquid Glass MCP */
+  /* Applied to background layer only via ::before */
+}
+/* Top gradient accent line */
+.gl-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(99,102,241,.8) 30%,rgba(6,182,212,.8) 70%,transparent 100%);
+  z-index:2;
+}
+/* Inner gloss highlight */
+.gl-card::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:45%;
+  background:linear-gradient(to bottom,rgba(255,255,255,0.06) 0%,transparent 100%);
+  pointer-events:none;z-index:1;border-radius:inherit;
+}
+
+/* ━━ CARD SHIMMER SWEEP — from 21st.dev Highlight Card ━━ */
+.card-shimmer{position:relative;overflow:hidden}
+.card-shimmer .shimmer-ray{
+  position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(-50deg,transparent 0%,rgba(255,255,255,0.04) 50%,transparent 100%);
+  transform:skewX(-12deg) translateX(110%);
+  transition:transform 1s ease;
+  pointer-events:none;z-index:3;
+}
+.card-shimmer:hover .shimmer-ray{transform:skewX(-12deg) translateX(-220%)}
+/* Corner accent glow on hover — from 21st.dev */
+.card-shimmer .c-tl,.card-shimmer .c-br{
+  position:absolute;width:80px;height:80px;
+  opacity:0;transition:opacity .4s;pointer-events:none;z-index:3;
+}
+.card-shimmer .c-tl{top:0;left:0;background:linear-gradient(135deg,rgba(99,102,241,.15),transparent);border-radius:20px 0 0 0}
+.card-shimmer .c-br{bottom:0;right:0;background:linear-gradient(315deg,rgba(6,182,212,.12),transparent);border-radius:0 0 20px 0}
+.card-shimmer:hover .c-tl,.card-shimmer:hover .c-br{opacity:1}
+
+/* ━━ GRADIENT TEXT ━━ */
+.g-text{
+  background:linear-gradient(135deg,#818CF8 0%,#06B6D4 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200% 200%;animation:g-anim 5s ease infinite;
+}
+@keyframes g-anim{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* Hover glow for interactive elements */
+.g-hover{cursor:none;transition:all .2s ease}
+.g-hover:hover{box-shadow:0 8px 36px rgba(99,102,241,.5),inset 0 1px 0 rgba(255,255,255,.2);transform:translateY(-2px);filter:brightness(1.08)}
+
+/* Ghost button */
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:400;color:rgba(226,232,240,.6);
+  padding:12px 22px;border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+  transition:all .2s;cursor:none;
+}
+.btn-ghost:hover{color:#E2E8F0;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+
+/* ━━ ANIMATED ORBS — enhanced from GlassRefractionHero (21st.dev) ━━ */
+.scene{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(110px)}
+/* U-shaped motion pattern from 21st.dev GlassRefractionHero */
+.o1{width:650px;height:650px;background:radial-gradient(circle,rgba(99,102,241,.28) 0%,rgba(99,102,241,.18) 50%,rgba(80,83,200,.1) 100%);top:-150px;left:-150px;animation:ub1 22s ease-in-out infinite}
+.o2{width:550px;height:550px;background:radial-gradient(circle,rgba(6,182,212,.22) 0%,rgba(6,182,212,.12) 50%,rgba(8,145,178,.08) 100%);top:100px;right:-180px;animation:ub2 28s ease-in-out infinite}
+.o3{width:480px;height:480px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,rgba(109,40,217,.1) 100%);bottom:-80px;left:30%;animation:ub3 32s ease-in-out infinite}
+.o4{width:320px;height:320px;background:radial-gradient(circle,rgba(6,182,212,.14) 0%,transparent 70%);bottom:180px;right:8%;animation:ub4 18s ease-in-out infinite}
+/* U-shaped motion keyframes — from 21st.dev GlassRefractionHero */
+@keyframes ub1{0%{transform:translate(0,0) scale(1) rotate(0deg)}25%{transform:translate(50px,-80px) scale(1.2) rotate(90deg)}50%{transform:translate(100px,0) scale(1.4) rotate(180deg)}75%{transform:translate(50px,80px) scale(1.2) rotate(270deg)}100%{transform:translate(0,0) scale(1) rotate(360deg)}}
+@keyframes ub2{0%{transform:translate(0,0) scale(1) rotate(0deg)}25%{transform:translate(-60px,90px) scale(1.3) rotate(-90deg)}50%{transform:translate(-120px,0) scale(1.5) rotate(-180deg)}75%{transform:translate(-60px,-90px) scale(1.3) rotate(-270deg)}100%{transform:translate(0,0) scale(1) rotate(-360deg)}}
+@keyframes ub3{0%{transform:translate(0,0) scale(1) rotate(0deg)}25%{transform:translate(70px,-100px) scale(1.25) rotate(120deg)}50%{transform:translate(140px,0) scale(1.45) rotate(240deg)}75%{transform:translate(70px,100px) scale(1.25) rotate(120deg)}100%{transform:translate(0,0) scale(1) rotate(360deg)}}
+@keyframes ub4{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-60px) scale(1.35)}100%{transform:translate(0,0) scale(1)}}
+
+/* ━━ VERTICAL GLASS STRIPS — from 21st.dev GlassRefractionHero ━━ */
+.glass-strips{
+  position:absolute;inset:0;display:flex;pointer-events:none;z-index:1;
+  animation:strip-pulse 4s ease-in-out infinite;
+}
+.glass-strip{
+  flex:1;
+  background:linear-gradient(90deg,rgba(217,217,217,0) 0%,rgba(0,0,0,.7) 76%,rgba(255,255,255,.3) 100%);
+  mix-blend-mode:overlay;
+  opacity:.35;
+}
+@keyframes strip-pulse{0%,100%{opacity:.35}50%{opacity:.55}}
+
+/* ━━ NAVBAR ━━ */
+#nav{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  z-index:1000;width:calc(100% - 48px);max-width:900px;
+  border-radius:100px;padding:12px 20px;
+  transition:all .4s ease;
+}
+#nav.solid{
+  background:rgba(5,8,22,.88);
+  backdrop-filter:blur(32px) saturate(2);-webkit-backdrop-filter:blur(32px) saturate(2);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 8px 32px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:none}
+.nav-logo img{height:26px}
+.nav-logo span{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;letter-spacing:3.5px;color:#E2E8F0}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{font-size:13px;font-weight:400;color:rgba(226,232,240,.55);padding:7px 16px;border-radius:100px;transition:all .2s;cursor:none}
+.nav-links a:hover{color:#E2E8F0;background:rgba(255,255,255,.07)}
+.nav-toggle{display:none;background:none;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:7px 10px;cursor:none}
+.nav-toggle svg{width:18px;height:18px;stroke:#E2E8F0;stroke-width:2;fill:none}
+
+/* ━━ HERO ━━ */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;background:#050816;overflow:hidden;z-index:1}
+/* Dot grid */
+#hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(99,102,241,.1) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(ellipse 80% 90% at 55% 50%,black 30%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 90% at 55% 50%,black 30%,transparent 75%);
+  pointer-events:none;z-index:0;
+}
+canvas#ptcl{position:absolute;inset:0;pointer-events:none;z-index:1}
+.hero-wrap{position:relative;z-index:3;padding:160px 0 80px}
+
+/* Word-reveal animation — from 21st.dev GlassRefractionHero */
+.word-reveal{overflow:hidden;display:inline-block}
+.word-reveal span{
+  display:inline-block;
+  opacity:0;transform:translateY(80px);
+  animation:word-up .8s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes word-up{to{opacity:1;transform:translateY(0)}}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(129,140,248,.9);padding:6px 14px;border-radius:100px;
+  background:rgba(99,102,241,.1);
+  border:1px solid rgba(99,102,241,.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  margin-bottom:28px;position:relative;overflow:hidden;
+}
+/* Badge top line — from 21st.dev ShaderShowcase */
+.hero-badge::before{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(103,232,249,.5),transparent);
+  border-radius:100px;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#6366F1;box-shadow:0 0 0 0 rgba(99,102,241,.6);animation:bp 2s ease infinite}
+@keyframes bp{0%{box-shadow:0 0 0 0 rgba(99,102,241,.6)}70%{box-shadow:0 0 0 8px rgba(99,102,241,0)}100%{box-shadow:0 0 0 0 rgba(99,102,241,0)}}
+
+.hero-title{font-size:clamp(44px,6vw,80px);font-weight:600;line-height:1.06;letter-spacing:-.025em;color:#F1F5F9;margin-bottom:20px}
+.hero-sub{font-size:16px;font-weight:300;color:rgba(148,163,184,.85);line-height:1.75;max-width:400px;margin-bottom:36px;opacity:0;animation:fi .8s ease 1.2s forwards}
+@keyframes fi{to{opacity:1}}
+
+.hero-ctas{display:flex;align-items:center;flex-wrap:wrap;gap:12px;opacity:0;animation:fi .8s ease 1.4s forwards}
+.hero-proof{display:flex;flex-wrap:wrap;gap:18px;margin-top:32px;opacity:0;animation:fi .8s ease 1.6s forwards}
+.proof-item{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(148,163,184,.6)}
+.proof-item svg{width:12px;height:12px;color:#818CF8;flex-shrink:0}
+
+/* ━━ TREE ━━ */
+.tree-side{display:flex;justify-content:center;align-items:center;position:relative}
+.tree-halo{position:absolute;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);animation:th 7s ease-in-out infinite}
+@keyframes th{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+.tree-svg{width:100%;max-width:480px;filter:drop-shadow(0 0 40px rgba(99,102,241,.1));transition:transform .1s ease}
+.tl{stroke-dasharray:280;stroke-dashoffset:280;animation:dl 1.4s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes dl{to{stroke-dashoffset:0}}
+.tl1{animation-delay:.2s}.tl2{animation-delay:.5s}.tl3{animation-delay:.7s}.tl4{animation-delay:1s}.tl5{animation-delay:1.2s}.tl6{animation-delay:1.5s}.tl7{animation-delay:1.8s}
+.tn{opacity:0;animation:dn .5s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes dn{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+.tn1{animation-delay:.15s}.tn2{animation-delay:.45s}.tn3{animation-delay:.75s}.tn4{animation-delay:1.05s}.tn5{animation-delay:1.35s}.tn6{animation-delay:1.65s}.tn7{animation-delay:1.9s}.tn8{animation-delay:2.15s}
+.pls{animation:pl 3s ease-out infinite;transform-origin:center}
+@keyframes pl{0%{r:16;opacity:.5}100%{r:40;opacity:0}}
+
+.scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;z-index:3;opacity:0;animation:fi 1s ease 2.5s forwards;cursor:none}
+.scroll-cue span{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(148,163,184,.4)}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,#6366F1);animation:slp 2s ease infinite}
+@keyframes slp{0%,100%{opacity:.2}50%{opacity:1}}
+
+/* ━━ TICKER ━━ */
+.ticker{overflow:hidden;padding:13px 0;background:rgba(5,8,22,.6);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:1;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(to right,#050816,transparent)}
+.ticker::after{right:0;background:linear-gradient(to left,#050816,transparent)}
+.ticker-inner{display:flex;gap:52px;width:max-content;animation:tk 28s linear infinite}
+@keyframes tk{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.t-item{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(148,163,184,.45);white-space:nowrap}
+.t-item svg{width:12px;height:12px;color:rgba(99,102,241,.7);flex-shrink:0}
+.t-dot{width:3px;height:3px;border-radius:50%;background:rgba(99,102,241,.3);flex-shrink:0}
+
+/* ━━ STATS ━━ */
+.stats-row{display:flex;flex-wrap:wrap;justify-content:center;gap:0;padding:52px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.stat-item{padding:16px 48px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+.stat-item:last-child{border-right:none}
+.stat-val{font-family:'Playfair Display',serif;font-size:46px;font-weight:600;line-height:1;background:linear-gradient(135deg,#818CF8,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.stat-lbl{font-size:10px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;color:rgba(148,163,184,.45);margin-top:8px;display:block}
+
+/* ━━ SECTION UTILS ━━ */
+.sec{padding:96px 0;position:relative;z-index:2}
+.sec-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(129,140,248,.8);margin-bottom:14px}
+.sec-tag::before{content:'';width:24px;height:1px;background:linear-gradient(to right,#6366F1,transparent)}
+.sec-h{font-size:clamp(26px,3.5vw,46px);font-weight:600;color:#F1F5F9;line-height:1.12;margin-bottom:14px;letter-spacing:-.015em}
+.sec-p{font-size:15px;color:rgba(148,163,184,.75);font-weight:300;line-height:1.8}
+
+/* ━━ FEATURES ━━ */
+.feat-hero{padding:40px;margin-bottom:20px;cursor:none;transition:transform .3s ease,box-shadow .3s ease,border-color .3s}
+.feat-hero:hover{transform:translateY(-4px);border-color:rgba(99,102,241,.22)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 32px 70px rgba(0,0,0,.6),0 0 0 1px rgba(99,102,241,.18)}
+.feat-hero-inner{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap}
+.feat-hero-text{flex:1 1 280px}
+.feat-hero-img{flex:1 1 340px}
+
+.feat-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:20px}
+
+.feat-card{padding:30px;cursor:none;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
+.feat-card:hover{transform:translateY(-5px);border-color:rgba(99,102,241,.25)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 28px 60px rgba(0,0,0,.55),0 0 0 1px rgba(99,102,241,.15),0 0 40px rgba(99,102,241,.06)}
+
+.feat-num{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(99,102,241,.7);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.feat-num::before{content:'';width:16px;height:1px;background:#6366F1}
+.feat-title{font-size:clamp(20px,2vw,26px);font-weight:600;color:#F1F5F9;line-height:1.15;margin-bottom:10px}
+.feat-desc{font-size:13px;color:rgba(148,163,184,.7);font-weight:300;line-height:1.75;margin-bottom:16px}
+.feat-bullets{list-style:none;padding:0;margin-bottom:16px}
+.feat-bullets li{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(148,163,184,.65);padding:3px 0}
+.feat-bullets li svg{width:12px;height:12px;color:#818CF8;flex-shrink:0}
+.feat-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;background:linear-gradient(135deg,#818CF8,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:gap .2s;cursor:none}
+.feat-link:hover{gap:10px}
+.feat-link svg{width:12px;height:12px;color:#818CF8;transition:transform .2s;-webkit-text-fill-color:rgba(103,232,249,1)}
+.feat-link:hover svg{transform:translateX(3px)}
+.feat-img{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.feat-img img{width:100%;display:block;object-fit:cover}
+.feat-mini-img{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.07);margin-top:18px}
+.feat-mini-img img{width:100%;height:154px;object-fit:cover;object-position:top}
+.feat-icon{width:46px;height:46px;border-radius:12px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.feat-icon svg{width:21px;height:21px;color:#818CF8}
+.big-g{font-family:'Playfair Display',serif;font-size:50px;font-weight:600;line-height:1;background:linear-gradient(135deg,#818CF8,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:4px}
+.lang-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.lang-tag{font-size:11px;padding:3px 10px;border-radius:20px;color:rgba(148,163,184,.6);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+
+/* ━━ HOW IT WORKS ━━ */
+.how-sec{padding:90px 0;background:linear-gradient(to bottom,rgba(99,102,241,.03) 0%,transparent 100%);border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:2}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.step-card{padding:36px 28px;text-align:center;cursor:none;transition:transform .3s ease,border-color .3s}
+.step-card:hover{transform:translateY(-5px);border-color:rgba(99,102,241,.25)!important}
+.step-card:hover .step-icon{transform:translateY(-6px);border-color:rgba(99,102,241,.45)!important}
+.step-bg-n{font-family:'Playfair Display',serif;font-size:80px;font-weight:600;position:absolute;top:14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366F1,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.07;user-select:none;pointer-events:none;line-height:1}
+.step-icon{width:68px;height:68px;border-radius:50%;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;position:relative;z-index:1;transition:transform .35s cubic-bezier(.34,1.56,.64,1),border-color .25s}
+.step-icon svg{width:26px;height:26px;color:#818CF8}
+.step-title{font-size:19px;font-weight:600;color:#F1F5F9;margin-bottom:10px;position:relative;z-index:1}
+.step-desc{font-size:13px;color:rgba(148,163,184,.65);line-height:1.75;position:relative;z-index:1}
+
+/* ━━ CTA ━━ */
+.cta-sec{padding:100px 0;border-top:1px solid rgba(255,255,255,.06);text-align:center;position:relative;z-index:2}
+.cta-sec::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:280px;background:radial-gradient(ellipse,rgba(99,102,241,.08) 0%,transparent 70%);pointer-events:none}
+.cta-card{display:inline-block;max-width:660px;width:100%;padding:56px 60px;text-align:center;position:relative;z-index:1}
+.cta-card::before{background:linear-gradient(90deg,transparent,rgba(99,102,241,.9) 30%,rgba(6,182,212,.9) 70%,transparent)!important}
+.cta-label{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(129,140,248,.8);margin-bottom:16px}
+.cta-title{font-size:clamp(26px,3.2vw,44px);font-weight:600;color:#F1F5F9;line-height:1.1;margin-bottom:12px}
+.cta-sub{font-size:14px;color:rgba(148,163,184,.65);font-weight:300;margin-bottom:28px}
+.cta-btns{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px}
+.store-btn{display:inline-block;border-radius:10px;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:none;margin-top:20px}
+.store-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.store-btn img{height:44px;border-radius:10px}
+
+/* ━━ CONTACT / FOOTER ━━ */
+#contact{padding:52px 0 36px;background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.06);text-align:center;position:relative;z-index:2}
+.contact-email{font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:#E2E8F0;margin:12px 0 6px}
+.contact-sub{font-size:13px;color:rgba(148,163,184,.5);font-weight:300}
+.socials{display:flex;justify-content:center;gap:8px;margin:24px 0;flex-wrap:wrap}
+.soc{width:40px;height:40px;border-radius:10px;cursor:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;color:rgba(148,163,184,.45);transition:all .2s}
+.soc svg{width:16px;height:16px}
+.soc:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:#818CF8;transform:translateY(-3px)}
+.footer-links{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;padding:16px 0;margin-bottom:20px;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.footer-links a{font-size:12px;color:rgba(148,163,184,.35);cursor:none;transition:color .2s}
+.footer-links a:hover{color:rgba(129,140,248,.8)}
+footer{padding:16px;text-align:center;background:rgba(0,0,0,.15);border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:2}
+footer p{font-size:11px;color:rgba(148,163,184,.28);margin:0}
+.hrt{color:#F472B6;display:inline-block;animation:hb 1.8s ease infinite}
+@keyframes hb{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+
+/* ━━ BACK TO TOP ━━ */
+#btt{position:fixed;bottom:26px;right:26px;z-index:999;width:40px;height:40px;border-radius:10px;border:none;background:linear-gradient(135deg,#6366F1,#06B6D4);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(99,102,241,.4);opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .3s,transform .3s,box-shadow .2s;cursor:none}
+#btt svg{width:16px;height:16px}
+#btt.on{opacity:1;pointer-events:auto;transform:translateY(0)}
+#btt:hover{box-shadow:0 10px 36px rgba(99,102,241,.6);transform:translateY(-3px)}
+
+/* ━━ REVEAL ━━ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+.rv.on{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* ━━ TYPEWRITER ━━ */
+.tw-wrap{display:inline-block;min-width:180px}
+.tw-t{background:linear-gradient(135deg,#818CF8,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cur{display:inline-block;width:3px;height:.8em;background:#818CF8;margin-left:3px;vertical-align:middle;animation:bc .85s step-end infinite}
+@keyframes bc{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ━━ RESPONSIVE ━━ */
+@media(max-width:1024px){.feat-grid-3{grid-template-columns:repeat(2,1fr)}.feat-grid-2{grid-template-columns:1fr}}
+@media(max-width:991px){.tree-side{display:none}#hero{text-align:center}.hero-sub{max-width:100%}.hero-ctas,.hero-proof{justify-content:center}.hero-wrap{padding:130px 0 60px}.stat-item{padding:16px 28px}.steps-grid{grid-template-columns:1fr}.feat-hero-inner{flex-direction:column}body{cursor:default}#cd,#cr{display:none}.nav-links{display:none}.nav-toggle{display:flex;align-items:center;justify-content:center}#nav{padding:10px 16px}.glass-strips{display:none}}
+@media(max-width:768px){.feat-grid-3{grid-template-columns:1fr}.feat-grid-2{grid-template-columns:1fr}.cta-card{padding:36px 24px}.stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.06);padding:20px 24px}.stat-item:last-child{border-bottom:none}.stats-row{flex-direction:column;align-items:center}.footer-links{gap:14px}}
+@media(max-width:576px){.hero-title{font-size:36px}.cta-title{font-size:24px}.big-g{font-size:38px}}
+</style>
 </head>
-
 <body id="home">
 
-    <script>
-        (function (d, t) {
-            var BASE_URL = "https://app.chatwoot.com";
-            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-            g.src = BASE_URL + "/packs/js/sdk.js";
-            s.parentNode.insertBefore(g, s);
-            g.onload = function () {
-                window.chatwootSDK.run({
-                    websiteToken: 'aGnsM5KMtKjDQY8HcRn9vSCM',
-                    baseUrl: BASE_URL
-                })
-            }
-        })(document, "script");
-    </script>
+<!-- Custom cursor -->
+<div id="cd"></div>
+<div id="cr"></div>
 
-    <!--Header Section Start-->
-    <section class="top-bar animated-header">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand row" href="#">
-                    <img src="./lib/images/logo.png" alt="logo" height="40px">
-                </a>
-                <span class="nav-title header-hide wow fadeInUp" data-wow-delay=".3s"
-                    data-wow-duration="500ms">Bloodline</span>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto" style="align-items: center;">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#home">Home
-                                <span class="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#features">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contact">Contact</a>
-                        </li>
-                        <li class="nav-item ml-2">
-                            <a class="btn btn-danger" href="/app/">Get Started</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </section>
+<!-- SVG Filters — Liquid Glass from 21st.dev -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <filter id="liqglass" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="t"/>
+      <feComponentTransfer in="t" result="m">
+        <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+        <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+        <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+      </feComponentTransfer>
+      <feGaussianBlur in="t" stdDeviation="3" result="sm"/>
+      <feSpecularLighting in="sm" surfaceScale="5" specularConstant="1" specularExponent="100" lightingColor="white" result="sl">
+        <fePointLight x="-200" y="-200" z="300"/>
+      </feSpecularLighting>
+      <feComposite in="sl" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="li"/>
+      <feDisplacementMap in="SourceGraphic" in2="sm" scale="80" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 
-    <!--Slider Section Start-->
-    <section id="hero-area" style="background-image: url(./lib/images/home_bg.jpg);">
-        <div class="block wow fadeInUp container home-banner row align-items-center" style="margin: auto;"
-            data-wow-delay=".3s">
-            <div class="col-md-6">
-                <h1 class="wow fadeInUp animated cd-headline slide">
-                    <span>Welcome to Bloodline</span><br>
-                </h1>
-                <h2 class="wow fadeInUp animated mb-5">
-                    Build your <strong>family tree</strong> and work on your way upwards,<br>Who knows you may reach
-                    Adam and Eve.
-                </h2>
+<!-- Background scene -->
+<div class="scene">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+  <div class="orb o4"></div>
+</div>
 
-                <div class="test">
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="goo">
-                        <defs>
-                            <filter id="goo">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                                <feColorMatrix in="blur" mode="matrix"
-                                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
-                                <feComposite in="SourceGraphic" in2="goo" />
-                            </filter>
-                        </defs>
-                    </svg>
+<!-- Chatwoot -->
+<script>(function(d,t){var B="https://app.chatwoot.com",g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src=B+"/packs/js/sdk.js";s.parentNode.insertBefore(g,s);g.onload=function(){window.chatwootSDK.run({websiteToken:'aGnsM5KMtKjDQY8HcRn9vSCM',baseUrl:B})}})(document,"script");</script>
 
-                    <span class="button--bubble__container">
-                        <a href="/app/" class="button button--bubble">
-                            Get Started
-                        </a>
-                        <span class="button--bubble__effect-container">
-                            <span class="circle top-left"></span>
-                            <span class="circle top-left"></span>
-                            <span class="circle top-left"></span>
-                            <span class="button effect-button"></span>
-                            <span class="circle bottom-right"></span>
-                            <span class="circle bottom-right"></span>
-                            <span class="circle bottom-right"></span>
-                        </span>
-                    </span>
-                </div>
-            </div>
-            <div class="youtube-video col-md-6">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/MmfxQ7wHEcQ?controls=0"
-                    title="Bloodline Intro" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-            </div>
-        </div>
-        <center style="position: relative; z-index: 9;"><a href="#features">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather-chevrons-down">
-                    <polyline points="7 13 12 18 17 13"></polyline>
-                    <polyline points="7 6 12 11 17 6"></polyline>
-                </svg></a>
-        </center>
-    </section>
-
-    <!-- About Section Start -->
-    <div class="container" id="features">
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Family Tree
-                    </h1>
-                    <ul
-                        style="margin-top: 30px;margin-bottom: 30px;list-style: none!important;line-height: 28px;color: #727272;font-size: 16px;font-weight: 300;">
-                        <li> <img src="./icons/check-circled.svg" height="15px" class="mr-2">Completely Free</li>
-                        <li><img src="./icons/check-circled.svg" height="15px" class="mr-2">Add Unlimited People
-                        </li>
-                        <li> <img src="./icons/check-circled.svg" height="15px" class="mr-2">No ADs or Promotions
-                        </li>
-                        <li><img src="./icons/check-circled.svg" height="15px" class="mr-2">No Signup / Signin
-                            process</li>
-                        <li><img src="./icons/check-circled.svg" height="15px" class="mr-2">Private Data (Mobile
-                            No., Email
-                            etc.,) will not be shown to others</li>
-                    </ul>
-                    <a href="/app/nehru" target="_blank">See how <i class="fa fa-long-arrow-right ml-2"
-                            aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/family_tree.jpeg" alt="familytree">
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Relation Finder Info -->
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Relation Finder
-                    </h1>
-                    <p>
-                        As the name itself is pretty much self explanatory no need of further definitions. The only
-                        thing you need to know is, It supports English, తెలుగు, മലയാളം, தமிழ் and more are coming very
-                        soon.
-                    </p>
-                    <a href="/app/nehru/relation-finder" target="_blank">See how <i class="fa fa-long-arrow-right ml-2"
-                            aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/relation_finder.jpeg" alt="relation_finder">
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Subtree Info -->
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Sub Tree
-                    </h1>
-                    <p>
-                        You can view any branch of your huge family tree seperately.
-                        Confused? Take a look at below example.
-                    </p>
-                    <a href="/app/nehru/partial-tree" target="_blank">See how <i class="fa fa-long-arrow-right ml-2"
-                            aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/subtree.jpeg">
-                </div>
-            </div>
-        </div>
-
-        <!-- Timeline Info -->
-        <div class="row" id="about">
-            <div class="col-md-6 m-auto">
-                <div class="block wow fadeInLeft" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <h1>
-                        Timeline
-                    </h1>
-                    <p>
-                        Create a <strong>Timeline</strong> for any individual and can share the
-                        common events like your trips and occations with multiple members in your family.
-                    </p>
-                    <!-- <a href="#">See how <i class="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a> -->
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="block wow fadeInRight" data-wow-delay=".3s" data-wow-duration="500ms">
-                    <img src="./lib/images/timeline.jpg" alt="Bloodline_Timeline">
-                </div>
-            </div>
-        </div>
+<!-- ══════════ NAVBAR ══════════ -->
+<nav id="nav" class="gl">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <img src="./lib/images/logo.png" alt="Bloodline">
+      <span>BLOODLINE</span>
+    </a>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
     </div>
+    <a href="/app/" class="shiny-btn shiny-pill g-hover">
+      <span>Get Started</span>
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <canvas id="ptcl"></canvas>
+
+  <!-- Vertical glass strips — from 21st.dev GlassRefractionHero -->
+  <div class="glass-strips" aria-hidden="true">
+    <div class="glass-strip"></div><div class="glass-strip"></div><div class="glass-strip"></div>
+    <div class="glass-strip"></div><div class="glass-strip"></div><div class="glass-strip"></div>
+    <div class="glass-strip"></div><div class="glass-strip"></div><div class="glass-strip"></div>
+    <div class="glass-strip"></div><div class="glass-strip"></div><div class="glass-strip"></div>
+    <div class="glass-strip"></div><div class="glass-strip"></div><div class="glass-strip"></div>
+    <div class="glass-strip"></div><div class="glass-strip"></div><div class="glass-strip"></div>
+  </div>
+
+  <div class="container">
+    <div class="row align-items-center">
+
+      <!-- Left: Copy -->
+      <div class="col-lg-6 hero-wrap">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Your heritage, preserved forever
+        </div>
+
+        <!-- Word-reveal animation — from 21st.dev GlassRefractionHero -->
+        <h1 class="hero-title">
+          <span class="word-reveal"><span style="animation-delay:.1s">Trace</span></span>
+          <span>&nbsp;</span>
+          <span class="word-reveal"><span style="animation-delay:.2s">Your</span></span>
+          <br>
+          <span class="tw-wrap"><span class="tw-t" id="tw"></span><span class="cur"></span></span>
+          <br>
+          <span class="word-reveal"><span class="g-text" style="animation-delay:.4s">Bloodline</span></span>
+        </h1>
+
+        <p class="hero-sub">Build and explore your family tree. Connect generations, discover relationships — completely free, forever.</p>
+
+        <div class="hero-ctas">
+          <!-- Shiny button — from 21st.dev ShinyButton -->
+          <a href="/app/" class="shiny-btn g-hover" id="hero-cta" onmousemove="shineMouse(this,event)">
+            <span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M8 8a4 4 0 1 1 8 0"/></svg>
+              Start for Free
+            </span>
+          </a>
+          <a href="https://www.youtube.com/watch?v=MmfxQ7wHEcQ" target="_blank" class="btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            Watch Demo
+          </a>
+        </div>
+
+        <div class="hero-proof">
+          <span class="proof-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Free forever</span>
+          <span class="proof-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>No signup needed</span>
+          <span class="proof-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Zero ads</span>
+        </div>
+      </div>
+
+      <!-- Right: Tree -->
+      <div class="col-lg-6 tree-side">
+        <div class="tree-halo"></div>
+        <svg class="tree-svg" viewBox="0 0 460 500" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="gp" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M40 0L0 0 0 40" fill="none" stroke="rgba(99,102,241,0.05)" stroke-width="0.5"/>
+            </pattern>
+            <radialGradient id="vi" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#A5B4FC"/><stop offset="100%" stop-color="#6366F1"/></radialGradient>
+            <radialGradient id="cy" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#67E8F9"/><stop offset="100%" stop-color="#06B6D4"/></radialGradient>
+            <filter id="sf"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="gf"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect width="460" height="500" fill="url(#gp)" rx="20"/>
+          <line class="tl tl1" x1="230" y1="82" x2="120" y2="175" stroke="rgba(99,102,241,.2)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl1" x1="230" y1="82" x2="340" y2="175" stroke="rgba(99,102,241,.2)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl2" x1="120" y1="200" x2="68" y2="295" stroke="rgba(99,102,241,.15)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl3" x1="120" y1="200" x2="178" y2="295" stroke="rgba(99,102,241,.15)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl4" x1="340" y1="200" x2="278" y2="295" stroke="rgba(99,102,241,.15)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl5" x1="340" y1="200" x2="388" y2="295" stroke="rgba(99,102,241,.15)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl6" x1="178" y1="320" x2="148" y2="410" stroke="rgba(99,102,241,.1)" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="tl tl7" x1="178" y1="320" x2="228" y2="410" stroke="rgba(99,102,241,.1)" stroke-width="1.5" stroke-linecap="round"/>
+          <g class="tn tn1"><circle cx="230" cy="62" r="24" fill="none" stroke="rgba(6,182,212,.12)" stroke-width="1.5" class="pls"/><circle cx="230" cy="62" r="18" fill="rgba(6,182,212,.08)" stroke="rgba(6,182,212,.35)" stroke-width="1.5"/><circle cx="230" cy="62" r="10" fill="url(#cy)" filter="url(#sf)"/></g>
+          <text class="tn tn1" x="230" y="42" text-anchor="middle" fill="rgba(103,232,249,.5)" font-size="10" font-family="Inter">Great-Grandfather</text>
+          <g class="tn tn2"><circle cx="120" cy="188" r="15" fill="rgba(99,102,241,.06)" stroke="rgba(99,102,241,.28)" stroke-width="1.5"/><circle cx="120" cy="188" r="8" fill="url(#vi)" filter="url(#sf)"/></g>
+          <text class="tn tn2" x="78" y="208" text-anchor="middle" fill="rgba(165,180,252,.45)" font-size="9.5" font-family="Inter">Grandfather</text>
+          <g class="tn tn3"><circle cx="340" cy="188" r="15" fill="rgba(99,102,241,.06)" stroke="rgba(99,102,241,.28)" stroke-width="1.5"/><circle cx="340" cy="188" r="8" fill="url(#vi)" filter="url(#sf)"/></g>
+          <text class="tn tn3" x="382" y="208" text-anchor="middle" fill="rgba(165,180,252,.45)" font-size="9.5" font-family="Inter">Grand-Uncle</text>
+          <g class="tn tn4"><circle cx="68" cy="308" r="12" fill="rgba(99,102,241,.04)" stroke="rgba(99,102,241,.2)" stroke-width="1.5"/><circle cx="68" cy="308" r="7" fill="url(#vi)"/></g>
+          <text class="tn tn4" x="68" y="328" text-anchor="middle" fill="rgba(226,232,240,.25)" font-size="9" font-family="Inter">Uncle</text>
+          <g class="tn tn5"><circle cx="178" cy="308" r="12" fill="rgba(99,102,241,.04)" stroke="rgba(99,102,241,.2)" stroke-width="1.5"/><circle cx="178" cy="308" r="7" fill="url(#vi)"/></g>
+          <text class="tn tn5" x="178" y="328" text-anchor="middle" fill="rgba(226,232,240,.25)" font-size="9" font-family="Inter">Father</text>
+          <g class="tn tn6"><circle cx="278" cy="308" r="12" fill="rgba(99,102,241,.04)" stroke="rgba(99,102,241,.2)" stroke-width="1.5"/><circle cx="278" cy="308" r="7" fill="url(#vi)"/></g>
+          <text class="tn tn6" x="278" y="328" text-anchor="middle" fill="rgba(226,232,240,.25)" font-size="9" font-family="Inter">Cousin</text>
+          <g class="tn tn7"><circle cx="388" cy="308" r="12" fill="rgba(99,102,241,.04)" stroke="rgba(99,102,241,.2)" stroke-width="1.5"/><circle cx="388" cy="308" r="7" fill="url(#vi)"/></g>
+          <text class="tn tn7" x="388" y="328" text-anchor="middle" fill="rgba(226,232,240,.25)" font-size="9" font-family="Inter">Cousin</text>
+          <g class="tn tn8"><circle cx="228" cy="426" r="28" fill="none" stroke="rgba(6,182,212,.1)" stroke-width="1.5" class="pls"/><circle cx="228" cy="426" r="20" fill="rgba(6,182,212,.08)" stroke="rgba(6,182,212,.4)" stroke-width="2"/><circle cx="228" cy="426" r="12" fill="url(#cy)" filter="url(#gf)"/></g>
+          <text class="tn tn8" x="228" y="460" text-anchor="middle" fill="rgba(103,232,249,.7)" font-size="11" font-family="Inter" font-weight="600">You</text>
+          <g class="tn tn8"><circle cx="148" cy="426" r="10" fill="rgba(99,102,241,.03)" stroke="rgba(99,102,241,.14)" stroke-width="1.5"/><circle cx="148" cy="426" r="6" fill="url(#vi)" opacity=".4"/></g>
+          <text class="tn tn8" x="148" y="445" text-anchor="middle" fill="rgba(226,232,240,.2)" font-size="8" font-family="Inter">Sibling</text>
+          <text x="228" y="490" text-anchor="middle" fill="rgba(99,102,241,.18)" font-size="9" font-family="Inter" letter-spacing="3">∞ generations more</text>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+  <a href="#features" class="scroll-cue"><span>Scroll</span><span class="scroll-line"></span></a>
+</section>
+
+<!-- ══════════ TICKER ══════════ -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Free Forever</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>No Signup</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Zero Ads</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Unlimited Members</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>4+ Languages</span><span class="t-dot"></span>
+    <!-- dup -->
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Free Forever</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>No Signup</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Zero Ads</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Unlimited Members</span><span class="t-dot"></span>
+    <span class="t-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>4+ Languages</span>
+  </div>
+</div>
+
+<!-- ══════════ STATS ══════════ -->
+<section style="position:relative;z-index:2;background:rgba(5,8,22,.5)">
+  <div class="stats-row rv">
+    <div class="stat-item"><span class="stat-val">∞</span><span class="stat-lbl">Free Forever</span></div>
+    <div class="stat-item"><span class="stat-val">0</span><span class="stat-lbl">Ads or Promotions</span></div>
+    <div class="stat-item"><span class="stat-val">4+</span><span class="stat-lbl">Languages</span></div>
+    <div class="stat-item"><span class="stat-val">∞</span><span class="stat-lbl">Family Members</span></div>
+  </div>
+</section>
+
+<!-- ══════════ FEATURES ══════════ -->
+<section id="features" class="sec">
+  <div class="container">
+    <div class="text-center rv" style="margin-bottom:52px">
+      <div class="sec-tag" style="justify-content:center">Features</div>
+      <h2 class="sec-h">Everything to Map Your Heritage</h2>
+      <p class="sec-p mx-auto" style="max-width:420px">From tree visualization to relationship discovery — all in one place.</p>
     </div>
 
-
-    <!--Call To Action Section Start -->
-    <section id="contact">
-        <div class="container">
-            <div class="col-md-12">
-                <div class="block">
-                    <h4 class="mt-2 wow fadeInDown">
-                        <strong>hello@bloodline.app</strong>
-                        <!-- <i class="fa fa-lg fa-envelope-o social"> </i> -->
-                    </h4>
-                    <div class="mt-4 wow fadeInDown">
-                        <a href="https://play.google.com/store/apps/details?id=com.losersteam.bloodline">
-                            <img src="./lib/images/google-play.jpeg"
-                                style="box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 75%);" height="50px"></a>
-                    </div>
-                    <div align="center" class="socialbtns wow fadeInDown mb-5">
-                        <ul style="padding-inline-start: 0px;">
-                            <li><a href="https://www.instagram.com/bloodline.app/" target="_blank"
-                                    class="fa fa-lg fa-instagram social"></a></li>
-                            <li><a href="https://www.facebook.com/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-facebook social"></a></li>
-                            <li><a href="https://twitter.com/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-twitter social"></a></li>
-                            <li><a href="https://github.com/losers/tree/issues" target="_blank"
-                                    class="fa fa-lg fa-github social"></a></li>
-                            <li><a href="https://www.linkedin.com/company/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-linkedin-square social"></a></li>
-                            <li><a href="https://t.me/bloodlineapp" target="_blank"
-                                    class="fa fa-lg fa-telegram social"></a></li>
-                        </ul>
-                    </div>
-                    <div class="bottom-links wow fadeInDown row justify-content-around">
-                        <a href="#features">Features</a>
-                        <a href="https://blog.bloodline.app" target="_blank">Blog</a>
-                        <a href="https://github.com/losers/tree/projects/2" target="_blank">Roadmap</a>
-                        <a href="https://www.youtube.com/channel/UCKO-JUbSvs4IzuSvOnKJeDg" target="_blank
-                        ">Video Source</a>
-                    </div>
-                </div>
-            </div>
+    <!-- Large hero card with shimmer + corner glows — from 21st.dev Highlight Card -->
+    <div class="gl-card feat-hero card-shimmer rv">
+      <div class="shimmer-ray"></div>
+      <div class="c-tl"></div><div class="c-br"></div>
+      <div class="feat-hero-inner" style="position:relative;z-index:2">
+        <div class="feat-hero-text">
+          <div class="feat-num">01 / Family Tree</div>
+          <h3 class="feat-title">Visualize Your<br>Family Connections</h3>
+          <p class="feat-desc">Build an interactive, beautifully rendered family tree that spans generations. Add as many members as your family has — no limits.</p>
+          <ul class="feat-bullets">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Completely Free — no hidden costs</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Unlimited Family Members</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Private data stays private</li>
+          </ul>
+          <a href="/app/nehru" target="_blank" class="feat-link">
+            See a live demo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
         </div>
-    </section>
+        <div class="feat-hero-img">
+          <div class="feat-img"><img src="./lib/images/family_tree.jpeg" alt="Family Tree"></div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Footer Section Start -->
-    <footer id="footer">
-        <p class="copyright" style="text-align: center;margin: 0px;">Developed with <i class="fa fa-heart"
-                aria-hidden="true" style="color: red;"></i> by <strong>Losers</strong><br>
-        </p>
-    </footer>
+    <!-- 3-col grid with shimmer -->
+    <div class="feat-grid-3">
+      <div class="gl-card feat-card card-shimmer rv d1">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div style="position:relative;z-index:2">
+          <div class="feat-num">02 / Relation Finder</div>
+          <h3 class="feat-title" style="font-size:22px">Discover How You're Related</h3>
+          <p class="feat-desc">Enter any two members — get their exact relationship instantly in 4+ languages.</p>
+          <a href="/app/nehru/relation-finder" target="_blank" class="feat-link">Try it live <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <div class="feat-mini-img"><img src="./lib/images/relation_finder.jpeg" alt="Relation Finder"></div>
+        </div>
+      </div>
+      <div class="gl-card feat-card card-shimmer rv d2">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div style="position:relative;z-index:2">
+          <div class="feat-num">03 / Sub Tree</div>
+          <h3 class="feat-title" style="font-size:22px">Explore Any Branch</h3>
+          <p class="feat-desc">Navigate into any branch for a focused view. Perfect for large families with hundreds of members.</p>
+          <a href="/app/nehru/partial-tree" target="_blank" class="feat-link">See in action <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <div class="feat-mini-img"><img src="./lib/images/subtree.jpeg" alt="Sub Tree"></div>
+        </div>
+      </div>
+      <div class="gl-card feat-card card-shimmer rv d3">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div style="position:relative;z-index:2">
+          <div class="feat-num">04 / Timeline</div>
+          <h3 class="feat-title" style="font-size:22px">Chronicle Your Story</h3>
+          <p class="feat-desc">Personal timelines for any member. Share milestone events across the whole family.</p>
+          <div class="feat-mini-img"><img src="./lib/images/timeline.jpg" alt="Timeline"></div>
+        </div>
+      </div>
+    </div>
 
+    <!-- 2-col info cards -->
+    <div class="feat-grid-2">
+      <div class="gl-card feat-card card-shimmer rv d1">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div style="position:relative;z-index:2">
+          <span class="big-g">∞</span>
+          <h3 class="feat-title" style="font-size:20px;margin-top:4px">Always Free</h3>
+          <p class="feat-desc" style="font-size:13px">No paywalls, no premium tiers. Bloodline is and always will be free.</p>
+        </div>
+      </div>
+      <div class="gl-card feat-card card-shimmer rv d2">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div style="position:relative;z-index:2">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <h3 class="feat-title" style="font-size:20px">4+ Languages</h3>
+          <p class="feat-desc" style="font-size:13px">Relationship terms in your mother tongue.</p>
+          <div class="lang-tags">
+            <span class="lang-tag">English</span><span class="lang-tag">తెలుగు</span>
+            <span class="lang-tag">മലയാളം</span><span class="lang-tag">தமிழ்</span>
+            <span class="lang-tag">+ More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- ══════════ HOW IT WORKS ══════════ -->
+<section class="how-sec">
+  <div class="container">
+    <div class="text-center rv">
+      <div class="sec-tag" style="justify-content:center">How It Works</div>
+      <h2 class="sec-h">Start in Minutes</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="gl-card step-card card-shimmer rv d1">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div class="step-bg-n">01</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+        <h4 class="step-title">Create Your Tree</h4>
+        <p class="step-desc">No account needed. Open the app and start immediately.</p>
+      </div>
+      <div class="gl-card step-card card-shimmer rv d2">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div class="step-bg-n">02</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4 class="step-title">Add Family Members</h4>
+        <p class="step-desc">Add parents, siblings, children. Attach photos and details.</p>
+      </div>
+      <div class="gl-card step-card card-shimmer rv d3">
+        <div class="shimmer-ray"></div><div class="c-tl"></div><div class="c-br"></div>
+        <div class="step-bg-n">03</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+        <h4 class="step-title">Explore &amp; Share</h4>
+        <p class="step-desc">Navigate, discover relationships, and share your family's story.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CTA ══════════ -->
+<section class="cta-sec">
+  <div class="container">
+    <div class="rv" style="display:flex;justify-content:center">
+      <div class="gl-card cta-card card-shimmer">
+        <div class="shimmer-ray"></div>
+        <div style="position:relative;z-index:2">
+          <div class="cta-label">Get Started Today</div>
+          <h2 class="cta-title">Your Family Story<br>Deserves to Be Told</h2>
+          <p class="cta-sub">Free forever. No signup. No ads.</p>
+          <div class="cta-btns">
+            <a href="/app/" class="shiny-btn g-hover" onmousemove="shineMouse(this,event)">
+              <span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M8 8a4 4 0 1 1 8 0"/></svg>
+                Build Your Tree Now
+              </span>
+            </a>
+            <a href="/app/nehru" target="_blank" class="btn-ghost">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View Demo Tree
+            </a>
+          </div>
+          <a href="https://play.google.com/store/apps/details?id=com.losersteam.bloodline" class="store-btn">
+            <img src="./lib/images/google-play.jpeg" alt="Get it on Google Play">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-tag" style="justify-content:center">Get in Touch</div>
+      <h4 class="contact-email">hello@bloodline.app</h4>
+      <p class="contact-sub">Reach out anytime — we'd love to hear from you.</p>
+    </div>
+    <div class="socials rv d1">
+      <a href="https://www.instagram.com/bloodline.app/" target="_blank" class="soc" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.facebook.com/bloodlineapp" target="_blank" class="soc" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://twitter.com/bloodlineapp" target="_blank" class="soc" title="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://github.com/losers/tree/issues" target="_blank" class="soc" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
+      <a href="https://www.linkedin.com/company/bloodlineapp" target="_blank" class="soc" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a href="https://t.me/bloodlineapp" target="_blank" class="soc" title="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+    </div>
+    <div class="footer-links rv d2">
+      <a href="#features">Features</a>
+      <a href="https://blog.bloodline.app" target="_blank">Blog</a>
+      <a href="https://github.com/losers/tree/projects/2" target="_blank">Roadmap</a>
+      <a href="https://www.youtube.com/channel/UCKO-JUbSvs4IzuSvOnKJeDg" target="_blank">Videos</a>
+    </div>
+  </div>
+</section>
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
+
+<footer>
+  <p>Developed with <span class="hrt"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> by <strong>Losers</strong></p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ── Cursor ── */
+var cd=document.getElementById('cd'),cr=document.getElementById('cr');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)}());
+document.querySelectorAll('a,button,.feat-card,.feat-hero,.step-card,.soc,.store-btn,.btn-ghost').forEach(function(el){
+  el.addEventListener('mouseenter',function(){document.body.classList.add('ch')});
+  el.addEventListener('mouseleave',function(){document.body.classList.remove('ch')});
+});
+
+/* ── Shiny btn radial glow ── */
+window.shineMouse=function(el,e){
+  var r=el.getBoundingClientRect();
+  el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+  el.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+};
+
+/* ── Navbar ── */
+var nav=document.getElementById('nav'),btt=document.getElementById('btt');
+window.addEventListener('scroll',function(){
+  nav.classList.toggle('solid',window.scrollY>60);
+  btt.classList.toggle('on',window.scrollY>400);
+});
+if(window.scrollY>60)nav.classList.add('solid');
+
+/* ── Scroll reveal ── */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('on')});
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+/* ── Typewriter ── */
+var words=['Family','Heritage','Legacy','Ancestors','Roots'];
+var tel=document.getElementById('tw');
+if(tel){
+  var wi=0,ci=0,del=false,dly=120;
+  function tick(){
+    var w=words[wi];
+    if(!del){tel.textContent=w.slice(0,++ci);if(ci===w.length){del=true;dly=1900}else dly=110}
+    else{tel.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length;dly=300}else dly=55}
+    setTimeout(tick,dly);
+  }
+  setTimeout(tick,800);
+}
+
+/* ── Magnetic shiny buttons ── */
+document.querySelectorAll('.shiny-btn').forEach(function(btn){
+  btn.addEventListener('mousemove',function(e){
+    var r=btn.getBoundingClientRect();
+    btn.style.transform='translate('+((e.clientX-(r.left+r.width/2))*.14)+'px,'+((e.clientY-(r.top+r.height/2))*.14-2)+'px)';
+  });
+  btn.addEventListener('mouseleave',function(){btn.style.transform=''});
+});
+
+/* ── Tree parallax ── */
+var tree=document.querySelector('.tree-svg');
+if(tree){
+  document.addEventListener('mousemove',function(e){
+    tree.style.transform='translate('+((e.clientX-window.innerWidth/2)/window.innerWidth*12)+'px,'+((e.clientY-window.innerHeight/2)/window.innerHeight*7)+'px)';
+  });
+}
+
+/* ── Particles ── */
+var cv=document.getElementById('ptcl');
+if(!cv)return;
+var ctx=cv.getContext('2d'),pts=[];
+function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight}
+function Pt(){
+  this.x=Math.random()*cv.width;this.y=Math.random()*cv.height;
+  this.r=Math.random()*.9+.2;
+  this.vx=(Math.random()-.5)*.12;this.vy=-Math.random()*.22-.03;
+  this.a=Math.random()*.22+.04;this.v=Math.random()>.5;
+}
+Pt.prototype.tick=function(){this.x+=this.vx;this.y+=this.vy;if(this.y<-6||this.x<-6||this.x>cv.width+6){this.x=Math.random()*cv.width;this.y=cv.height+6}};
+function init(){resize();pts=[];var n=Math.floor(cv.width*cv.height/8000);for(var i=0;i<n;i++)pts.push(new Pt())}
+function frame(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(function(p){p.tick();ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.v?'rgba(99,102,241,'+p.a+')':'rgba(6,182,212,'+(p.a*.6)+')';ctx.fill()});
+  requestAnimationFrame(frame);
+}
+init();frame();window.addEventListener('resize',init);
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CURSOR-REACTIVE FLOW BACKGROUND
+   Sources: 21st.dev GradientBlur + BackgroundGradientAnimation
+
+   Two layers:
+   1. Soft lerping orb (BackgroundGradientAnimation style)
+      — large radial gradient that eases toward cursor
+   2. Glow trail canvas (GradientBlur style)
+      — additive indigo/cyan blobs that fade along cursor path
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ── Layer 1: Lerping orb ── */
+var blob = document.createElement('div');
+blob.id = 'gblob';
+blob.style.cssText = [
+  'position:fixed',
+  'width:700px',
+  'height:700px',
+  'border-radius:50%',
+  'pointer-events:none',
+  'z-index:0',
+  'mix-blend-mode:hard-light',
+  'background:radial-gradient(circle at center, rgba(99,102,241,0.13) 0%, rgba(6,182,212,0.07) 40%, transparent 70%)',
+  'transform:translate(-50%,-50%)',
+  'transition:none',
+  'will-change:left,top',
+  'filter:blur(2px)',
+].join(';');
+document.body.appendChild(blob);
+
+var bx = window.innerWidth / 2, by = window.innerHeight / 2;
+var tx = bx, ty = by;
+
+document.addEventListener('mousemove', function(e) {
+  tx = e.clientX; ty = e.clientY;
+});
+
+(function blobLoop() {
+  // Lerp — easing factor from BackgroundGradientAnimation (/ 20)
+  bx += (tx - bx) / 18;
+  by += (ty - by) / 18;
+  blob.style.left = Math.round(bx) + 'px';
+  blob.style.top  = Math.round(by) + 'px';
+  requestAnimationFrame(blobLoop);
+}());
+
+/* ── Layer 2: Glow trail canvas — GradientBlur from 21st.dev ── */
+var tc = document.createElement('canvas');
+tc.id = 'gtrail';
+tc.style.cssText = [
+  'position:fixed',
+  'inset:0',
+  'pointer-events:none',
+  'z-index:0',
+  'opacity:0.7',
+].join(';');
+document.body.appendChild(tc);
+
+var tctx = tc.getContext('2d');
+var circs = [];
+var tmx = -999, tmy = -999;
+var frameCount = 0;
+
+// Color palette: indigo & cyan — from our design system
+var trailColors = [
+  [99, 102, 241],   // indigo
+  [6,  182, 212],   // cyan
+  [129, 140, 248],  // indigo-light
+  [34,  211, 238],  // cyan-light
+];
+
+function resizeTrail() {
+  tc.width  = window.innerWidth;
+  tc.height = window.innerHeight;
+}
+resizeTrail();
+window.addEventListener('resize', resizeTrail);
+
+document.addEventListener('mousemove', function(e) {
+  tmx = e.clientX; tmy = e.clientY;
+});
+
+// Spawn particles every N frames for performance
+function spawnTrailBlob() {
+  var col = trailColors[Math.floor(Math.random() * trailColors.length)];
+  var r = 55 + Math.random() * 35; // radius 55–90px
+  var grd = tctx.createRadialGradient(tmx, tmy, 0, tmx, tmy, r);
+  grd.addColorStop(0,   'rgba('+col[0]+','+col[1]+','+col[2]+',0.55)');
+  grd.addColorStop(0.3, 'rgba('+col[0]+','+col[1]+','+col[2]+',0.28)');
+  grd.addColorStop(0.6, 'rgba('+col[0]+','+col[1]+','+col[2]+',0.10)');
+  grd.addColorStop(1,   'rgba('+col[0]+','+col[1]+','+col[2]+',0)');
+  circs.push({ x: tmx, y: tmy, r: r, grd: grd, alpha: 0.85 });
+}
+
+function drawTrail() {
+  frameCount++;
+
+  // Spawn a blob every 2 frames — balances richness vs performance
+  if (frameCount % 2 === 0 && tmx > 0) spawnTrailBlob();
+
+  // Clear with full transparency — GradientBlur uses clearRect
+  tctx.clearRect(0, 0, tc.width, tc.height);
+
+  // Additive blending — key to the glowing look (from 21st.dev GradientBlur)
+  tctx.globalCompositeOperation = 'lighter';
+
+  var toRemove = [];
+  for (var i = 0; i < circs.length; i++) {
+    var c = circs[i];
+    tctx.globalAlpha = c.alpha;
+    tctx.beginPath();
+    tctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+    tctx.fillStyle = c.grd;
+    tctx.fill();
+    c.alpha -= 0.022; // fade speed
+    if (c.alpha <= 0) toRemove.push(i);
+  }
+
+  // Remove dead blobs (reverse to preserve indices)
+  for (var j = toRemove.length - 1; j >= 0; j--) circs.splice(toRemove[j], 1);
+
+  tctx.globalAlpha = 1;
+  tctx.globalCompositeOperation = 'source-over';
+
+  requestAnimationFrame(drawTrail);
+}
+drawTrail();
+
+}());
+</script>
 </body>
-
 </html>
