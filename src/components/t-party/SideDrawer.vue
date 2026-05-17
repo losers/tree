@@ -95,15 +95,34 @@ export default {
     },
   },
   mounted() {
-    document
-      .querySelector(".menu-icon")
-      .addEventListener("click", this.openMenu, false);
-    document
-      .querySelector(".menu-links")
-      .addEventListener("click", this.closeMenu, false);
-    document
-      .querySelector(".bg-menu")
-      .addEventListener("click", this.closeMenu, false);
+    const menuEl = this.$el.querySelector(".menu");
+    if (menuEl) {
+      document.body.appendChild(menuEl);
+    }
+    
+    // Allow time for DOM to update
+    this.$nextTick(() => {
+      const menuIcon = this.$el.querySelector(".menu-icon");
+      if (menuIcon) {
+        menuIcon.addEventListener("click", this.openMenu, false);
+      }
+      
+      const menuLinks = document.querySelector(".menu-links");
+      if (menuLinks) {
+        menuLinks.addEventListener("click", this.closeMenu, false);
+      }
+      
+      const bgMenu = document.querySelector(".bg-menu");
+      if (bgMenu) {
+        bgMenu.addEventListener("click", this.closeMenu, false);
+      }
+    });
+  },
+  beforeDestroy() {
+    const menuEl = document.querySelector(".menu");
+    if (menuEl && menuEl.parentNode === document.body) {
+      document.body.removeChild(menuEl);
+    }
   },
   computed: {
     isEditable: {
@@ -128,26 +147,37 @@ export default {
   transition: all 200ms linear;
 }
 .bloodline-title {
-  color: grey;
-  font-size: 18px;
-  margin: 15px 20px;
+  color: #a78bfa;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 25px 20px 15px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
 }
 .router-link-exact-active li {
-  border-left: solid red 5px;
-  background-color: black;
+  background: linear-gradient(90deg, rgba(79, 142, 247, 0.25), transparent);
+  border-left: 3px solid #4f8ef7;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(79, 142, 247, 0.8);
+  box-shadow: inset 20px 0 40px -20px rgba(79, 142, 247, 0.4);
 }
 .drawer-icons {
-  border-radius: 5px;
-  background-color: black;
+  background: transparent;
+  color: #a78bfa;
   margin-right: 15px;
-  font-size: 20px;
+  font-size: 22px;
+  transition: all 0.3s ease;
 }
 a {
-  color: white;
-  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  text-decoration: none;
 }
 .fadeMe {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
 }
 
 .drawer {
@@ -162,12 +192,13 @@ a {
   transform: translateX(0) !important;
 }
 .app-menu {
-  background-color: #2a2a2e;
-  width: 70%;
+  background: rgba(15, 17, 35, 0.7);
+  backdrop-filter: blur(40px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  width: 75%;
   height: 100%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  height: 100%;
-  overflow: scroll;
+  box-shadow: 10px 0 50px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
 }
 .bg-menu {
   width: 30%;
@@ -184,19 +215,40 @@ ul {
 
 li {
   position: relative;
-  display: block;
-  margin-bottom: 5px;
-  padding: 10px;
-  text-align: center;
   display: flex;
   justify-content: start;
   align-items: center;
-  padding-left: 15px;
+  padding: 14px 20px;
+  margin: 8px 12px;
+  border-radius: 14px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.drawer-trasform li {
+  opacity: 1;
+  transform: translateX(0);
+}
+.drawer-trasform a:nth-child(2) li { transition-delay: 0.1s; }
+.drawer-trasform a:nth-child(3) li { transition-delay: 0.15s; }
+.drawer-trasform a:nth-child(4) li { transition-delay: 0.2s; }
+.drawer-trasform a:nth-child(5) li { transition-delay: 0.25s; }
+.drawer-trasform a:nth-child(6) li { transition-delay: 0.3s; }
+.drawer-trasform a:nth-child(7) li { transition-delay: 0.35s; }
+.drawer-trasform a:nth-child(8) li { transition-delay: 0.4s; }
+.drawer-trasform a:nth-child(9) li { transition-delay: 0.45s; }
+
+li:hover {
+  background: linear-gradient(90deg, rgba(79, 142, 247, 0.15), transparent);
+  transform: translateX(8px) !important;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+li:hover .drawer-icons {
+  color: #4f8ef7;
+  transform: scale(1.2) rotate(5deg);
 }
 i {
-  padding: 10px;
+  padding: 8px;
 }
-/* .animateMe {
-  transform: translateX(0);
-} */
 </style>

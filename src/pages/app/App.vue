@@ -100,4 +100,121 @@
 .vue-typer .custom.caret.idle.pre-erase {
   background-color: #009688;
 }
+
+/* ==========================================================================
+   Global Glassmorphism UI Theme Utilities
+   ========================================================================== */
+.my-action-btn {
+  background: rgba(15, 17, 35, 0.6) !important;
+  color: white !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font-weight: 600;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.my-action-btn:hover {
+  transform: translateY(-2px);
+}
+.my-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+.glass-primary {
+  border-left: 3px solid #4f8ef7 !important;
+}
+.glass-primary:hover {
+  background: rgba(79, 142, 247, 0.2) !important;
+  border-color: #4f8ef7 !important;
+  box-shadow: 0 5px 15px rgba(79, 142, 247, 0.3);
+}
+.glass-success {
+  border-left: 3px solid #2ed573 !important;
+}
+.glass-success:hover {
+  background: rgba(46, 213, 115, 0.2) !important;
+  border-color: #2ed573 !important;
+  box-shadow: 0 5px 15px rgba(46, 213, 115, 0.3);
+}
+.glass-warning {
+  border-left: 3px solid #ffa502 !important;
+}
+.glass-warning:hover {
+  background: rgba(255, 165, 2, 0.2) !important;
+  border-color: #ffa502 !important;
+  box-shadow: 0 5px 15px rgba(255, 165, 2, 0.3);
+}
+.glass-danger {
+  border-left: 3px solid #ff4757 !important;
+}
+.glass-danger:hover {
+  background: rgba(255, 71, 87, 0.2) !important;
+  border-color: #ff4757 !important;
+  box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+}
+
+/* Global Glass Card Form */
+.glass-card-form {
+  background: rgba(15, 17, 35, 0.9) !important;
+  backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4) !important;
+  color: white !important;
+}
+
+/* Form inputs dark theme */
+.dark-input, .dark-addon {
+  background: rgba(15, 17, 35, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+.dark-input:focus {
+  border-color: #4f8ef7 !important;
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.2) !important;
+}
+.dark-datepicker input {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+}
+
+/* Vue Select premium dark theme overrides */
+.dark-vselect .vs__dropdown-toggle {
+  background: rgba(15, 17, 35, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  color: white !important;
+  padding: 2px 8px !important;
+}
+.dark-vselect .vs__selected {
+  color: white !important;
+  background: rgba(79, 142, 247, 0.2) !important;
+  border: 1px solid rgba(79, 142, 247, 0.4) !important;
+  border-radius: 20px !important;
+}
+.dark-vselect .vs__search {
+  color: white !important;
+}
+.dark-vselect .vs__dropdown-menu {
+  background: rgba(15, 17, 35, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+}
+.dark-vselect .vs__dropdown-option {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.dark-vselect .vs__dropdown-option--highlight {
+  background: #4f8ef7 !important;
+  color: white !important;
+}
+.dark-vselect .vs__open-indicator,
+.dark-vselect .vs__clear {
+  fill: rgba(255, 255, 255, 0.6) !important;
+}
 </style>

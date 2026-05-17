@@ -41,8 +41,8 @@
           </div>
         </transition>
 
-        <div class="row pt-5" style="margin: 0">
-          <div class="col-md-6 col-sm-12">
+        <div class="row pt-5 justify-content-center" style="margin: 0; display: flex; gap: 40px;">
+          <div class="col-md-7 col-sm-12" style="max-width: 650px;">
             <b class="timeline-title">{{ user.name }}'s Timeline</b>
 
             <div v-if="dataTimeline.length != 0">
@@ -57,18 +57,21 @@
             </div>
 
             <!-- No Timeline found -->
-            <div v-else class="timeline-intro col-md-10">
-              <div>
-                <i class="icofont-arrow-right"></i> Add events like BirthDay,
-                Anniversaries, etc.,
+            <div v-else class="timeline-intro col-md-10 glass-card-form p-5 text-left">
+              <h4 style="color: #a78bfa; font-weight: bold; margin-bottom: 25px; font-family: 'Comfortaa', sans-serif;">
+                <i class="icofont-info-circle"></i> Timeline is Empty
+              </h4>
+              <div class="intro-item">
+                <span class="intro-icon"><i class="icofont-heart-alt"></i></span>
+                <p>Add special life events like Birthdays, Anniversaries, and milestones to build your story.</p>
               </div>
-              <div class="intro-text2">
-                <i class="icofont-arrow-right"></i> Events like Trips,
-                Marriage etc., can also be added and shared with corresponding
-                people So that it will appear on their Timeline.
+              <div class="intro-item mt-4">
+                <span class="intro-icon"><i class="icofont-share-alt"></i></span>
+                <p>Events like family trips, marriages, and reunions can be added and shared with other family members, instantly appearing on their timelines too!</p>
               </div>
-              <div class="intro-text2">
-                <i class="icofont-arrow-right"></i> Notifications will be sent for all events on anniversaries.
+              <div class="intro-item mt-4">
+                <span class="intro-icon"><i class="icofont-notification"></i></span>
+                <p>Smart notifications will keep everyone in the loop when special anniversaries roll around.</p>
               </div>
             </div>
 
@@ -87,37 +90,28 @@
               <!-- Add Event Button for Mobile -->
               <div
                 v-if="!view_only"
-                style="
-                  position: fixed;
-                  font-size: 20px;
-                  padding: 30px;
-                  bottom: 0px;
-                  left: 0;
-                  width: 100%;
-                  -webkit-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
-                  -moz-box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
-                  box-shadow: -14px 14px 32px -16px rgba(0, 0, 0, 0.75);
-                "
+                class="mobile-action-bar"
               >
                 <button
                   @click="wrapperUp"
-                  class="btn btn-success"
-                  style="width: 100%"
+                  class="btn my-action-btn glass-success w-100"
                 >
-                  + Add Event
+                  <i class="icofont-plus-circle mr-2" style="font-size: 20px;"></i> Add Event
                 </button>
               </div>
             </div>
           </div>
 
           <div
-            class="timeline_add_box"
-            v-if="!$device.mobile && !payload.loading.main && !view_only"
+            class="col-md-5 d-none d-md-block"
+            v-if="!payload.loading.main && !view_only"
           >
+            <div class="timeline_add_box">
             <TimelineForm
               :payload="payload"
               v-on:crudops="formEmit"
             ></TimelineForm>
+            </div>
           </div>
         </div>
       </section>
@@ -396,11 +390,30 @@ export default {
   color: indianred;
 }
 .timeline-intro {
-  margin-top: 130px;
-  font-size: 20px;
+  margin-top: 50px !important;
 }
-.intro-text2 {
-  margin-top: 50px;
+.intro-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+.intro-icon {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.intro-item p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
 }
 .card {
   z-index: 10;
@@ -432,33 +445,48 @@ export default {
   position: fixed;
   width: 100%;
   z-index: 1;
-  box-shadow: -1px 3px 20px -10px rgba(163, 163, 163, 0.75);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   padding: 5px;
-  background-color: white;
+  background-color: rgba(15, 17, 35, 0.8);
+  backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
 }
 .timeline-title {
-  font-size: 30px;
-  color: black;
-  font-weight: bold;
-  margin: 10px;
+  font-size: 32px;
+  color: white !important;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 700;
+  margin: 10px 0 30px 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 44px;
+  display: block;
   white-space: nowrap;
 }
-.timeline_add_box {
-  overflow: scroll;
-  max-height: 600px;
+.mobile-action-bar {
   position: fixed;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  padding: 16px 24px;
+  background: rgba(15, 17, 35, 0.85);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 99;
+}
+.timeline_add_box {
+  position: sticky;
+  top: 100px;
   border-radius: 20px;
-  top: 20%;
-  right: 5%;
-  width: 650px;
-  -webkit-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
-  box-shadow: 11px 10px 34px -22px rgba(0, 0, 0, 0.75);
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  background: rgba(15, 17, 35, 0.6);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.timeline_add_box::-webkit-scrollbar {
+  display: none;
 }
 .fade-enter-active,
 .fade-leave-active {

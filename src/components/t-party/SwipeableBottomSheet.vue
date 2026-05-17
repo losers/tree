@@ -5,7 +5,7 @@
       ref="card"
       class="card"
       :data-state="isMove ? 'move' : state"
-      :style="{ top: `${isMove ? y : calcY()}px` }"
+      :style="{ transform: `translateY(${isMove ? y : calcY()}px)` }"
     >
       <div class="pan-area" ref="pan">
         <div class="bar" ref="bar"></div>
@@ -50,34 +50,31 @@ export default {
     this.mc = new Hammer(this.$refs.pan);
     this.mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
 
-    this.mc.on("panup pandown", (evt) => {
-      this.y = evt.center.y - 16;
+    this.mc.on("panstart", (evt) => {
+      this.isMove = true;
+      this.startY = evt.center.y;
+      this.startTop = this.calcY();
     });
 
-    this.mc.on("panstart", () => {
-      this.isMove = true;
+    this.mc.on("panmove panup pandown", (evt) => {
+      let newY = this.startTop + evt.deltaY;
+      // Optionally prevent dragging too high
+      if (newY < 50) newY = 50; 
+      this.y = newY;
     });
 
     this.mc.on("panend", (evt) => {
       this.isMove = false;
-      if (this.startY - evt.center.y < -100) {
+      // evt.deltaY gives the total distance moved
+      if (evt.deltaY > 100) {
         this.state = "close";
         setTimeout(() => {
           this.$emit("close");
         }, 300);
+      } else {
+        // Snap back to open if they didn't drag far enough down
+        this.state = "open";
       }
-      // switch (this.state) {
-      //   case "half":
-      //     if (this.startY - evt.center.y > 120) {
-      //       this.state = "open"
-      //     }
-      //     break;
-      //   case "open":
-      //     if (this.startY - evt.center.y < -120) {
-      //       this.state = "half"
-      //     }
-      //     break;
-      // }
     });
   },
   beforeDestroy() {
@@ -119,8 +116,8 @@ export default {
   display: block;
   transition: all 0.3s;
   position: fixed;
-  background-color : grey;
-  opacity: 0.5;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   top: 0;
   left: 0;
   right: 0;
@@ -131,15 +128,18 @@ export default {
   width: 100%;
   height: 100vh;
   position: fixed;
-  background: white;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 -3px 4px rgba(0, 0, 0, 0.1);
+  top: 0;
+  background: #0a0b18;
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
   left: 0;
+  will-change: transform;
 }
 
 .card[data-state="open"],
 .card[data-state="close"] {
-  transition: top 0.4s ease-out;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .card[data-state="close"] {
@@ -147,10 +147,10 @@ export default {
 }
 
 .bar {
-  width: 45px;
-  height: 8px;
+  width: 48px;
+  height: 6px;
   border-radius: 14px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   margin: 0 auto;
   cursor: pointer;
 }

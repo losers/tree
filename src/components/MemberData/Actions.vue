@@ -3,21 +3,20 @@
     <div class="mx-auto col-12" v-if="hasCookie && !viewOnly">
       <button
         @click="addMember(0)"
-        class="col-10 btn btn-warning mb-3"
+        class="col-10 btn mb-3 my-action-btn glass-warning"
         v-show="!data.parent_id || (data.is_mate && !data.linked_tree)"
       >
         + Add Parent
       </button>
 
-      <button @click="addMember(1)" class="col-10 btn btn-success mb-3">
+      <button @click="addMember(1)" class="col-10 btn mb-3 my-action-btn glass-success">
         + Add Child
       </button>
 
       <button
         @click="goToSubTree()"
-        class="col-10 btn btn-warning mb-3"
+        class="col-10 btn mb-3 my-action-btn glass-info"
         v-show="data.linked_tree"
-        style="background-color: #0083a0; color: white"
       >
         <i class="icofont-tree p2" style="font-size: 15px"></i>
         View Parent Tree
@@ -26,7 +25,7 @@
       <button
         v-show="!data.is_mate"
         @click="addMember('gender')"
-        class="col-10 btn btn-primary mb-3"
+        class="col-10 btn mb-3 my-action-btn glass-primary"
       >
         + Add {{ data.gender == "1" ? "Wife" : "Husband" }}
       </button>
@@ -34,13 +33,12 @@
       <button
         @click="reArrange"
         v-if="!data.is_mate && data.parent_id"
-        class="col-10 btn mb-3"
-        style="color: white; background-color: #e0a600"
+        class="col-10 btn mb-3 my-action-btn glass-warning"
       >
         <i class="icofont-exchange"></i> Swap Siblings
       </button>
 
-      <button @click="deleteSwipe" class="btn btn-danger col-10 mb-3">
+      <button @click="deleteSwipe" class="btn col-10 mb-3 my-action-btn glass-danger">
         <i class="icofont-ui-delete"></i> Delete
       </button>
     </div>
@@ -48,15 +46,14 @@
       <span class="col-4">
         <button
           @click="goToSubTree()"
-          class="col-10 btn btn-warning mb-3"
+          class="col-10 btn mb-3 my-action-btn glass-info"
           v-show="data.linked_tree"
-          style="background-color: #0083a0; color: white"
         >
           <i class="icofont-tree p2" style="font-size: 15px"></i>
           View Parent Tree
         </button>
         <input
-          class="form-control input-sm"
+          class="form-control input-sm dark-input"
           placeholder="Enter Admin Key to Edit"
           v-model="key"
           onkeypress="if(this.value.length==4) return false;"
@@ -65,8 +62,8 @@
         <button
           v-show="key.length == 4"
           @click="validate"
-          class="btn mt-3"
-          :class="{ 'btn-success': !retry, 'btn-warning': retry }"
+          class="btn mt-3 my-action-btn"
+          :class="{ 'glass-success': !retry, 'glass-warning': retry }"
           :disabled="vloading"
         >
           <span
@@ -147,3 +144,69 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.my-action-btn {
+  background: rgba(15, 17, 35, 0.6) !important;
+  color: white !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font-weight: 600;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.my-action-btn:hover {
+  transform: translateY(-2px);
+}
+.glass-primary {
+  border-left: 3px solid #4f8ef7 !important;
+}
+.glass-primary:hover {
+  background: rgba(79, 142, 247, 0.2) !important;
+  border-color: #4f8ef7 !important;
+  box-shadow: 0 5px 15px rgba(79, 142, 247, 0.3);
+}
+.glass-success {
+  border-left: 3px solid #2ed573 !important;
+}
+.glass-success:hover {
+  background: rgba(46, 213, 115, 0.2) !important;
+  border-color: #2ed573 !important;
+  box-shadow: 0 5px 15px rgba(46, 213, 115, 0.3);
+}
+.glass-warning {
+  border-left: 3px solid #ffa502 !important;
+}
+.glass-warning:hover {
+  background: rgba(255, 165, 2, 0.2) !important;
+  border-color: #ffa502 !important;
+  box-shadow: 0 5px 15px rgba(255, 165, 2, 0.3);
+}
+.glass-danger {
+  border-left: 3px solid #ff4757 !important;
+}
+.glass-danger:hover {
+  background: rgba(255, 71, 87, 0.2) !important;
+  border-color: #ff4757 !important;
+  box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+}
+.glass-info {
+  border-left: 3px solid #00a8ff !important;
+}
+.glass-info:hover {
+  background: rgba(0, 168, 255, 0.2) !important;
+  border-color: #00a8ff !important;
+  box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+}
+.dark-input {
+  background: rgba(15, 17, 35, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border-radius: 8px;
+}
+.dark-input:focus {
+  border-color: #4f8ef7 !important;
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.2) !important;
+}
+</style>

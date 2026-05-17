@@ -1,5 +1,6 @@
 <template>
-  <div id="app" style="height: 100%" :class="[{ 'o-auto': $device.mobile }]">
+  <div id="app" style="height: 100%" :class="[{ 'o-auto': $device.mobile }, 'fade-in-up']">
+    <div class="tree-bg-glow"></div>
     <!-- All errors are handeled here -->
     <section v-if="errored" class="h100">
       <error
@@ -184,14 +185,44 @@
               </div>
             </div>
 
-            <!-- Tree -->
-            <TreeChart
-              :json="tempData"
-              :images="images"
-              :class="{ landscape: landscape.length }"
-              @click-node="clickNode"
-              style="padding-top: 20px"
-            />
+            <!-- View Controls -->
+            <div class="view-controls">
+              <button class="my-btn view-control-btn" @click="zoomIn" title="Zoom In">
+                <i class="icofont-plus"></i>
+              </button>
+              <button 
+                class="my-btn view-control-btn"
+                @click="pan.enabled = !pan.enabled"
+                :class="{ 'pan-active': pan.enabled }"
+                :title="pan.enabled ? 'Pan Mode: ON' : 'Pan Mode: OFF'"
+              >
+                <i :class="pan.enabled ? 'icofont-drag' : 'icofont-scroll-long-right'"></i> 
+              </button>
+              <button class="my-btn view-control-btn" @click="zoomOut" title="Zoom Out">
+                <i class="icofont-minus"></i>
+              </button>
+            </div>
+
+            <!-- Tree with Pan & Zoom -->
+            <div 
+              class="tree-pan-zoom-container"
+              :class="{ 'pan-disabled': !pan.enabled }"
+              @mousedown="startPan"
+              @mousemove="doPan"
+              @mouseup="endPan"
+              @mouseleave="endPan"
+              @wheel="doZoom"
+            >
+              <div class="tree-canvas" :style="pan.enabled ? { transform: `translate(${pan.x}px, ${pan.y}px) scale(${pan.scale})` } : {}">
+                <TreeChart
+                  :json="tempData"
+                  :images="images"
+                  :class="{ landscape: landscape.length }"
+                  @click-node="clickNode"
+                  style="padding-top: 80px;"
+                />
+              </div>
+            </div>
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
               <center>
                 <i
@@ -280,6 +311,15 @@ export default {
         show: false,
         browser: "",
         main_show: false,
+      },
+      pan: {
+        enabled: false,
+        isDragging: false,
+        startX: 0,
+        startY: 0,
+        x: 0,
+        y: 0,
+        scale: 1,
       },
     };
   },
@@ -423,6 +463,64 @@ export default {
       } catch (error) {
         navigator.share(shareData);
       }
+    },
+    startPan(e) {
+      if (this.$device.mobile || !this.pan.enabled) return; // Touch pan handled separately or rely on overflow
+      this.pan.isDragging = true;
+      this.pan.startX = e.clientX - this.pan.x;
+      this.pan.startY = e.clientY - this.pan.y;
+    },
+    doPan(e) {
+      if (!this.pan.isDragging || !this.pan.enabled) return;
+      this.pan.x = e.clientX - this.pan.startX;
+      this.pan.y = e.clientY - this.pan.startY;
+    },
+    endPan() {
+      this.pan.isDragging = false;
+    },
+    doZoom(e) {
+      if (!this.pan.enabled) return;
+      e.preventDefault();
+      const zoomSensitivity = 0.001;
+      const delta = -e.deltaY * zoomSensitivity;
+      const oldScale = this.pan.scale;
+      let newScale = oldScale + delta;
+      
+      // Limit zoom min/max
+      if (newScale < 0.2) newScale = 0.2;
+      if (newScale > 4) newScale = 4;
+      
+      // Calculate cursor position relative to the container
+      const container = e.currentTarget.getBoundingClientRect();
+      const mouseX = e.clientX - container.left;
+      const mouseY = e.clientY - container.top;
+      
+      // Adjust x and y so the point under the mouse stays under the mouse
+      this.pan.x = mouseX - (mouseX - this.pan.x) * (newScale / oldScale);
+      this.pan.y = mouseY - (mouseY - this.pan.y) * (newScale / oldScale);
+      
+      this.pan.scale = newScale;
+    },
+    zoomIn() {
+      if (!this.pan.enabled) return;
+      let newScale = this.pan.scale + 0.2;
+      if (newScale > 4) newScale = 4;
+      this.zoomToCenter(newScale);
+    },
+    zoomOut() {
+      if (!this.pan.enabled) return;
+      let newScale = this.pan.scale - 0.2;
+      if (newScale < 0.2) newScale = 0.2;
+      this.zoomToCenter(newScale);
+    },
+    zoomToCenter(newScale) {
+      const container = this.$el.querySelector('.tree-pan-zoom-container').getBoundingClientRect();
+      const mouseX = container.width / 2;
+      const mouseY = container.height / 2;
+      
+      this.pan.x = mouseX - (mouseX - this.pan.x) * (newScale / this.pan.scale);
+      this.pan.y = mouseY - (mouseY - this.pan.y) * (newScale / this.pan.scale);
+      this.pan.scale = newScale;
     },
     // Called when a node is clicked
     toggleHelper: function () {
@@ -589,11 +687,58 @@ a:hover {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
   margin-top: 0px;
+  background: #05060f;
+  min-height: 100vh;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+.tree-bg-glow {
+  position: fixed;
+  inset: 0;
+  background-color: #05060f;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.tree-bg-glow::before, .tree-bg-glow::after {
+  content: '';
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.5;
+  animation: floatBG 20s infinite alternate;
+}
+.tree-bg-glow::before {
+  background: radial-gradient(circle, rgba(79, 142, 247, 0.4), transparent 70%);
+  top: -200px;
+  left: -200px;
+}
+.tree-bg-glow::after {
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.3), transparent 70%);
+  bottom: -200px;
+  right: -200px;
+  animation-delay: -10s;
+}
+
+@keyframes floatBG {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(200px, 100px) scale(1.2); }
+  100% { transform: translate(-100px, 200px) scale(0.9); }
+}
+.fade-in-up {
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 #app .name {
   font-weight: 700;
+  color: #fff;
 }
 h2 {
   font-family: "Comfortaa", cursive;
@@ -601,19 +746,46 @@ h2 {
 .foot {
   position: fixed;
   left: 0;
-  bottom: -20px;
+  bottom: 0px;
   width: 100%;
-  background: black;
-  padding: 10px;
-  overflow: hidden;
-  color: white;
-  font-size: 14px;
+  background: rgba(15, 17, 35, 0.85);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   text-align: center;
   z-index: 10;
 }
 .foot a {
   color: #fff !important;
   margin: 0 0.5em;
+}
+.tree-pan-zoom-container {
+  width: 100vw;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+  cursor: grab;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.tree-pan-zoom-container.pan-disabled {
+  overflow: auto;
+  justify-content: flex-start;
+  cursor: default;
+}
+.tree-pan-zoom-container:active {
+  cursor: grabbing;
+}
+.tree-canvas {
+  transform-origin: top center;
+  will-change: transform;
+  display: inline-block;
+  min-width: max-content;
+  transition: transform 0.1s ease-out; /* Smooth snapping for mousewheel */
 }
 .table-data {
   color: white;
@@ -637,26 +809,96 @@ h2 {
 /* Share Button In Mobile */
 .bottombtn {
   position: fixed;
-  background: indianred;
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
   color: white !important;
-  bottom: 10px;
-  height: 50px;
-  width: 50px;
+  bottom: 80px;
+  right: 24px;
+  height: 60px;
+  width: 60px;
   border-radius: 60px;
   z-index: 11;
+  border: none !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+.bottombtn:hover {
+  transform: scale(1.15) translateY(-5px) !important;
+  box-shadow: 0 15px 40px rgba(79, 142, 247, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -4px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
 .download-tree-btn {
   position: fixed;
-  right: 30px;
-  font-size: 22px;
+  right: 24px;
+  top: 100px;
+  font-size: 24px;
   cursor: pointer;
   z-index: 11;
-  background: indianred;
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
   color: white !important;
   border-radius: 60px;
-  height: 50px;
-  width: 50px;
+  height: 64px;
+  width: 64px;
+  border: none !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.download-tree-btn:hover {
+  transform: scale(1.15) translateY(-5px) !important;
+  box-shadow: 0 15px 40px rgba(79, 142, 247, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -4px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.my-btn {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
+  border: none !important;
+  padding: 14px 40px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+.my-btn:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 16px 40px rgba(79, 142, 247, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+.view-controls {
+  position: fixed;
+  right: 24px;
+  left: auto;
+  bottom: 80px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.view-control-btn {
+  padding: 0 !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(15, 17, 35, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255,255,255,0.7) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  font-size: 20px;
+}
+.view-control-btn.pan-active {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
 }
 
 .download-msg,

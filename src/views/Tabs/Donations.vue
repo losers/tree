@@ -19,10 +19,10 @@
         :style="{ margin: $device.mobile ? '10px' : '0 100px' }"
       >
         <!-- Donations Main Card -->
-        <div class="theme-gery-bg row m-0 donation-card">
+        <div class="glass-card row m-0 p-4">
           <!-- Donations BG Image -->
           <div class="col-sm-12 col-md-6 p-4" v-if="!$device.mobile">
-            <img src="@/assets/donations_her.png" width="80%" />
+            <img src="@/assets/donations_her.png" width="80%" style="filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.3));" />
           </div>
 
           <!-- Donations Right Side Content -->
@@ -37,15 +37,14 @@
             "
           >
             <!-- Donation Box -->
-            <div class="donation-box p-3">
+            <div class="glass-card-inner p-4 w-100">
               <center
-                class="theme-primary-color"
-                style="font-size: 20px; font-weight: bold"
+                style="font-size: 20px; font-weight: bold; color: #a78bfa;"
               >
-                <i class="icofont-gift"></i> Donation Box
+                <i class="icofont-gift mr-2"></i> Feed the Hamsters (Donation Box)
               </center>
               <div class="row m-3 align-items-center">
-                <div v-if="!$device.mobile" class="col-3 theme-primary-color">
+                <div v-if="!$device.mobile" class="col-3" style="color: #4f8ef7; font-weight: 600;">
                   <span>Amount: </span>
                 </div>
                 <div class="col-sm-12 col-md-9 input-group align-items-center">
@@ -70,7 +69,6 @@
                     class="
                       form-control
                       amount-input-box
-                      theme-primary-color
                       col-7
                     "
                     placeholder="Enter Amount"
@@ -85,7 +83,7 @@
               <!-- Donate Btn -->
               <div
                 @click="initiatePaymentGateway()"
-                class="donation-btn theme-primary-bgdark"
+                class="my-btn text-center mt-3 cursor"
               >
                 <center>
                   <i class="icofont-ui-love mr-1"></i>
@@ -114,20 +112,20 @@
         <!-- Donations Main History Card -->
         <div
           v-if="transactions.length > 0"
-          class="col-12 mt-5 mb-5 donations-history-box"
+          class="col-12 mt-5 mb-5 glass-card"
           :style="{
-            padding: $device.mobile ? '10px' : '20px 40px',
+            padding: $device.mobile ? '20px' : '30px 40px',
           }"
         >
-          <i class="text-muted ml-3"
+          <i class="ml-3" style="color: #a78bfa; font-size: 18px;"
             >Total Donations : <strong>{{ transactions.length }}</strong></i
           >
 
           <!-- Donation Transactions lV2 box -->
-          <div class="d-flex align-items-center history-carousel-box col-12">
+          <div class="d-flex align-items-center history-carousel-box col-12 glass-card-inner mt-3">
             <div v-if="!$device.mobile" class="col-1">
               <i
-                class="icofont-rounded-left theme-primary-bg"
+                class="icofont-rounded-left nav-arrow cursor"
                 onClick="(function(){document.getElementById('histories').scrollLeft -= 200})();"
               ></i>
             </div>
@@ -137,9 +135,9 @@
                 :key="transaction['_id']"
                 class="col-sm-12 col-md-3 p-0"
               >
-                <center class="transaction-box">
+                <center class="transaction-box glass-card-solid">
                   <!-- Amount -->
-                  <div class="theme-primary-color">
+                  <div style="color: #4f8ef7;">
                     <span style="font-size: 20px" class="font-weight-bold">
                       {{ currencyToSymbolMap[transaction.currency] }}</span
                     >
@@ -149,12 +147,12 @@
                   </div>
 
                   <!-- User Name-->
-                  <div class="text-muted transaction-username">
+                  <div class="transaction-username mt-2" style="color: white; font-weight: 600;">
                     {{ transaction.name }}
                   </div>
 
                   <p
-                    class="mt-2 text-primary"
+                    class="mt-3 my-btn-outline-small cursor"
                     v-if="!$device.mobile"
                     @click="
                       () => {
@@ -163,30 +161,30 @@
                       }
                     "
                   >
-                    More
+                    View Details
                   </p>
                 </center>
               </div>
             </div>
             <div v-if="!$device.mobile" class="col-1">
               <i
-                class="icofont-rounded-right theme-primary-bg"
+                class="icofont-rounded-right nav-arrow cursor"
                 onClick="(function(){document.getElementById('histories').scrollLeft += 200})();"
               ></i>
             </div>
           </div>
         </div>
 
-        <div class="mt-4 mb-4 theme-gery-bg p-5 tc-center" v-else>
+        <div class="mt-5 mb-4 glass-card p-5 tc-center" v-else>
           <h3>
-            <span class="award-bg theme-primary-bgdark">
-              <i class="icofont-badge h5"></i>
+            <span class="award-bg" style="color: #4f8ef7;">
+              <i class="icofont-badge h3"></i>
             </span>
-            <span class="text-muted mr-3">
+            <span class="mr-3" style="color: rgba(255,255,255,0.8);">
               {{
                 $device.mobile
-                  ? "Donate and Unlock "
-                  : "Unlock a Super Family Badge by making a donation."
+                  ? "Bribe the dev and Unlock Badge"
+                  : "Be the first to bribe the developer and unlock the Super Family Badge!"
               }}
             </span>
           </h3>
@@ -194,13 +192,13 @@
 
         <!-- F.A.Q s -->
         <div
-          class="theme-gery-bg p-3"
+          class="glass-card mt-5 p-4"
           :class="{ 'pl-5': !$device.mobile, 'pl-4': $device.mobile }"
         >
-          <h5 class="mt-3 text-muted">F.A.Q s</h5>
+          <h4 class="mb-4" style="color: #a78bfa;">Frequently Asked Questions</h4>
           <div id="accordion">
             <!-- Card 1 -->
-            <div class="mb-1">
+            <div class="mb-3 glass-card-solid">
               <!-- Card 1 Btn -->
               <button
                 class="btn p-0 collapsed w-100 text-left"
@@ -210,7 +208,7 @@
                 aria-controls="collapseOne"
               >
                 <div
-                  class="card-header font-weight-bold theme-primary-color"
+                  class="card-header font-weight-bold faq-header"
                   id="headingOne"
                 >
                   Why Donate ?
@@ -224,7 +222,7 @@
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
               >
-                <div class="card-body p-0 text-muted">
+                <div class="card-body faq-body">
                   Bloodline follows a policy of No-ADS, No Premium Plans.<br />
                   Donations is the only source of revenue to run this website.
                   If you like our work, please support us by donating.
@@ -233,7 +231,7 @@
             </div>
 
             <!-- Card 2 -->
-            <div>
+            <div class="mb-3 glass-card-solid">
               <!-- Card 2 Btn -->
               <button
                 class="btn p-0 collapsed w-100 text-left"
@@ -243,7 +241,7 @@
                 aria-controls="collapseTwo"
               >
                 <div
-                  class="card-header font-weight-bold theme-primary-color"
+                  class="card-header font-weight-bold faq-header"
                   id="headingTwo"
                 >
                   What is the minimum amount to unlock 'Super Family Badge' ?
@@ -257,7 +255,7 @@
                 aria-labelledby="headingTwo"
                 data-parent="#accordion"
               >
-                <div class="card-body p-0 text-muted">
+                <div class="card-body faq-body">
                   There is no minimum limit to unlock Super Family Badge. As a
                   token of gratitude for donation we honor your family with
                   badge.
@@ -268,23 +266,23 @@
         </div>
       </div>
     </transition>
-    <modal name="showInfo" :draggable="true" height="auto">
-      <div class="p-3 text-muted">
-        <h4 class="text-center mb-3">Transaction Details</h4>
+    <modal name="showInfo" :draggable="true" height="auto" :styles="modalStyles">
+      <div class="p-4" style="background: rgba(15, 17, 35, 0.95); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; height: 100%;">
+        <h4 class="text-center mb-4" style="color: #4f8ef7;">Transaction Details</h4>
         <!-- Username -->
-        <div class="m-3">
-          <i class="icofont-ui-user mr-2"></i>
-          {{ transactionIns.name }}
+        <div class="m-3 p-3 glass-card-solid">
+          <i class="icofont-ui-user mr-3" style="color: #a78bfa;"></i>
+          <span style="font-size: 18px; font-weight: 600;">{{ transactionIns.name }}</span>
         </div>
-        <div class="m-3">
-          <span style="font-size: 20px" class="font-weight-bold mr-2">
+        <div class="m-3 p-3 glass-card-solid">
+          <span style="font-size: 20px; color: #4f8ef7;" class="font-weight-bold mr-2">
             {{ currencyToSymbolMap[transactionIns.currency] }}</span
           >
-          <span style="font-size: 25px" class="font-weight-bold"
+          <span style="font-size: 28px" class="font-weight-bold"
             >{{ transactionIns.amount }}
           </span>
         </div>
-        <div class="m-3">
+        <div class="m-3 p-3 glass-card-solid text-muted" style="color: rgba(255,255,255,0.6) !important;">
           <i class="icofont-clock-time mr-2"></i> Aug 08, 2021
         </div>
       </div>
@@ -316,6 +314,7 @@ export default {
           symbol: currencyToSymbolMap["INR"],
         },
       },
+      modalStyles: 'background: transparent; box-shadow: none;'
     };
   },
   mounted() {
@@ -431,55 +430,61 @@ export default {
 .tc-center {
   text-align: center;
 }
-/* .bigscreen-lock {
+.glass-card {
+  background: rgba(15, 17, 35, 0.65);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
   color: white;
-  font-size: 25px;
-  background: #6a6a6a;
-  padding: 10px;
-  float: left;
-  left: 25px;
-  box-shadow: 0px 5px 18px -12px rgb(0 0 0 / 75%);
 }
-
-.surname {
-  font-size: 20px;
-  font-weight: bold;
-  color: #a4a4a4;
+.glass-card-inner {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
 }
-.clickable-box {
-  padding: 20px;
-  border-radius: 10px 10px 0 0;
-  cursor: pointer;
-  word-break: break-word;
-  box-shadow: 0px 0px 18px -12px rgb(0 0 0 / 75%);
-  background: white;
-  text-align: center;
-} */
-.donation-card {
-  box-shadow: 0px 0px 5px 0px rgb(226 226 226);
-  border-radius: 21px;
+.glass-card-solid {
+  background: rgba(25, 27, 45, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
 }
 .select-currency {
-  border: none;
-  box-shadow: 0 0 3px 0 #eb9797;
-  color: #eb9797;
-  border-radius: 15px 0px 0px 15px;
-  font-size: 0.8em;
-  height: 38px;
+  background: rgba(0,0,0,0.2) !important;
+  border: 1px solid rgba(79, 142, 247, 0.3) !important;
+  color: #fff !important;
+  border-radius: 12px 0px 0px 12px;
+  font-size: 0.9em;
+  height: 44px;
   padding: 0;
   text-align: center;
   text-align-last: center;
   -moz-text-align-last: center;
 }
-.amount-input-box {
-  border-radius: 12px;
-  box-shadow: 0 0 3px 0 #eb9797;
-  border: none;
-  text-align: center;
+.select-currency:focus {
+  border-color: #4f8ef7 !important;
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.3) !important;
 }
-.amount-input-box:active {
-  border: none;
-  color: #eb9797;
+.select-currency option {
+  background: #0f1123;
+  color: white;
+}
+.amount-input-box {
+  background: rgba(0,0,0,0.2) !important;
+  border: 1px solid rgba(79, 142, 247, 0.3) !important;
+  border-left: none !important;
+  color: #fff !important;
+  border-radius: 0 12px 12px 0;
+  height: 44px;
+  text-align: center;
+  font-size: 1.1em;
+}
+.amount-input-box:focus {
+  border-color: #4f8ef7 !important;
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.3) !important;
+  outline: none;
+}
+.amount-input-box::placeholder {
+  color: rgba(255,255,255,0.4);
 }
 .transaction-username {
   width: 90%;
@@ -490,40 +495,48 @@ export default {
 .card-header {
   background-color: transparent;
   border-bottom: none;
-  border-radius: 20px;
-  color: #7979e8;
-  text-decoration: underline;
-  padding: 4px;
+  border-radius: 12px;
+  padding: 15px 20px;
+}
+.faq-header {
+  color: #4f8ef7;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+.faq-header:hover {
+  color: #a78bfa;
+}
+.faq-body {
+  padding: 0 20px 20px 20px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
 }
 
 .btn.focus,
 .btn:focus {
   box-shadow: none;
 }
-.donations-history-box {
-  border-radius: 21px;
-  background-color: #f6f6f6;
-}
-.history-carousel-box {
-  border-radius: 20px;
-  padding: 10px;
-  margin-top: 15px;
-  background-color: white;
-}
+
 .transaction-box {
   margin: 10px;
-  border-radius: 10px;
-  border-radius: 11px;
-  padding: 10px;
-  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.15);
-  background-color: #ffffff;
+  padding: 20px 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
 }
-.icofont-rounded-left,
-.icofont-rounded-right {
+.transaction-box:hover {
+  transform: translateY(-5px);
+}
+.nav-arrow {
+  background: rgba(255,255,255,0.1);
   border-radius: 50%;
   color: white;
-  padding: 5px;
-  font-size: 30px;
+  padding: 10px;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+.nav-arrow:hover {
+  background: #4f8ef7;
+  box-shadow: 0 0 15px rgba(79, 142, 247, 0.5);
 }
 #histories {
   overflow: auto;
@@ -533,16 +546,34 @@ export default {
   display: none;
 }
 
-.donation-box {
-  color: white;
-  border-radius: 21px;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-  background-color: white;
+.my-btn {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
+  border: none !important;
+  padding: 12px 32px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  display: inline-block;
 }
-.donation-btn {
-  width: 100%;
-  padding: 10px 32px;
-  border-radius: 19px;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+.my-btn:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 16px 40px rgba(79, 142, 247, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.25) !important;
+}
+.my-btn-outline-small {
+  background: transparent;
+  border: 1px solid #4f8ef7;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #4f8ef7;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+.my-btn-outline-small:hover {
+  background: rgba(79, 142, 247, 0.1);
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.3);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <center style="padding-bottom: 30px">
     <table class="table table-borderless table-hover table-data">
-      <tbody class="text-left" style="color: black">
+      <tbody class="text-left" style="color: white">
         <tr v-if="data.mobile">
           <td style="border-left: 3px solid yellow">
             <i class="icofont-smart-phone"></i>
@@ -73,7 +73,16 @@
   font-size: 20px;
 }
 .btn-default {
-  border: 1px solid indianred;
+  border: 1px solid #4f8ef7;
+  color: white;
+  border-radius: 12px;
+  padding: 8px 16px;
+  background: rgba(15, 17, 35, 0.6);
+  transition: all 0.3s ease;
+}
+.btn-default:hover {
+  background: rgba(79, 142, 247, 0.2);
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.4);
 }
 .description {
   display: -webkit-box;

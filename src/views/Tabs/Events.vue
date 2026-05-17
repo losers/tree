@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div class="main-title">
-      <div class="header" :class="{ 'f-19': $device.mobile }">Today's Events</div>
-      <div class="today" :class="{ 'f-16': $device.mobile }">- {{ date.display }}</div>
+    <div class="main-title mt-3">
+      <div class="header font-weight-bold" :class="{ 'f-19': $device.mobile }" style="color: #4f8ef7;">Today's Events</div>
+      <div class="today font-weight-bold" :class="{ 'f-16': $device.mobile }" style="color: #a78bfa;">- {{ date.display }}</div>
     </div>
     <div class="load-con" v-if="loading">
       <div class="ml-3 spinner-border spinner-border-sm"></div>
     </div>
     <div v-else-if="events.length == 0">
-      <center>
-        <img src="@/assets/events/empty_events.png" height="150px" />
-        <div style="color: indianred">
-          <h3 class="m-4 mt-5">No Events Today</h3>
-          <h5 style="color:black">Birthdays, Timeline events will be displayed here.</h5>
+      <center class="glass-card mt-5 p-5 mx-4" style="border-radius: 20px;">
+        <img src="@/assets/events/empty_events.png" height="150px" style="filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.4)); opacity: 0.8;" />
+        <div class="mt-4">
+          <h3 class="mb-3 font-weight-bold" style="color: #4f8ef7;">It's quiet... too quiet.</h3>
+          <h5 style="color: rgba(255, 255, 255, 0.7);">The ancestors are resting today. No events to show!</h5>
         </div>
       </center>
     </div>
@@ -37,10 +37,10 @@
             </div>
 
             <!-- Event Content -->
-            <center>
-              <div class="name">{{ event.name }}</div>
-              <div class="anniv">
-                <span class="anniv-num">
+            <center style="z-index: 1;">
+              <div class="name font-weight-bold" style="color: white;">{{ event.name }}</div>
+              <div class="anniv" style="color: rgba(255,255,255,0.7);">
+                <span class="anniv-num" style="color: #4f8ef7;">
                   {{ event.dob | anivCalc }}
                   <span class="a-th">th</span>
                 </span>
@@ -52,7 +52,7 @@
                   name: 'SubMemberData',
                   params: { subtree_id: event.subtree_id, member: event._id },
                 }"
-                class="btn mt-2 event-btn"
+                class="btn mt-3 my-btn-outline"
                 v-if="event.subtree_id"
               >View Profile</router-link>
 
@@ -61,7 +61,7 @@
                   name: 'MemberData',
                   params: { id: $route.params.id, member: event._id },
                 }"
-                class="btn mt-2 event-btn"
+                class="btn mt-3 my-btn-outline"
                 v-else
               >View Profile</router-link>
 
@@ -70,10 +70,10 @@
         </div>
 
         <!-------------- Memorial Event ------------->
-        <div class="event death" v-if="event.type == 2">
+        <div class="event death glass-card" v-if="event.type == 2">
           <!-- Background -->
-          <div class="memorial-bg">
-            <img src="@/assets/events/candle.jpeg" alt=" Birthday" width="50px" height="120" />
+          <div class="memorial-bg" style="background: transparent; filter: brightness(0.7) opacity(0.5); border-radius: 20px 20px 0 0;">
+            <img src="@/assets/events/candle.jpeg" alt=" Birthday" width="50px" height="120" style="mix-blend-mode: screen;" />
           </div>
 
           <!-- Event body with DP -->
@@ -90,10 +90,10 @@
             </div>
 
             <!-- Event Content -->
-            <center>
-              <div class="name">{{ event.name }}</div>
-              <div class="anniv">
-                <span class="anniv-num">
+            <center style="z-index: 1;">
+              <div class="name font-weight-bold" style="color: white;">{{ event.name }}</div>
+              <div class="anniv" style="color: rgba(255,255,255,0.7);">
+                <span class="anniv-num" style="color: #a78bfa;">
                   {{ event.died_on | anivCalc }}
                   <span class="a-th">th</span>
                 </span>
@@ -104,21 +104,21 @@
                   name: 'MemberData',
                   params: { id: $route.params.id, member: event._id },
                 }"
-                class="btn mt-2 event-btn"
+                class="btn mt-3 my-btn-outline-purple"
               >View Profile</router-link>
             </center>
           </div>
         </div>
 
         <!-- Timeline Event -->
-        <div class="event" v-if="event.type == 3">
+        <div class="event glass-card" v-if="event.type == 3">
           <!-- Vertical Line -->
           <div class="timeline-line"></div>
           <!-- Timeline Dot -->
           <span class="timeline-dot"></span>
           <!-- Timeline Header -->
           <div class="timeline-header">
-            <div class="person-img">
+            <div class="person-img timeline-img">
               <img
                 :src="'data:image/png;base64, ' + store.state.images[event._id]"
                 v-if="store.state.images && store.state.images[event._id]"
@@ -126,7 +126,7 @@
               />
               <img src="@/assets/dp.png" v-else alt="Bloodline User" />
             </div>
-            <div class="name" style="margin-left: 120px">{{ event.name }}</div>
+            <div class="name font-weight-bold" style="margin-left: 120px; color: white;">{{ event.name }}</div>
           </div>
           <div class="timeline-body">
             <div class="timeline-title">{{ event.title }}</div>
@@ -136,7 +136,7 @@
                 name: 'PersonTimeline',
                 params: { id: $route.params.id, member: event._id },
               }"
-              class="btn event-btn"
+              class="btn mt-2 my-btn-outline"
             >View Timeline</router-link>
           </div>
         </div>
@@ -146,47 +146,56 @@
 </template>
 
 <style scoped>
-.f-19{
+.glass-card {
+  background: rgba(15, 17, 35, 0.65);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+.f-19 {
   font-size: 19px !important;
 }
-.f-16{
+.f-16 {
   font-size: 16px !important;
 }
 .death {
-  background-color: black;
-  color: white;
-  overflow: hidden;
+  background: rgba(10, 5, 20, 0.7);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  border-color: rgba(167, 139, 250, 0.2);
 }
 .event-body {
   display: flex;
-  margin-top: 25px;
+  margin-top: 15px;
   align-items: center;
   justify-content: center;
-}
-.event-btn {
-  border: solid 1px indianred;
-  color: indianred;
+  position: relative;
 }
 .timeline-line {
   height: 300px;
   width: 4px;
-  background: grey;
+  background: linear-gradient(to bottom, #4f8ef7, transparent);
   position: absolute;
   margin-left: 50px;
+  border-radius: 2px;
 }
 .timeline-dot {
   height: 20px;
   width: 20px;
   position: absolute;
-  background: #286b8b;
+  background: #4f8ef7;
   border-radius: 20px;
   margin-left: 42px;
   margin-top: 120px;
+  box-shadow: 0 0 15px #4f8ef7;
 }
 .memorial-bg {
   width: 100%;
-  background: black;
   padding-left: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .timeline-header {
   padding-top: 45px;
@@ -196,6 +205,10 @@
   margin-left: 22px;
   margin-top: -10px;
   width: 60px;
+  top: auto;
+  position: relative;
+  box-shadow: 0 0 20px rgba(79, 142, 247, 0.5);
+  border: 2px solid #4f8ef7;
 }
 
 .timeline-body {
@@ -209,8 +222,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   width: 250px;
-  color: grey;
+  color: #a78bfa;
   font-size: 24px;
+  font-weight: 600;
 }
 .timeline-content {
   display: -webkit-box;
@@ -219,26 +233,38 @@
   overflow: hidden;
   text-overflow: ellipsis;
   width: 250px;
-  margin: 10px;
+  margin: 10px 0;
+  color: rgba(255,255,255,0.7);
 }
 .person-img {
-  box-shadow: 10px 10px 22px -13px rgba(0, 0, 0, 0.75);
   width: 90px;
   border-radius: 50%;
   overflow: hidden;
   position: absolute;
   top: 65px;
-  border: 1px solid;
+  border: 3px solid #4f8ef7;
+  box-shadow: 0 0 25px rgba(79, 142, 247, 0.6);
+  z-index: 2;
+  background: #0f1123;
+}
+.death .person-img {
+  border-color: #a78bfa;
+  box-shadow: 0 0 25px rgba(167, 139, 250, 0.6);
+}
+.timeline-img {
+  width: 60px;
+  height: 60px;
 }
 .a-th {
-  font-size: 10px;
+  font-size: 14px;
 }
 .anniv-num {
-  color: indianred;
-  font-size: 30px;
+  font-size: 36px;
+  font-weight: 700;
 }
 .name {
-  font-size: 30px;
+  font-size: 28px;
+  margin-top: 30px;
 }
 .load-con {
   display: flex;
@@ -247,17 +273,10 @@
 }
 .spinner-border-sm {
   font-size: 20px;
-  color: indianred;
+  color: #4f8ef7;
   width: 3rem;
   height: 3rem;
   border-width: 0.2em;
-}
-.today {
-  color: indianred;
-  font-size: 20px;
-}
-.header {
-  font-size: 30px;
 }
 .main-title {
   display: flex;
@@ -270,10 +289,44 @@
 }
 .event {
   height: 300px;
-  border-radius: 10px;
-  -webkit-box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 2px 4px 9px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 2px 4px 9px 0px rgb(213 213 213 / 75%);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-radius: 20px;
+}
+.event:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.my-btn-outline {
+  background: transparent !important;
+  border: 1px solid #4f8ef7 !important;
+  padding: 6px 16px !important;
+  border-radius: 8px !important;
+  color: #4f8ef7 !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  z-index: 10;
+  position: relative;
+}
+.my-btn-outline:hover {
+  background: rgba(79, 142, 247, 0.1) !important;
+  box-shadow: 0 0 15px rgba(79, 142, 247, 0.3) !important;
+}
+.my-btn-outline-purple {
+  background: transparent !important;
+  border: 1px solid #a78bfa !important;
+  padding: 6px 16px !important;
+  border-radius: 8px !important;
+  color: #a78bfa !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  z-index: 10;
+  position: relative;
+}
+.my-btn-outline-purple:hover {
+  background: rgba(167, 139, 250, 0.1) !important;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.3) !important;
 }
 </style>
 

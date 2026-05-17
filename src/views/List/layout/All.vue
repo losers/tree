@@ -1,130 +1,72 @@
 <template>
-  <div>
-    <form v-on:submit.prevent="search" class="search-box container">
-      <input
-        type="text"
-        style="height: 45px"
-        :class="{ 'desktop-search': $device.mobile }"
-        v-model="searchText"
-        :placeholder="`Find in ${totalFamilies} families..`"
-        class="form-control input-lg search-bar float-left"
-      />
-      <button
-        type="submit"
-        class="btn"
-        style="float: right; margin-right: 10px; margin-top: -40px"
-      >
-        <i class="icofont-search-2"></i>
-      </button>
-    </form>
-
-    <DualPage
-      :payload="authPayload"
-      :reference="5"
-      v-if="showAuthBox == true"
-      v-on:closed="showAuthBox = false"
-    ></DualPage>
-
+  <div class="list-wrapper">
     <!-- Loader -->
-    <div v-if="loading">
-      <center style="padding-top: 80px">
-        <div
-          class="spinner-border"
-          style="height: 50px; width: 50px; color: black"
-          role="status"
-        >
-          <span class="sr-only">Loading...</span>
-        </div>
-      </center>
+    <div v-if="loading" class="loader-wrap">
+      <div class="loader-spinner"></div>
     </div>
 
     <!-- All Families List -->
-    <div v-else v-for="data in info" :key="data.id">
-      <div
-        class="
-          container
-          family-box
-          d-flex
-          align-items-start
-          justify-content-between
-        "
-        :class="{
-          'cur-family': curFamily == data._id,
-          'normal-family': curFamily != data._id,
-        }"
-        @click="
-          showAuth(data.surname, data.title, data.celeb, data._id, data.contact)
-        "
+    <div v-else class="family-grid">
+      <div 
+        v-for="data in info" 
+        :key="data.id" 
+        class="family-card"
+        :class="{ 'card-active': curFamily === data._id }"
+        @click="showAuth(data.surname, data.title, data.celeb, data._id, data.contact)"
       >
-        <!-- Lock and Unlock Symbol -->
-        <i
-          class="icofont-unlocked rounded-lg"
-          :class="{
-            'bigscreen-lock': !$device.mobile,
-            'mobile-lock': $device.mobile,
-          }"
-          data-toggle="tooltip"
-          title="UnLocked"
-          v-if="data.celeb"
-        ></i>
-        <i
-          class="icofont-lock rounded-lg"
-          :class="{
-            'bigscreen-lock': !$device.mobile,
-            'mobile-lock': $device.mobile,
-          }"
-          data-toggle="tooltip"
-          title="Locked"
-          v-else
-        ></i>
-
-        <div>
-          <span
-            class="title"
-            :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
-          >
-            {{ data.title }}
-          </span>
-          <p class="surname">Surname : {{ data.surname }}</p>
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="shield-icon">
+              <span v-if="data.b_coins && data.b_coins > 0">👑</span>
+              <span v-else>🛡️</span>
+            </div>
+            
+            <div class="lock-status" :class="data.celeb ? 'status-unlocked' : 'status-locked'">
+              <span class="status-icon">{{ data.celeb ? '🔓' : '🔒' }}</span>
+            </div>
+          </div>
+          
+          <h3 class="family-title">{{ data.title }}</h3>
+          <p class="family-surname">Surname: <span>{{ data.surname }}</span></p>
+          
+          <div class="member-count">
+            <span class="member-icon">👥</span>
+            <span>Members</span>
+          </div>
         </div>
-
-        <div class="award-bg theme-primary-bgdark" v-if="data.b_coins && data.b_coins > 0">
-          <i class="icofont-badge h5"></i>
-        </div>
-        <div v-else></div>
       </div>
     </div>
-    <div
-      v-if="hasNext && info.length !== 0"
-      style="margin-bottom: 20px; margin-top: 20px"
-    >
-      <button
-        type="button"
-        @click="loadMore"
-        v-if="!loadingMore"
-        class="btn load-more"
+
+    <!-- Load More -->
+    <div v-if="hasNext && info.length !== 0" class="load-more-wrap">
+      <button 
+        type="button" 
+        @click="loadMore" 
+        class="btn-load-more" 
+        :class="{ 'is-loading': loadingMore }"
       >
-        Load more
-        <i class="icofont-arrow-down ml-1"></i>
+        <span v-if="!loadingMore">Load More Families &darr;</span>
+        <div v-else class="loader-spinner-small"></div>
       </button>
-      <div
-        v-if="loadingMore"
-        class="spinner-border"
-        style="height: 50px; width: 50px; color: black"
-        role="status"
-      >
-        <span class="sr-only">Loading...</span>
-      </div>
     </div>
+
+    <!-- Auth Modal Component would be rendered by parent -->
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import ProdData from "@/data.js";
-import DualPage from "@/modals/DualPage";
 
 export default {
   name: "AllFamiliesList",
+  props: {
+    searchOverride: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       info: [],
@@ -132,15 +74,14 @@ export default {
       totalFamilies: "",
       nextPage: {},
       hasNext: {},
-      searchText: "",
       loading: true,
       loadingMore: false,
-      showAuthBox: false,
-      authPayload: {},
     };
   },
-  components: {
-    DualPage,
+  watch: {
+    searchOverride(newVal) {
+      this.search(newVal);
+    }
   },
   methods: {
     getAllList(page) {
@@ -158,40 +99,41 @@ export default {
           this.hasNext = response.data.has_next;
         })
         .catch((error) => {
-          this.errored = error;
+          console.error(error);
         })
-        .finally(() => ((this.loading = false), (this.loadingMore = false)));
+        .finally(() => {
+          this.loading = false;
+          this.loadingMore = false;
+        });
     },
     loadMore() {
       this.loadingMore = true;
       this.getAllList(this.nextPage);
     },
-    search() {
-      if (this.searchText) {
-        this.s_load = true;
+    search(text) {
+      if (text) {
+        this.loading = true;
         axios
-          .get(ProdData.getHostURL() + "/meta/search?text=" + this.searchText)
+          .get(ProdData.getHostURL() + "/meta/search?text=" + text)
           .then((response) => {
             this.info = response.data.list;
             this.curFamily = response.data.cur_family;
+            this.hasNext = false; // Usually search results don't paginate the same way
           })
           .catch((error) => {
-            console.log(error);
+            console.error(error);
           })
-          .finally(() => (this.s_load = false));
+          .finally(() => {
+            this.loading = false;
+          });
       } else {
+        this.info = [];
+        this.loading = true;
         this.getAllList();
       }
     },
     showAuth(surname, title, isCeleb, family_id, contact) {
-      if (family_id === this.curFamily || isCeleb) {
-        location.href = `/app/${surname}`;
-      } else {
-        this.authPayload.surname = surname;
-        this.authPayload.title = title;
-        this.authPayload.contact = contact;
-        this.showAuthBox = true;
-      }
+      this.$parent.showAuth(surname, title, isCeleb, family_id, contact);
     },
   },
   mounted() {
@@ -200,129 +142,201 @@ export default {
 };
 </script>
 
-<style>
-/* Access Famili */
-.cur-family {
-  background-color: black;
-}
-.cur-family .surname {
-  color: rgb(216, 216, 216);
-}
-.cur-family .title {
-  color: rgb(216, 216, 216) !important;
-}
-/* All Normal Families */
-.normal-family {
-  background: white;
-}
-.search-box {
-  height: 40px;
-}
-.award-bg {
-  display: inline-block;
-  height: 60px;
-  margin-top: -25px;
-  padding-top: 20px;
-  padding-left: 4px;
-  width: 30px;
-  text-align: center;
-  color: white;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  box-shadow: 0px 0px 5px 0px rgb(255 0 0 / 75%);
-}
-.award-bg::after {
-  border-top: 15px solid #ff5d5d;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  content: "";
-  height: 0;
-  left: -24px;
-  position: relative;
-  top: 52px;
-  width: 30px;
-}
-
-.family-box {
-  cursor: pointer;
-  padding: 20px;
-  word-break: break-word;
-  border-radius: "10px";
-  margin-top: 25px;
-  -webkit-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 18px -12px rgba(0, 0, 0, 0.75);
-}
-</style>
-
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-.bigscreen-lock {
-  color: white;
-  font-size: 25px;
-  background: #6a6a6a;
-  padding: 10px;
-  float: left;
-  left: 25px;
-  box-shadow: 0px 5px 18px -12px rgba(0, 0, 0, 0.75);
-}
-.mobile-lock {
-  color: #6a6a6a;
-  font-size: 20px;
-  float: left;
-  left: 25px;
-}
-.desktop-form {
-  padding-left: 10%;
-  padding-right: 10%;
-}
-
-.body-view {
-  background-size: cover;
+.list-wrapper {
   width: 100%;
-  /* background-color: black; */
-  background-color: #f9f9f9;
 }
 
-.help {
-  position: fixed;
-  bottom: 20px;
-  background: indianred;
+.loader-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(79, 142, 247, 0.2);
+  border-top-color: #4f8ef7;
   border-radius: 50%;
-  color: white;
-  right: 20px;
-  height: 60px;
-  width: 60px;
+  animation: spin 1s linear infinite;
+}
+
+.loader-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.family-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.family-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(79, 142, 247, 0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.family-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(79, 142, 247, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.family-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-active {
+  background: rgba(79, 142, 247, 0.08);
+  border-color: rgba(79, 142, 247, 0.5);
+  box-shadow: 0 0 0 1px rgba(79, 142, 247, 0.5) inset;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.shield-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.load-more {
-  background-color: white;
-  font-weight: bolder;
-  border: solid black 1px;
-  color: black;
+  font-size: 20px;
 }
 
-a:hover {
-  text-decoration: none !important;
+.lock-status {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 }
-.title {
-  font-weight: bold;
-  color: #6a6a6a;
+
+.status-unlocked {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
-/* a:not([href]) {
-  color: #a0a0a0;
-} */
-.surname {
-  font-size: 20px;
-  font-weight: bold;
-  color: #a4a4a4;
+
+.status-locked {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.family-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.family-surname {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 24px;
+  flex: 1;
+}
+
+.family-surname span {
+  color: #7eb3ff;
+  font-weight: 500;
+}
+
+.member-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  width: fit-content;
+}
+
+.member-icon {
+  font-size: 14px;
+}
+
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.btn-load-more {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.btn-load-more:hover:not(.is-loading) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .family-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-  <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
+  <div>
+    <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
     <div v-if="open">
       <section v-if="errored">
         err
@@ -43,7 +44,7 @@
           <button
             @click="uploadImage"
             v-show="showUpload"
-            class="btn btn-success mt-3"
+            class="my-btn mt-3"
             :disabled="loadingUpload"
           >
             <span v-if="!doneUpload">
@@ -57,20 +58,9 @@
             </span>
           </button>
 
-          <my-upload
-            :class="{ 'img-picker-mob': $device.mobile }"
-            field="img"
-            @crop-success="cropSuccess"
-            :width="200"
-            :height="200"
-            url
-            lang-type="en"
-            v-model="show"
-            img-format="jpg"
-          ></my-upload>
           <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
           <table class="table table-borderless table-hover mt-3 table-data">
-            <tbody class="text-left" style="color: black">
+            <tbody class="text-left" style="color: #fff">
               <tr class="text-center">
                 <td>
                   {{ data.short_name }}
@@ -116,7 +106,7 @@
                   <!-- Actions Heading -->
                   <button
                     class="btn p-0"
-                    style="color: #007bff; width: 100%"
+                    style="color: #a78bfa; width: 100%; font-weight: bold;"
                     data-toggle="collapse"
                     data-target="#collapseOne"
                     aria-expanded="true"
@@ -153,7 +143,7 @@
                   <!-- INfo HEading -->
                   <button
                     class="btn p-0 collapsed"
-                    style="color: #007bff; width: 100%"
+                    style="color: #a78bfa; width: 100%; font-weight: bold;"
                     data-toggle="collapse"
                     data-target="#collapseTwo"
                     aria-expanded="false"
@@ -219,7 +209,18 @@
       v-on:closed="addMemberCancel"
     ></DualPage>
   </Drawer>
-  <!-- </div> -->
+  <my-upload
+    :class="{ 'img-picker-mob': $device.mobile }"
+    field="img"
+    @crop-success="cropSuccess"
+    :width="200"
+    :height="200"
+    url
+    lang-type="en"
+    v-model="show"
+    img-format="jpg"
+  ></my-upload>
+  </div>
 </template>
 
 <script>
@@ -498,9 +499,10 @@ input[type="number"] {
 
 .vue-simple-drawer {
   position: absolute;
-  background: white !important;
-  box-shadow: 20px black;
-  color: black;
+  background: rgba(15, 17, 35, 0.75) !important;
+  backdrop-filter: blur(40px) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #fff;
   -webkit-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
@@ -542,9 +544,10 @@ input[type="number"] {
 }
 
 .tabs-component-tabs {
-  border: solid 1px #ddd;
-  border-radius: 6px;
-  margin-bottom: 5px;
+  border: 0;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin-bottom: 10px;
 }
 
 @media (min-width: 700px) {
@@ -552,7 +555,7 @@ input[type="number"] {
     border: 0;
     align-items: stretch;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     margin-bottom: -1px;
     padding-left: 0 !important;
   }
@@ -571,7 +574,8 @@ input[type="number"] {
 }
 
 .tabs-component-tab:hover {
-  color: #666;
+  color: #4f8ef7;
+  text-shadow: 0 0 8px rgba(79,142,247,0.5);
 }
 
 .tabs-component-tab.is-active {
@@ -585,18 +589,18 @@ input[type="number"] {
 
 @media (min-width: 700px) {
   .tabs-component-tab {
-    background-color: #fff;
-    border: solid 1px #ddd;
-    border-radius: 3px 3px 0 0;
+    background-color: transparent;
+    border: none !important;
+    border-radius: 12px;
     margin-right: 0.5em;
-    transform: translateY(2px);
     transition: transform 0.3s ease;
   }
 
   .tabs-component-tab.is-active {
-    border-bottom: solid 1px #fff;
-    z-index: 2;
-    transform: translateY(0);
+    background-color: rgba(79, 142, 247, 0.15) !important;
+    color: #4f8ef7 !important;
+    border-bottom: none !important;
+    box-shadow: inset 0 0 10px rgba(79, 142, 247, 0.2);
   }
 }
 
@@ -612,7 +616,7 @@ input[type="number"] {
 .tabs-component-panels {
   padding-top: 20px;
   height: 200px;
-  color: black;
+  color: #fff;
 }
 
 .mobile-member-drawer {
@@ -644,8 +648,23 @@ input[type="number"] {
   }
   .tabs-component-panels {
     border-top-left-radius: 0;
-    background-color: #fff;
-    border-top: solid 1px #ddd;
+    background-color: transparent;
+    border-top: none;
   }
+}
+.my-btn {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+.my-btn:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 16px 40px rgba(79, 142, 247, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.25) !important;
 }
 </style>

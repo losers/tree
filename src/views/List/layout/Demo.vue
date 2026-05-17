@@ -1,143 +1,66 @@
 <template>
-  <div>
-    <div
-      class="
-        text-muted
-        container
-        mb-3
-        d-flex
-        flex-column
-        justify-content-start
-        align-items-start
-      "
-    >
-      <h5>How to create Demo Families ?</h5>
-      <div>
-        <strong class="mr-2">1. </strong> Create a normal family tree.
+  <div class="list-wrapper">
+    <!-- Info Banner -->
+    <div class="info-banner">
+      <div class="banner-icon">💡</div>
+      <div class="banner-content">
+        <h4 class="banner-title">How to create a Demo Family?</h4>
+        <ol class="banner-list">
+          <li>Create a normal family tree.</li>
+          <li>Email surname to <a href="mailto:hello@bloodline.app" class="banner-link">hello@bloodline.app</a> along with your details.</li>
+        </ol>
       </div>
-      <div>
-        <strong class="mr-2">2. </strong> Email surname to
-        <i>hello@bloodline.app</i> along with your details.
-      </div>
-      <div class="mt-2">
-        <strong class="mr-2">Thats it, Your Demo Family will go live</strong>
-      </div>
-    </div>
-    <!-- Search Bar -->
-    <form v-on:submit.prevent="search" class="search-box container">
-      <input
-        type="text"
-        style="height: 45px"
-        :class="{ 'desktop-search': $device.mobile }"
-        v-model="text"
-        :placeholder="`Find in ${totalFamilies} Demo families..`"
-        class="form-control input-lg float-left search-bar"
-      />
-      <button
-        type="submit"
-        class="btn"
-        style="float: right; margin-right: 10px; margin-top: -40px"
-      >
-        <i class="icofont-search-2"></i>
-      </button>
-    </form>
-    <!-- Loader -->
-    <div v-if="loading">
-      <center style="padding-top: 80px">
-        <div
-          class="spinner-border"
-          style="height: 50px; width: 50px; color: black"
-          role="status"
-        >
-          <span class="sr-only">Loading...</span>
-        </div>
-      </center>
     </div>
 
-    <!-- All Families List -->
-    <div v-else v-for="data in info" :key="data.id">
-      <div
-        class="
-          container
-          family-box
-          d-flex
-          align-items-start
-          justify-content-between
-          normal-family
-        "
+    <!-- Loader -->
+    <div v-if="loading" class="loader-wrap">
+      <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Demo Families List -->
+    <div v-else class="family-grid">
+      <div 
+        v-for="data in info" 
+        :key="data.id" 
+        class="family-card"
         @click="goto(data.surname)"
       >
-        <i
-          class="icofont-unlocked rounded-lg"
-          :class="{
-            'bigscreen-lock': !$device.mobile,
-            'mobile-lock': $device.mobile,
-          }"
-          data-toggle="tooltip"
-          title="UnLocked"
-        ></i>
-
-        <!-- Family Title Box -->
-        <div>
-          <span
-            class="title"
-            :style="{ 'font-size': $device.mobile ? '25px' : '35px' }"
-          >
-            {{ data.title }}
-          </span>
-          <!-- Family Surname -->
-          <!-- <p class="surname">Surname : {{ data.surname }}</p> -->
-
-          <div v-if="data.contras" class="mt-3">
-            <span v-if="$device.mobile"
-              ><i class="icofont-edit text-muted mr-2"></i
-            ></span>
-            <span class="text-muted" v-else>Contributors: </span>
-            <span v-for="(contra, i) in data.contras" :key="i">
-              <a :href="contra.link" @click.stop target="_blank">{{
-                contra.name
-              }}</a
-              >,
-            </span>
-            <!-- <span v-for="(contra, i) in data.contras.slice(0, 1)" :key="i">
-            <a :href="contra.link" @click.stop target="_blank">{{
-              contra.name
-            }}</a
-            >,
-          </span>
-          <span
-            style="color: #287efb"
-            v-if="data.contras.length > 1"
-            @click.stop
-            @click.self="showContributorsModel"
-          >
-            +{{ data.contras.length - 1 }} more
-          </span> -->
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="demo-icon">
+              <span>🗂️</span>
+            </div>
+            <div class="lock-status status-unlocked">
+              <span class="status-icon">🔓</span>
+            </div>
+          </div>
+          
+          <h3 class="family-title">{{ data.title }}</h3>
+          
+          <div v-if="data.contras" class="contributors-wrap">
+            <span class="contri-label">Contributors:</span>
+            <div class="contri-list">
+              <span v-for="(contra, i) in data.contras" :key="i" class="contri-item">
+                <a :href="contra.link" @click.stop target="_blank">{{ contra.name }}</a><span v-if="i < data.contras.length - 1">,</span>
+              </span>
+            </div>
           </div>
         </div>
-        <div></div>
       </div>
     </div>
-    <div
-      v-if="hasNext && info.length !== 0"
-      style="margin-bottom: 20px; margin-top: 20px"
-    >
-      <button
-        type="button"
-        @click="loadMore"
-        v-if="!loadingMore"
-        class="btn load-more"
+
+    <!-- Load More -->
+    <div v-if="hasNext && info.length !== 0" class="load-more-wrap">
+      <button 
+        type="button" 
+        @click="loadMore" 
+        class="btn-load-more" 
+        :class="{ 'is-loading': loadingMore }"
       >
-        Load more <i class="icofont-arrow-down ml-1"></i>
+        <span v-if="!loadingMore">Load More Demo Families &darr;</span>
+        <div v-else class="loader-spinner-small"></div>
       </button>
-      <div
-        v-if="loadingMore"
-        class="spinner-border"
-        style="height: 50px; width: 50px; color: black"
-        role="status"
-      >
-        <span class="sr-only">Loading...</span>
-      </div>
     </div>
   </div>
 </template>
@@ -147,15 +70,19 @@ import axios from "axios";
 import ProdData from "@/data.js";
 
 export default {
-  mounted() {
-    this.getAllList();
+  name: "DemoFamilies",
+  data() {
+    return {
+      loading: true,
+      loadingMore: false,
+      nextPage: 0,
+      hasNext: true,
+      info: [],
+    };
   },
   methods: {
     goto(surname) {
       location.href = `/app/${surname}`;
-    },
-    showContributorsModel() {
-      console.log("cdkvdfv");
     },
     getAllList(page) {
       let url = `${ProdData.getHostURL()}/meta?type=2`;
@@ -166,81 +93,254 @@ export default {
         .get(url)
         .then((response) => {
           this.info = this.info.concat(response.data.list);
-          this.curFamily = response.data.cur_family;
-          this.totalFamilies = response.data.total_families;
           this.nextPage = response.data.next_page;
           this.hasNext = response.data.has_next;
         })
         .catch((error) => {
-          this.errored = error;
+          console.error(error);
         })
-        .finally(() => ((this.loading = false), (this.loadingMore = false)));
+        .finally(() => {
+          this.loading = false;
+          this.loadingMore = false;
+        });
     },
     loadMore() {
       this.loadingMore = true;
       this.getAllList(this.nextPage);
     },
   },
-  data() {
-    return {
-      loading: true,
-      loadingMore: false,
-      nextPage: 0,
-      hasNext: true,
-      text: "",
-      totalFamilies: 0,
-      info: [],
-    };
+  mounted() {
+    this.getAllList();
   },
 };
 </script>
 
 <style scoped>
-.btn:focus {
-  box-shadow: none;
+.list-wrapper {
+  width: 100%;
 }
-.bigscreen-lock {
-  color: white;
-  font-size: 25px;
-  background: #6a6a6a;
-  padding: 10px;
-  float: left;
-  left: 25px;
-  box-shadow: 0px 5px 18px -12px rgba(0, 0, 0, 0.75);
+
+.info-banner {
+  display: flex;
+  gap: 16px;
+  background: rgba(79, 142, 247, 0.08);
+  border: 1px solid rgba(79, 142, 247, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 32px;
+  text-align: left;
 }
-.mobile-lock {
-  color: #6a6a6a;
+
+.banner-icon {
+  font-size: 24px;
+  background: rgba(79, 142, 247, 0.15);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.banner-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.banner-list {
+  margin: 0;
+  padding-left: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.banner-link {
+  color: #7eb3ff;
+  text-decoration: none;
+}
+
+.banner-link:hover {
+  text-decoration: underline;
+}
+
+.loader-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(79, 142, 247, 0.2);
+  border-top-color: #4f8ef7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loader-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.family-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.family-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(79, 142, 247, 0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.family-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(79, 142, 247, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.family-card:hover .card-glow {
+  opacity: 1;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.demo-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(79, 142, 247, 0.1);
+  border: 1px solid rgba(79, 142, 247, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 20px;
-  float: left;
-  left: 25px;
-}
-.load-more {
-  background-color: white;
-  font-weight: bolder;
-  border: solid black 1px;
-  color: black;
 }
 
-.title {
-  font-weight: bold;
-  color: #6a6a6a !important;
+.lock-status {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 }
 
-.surname {
-  font-size: 20px;
-  font-weight: bold;
-  color: #a4a4a4;
+.status-unlocked {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.contri {
-  background: grey;
-  border-radius: 0 0 10px 10px;
-  max-height: 40px;
-
-  color: white;
+.family-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 24px;
+  letter-spacing: -0.5px;
+  flex: 1;
 }
-.contri:hover {
-  max-height: 100px !important;
-  box-shadow: 0px 2px 5px 0px rgb(255, 184, 184);
+
+.contributors-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.contri-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contri-list {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contri-item a {
+  color: #7eb3ff;
+  text-decoration: none;
+}
+
+.contri-item a:hover {
+  text-decoration: underline;
+}
+
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.btn-load-more {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.btn-load-more:hover:not(.is-loading) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 </style>
