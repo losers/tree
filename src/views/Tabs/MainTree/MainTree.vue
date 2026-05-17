@@ -313,7 +313,7 @@ export default {
         main_show: false,
       },
       pan: {
-        enabled: false,
+        enabled: true,
         isDragging: false,
         startX: 0,
         startY: 0,
@@ -396,6 +396,12 @@ export default {
       console.log(data);
       this.$router.go();
     });
+
+    // Add keyboard listener for zoom in/out keys
+    window.addEventListener("keydown", this.handleKeyDown);
+  },
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.handleKeyDown);
   },
   methods: {
     puppyDownload() {
@@ -502,13 +508,17 @@ export default {
       this.pan.scale = newScale;
     },
     zoomIn() {
-      if (!this.pan.enabled) return;
+      if (!this.pan.enabled) {
+        this.pan.enabled = true;
+      }
       let newScale = this.pan.scale + 0.2;
       if (newScale > 4) newScale = 4;
       this.zoomToCenter(newScale);
     },
     zoomOut() {
-      if (!this.pan.enabled) return;
+      if (!this.pan.enabled) {
+        this.pan.enabled = true;
+      }
       let newScale = this.pan.scale - 0.2;
       if (newScale < 0.2) newScale = 0.2;
       this.zoomToCenter(newScale);
@@ -521,6 +531,26 @@ export default {
       this.pan.x = mouseX - (mouseX - this.pan.x) * (newScale / this.pan.scale);
       this.pan.y = mouseY - (mouseY - this.pan.y) * (newScale / this.pan.scale);
       this.pan.scale = newScale;
+    },
+    handleKeyDown(e) {
+      // Ignore if user is typing in an input or textarea
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        this.zoomIn();
+      } else if (e.key === "-") {
+        e.preventDefault();
+        this.zoomOut();
+      }
     },
     // Called when a node is clicked
     toggleHelper: function () {
