@@ -396,7 +396,7 @@ export default {
 .form-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0px;
 }
 
 .form-group {

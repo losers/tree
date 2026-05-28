@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="glass-card mt-4 p-4" style="position: relative; z-index: 10;">
-      <h3 class="mb-4 text-center" style="color: #4f8ef7;">Isolate a Branch</h3>
+      <h3 class="mb-4 text-center" style="color: #4f8ef7;">Partial Tree</h3>
       <div class="row align-items-center justify-content-center">
         <div class="col-10 col-md-4 mb-3 mb-md-0">
           <vSelect
             :options="names"
-            placeholder="Select a victim... I mean, family member!"
+            placeholder="Select your family member..."
             v-model="p1"
             class="dark-vselect"
           ></vSelect>
@@ -27,7 +27,7 @@
           style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"
           alt="Bloodline Helper"
         />
-        <h4 style="color: #a78bfa;">Waiting to isolate their branch...</h4>
+        <h4 style="color: #a78bfa;">Waiting to view the partial tree...</h4>
       </div>
       <div v-else style="width: 100%; overflow: auto" class="glass-card mt-5 p-4">
         <TreeChart :json="tree" :images="images" style="padding-top: 70px" />

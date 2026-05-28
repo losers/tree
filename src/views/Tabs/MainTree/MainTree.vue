@@ -213,7 +213,7 @@
               @mouseleave="endPan"
               @wheel="doZoom"
             >
-              <div class="tree-canvas" :style="pan.enabled ? { transform: `translate(${pan.x}px, ${pan.y}px) scale(${pan.scale})` } : {}">
+              <div class="tree-canvas" :style="{ transform: pan.enabled ? `translate(${pan.x}px, ${pan.y}px) scale(${pan.scale})` : `scale(${pan.scale})` }">
                 <TreeChart
                   :json="tempData"
                   :images="images"
@@ -313,7 +313,7 @@ export default {
         main_show: false,
       },
       pan: {
-        enabled: true,
+        enabled: false,
         isDragging: false,
         startX: 0,
         startY: 0,
@@ -508,17 +508,11 @@ export default {
       this.pan.scale = newScale;
     },
     zoomIn() {
-      if (!this.pan.enabled) {
-        this.pan.enabled = true;
-      }
       let newScale = this.pan.scale + 0.2;
       if (newScale > 4) newScale = 4;
       this.zoomToCenter(newScale);
     },
     zoomOut() {
-      if (!this.pan.enabled) {
-        this.pan.enabled = true;
-      }
       let newScale = this.pan.scale - 0.2;
       if (newScale < 0.2) newScale = 0.2;
       this.zoomToCenter(newScale);
@@ -804,7 +798,8 @@ h2 {
 }
 .tree-pan-zoom-container.pan-disabled {
   overflow: auto;
-  justify-content: flex-start;
+  display: block;
+  text-align: center;
   cursor: default;
 }
 .tree-pan-zoom-container:active {

@@ -1,68 +1,103 @@
 <template>
   <div class="list-wrapper">
-    <!-- Info Banner -->
-    <div class="info-banner">
-      <div class="banner-icon">⚡</div>
-      <div class="banner-content">
-        <h4 class="banner-title">What are Super Families?</h4>
-        <p class="banner-text">Families who donate and support Bloodline become super families.</p>
-        <p class="banner-contact">For more info, write to <a href="mailto:hello@bloodline.app" class="banner-link">hello@bloodline.app</a></p>
+
+    <!-- ===== ROYAL BANNER ===== -->
+    <div class="royal-banner">
+      <div class="royal-banner-bg"></div>
+      <div class="royal-banner-inner">
+        <div class="royal-banner-left">
+          <div class="royal-crown-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M2 19h20v2H2v-2zm0-4l4-8 4 4 4-8 4 8 2-4v8H2v-8l2 4z" fill="url(#crownGrad)"/>
+              <defs>
+                <linearGradient id="crownGrad" x1="0" y1="0" x2="24" y2="24">
+                  <stop offset="0%" stop-color="#FDE68A"/>
+                  <stop offset="100%" stop-color="#D97706"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="royal-banner-text">
+            <h4 class="royal-banner-title">Super Families</h4>
+            <p class="royal-banner-sub">Families who support &amp; donate to Bloodline earn this elite status.</p>
+          </div>
+        </div>
+        <a href="mailto:hello@bloodline.app" class="royal-cta-btn">
+          <span>✦</span> Get Status
+        </a>
       </div>
     </div>
 
-    <!-- Loader -->
+    <!-- ===== LOADER ===== -->
     <div v-if="loading" class="loader-wrap">
-      <div class="loader-spinner"></div>
+      <div class="gold-spinner">
+        <div class="gold-spinner-ring"></div>
+        <span class="gold-spinner-crown">♛</span>
+      </div>
     </div>
 
-    <!-- Super Families List -->
+    <!-- ===== SUPER FAMILIES GRID ===== -->
     <div v-else class="family-grid">
-      <div 
-        v-for="data in info" 
-        :key="data.id" 
-        class="family-card super-family-card"
+      <div
+        v-for="data in info"
+        :key="data.id"
+        class="super-card"
         :class="{ 'card-active': curFamily === data._id }"
         @click="showAuth(data.surname, data.title, data.celeb, data._id, data.contact)"
       >
-        <div class="card-glow"></div>
+        <!-- Gold shimmer top line -->
+        <div class="super-top-line"></div>
+
+        <!-- Hover glow -->
+        <div class="card-gold-glow"></div>
+
+        <!-- Corner ornaments -->
+        <div class="ornament ornament-tl">❧</div>
+        <div class="ornament ornament-br">❧</div>
+
         <div class="card-content">
-          <div class="card-header">
-            <div class="super-icon">
-              <span>⚡</span>
-            </div>
-            <div class="lock-status" :class="data.celeb ? 'status-unlocked' : 'status-locked'">
-              <span class="status-icon">{{ data.celeb ? '🔓' : '🔒' }}</span>
-            </div>
+          <!-- Title row: lock pill + name + gold verified badge -->
+          <div class="title-row">
+            <span
+              class="lock-pill"
+              :class="data.celeb ? 'lock-open' : 'lock-closed'"
+            >{{ data.celeb ? '🔓' : '🔒' }}</span>
+
+            <h3 class="family-title">
+              {{ data.title }}
+              <span class="verified-badge" title="Super Family">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 1L14.39 3.56L17.72 2.45L18.94 5.74L22.29 6.8L21.35 10.18L23.51 12.76L21.35 15.34L22.29 18.72L18.94 19.78L17.72 23.07L14.39 21.96L12 24.52L9.61 21.96L6.28 23.07L5.06 19.78L1.71 18.72L2.65 15.34L0.49 12.76L2.65 10.18L1.71 6.8L5.06 5.74L6.28 2.45L9.61 3.56L12 1Z" fill="url(#g2)"/>
+                  <path d="M8 12.5L10.5 15L16 9.5" stroke="#1a0e00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="g2" x1="0" y1="0" x2="24" y2="24">
+                      <stop offset="0%" stop-color="#FDE68A"/>
+                      <stop offset="50%" stop-color="#FBBF24"/>
+                      <stop offset="100%" stop-color="#D97706"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+            </h3>
           </div>
-          
-          <h3 class="family-title">
-            {{ data.title }}
-            <span class="premium-check">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L15.09 5.09L19.41 4.59L20.84 8.76L24 12L20.84 15.24L19.41 19.41L15.09 18.91L12 22L8.91 18.91L4.59 19.41L3.16 15.24L0 12L3.16 8.76L4.59 4.59L8.91 5.09L12 2Z" fill="#FBBF24"/>
-                <path d="M10 15.5L6.5 12L7.91 10.59L10 12.67L16.09 6.58L17.5 8L10 15.5Z" fill="#1F2937"/>
-              </svg>
-            </span>
-          </h3>
-          <p class="family-surname">Surname: <span>{{ data.surname }}</span></p>
-          
-          <div class="badge-wrap">
-            <span class="badge-icon">🏅</span>
-            <span>Super Family</span>
-          </div>
+
+          <!-- Surname -->
+          <p class="family-surname">
+            <span class="surname-gold">{{ data.surname }}</span>
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- Load More -->
+    <!-- ===== LOAD MORE ===== -->
     <div v-if="hasNext && info.length !== 0" class="load-more-wrap">
-      <button 
-        type="button" 
-        @click="loadMore" 
-        class="btn-load-more" 
+      <button
+        type="button"
+        @click="loadMore"
+        class="btn-load-more"
         :class="{ 'is-loading': loadingMore }"
       >
-        <span v-if="!loadingMore">Load More Super Families &darr;</span>
+        <span v-if="!loadingMore">Load More ↓</span>
         <div v-else class="loader-spinner-small"></div>
       </button>
     </div>
@@ -87,6 +122,11 @@ export default {
   },
   methods: {
     showAuth(surname, title, isCeleb, family_id, contact) {
+      // Active family (user's own) — redirect directly, no PIN needed
+      if (family_id && family_id === this.curFamily) {
+        location.href = `/app/${surname}`;
+        return;
+      }
       this.$parent.showAuth(surname, title, isCeleb, family_id, contact);
     },
     getAllList(page) {
@@ -122,255 +162,310 @@ export default {
 </script>
 
 <style scoped>
-.list-wrapper {
-  width: 100%;
-}
+.list-wrapper { width: 100%; }
 
-.info-banner {
-  display: flex;
-  gap: 16px;
-  background: rgba(138, 79, 247, 0.08);
-  border: 1px solid rgba(138, 79, 247, 0.2);
-  border-radius: 16px;
-  padding: 20px;
+/* ===== ROYAL BANNER ===== */
+.royal-banner {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
   margin-bottom: 32px;
-  text-align: left;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 32px rgba(251, 191, 36, 0.06), inset 0 1px 0 rgba(251, 191, 36, 0.12);
 }
-
-.banner-icon {
-  font-size: 24px;
-  background: rgba(138, 79, 247, 0.15);
+.royal-banner-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(251,191,36,0.09) 0%, rgba(120,53,15,0.10) 50%, rgba(251,191,36,0.05) 100%);
+}
+.royal-banner-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 22px;
+  flex-wrap: wrap;
+}
+.royal-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.royal-crown-icon {
   width: 48px;
   height: 48px;
+  background: linear-gradient(135deg, rgba(251,191,36,0.18), rgba(245,158,11,0.08));
+  border: 1px solid rgba(251,191,36,0.35);
+  border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
   flex-shrink: 0;
 }
-
-.banner-title {
-  margin: 0 0 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
+.royal-banner-title {
+  margin: 0 0 3px;
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #FBBF24, #FDE68A, #F59E0B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-
-.banner-text {
-  margin: 0 0 4px;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
-}
-
-.banner-contact {
+.royal-banner-sub {
   margin: 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
 }
-
-.banner-link {
-  color: #a78bfa;
+.royal-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: rgba(251,191,36,0.12);
+  border: 1px solid rgba(251,191,36,0.4);
+  border-radius: 50px;
+  color: #FBBF24;
+  font-size: 13px;
+  font-weight: 700;
   text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.royal-cta-btn:hover {
+  background: rgba(251,191,36,0.22);
+  border-color: rgba(251,191,36,0.75);
+  box-shadow: 0 4px 16px rgba(251,191,36,0.18);
+  transform: translateY(-1px);
 }
 
-.banner-link:hover {
-  text-decoration: underline;
-}
-
+/* ===== GOLD LOADER ===== */
 .loader-wrap {
   display: flex;
   justify-content: center;
-  padding: 60px 0;
+  padding: 80px 0;
 }
-
-.loader-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(138, 79, 247, 0.2);
-  border-top-color: #8a4ff7;
+.gold-spinner {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gold-spinner-ring {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  border: 3px solid transparent;
+  border-top-color: #FBBF24;
+  border-right-color: rgba(251,191,36,0.35);
+  animation: spin 1.2s linear infinite;
 }
-
+.gold-spinner-crown {
+  font-size: 20px;
+  animation: crownPulse 1.2s ease-in-out infinite;
+}
+@keyframes crownPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.85); }
+}
 .loader-spinner-small {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-top-color: #fff;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(251,191,36,0.25);
+  border-top-color: #FBBF24;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
+/* ===== GRID ===== */
 .family-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
-.family-card {
+/* ===== SUPER CARD ===== */
+.super-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 28px;
+  background: linear-gradient(145deg, rgba(38,26,5,0.88), rgba(18,12,2,0.93), rgba(38,26,5,0.88));
+  border: 1px solid rgba(251,191,36,0.38);
+  border-radius: 18px;
+  padding: 24px 22px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  transition: transform 0.35s cubic-bezier(0.25,1,0.5,1),
+              box-shadow 0.35s ease,
+              border-color 0.3s ease,
+              background 0.3s ease;
+  box-shadow: 0 4px 18px rgba(251,191,36,0.07), 0 1px 0 rgba(251,191,36,0.14) inset;
+}
+.super-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  background: linear-gradient(145deg, rgba(48,33,7,0.92), rgba(24,16,3,0.96), rgba(48,33,7,0.92));
+  border-color: rgba(251,191,36,0.75);
+  box-shadow: 0 18px 46px rgba(251,191,36,0.15), 0 6px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(251,191,36,0.28) inset;
+}
+.super-card:hover .card-gold-glow { opacity: 1; }
+.super-card:hover .ornament { color: rgba(251,191,36,0.28); }
+.super-card:hover .verified-badge {
+  filter: drop-shadow(0 0 8px rgba(251,191,36,0.85));
+  transform: scale(1.12);
+}
+.super-card:hover .lock-pill { transform: scale(1.08); }
+
+.card-active {
+  border-color: rgba(251,191,36,0.85);
+  box-shadow: 0 0 0 2px rgba(251,191,36,0.2), 0 10px 32px rgba(251,191,36,0.14);
 }
 
-.family-card.super-family-card {
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.08);
-}
-
-.card-glow {
+/* Gold shimmer top line */
+.super-top-line {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.1) 0%, transparent 60%);
+  top: 0; left: 12px; right: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #FBBF24, #FDE68A, #FBBF24, transparent);
+  border-radius: 0 0 2px 2px;
+  animation: lineGlow 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes lineGlow {
+  0%,100% { opacity: 0.45; }
+  50%      { opacity: 1; }
+}
+
+/* Hover glow */
+.card-gold-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(251,191,36,0.12) 0%, transparent 65%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.35s ease;
   pointer-events: none;
 }
 
-.family-card.super-family-card:hover {
-  transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(251, 191, 36, 0.8);
-  box-shadow: 0 12px 30px rgba(251, 191, 36, 0.15);
+/* Corner ornaments */
+.ornament {
+  position: absolute;
+  font-size: 14px;
+  color: rgba(251,191,36,0.12);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  transition: color 0.35s ease;
 }
+.ornament-tl { top: 10px; left: 12px; transform: rotate(180deg); }
+.ornament-br { bottom: 10px; right: 12px; }
 
-.family-card:hover .card-glow {
-  opacity: 1;
-}
-
-.card-active {
-  background: rgba(251, 191, 36, 0.08);
-  border-color: rgba(251, 191, 36, 0.5);
-  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.5) inset;
-}
-
+/* ===== CARD CONTENT ===== */
 .card-content {
   position: relative;
   z-index: 2;
-  flex: 1;
   display: flex;
   flex-direction: column;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
-}
-
-.super-icon {
-  width: 44px;
-  height: 44px;
-  background: rgba(251, 191, 36, 0.15);
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-
-.lock-status {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-
-.status-unlocked {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.status-locked {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-}
-
-.family-title {
-  display: flex;
-  align-items: center;
   gap: 8px;
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 8px;
-  letter-spacing: -0.5px;
 }
 
-.premium-check {
+/* ===== TITLE ROW ===== */
+.title-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
 }
 
-.family-surname {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0 0 24px;
-  flex: 1;
-}
-
-.badge-wrap {
+/* ===== LOCK PILL ===== */
+.lock-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(251, 191, 36, 0.15);
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  padding: 6px 12px;
-  border-radius: 50px;
-  font-size: 12px;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+.lock-closed {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.25);
+}
+.lock-open {
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.25);
+}
+
+/* ===== FAMILY TITLE ===== */
+.family-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  text-shadow: 0 1px 6px rgba(251,191,36,0.12);
+}
+
+/* ===== VERIFIED BADGE ===== */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(251,191,36,0.5));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* ===== SURNAME ===== */
+.family-surname {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  margin: 0;
+  padding-left: 40px; /* align under title text */
+}
+.surname-gold {
+  background: linear-gradient(90deg, #FBBF24, #FDE68A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 600;
-  color: #fbbf24;
-  width: fit-content;
 }
 
-.badge-icon {
-  font-size: 14px;
-}
-
+/* ===== LOAD MORE ===== */
 .load-more-wrap {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 36px;
 }
-
 .btn-load-more {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  padding: 12px 24px;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.3);
+  color: #FBBF24;
+  padding: 10px 28px;
   border-radius: 50px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 180px;
+  transition: all 0.25s ease;
+  min-width: 160px;
+  font-family: inherit;
+}
+.btn-load-more:hover:not(.is-loading) {
+  background: rgba(251,191,36,0.16);
+  border-color: rgba(251,191,36,0.65);
+  box-shadow: 0 4px 18px rgba(251,191,36,0.15);
+  transform: translateY(-1px);
 }
 
-.btn-load-more:hover:not(.is-loading) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
+@media (max-width: 768px) {
+  .family-grid { grid-template-columns: 1fr; }
+  .royal-banner-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 </style>

@@ -110,6 +110,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 200;
 }
 
 .wrapper[data-open="1"] .bg {

@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%" class="selections-wrapper bloodline-app">
     <!-- Top Navigation Bar -->
-    <div class="navbar" :class="{ 'updating-navbar': title.isClkd }">
+    <div class="navbar" :class="[{ 'updating-navbar': title.isClkd }, { 'navbar-hidden': isModalActive }]">
       <div class="navbar-animated-border"></div>
 
       <!-- Back Btn for Subtree -->
@@ -28,15 +28,15 @@
       </div>
 
       <!-- Title Update Input Box -->
-      <div v-else class="title" style="justify-content: space-around; width: 100%; padding: 0 20px;">
+      <div v-else class="title" style="display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; width: 100%; padding: 0 20px;">
         <!-- Cross Icon -->
-        <i class="icofont-close-line cursor" @click="title.isClkd = false" style="color: #ff4757;"></i>
+        <i class="icofont-close-line cursor" @click="title.isClkd = false" style="color: #ff4757; justify-self: start;"></i>
 
         <!-- Input Box -->
         <input
           v-model="title.input"
           class="titleInput"
-          :style="{ width: $device.mobile ? '60%' : '70%' }"
+          style="width: 100%;"
           autofocus
         />
 
@@ -45,14 +45,14 @@
           class="icofont-check cursor"
           v-if="!title.isUpdating"
           @click="titleUpdate"
-          style="color: #2ed573;"
+          style="color: #2ed573; justify-self: end;"
         ></i>
 
         <!-- Loader Circular -->
         <div
           v-else
           class="spinner-border spinner-border-sm"
-          style="width: 1rem; height: 1rem; color: #2ed573;"
+          style="width: 1rem; height: 1rem; color: #2ed573; justify-self: end;"
         ></div>
       </div>
     </div>
@@ -137,6 +137,10 @@ export default {
         return Store.getters.getIsEditable;
       },
     },
+    isModalActive() {
+      const name = this.$route.name;
+      return name === 'MemberData' || name === 'SubMemberData';
+    }
   },
   components: {
     SidebarMenu,
@@ -293,8 +297,11 @@ export default {
   transform: translateX(-50%);
   width: calc(100% - 32px);
   max-width: 800px;
-  z-index: 100;
+  z-index: 50;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.navbar-hidden {
+  z-index: 0 !important;
 }
 .add-border {
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);

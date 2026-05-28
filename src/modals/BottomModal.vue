@@ -146,6 +146,7 @@ export default {
   left: 0;
   width: 100vw;
   background: red;
+  z-index: 200;
 }
 .vue-bottom-dialog-overflow {
   overflow: hidden;

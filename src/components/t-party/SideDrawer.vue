@@ -145,6 +145,7 @@ export default {
   pointer-events: none;
   margin: 0;
   transition: all 200ms linear;
+  z-index: 200;
 }
 .bloodline-title {
   color: #a78bfa;

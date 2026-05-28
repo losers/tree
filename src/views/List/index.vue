@@ -8,7 +8,7 @@
       <!-- ===== NAVBAR ===== -->
       <nav class="navbar-glass">
         <div class="nav-brand">
-          <span class="brand-icon">🧬</span>
+          <img src="@/assets/logo.png" alt="Bloodline Logo" class="brand-icon-img" />
           <span class="brand-name">Bloodline</span>
         </div>
         <button class="btn-create-nav" @click="addFamilyBtn">
@@ -66,7 +66,7 @@
                 v-model="searchQuery"
                 type="text"
                 class="hero-search-input"
-                placeholder="Search lineages, surnames, or ancestors..."
+                :placeholder="searchPlaceholder"
               />
               <button type="submit" class="search-submit-btn">⌘K</button>
             </form>
@@ -82,7 +82,7 @@
 
           <!-- Conditional Family Lists -->
           <div v-if="!$route.hash">
-            <AllFamilies :search-override="searchQuery"></AllFamilies>
+            <AllFamilies :search-override="searchQuery" @total-families-loaded="setTotalFamilies"></AllFamilies>
           </div>
           <div v-else-if="$route.hash === '#demo'">
             <DemoFamilies></DemoFamilies>
@@ -181,7 +181,16 @@ export default {
       helper: { show: false },
       notificationsIcon: false,
       searchQuery: "",
+      totalFamiliesCount: 0,
     };
+  },
+  computed: {
+    searchPlaceholder() {
+      if (this.totalFamiliesCount > 0) {
+        return `Search ${this.totalFamiliesCount.toLocaleString()} lineages, surnames, or ancestors...`;
+      }
+      return "Search lineages, surnames, or ancestors...";
+    }
   },
   components: {
     DualPage,
@@ -191,10 +200,29 @@ export default {
     AllFamilies,
   },
   methods: {
+    setTotalFamilies(count) {
+      this.totalFamiliesCount = count;
+    },
     handleSearch() {
       // Trigger search in AllFamilies if on All tab (via prop)
     },
     showAuth(surname, title, isCeleb, family_id, contact) {
+      // Demo families → redirect instantly (no PIN needed)
+      if (isCeleb) {
+        location.href = `/app/${surname}`;
+        return;
+      }
+
+      // PIN already entered → redirect instantly
+      try {
+        const validated = JSON.parse(localStorage.getItem("bl_pin_cache") || "[]");
+        if (validated.includes(surname)) {
+          location.href = `/app/${surname}`;
+          return;
+        }
+      } catch { /* ignore */ }
+
+      // Show PIN modal immediately
       this.authPayload = { surname, title, isCeleb, family_id, contact };
       this.showAuthBox = true;
     },
@@ -233,6 +261,8 @@ export default {
   },
   mounted() {
     this.toggleBodyClass("addClass");
+    // Clear old localStorage cache key from a previous implementation
+    try { localStorage.removeItem("bl_validated_families"); } catch { /* ignore */ }
     try {
       print.postMessage("show Notifications");
       this.notificationsIcon = true;
@@ -281,8 +311,10 @@ export default {
   gap: 10px;
 }
 
-.brand-icon {
-  font-size: 22px;
+.brand-icon-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .brand-name {
@@ -481,6 +513,7 @@ export default {
   color: #fff;
   font-size: 15px;
   font-family: 'Inter', sans-serif;
+  margin-bottom: 0px;
 }
 
 .hero-search-input::placeholder {

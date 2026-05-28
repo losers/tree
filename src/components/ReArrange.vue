@@ -1,43 +1,42 @@
 <template>
-  <center>
-    <div class="col-10 mt-5">
-      <h3>Swap Siblings</h3>
-      <draggable
-        class="list-group mt-3"
-        tag="ul"
-        v-model="list"
-        v-bind="dragOptions"
-        @start="drag = true"
-        @end="drag = false"
-      >
-        <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-          <li
-            class="list-group-item"
-            v-for="element in list"
-            :key="element.order"
-          >
-            {{ element.name }}
-          </li>
-        </transition-group>
-      </draggable>
-      <div class="row justify-content-between mt-5 mb-3">
-        <button
-          class="btn btn-success"
-          v-on:click="finalList"
-          :disabled="loading"
+  <div class="col-12 col-md-10 mx-auto mt-4 mb-4">
+    <h3 class="swap-title text-center">Swap Siblings</h3>
+    <draggable
+      class="theme-list-group mt-3"
+      tag="ul"
+      v-model="list"
+      v-bind="dragOptions"
+      @start="drag = true"
+      @end="drag = false"
+    >
+      <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+        <li
+          class="theme-list-item"
+          v-for="element in list"
+          :key="element.order"
         >
-          <span
-            class="spinner-border spinner-border-sm"
-            v-show="loading"
-          ></span>
-          Submit
-        </button>
-        <button @click="close" class="btn btn-danger" type="button">
-          Cancel
-        </button>
-      </div>
+          <i class="icofont-navigation-menu mr-3" style="color: #6b7280;"></i>
+          {{ element.name }}
+        </li>
+      </transition-group>
+    </draggable>
+    <div class="action-buttons">
+      <button @click="close" class="btn-theme-cancel" type="button">
+        Cancel
+      </button>
+      <button
+        class="btn-theme-submit d-flex align-items-center"
+        v-on:click="finalList"
+        :disabled="loading"
+      >
+        <span
+          class="spinner-border spinner-border-sm mr-2"
+          v-show="loading"
+        ></span>
+        Submit
+      </button>
     </div>
-  </center>
+  </div>
 </template>
 
 <script>
@@ -162,20 +161,77 @@ export default {
 </script>
 
 <style scoped>
-div {
-  color: black;
+.swap-title {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.theme-list-group {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  list-style: none;
+  margin: 0;
+}
+.theme-list-item {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  cursor: grab;
+  font-weight: 500;
+}
+.theme-list-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+.theme-list-item:active {
+  cursor: grabbing;
+}
+.theme-list-item:last-child {
+  margin-bottom: 0;
 }
 .ghost {
-  opacity: 0.5;
-  background: #caeeff;
+  opacity: 0.4;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px dashed rgba(255, 255, 255, 0.4);
 }
-.list-group {
-  min-height: 20px;
+.btn-theme-submit {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 28px;
+  font-weight: 500;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
-.list-group-item {
-  cursor: move;
+.btn-theme-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 }
-.list-group-item i {
-  cursor: pointer;
+.btn-theme-cancel {
+  background: transparent;
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 10px 28px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.btn-theme-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
 }
 </style>

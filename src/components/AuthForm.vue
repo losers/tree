@@ -1,8 +1,10 @@
 <template>
   <div class="auth-container">
     <div class="modal-header">
-      <h3 class="modal-title">Unlock Family Tree</h3>
-      <span class="subtitle">{{ payload.title }}</span>
+      <div>
+        <h3 class="modal-title">Unlock Family Tree</h3>
+        <span class="subtitle">{{ payload.title }}</span>
+      </div>
       <button class="btn-close" v-if="!$device.mobile" @click="goBack">&times;</button>
     </div>
 
@@ -103,6 +105,14 @@ export default {
           .then(() => {
             this.hasCookie = true;
             this.vloading = false;
+            // Cache validated surname so list page skips PIN on next visit
+            try {
+              const cached = JSON.parse(localStorage.getItem("bl_pin_cache") || "[]");
+              if (!cached.includes(params.surname)) {
+                cached.push(params.surname);
+                localStorage.setItem("bl_pin_cache", JSON.stringify(cached));
+              }
+            } catch { /* ignore */ }
             let sessData = {};
             sessData.status = true;
             sessData.surname = params.surname;

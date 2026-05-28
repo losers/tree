@@ -147,66 +147,63 @@ export default {
 
 <style scoped>
 .my-action-btn {
-  background: rgba(15, 17, 35, 0.6) !important;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05) !important;
   color: white !important;
-  border-radius: 12px !important;
-  padding: 10px 16px !important;
+  border-radius: 14px !important;
+  padding: 12px 20px !important;
   font-weight: 600;
-  transition: all 0.3s ease !important;
-  backdrop-filter: blur(10px);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  overflow: hidden;
+  z-index: 1;
 }
+
+.my-action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
 .my-action-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  letter-spacing: 1px;
 }
-.glass-primary {
-  border-left: 3px solid #4f8ef7 !important;
+
+.my-action-btn:hover::before {
+  left: 100%;
 }
-.glass-primary:hover {
-  background: rgba(79, 142, 247, 0.2) !important;
-  border-color: #4f8ef7 !important;
-  box-shadow: 0 5px 15px rgba(79, 142, 247, 0.3);
-}
-.glass-success {
-  border-left: 3px solid #2ed573 !important;
-}
-.glass-success:hover {
-  background: rgba(46, 213, 115, 0.2) !important;
-  border-color: #2ed573 !important;
-  box-shadow: 0 5px 15px rgba(46, 213, 115, 0.3);
-}
-.glass-warning {
-  border-left: 3px solid #ffa502 !important;
-}
-.glass-warning:hover {
-  background: rgba(255, 165, 2, 0.2) !important;
-  border-color: #ffa502 !important;
-  box-shadow: 0 5px 15px rgba(255, 165, 2, 0.3);
-}
-.glass-danger {
-  border-left: 3px solid #ff4757 !important;
-}
-.glass-danger:hover {
-  background: rgba(255, 71, 87, 0.2) !important;
-  border-color: #ff4757 !important;
-  box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
-}
-.glass-info {
-  border-left: 3px solid #00a8ff !important;
-}
-.glass-info:hover {
-  background: rgba(0, 168, 255, 0.2) !important;
-  border-color: #00a8ff !important;
-  box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
-}
+
+.glass-primary { border-left: 4px solid #4f8ef7 !important; }
+.glass-primary:hover { background: rgba(79, 142, 247, 0.15) !important; box-shadow: 0 8px 20px rgba(79, 142, 247, 0.4) !important; border-color: rgba(79, 142, 247, 0.8) !important; }
+
+.glass-success { border-left: 4px solid #2ed573 !important; }
+.glass-success:hover { background: rgba(46, 213, 115, 0.15) !important; box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4) !important; border-color: rgba(46, 213, 115, 0.8) !important; }
+
+.glass-warning { border-left: 4px solid #ffa502 !important; }
+.glass-warning:hover { background: rgba(255, 165, 2, 0.15) !important; box-shadow: 0 8px 20px rgba(255, 165, 2, 0.4) !important; border-color: rgba(255, 165, 2, 0.8) !important; }
+
+.glass-danger { border-left: 4px solid #ff4757 !important; }
+.glass-danger:hover { background: rgba(255, 71, 87, 0.15) !important; box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4) !important; border-color: rgba(255, 71, 87, 0.8) !important; }
+
+.glass-info { border-left: 4px solid #00a8ff !important; }
+.glass-info:hover { background: rgba(0, 168, 255, 0.15) !important; box-shadow: 0 8px 20px rgba(0, 168, 255, 0.4) !important; border-color: rgba(0, 168, 255, 0.8) !important; }
+
 .dark-input {
   background: rgba(15, 17, 35, 0.8) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: white !important;
-  border-radius: 8px;
+  border-radius: 12px;
+  padding: 10px;
 }
 .dark-input:focus {
   border-color: #4f8ef7 !important;
-  box-shadow: 0 0 10px rgba(79, 142, 247, 0.2) !important;
+  box-shadow: 0 0 15px rgba(79, 142, 247, 0.4) !important;
 }
 </style>

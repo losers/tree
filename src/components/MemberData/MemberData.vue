@@ -7,27 +7,24 @@
         <p>{{ errored }}</p>
       </section>
       <section v-else>
-        <div v-if="loading" class="container_image mx-auto">
-          <center style="padding-top: 240px">
-            <img src="@/assets/dna.gif" alt="Bloodline Loader" />
-          </center>
+        <div v-if="loading" class="loading-wrapper">
+          <div class="modern-loader"></div>
         </div>
         <div v-else>
-          <div class="container_image mx-auto">
-            <div v-if="imageExists">
+          <div class="container_image mx-auto" style="margin-top: 30px; margin-bottom: 20px;">
+            <div class="animated-halo"></div>
+            <div v-if="imageExists" style="position: relative; z-index: 1;">
               <img
                 :src="previewImage"
                 alt="Avatar"
-                class="image mx-auto"
-                style="border-radius: 50%; width: 150px"
+                class="image mx-auto modern-avatar"
               />
             </div>
-            <div v-else>
+            <div v-else style="position: relative; z-index: 1;">
               <img
                 src="../../assets/profile.png"
                 alt="Family Tree Loading"
-                class="image mx-auto"
-                style="border-radius: 50%; width: 150px"
+                class="image mx-auto modern-avatar"
               />
             </div>
 
@@ -59,44 +56,43 @@
           </button>
 
           <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
-          <table class="table table-borderless table-hover mt-3 table-data">
-            <tbody class="text-left" style="color: #fff">
-              <tr class="text-center">
-                <td>
-                  {{ data.short_name }}
-                  <i
-                    class="icofont-edit float-right"
-                    @click="addMember(2, data)"
-                    style="font-size: 20px"
-                    v-show="cookeyStatus && !view_only"
-                  ></i>
-                </td>
-              </tr>
-              <tr>
-                <td style="border-left: 3px solid red">
-                  <i class="icofont-business-man"></i>
-                  {{ data.name }}
-                </td>
-              </tr>
-              <tr v-if="data.gender">
-                <td style="border-left: 3px solid orange">
-                  <span v-if="data.gender == 1">
-                    <i class="icofont-male"></i>
-                  </span>
-                  <span v-else>
-                    <i class="icofont-female"></i>
-                  </span>
-                  {{ data.gender == "1" ? "Male" : "Female" }}
-                </td>
-              </tr>
-              <tr v-if="data.xtra_parent_name">
-                <td style="border-left: 3px solid blue">
-                  <span v-if="data.gender == 1">S/O :</span>
-                  <span v-else>D/O :</span>
-                  {{ data.xtra_parent_name }}
-                </td>
-              </tr>
-            </tbody>
+          <!-- Modern Info Cards -->
+          <div class="info-cards-container mt-4">
+            <div class="info-card title-card" style="justify-content: center; background: transparent; border: none; box-shadow: none;">
+              <span class="info-text font-weight-bold" style="font-size: 22px; letter-spacing: 0.5px;">
+                {{ data.short_name }}
+              </span>
+              <i
+                class="icofont-edit edit-icon ml-2 cursor"
+                @click="addMember(2, data)"
+                v-show="cookeyStatus && !view_only"
+              ></i>
+            </div>
+            
+            <div class="info-card">
+              <div class="icon-wrapper" style="background: rgba(255, 71, 87, 0.15); color: #ff4757;">
+                <i class="icofont-business-man"></i>
+              </div>
+              <span class="info-text">{{ data.name }}</span>
+            </div>
+
+            <div class="info-card" v-if="data.gender">
+              <div class="icon-wrapper" style="background: rgba(255, 165, 2, 0.15); color: #ffa502;">
+                <i :class="data.gender == 1 ? 'icofont-male' : 'icofont-female'"></i>
+              </div>
+              <span class="info-text">{{ data.gender == "1" ? "Male" : "Female" }}</span>
+            </div>
+
+            <div class="info-card" v-if="data.xtra_parent_name">
+              <div class="icon-wrapper" style="background: rgba(79, 142, 247, 0.15); color: #4f8ef7;">
+                <i class="icofont-users-alt-4"></i>
+              </div>
+              <span class="info-text">
+                <span style="opacity: 0.6; margin-right: 6px;">{{ data.gender == 1 ? "S/O:" : "D/O:" }}</span>
+                {{ data.xtra_parent_name }}
+              </span>
+            </div>
+          </div>
 
             <!-- Accordian for Mobile -->
             <div v-if="$device.mobile && cookeyStatus" class="mt-3">
@@ -197,7 +193,6 @@
                 <MoreInfo :id="id" :data="data"></MoreInfo>
               </tab>
             </tabs>
-          </table>
         </div>
       </section>
     </div>
@@ -527,6 +522,7 @@ input[type="number"] {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   text-align: center;
+  z-index: 2;
 }
 .container_image:hover .image {
   opacity: 0.3;
@@ -599,8 +595,7 @@ input[type="number"] {
   .tabs-component-tab.is-active {
     background-color: rgba(79, 142, 247, 0.15) !important;
     color: #4f8ef7 !important;
-    border-bottom: none !important;
-    box-shadow: inset 0 0 10px rgba(79, 142, 247, 0.2);
+    border-bottom: 2px solid #4f8ef7 !important;
   }
 }
 
@@ -627,7 +622,7 @@ input[type="number"] {
 }
 
 .mask {
-  z-index: 10 !important;
+  z-index: 100 !important;
 }
 .vue-simple-drawer {
   z-index: 101 !important;
@@ -643,7 +638,7 @@ input[type="number"] {
 
 @media (min-width: 720px) {
   .vue-simple-drawer {
-    left: 70% !important;
+    left: 60% !important;
     position: fixed;
   }
   .tabs-component-panels {
@@ -667,4 +662,113 @@ input[type="number"] {
   transform: translateY(-4px) scale(1.05) !important;
   box-shadow: 0 16px 40px rgba(79, 142, 247, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.25) !important;
 }
+
+/* Modern MemberData Styles */
+.animated-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff007f, #7928ca, #4f8ef7, #00d2ff);
+  background-size: 400% 400%;
+  animation: glowingHalo 8s ease infinite;
+  z-index: 0;
+  filter: blur(14px);
+  opacity: 0.8;
+}
+
+@keyframes glowingHalo {
+  0% { background-position: 0% 50%; transform: translate(-50%, -50%) rotate(0deg); }
+  50% { background-position: 100% 50%; transform: translate(-50%, -50%) rotate(180deg); }
+  100% { background-position: 0% 50%; transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.modern-avatar {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.info-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 10px;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px 16px;
+  transition: transform 0.3s ease, background 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  margin-right: 16px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.info-text {
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.3px;
+}
+
+/* Modern Molecular Loader */
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+.modern-loader {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  animation: loader-spin 2s linear infinite;
+}
+.modern-loader::before,
+.modern-loader::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #4f8ef7;
+  box-shadow: 0 0 15px rgba(79, 142, 247, 0.6);
+  animation: loader-bounce 1s ease-in-out infinite alternate;
+}
+.modern-loader::after {
+  bottom: 0;
+  top: auto;
+  background: #a78bfa;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+  animation-delay: -1s;
+}
+@keyframes loader-spin { 100% { transform: rotate(360deg); } }
+@keyframes loader-bounce { 0% { transform: scale(0.6); } 100% { transform: scale(1.2); } }
 </style>
