@@ -56,7 +56,7 @@
       <router-view></router-view>
       <div v-if="loading">
         <center style="padding-top: 240px">
-          <img src="@/assets/dna.gif" alt="Bloodline Loader" />
+          <div class="spinner-border" style="transform: scale(3);"></div>
         </center>
       </div>
 
@@ -772,6 +772,7 @@ h2 {
   left: 0;
   bottom: 0px;
   width: 100%;
+  margin-bottom: 0;
   background: rgba(15, 17, 35, 0.85);
   backdrop-filter: blur(24px);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -782,6 +783,9 @@ h2 {
   letter-spacing: 0.5px;
   text-align: center;
   z-index: 10;
+}
+.foot p {
+  margin: 0;
 }
 .foot a {
   color: #fff !important;

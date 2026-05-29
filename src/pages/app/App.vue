@@ -217,4 +217,63 @@
 .dark-vselect .vs__clear {
   fill: rgba(255, 255, 255, 0.6) !important;
 }
+
+/* ==========================================================================
+   Global Cool DNA Loader Override
+   ========================================================================== */
+.spinner-border {
+  border: none !important;
+  display: inline-block;
+  position: relative;
+  width: 24px !important;
+  height: 24px !important;
+  vertical-align: middle;
+  background: transparent !important;
+  animation: none !important;
+}
+.spinner-border::before, .spinner-border::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: dna-spin 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.spinner-border::before {
+  background: #4f8ef7;
+  animation-delay: 0s;
+}
+.spinner-border::after {
+  background: #a78bfa;
+  animation-delay: -0.75s;
+}
+
+@keyframes dna-spin {
+  0% { transform: translate(-100%, -50%) scale(0.8); z-index: 1; }
+  25% { transform: translate(0, -50%) scale(1.2); z-index: 2; }
+  50% { transform: translate(100%, -50%) scale(0.8); z-index: 1; }
+  75% { transform: translate(0, -50%) scale(0.5); z-index: 0; }
+  100% { transform: translate(-100%, -50%) scale(0.8); z-index: 1; }
+}
+
+.spinner-border-sm {
+  width: 18px !important;
+  height: 18px !important;
+}
+.spinner-border-sm::before, .spinner-border-sm::after {
+  width: 7px;
+  height: 7px;
+}
+
+.spinner-border-lg {
+  width: 40px !important;
+  height: 40px !important;
+}
+.spinner-border-lg::before, .spinner-border-lg::after {
+  width: 16px;
+  height: 16px;
+}
 </style>

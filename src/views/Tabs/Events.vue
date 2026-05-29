@@ -9,7 +9,7 @@
     </div>
     <div v-else-if="events.length == 0">
       <center class="glass-card mt-5 p-5 mx-4" style="border-radius: 20px;">
-        <img src="@/assets/events/empty_events.png" height="150px" style="filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.4)); opacity: 0.8;" />
+        <img src="@/assets/events/empty_events.png" class="empty-state-img" height="150px" style="filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.4)); opacity: 0.8;" />
         <div class="mt-4">
           <h3 class="mb-3 font-weight-bold" style="color: #4f8ef7;">It's quiet... too quiet.</h3>
           <h5 style="color: rgba(255, 255, 255, 0.7);">The ancestors are resting today. No events to show!</h5>
@@ -18,7 +18,7 @@
     </div>
     <!-- All Boxes List -->
     <div class="row" v-else style="padding-bottom: 50px">
-      <div class="col-xs-12 col-sm-4 event-cont" v-for="(event, index) in events" :key="index">
+      <div class="col-xs-12 col-sm-4 event-cont" v-for="(event, index) in events" :key="index" :style="{ 'animation-delay': (index * 0.12) + 's' }">
         <!---------------- Birthday event --------------->
         <div class="event" v-if="event.type == 1">
           <!-- Background -->
@@ -111,7 +111,7 @@
         </div>
 
         <!-- Timeline Event -->
-        <div class="event glass-card" v-if="event.type == 3">
+        <div class="event glass-card timeline-event" v-if="event.type == 3">
           <!-- Vertical Line -->
           <div class="timeline-line"></div>
           <!-- Timeline Dot -->
@@ -126,7 +126,7 @@
               />
               <img src="@/assets/dp.png" v-else alt="Bloodline User" />
             </div>
-            <div class="name font-weight-bold" style="margin-left: 120px; color: white;">{{ event.name }}</div>
+            <div class="name font-weight-bold">{{ event.name }}</div>
           </div>
           <div class="timeline-body">
             <div class="timeline-title">{{ event.title }}</div>
@@ -172,23 +172,45 @@
   justify-content: center;
   position: relative;
 }
+.timeline-event {
+  padding: 20px 0;
+}
 .timeline-line {
-  height: 300px;
-  width: 4px;
-  background: linear-gradient(to bottom, #4f8ef7, transparent);
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(to bottom, #4f8ef7, #a78bfa, transparent);
+  background-size: 100% 200%;
   position: absolute;
-  margin-left: 50px;
+  top: 0;
+  left: 40px;
   border-radius: 2px;
+  animation: flowLine 3s infinite linear;
+}
+@keyframes flowLine {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 200%; }
 }
 .timeline-dot {
-  height: 20px;
-  width: 20px;
+  height: 14px;
+  width: 14px;
   position: absolute;
   background: #4f8ef7;
-  border-radius: 20px;
-  margin-left: 42px;
-  margin-top: 120px;
+  border-radius: 50%;
+  left: 34.5px;
+  top: 110px;
   box-shadow: 0 0 15px #4f8ef7;
+  animation: pulseGlow 2s infinite alternate;
+}
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 10px #4f8ef7, 0 0 20px #4f8ef7;
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 20px #a78bfa, 0 0 40px #a78bfa;
+    transform: scale(1.3);
+    background: #a78bfa;
+  }
 }
 .memorial-bg {
   width: 100%;
@@ -198,43 +220,52 @@
   left: 0;
 }
 .timeline-header {
-  padding-top: 45px;
   display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 .timeline-header .person-img {
-  margin-left: 22px;
-  margin-top: -10px;
-  width: 60px;
-  top: auto;
-  position: relative;
-  box-shadow: 0 0 20px rgba(79, 142, 247, 0.5);
+  width: 46px;
+  height: 46px;
+  position: absolute;
+  left: 18.5px;
+  top: 20px;
+  box-shadow: 0 0 15px rgba(79, 142, 247, 0.5);
   border: 2px solid #4f8ef7;
+  margin: 0;
 }
 
 .timeline-body {
   margin-left: 80px;
-  margin-top: 25px;
-  display: inline-block;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .timeline-title {
   display: -webkit-box;
   -webkit-line-clamp: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 250px;
-  color: #a78bfa;
-  font-size: 24px;
-  font-weight: 600;
-}
-.timeline-content {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 250px;
-  margin: 10px 0;
+  width: 100%;
+  color: #a78bfa;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+.timeline-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  margin: 8px 0 15px 0;
   color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-all;
 }
 .person-img {
   width: 90px;
@@ -246,14 +277,21 @@
   box-shadow: 0 0 25px rgba(79, 142, 247, 0.6);
   z-index: 2;
   background: #0f1123;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.person-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
 }
 .death .person-img {
   border-color: #a78bfa;
   box-shadow: 0 0 25px rgba(167, 139, 250, 0.6);
 }
 .timeline-img {
-  width: 60px;
-  height: 60px;
+  width: 46px;
+  height: 46px;
 }
 .a-th {
   font-size: 14px;
@@ -263,8 +301,15 @@
   font-weight: 700;
 }
 .name {
-  font-size: 28px;
-  margin-top: 30px;
+  font-size: 22px;
+  color: white;
+  margin-left: 80px;
+  margin-top: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .load-con {
   display: flex;
@@ -286,17 +331,58 @@
 }
 .event-cont {
   padding: 20px;
+  opacity: 0;
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 .event {
   height: 300px;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border-radius: 20px;
 }
+.event::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0px rgba(79, 142, 247, 0);
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
 .event:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+.event:hover::before {
+  animation: borderPulse 1.5s infinite alternate;
+}
+@keyframes borderPulse {
+  0% { box-shadow: inset 0 0 15px rgba(79, 142, 247, 0.3); }
+  100% { box-shadow: inset 0 0 35px rgba(167, 139, 250, 0.6); }
+}
+.event:hover .person-img {
+  transform: scale(1.1) rotate(5deg);
+}
+.event:hover .person-img img {
+  transform: scale(1.15);
+}
+.empty-state-img {
+  animation: floatEmpty 4s ease-in-out infinite;
+}
+@keyframes floatEmpty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px) scale(1.05); }
 }
 .my-btn-outline {
   background: transparent !important;
@@ -312,6 +398,7 @@
 .my-btn-outline:hover {
   background: rgba(79, 142, 247, 0.1) !important;
   box-shadow: 0 0 15px rgba(79, 142, 247, 0.3) !important;
+  transform: translateY(-2px);
 }
 .my-btn-outline-purple {
   background: transparent !important;
@@ -327,6 +414,7 @@
 .my-btn-outline-purple:hover {
   background: rgba(167, 139, 250, 0.1) !important;
   box-shadow: 0 0 15px rgba(167, 139, 250, 0.3) !important;
+  transform: translateY(-2px);
 }
 </style>
 

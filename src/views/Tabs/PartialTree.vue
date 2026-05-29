@@ -19,15 +19,10 @@
       </div>
     </div>
     <center>
-      <div v-if="!selected" class="mt-5 text-center">
-        <img
-          src="@/assets/tree_gen.jpg"
-          class="mb-4"
-          height="300px"
-          style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"
-          alt="Bloodline Helper"
-        />
-        <h4 style="color: #a78bfa;">Waiting to view the partial tree...</h4>
+      <div v-if="!selected" class="mt-5 glass-card p-5 mx-auto" style="border-radius: 20px; max-width: 600px;">
+        <i class="icofont-cut" style="font-size: 60px; color: #a78bfa; filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.4));"></i>
+        <h3 class="mt-4 font-weight-bold" style="color: white;">Prune the Tree</h3>
+        <p class="mt-3" style="color: rgba(255, 255, 255, 0.7); font-size: 16px;">Select a family member from the dropdown above to focus exclusively on their branch of the family tree.</p>
       </div>
       <div v-else style="width: 100%; overflow: auto" class="glass-card mt-5 p-4">
         <TreeChart :json="tree" :images="images" style="padding-top: 70px" />

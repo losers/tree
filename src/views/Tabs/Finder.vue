@@ -36,13 +36,11 @@
     </div>
     
     <center class="mt-5">
-      <img
-        v-if="same == null"
-        src="@/assets/finder.jpg"
-        style="margin-top: 70px"
-        height="250px"
-        alt="Bloodline Helper"
-      />
+      <div v-if="same == null" class="mt-5 glass-card p-5 mx-auto" style="border-radius: 20px; max-width: 600px;">
+        <i class="icofont-connection" style="font-size: 60px; color: #4f8ef7; filter: drop-shadow(0 0 15px rgba(79, 142, 247, 0.4));"></i>
+        <h3 class="mt-4 font-weight-bold" style="color: white;">Discover Connections</h3>
+        <p class="mt-3" style="color: rgba(255, 255, 255, 0.7); font-size: 16px;">Select two people from the dropdowns above to trace their exact relationship and view how they are connected in the family tree.</p>
+      </div>
       <div v-else-if="same">
         <img
           src="@/assets/same.jpg"
