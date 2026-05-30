@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="menu">
-      <div class="drawer row">
+    <div class="menu" @click.self="closeMenu">
+      <div class="drawer row" @click.self="closeMenu">
         <div class="app-menu">
-          <ul class="menu-links">
+          <ul class="menu-links" @click="closeMenu">
             <div style="color: grey" class="bloodline-title">BLOODLINE</div>
             <router-link
               :to="{
@@ -65,7 +65,7 @@
             >
           </ul>
         </div>
-        <div class="bg-menu">
+        <div class="bg-menu" @click="closeMenu">
           <i
             style="font-size: 50px; color: white"
             class="icofont-close-line"
@@ -73,7 +73,7 @@
         </div>
       </div>
     </div>
-    <div class="menu-icon"><i class="icofont-navigation-menu"></i></div>
+    <div class="menu-icon" @click="openMenu"><i class="icofont-navigation-menu"></i></div>
   </div>
 </template>
 
@@ -84,14 +84,22 @@ import Store from "@/store/index";
 export default {
   methods: {
     openMenu() {
-      document.querySelector(".drawer").classList.add("drawer-trasform");
-      document.querySelector(".menu").classList.add("fadeMe");
-      // document.querySelector("ul").classList.add("animateMe");
+      const drawer = document.querySelector(".drawer");
+      const menu = document.querySelector(".menu");
+      if (drawer) drawer.classList.add("drawer-trasform");
+      if (menu) {
+        menu.classList.add("fadeMe");
+        menu.style.pointerEvents = "auto";
+      }
     },
     closeMenu() {
-      document.querySelector(".drawer").classList.remove("drawer-trasform");
-      document.querySelector(".menu").classList.remove("fadeMe");
-      // document.querySelector("ul").classList.remove("animateMe");
+      const drawer = document.querySelector(".drawer");
+      const menu = document.querySelector(".menu");
+      if (drawer) drawer.classList.remove("drawer-trasform");
+      if (menu) {
+        menu.classList.remove("fadeMe");
+        menu.style.pointerEvents = "none";
+      }
     },
   },
   mounted() {
@@ -99,24 +107,6 @@ export default {
     if (menuEl) {
       document.body.appendChild(menuEl);
     }
-    
-    // Allow time for DOM to update
-    this.$nextTick(() => {
-      const menuIcon = this.$el.querySelector(".menu-icon");
-      if (menuIcon) {
-        menuIcon.addEventListener("click", this.openMenu, false);
-      }
-      
-      const menuLinks = document.querySelector(".menu-links");
-      if (menuLinks) {
-        menuLinks.addEventListener("click", this.closeMenu, false);
-      }
-      
-      const bgMenu = document.querySelector(".bg-menu");
-      if (bgMenu) {
-        bgMenu.addEventListener("click", this.closeMenu, false);
-      }
-    });
   },
   beforeDestroy() {
     const menuEl = document.querySelector(".menu");

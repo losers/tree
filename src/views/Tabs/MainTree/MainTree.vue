@@ -190,37 +190,35 @@
               <button class="my-btn view-control-btn" @click="zoomIn" title="Zoom In">
                 <i class="icofont-plus"></i>
               </button>
-              <button 
-                class="my-btn view-control-btn"
-                @click="pan.enabled = !pan.enabled"
-                :class="{ 'pan-active': pan.enabled }"
-                :title="pan.enabled ? 'Pan Mode: ON' : 'Pan Mode: OFF'"
-              >
-                <i :class="pan.enabled ? 'icofont-drag' : 'icofont-scroll-long-right'"></i> 
-              </button>
               <button class="my-btn view-control-btn" @click="zoomOut" title="Zoom Out">
                 <i class="icofont-minus"></i>
               </button>
             </div>
 
-            <!-- Tree with Pan & Zoom -->
+            <!-- Minimap -->
+            <div class="minimap-container" :class="{ 'minimap-visible': minimap.visible }" v-if="minimap.treeWidth > 0" @click="minimapClick" @mousedown="startMinimapDrag" @mouseenter="keepMinimapVisible" @mouseleave="hideMinimapDelayed">
+              <div class="minimap-canvas" :style="minimapCanvasStyle">
+                <div class="minimap-viewport" :style="minimapViewportStyle"></div>
+              </div>
+            </div>
+
+            <!-- Tree with Zoom -->
             <div 
               class="tree-pan-zoom-container"
-              :class="{ 'pan-disabled': !pan.enabled }"
-              @mousedown="startPan"
-              @mousemove="doPan"
-              @mouseup="endPan"
-              @mouseleave="endPan"
               @wheel="doZoom"
+              @scroll="updateMinimap"
+              ref="treeContainer"
             >
-              <div class="tree-canvas" :style="{ transform: pan.enabled ? `translate(${pan.x}px, ${pan.y}px) scale(${pan.scale})` : `scale(${pan.scale})` }">
-                <TreeChart
-                  :json="tempData"
-                  :images="images"
-                  :class="{ landscape: landscape.length }"
-                  @click-node="clickNode"
-                  style="padding-top: 80px;"
-                />
+              <div class="tree-wrapper" :style="wrapperStyle">
+                <div class="tree-canvas" ref="treeCanvas" :style="{ transform: `scale(${pan.scale})` }">
+                  <TreeChart
+                    :json="tempData"
+                    :images="images"
+                    :class="{ landscape: landscape.length }"
+                    @click-node="clickNode"
+                    style="padding-top: 80px;"
+                  />
+                </div>
               </div>
             </div>
             <div v-if="!tempData.children && !tempData.mate" class="on-board">
@@ -240,7 +238,7 @@
           <button
             @click="shareTree"
             class="btn bottombtn"
-            style="right: 10px"
+            style="left: 10px;"
             v-if="$device.mobile"
           >
             <i class="icofont-share"></i>
@@ -313,13 +311,18 @@ export default {
         main_show: false,
       },
       pan: {
-        enabled: false,
-        isDragging: false,
-        startX: 0,
-        startY: 0,
-        x: 0,
-        y: 0,
         scale: 1,
+      },
+      minimap: {
+        treeWidth: 0,
+        treeHeight: 0,
+        viewWidth: 0,
+        viewHeight: 0,
+        scrollLeft: 0,
+        scrollTop: 0,
+        isDragging: false,
+        visible: false,
+        hideTimer: null,
       },
     };
   },
@@ -382,6 +385,53 @@ export default {
         return Store.state.error;
       },
     },
+    minimapBaseSize() {
+      return this.$device && this.$device.mobile ? 80 : 150;
+    },
+    wrapperStyle() {
+      return {
+        width: `${this.minimap.treeWidth * this.pan.scale}px`,
+        height: `${this.minimap.treeHeight * this.pan.scale}px`
+      };
+    },
+    minimapCanvasStyle() {
+      let maxDim = Math.max(this.minimap.treeWidth, this.minimap.treeHeight, 1);
+      let scale = this.minimapBaseSize / maxDim;
+      return {
+        width: `${this.minimap.treeWidth * scale}px`,
+        height: `${this.minimap.treeHeight * scale}px`,
+        position: 'relative',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        borderRadius: '4px',
+        margin: 'auto'
+      };
+    },
+    minimapViewportStyle() {
+      let maxDim = Math.max(this.minimap.treeWidth, this.minimap.treeHeight, 1);
+      let scale = this.minimapBaseSize / maxDim;
+      let viewW = this.minimap.viewWidth / this.pan.scale;
+      let viewH = this.minimap.viewHeight / this.pan.scale;
+      let left = this.minimap.scrollLeft / this.pan.scale;
+      let top = this.minimap.scrollTop / this.pan.scale;
+      
+      if (left < 0) left = 0;
+      if (top < 0) top = 0;
+      if (viewW > this.minimap.treeWidth) viewW = this.minimap.treeWidth;
+      if (viewH > this.minimap.treeHeight) viewH = this.minimap.treeHeight;
+      
+      return {
+        width: `${viewW * scale}px`,
+        height: `${viewH * scale}px`,
+        left: `${left * scale}px`,
+        top: `${top * scale}px`,
+        position: 'absolute',
+        border: '2px solid #ff4757',
+        backgroundColor: 'rgba(255, 71, 87, 0.2)',
+        boxSizing: 'border-box',
+        cursor: 'grab'
+      };
+    },
   },
   mounted() {
     // this.toggleBodyClass("addClass", "mem-spec");
@@ -399,9 +449,26 @@ export default {
 
     // Add keyboard listener for zoom in/out keys
     window.addEventListener("keydown", this.handleKeyDown);
+    
+    // Resize Observer for Minimap
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateMinimapDimensions();
+    });
+    if (this.$refs.treeCanvas) this.resizeObserver.observe(this.$refs.treeCanvas);
+    if (this.$refs.treeContainer) this.resizeObserver.observe(this.$refs.treeContainer);
+    
+    // Minimap drag
+    window.addEventListener("mousemove", this.doMinimapDrag);
+    window.addEventListener("mouseup", this.endMinimapDrag);
+    
+    // Initial update
+    setTimeout(() => { this.updateMinimapDimensions(); }, 500);
   },
   beforeDestroy() {
     window.removeEventListener("keydown", this.handleKeyDown);
+    window.removeEventListener("mousemove", this.doMinimapDrag);
+    window.removeEventListener("mouseup", this.endMinimapDrag);
+    if (this.resizeObserver) this.resizeObserver.disconnect();
   },
   methods: {
     puppyDownload() {
@@ -470,61 +537,140 @@ export default {
         navigator.share(shareData);
       }
     },
-    startPan(e) {
-      if (this.$device.mobile || !this.pan.enabled) return; // Touch pan handled separately or rely on overflow
-      this.pan.isDragging = true;
-      this.pan.startX = e.clientX - this.pan.x;
-      this.pan.startY = e.clientY - this.pan.y;
+    updateMinimapDimensions() {
+      if (this.$refs.treeCanvas && this.$refs.treeContainer) {
+        this.minimap.treeWidth = this.$refs.treeCanvas.scrollWidth;
+        this.minimap.treeHeight = this.$refs.treeCanvas.scrollHeight;
+        this.minimap.viewWidth = this.$refs.treeContainer.clientWidth;
+        this.minimap.viewHeight = this.$refs.treeContainer.clientHeight;
+        this.updateMinimap();
+      }
     },
-    doPan(e) {
-      if (!this.pan.isDragging || !this.pan.enabled) return;
-      this.pan.x = e.clientX - this.pan.startX;
-      this.pan.y = e.clientY - this.pan.startY;
+    updateMinimap() {
+      if (this.$refs.treeContainer) {
+        this.minimap.scrollLeft = this.$refs.treeContainer.scrollLeft;
+        this.minimap.scrollTop = this.$refs.treeContainer.scrollTop;
+        this.showMinimap();
+      }
     },
-    endPan() {
-      this.pan.isDragging = false;
+    showMinimap() {
+      this.minimap.visible = true;
+      this.hideMinimapDelayed();
+    },
+    hideMinimapDelayed() {
+      if (this.minimap.hideTimer) clearTimeout(this.minimap.hideTimer);
+      this.minimap.hideTimer = setTimeout(() => {
+        if (!this.minimap.isDragging) {
+          this.minimap.visible = false;
+        }
+      }, 1500);
+    },
+    keepMinimapVisible() {
+      if (this.minimap.hideTimer) clearTimeout(this.minimap.hideTimer);
+      this.minimap.visible = true;
+    },
+    setMinimapScroll(e) {
+      let maxDim = Math.max(this.minimap.treeWidth, this.minimap.treeHeight, 1);
+      let scale = this.minimapBaseSize / maxDim;
+      
+      let canvasRect = e.currentTarget.closest('.minimap-canvas').getBoundingClientRect();
+      let clickX = e.clientX - canvasRect.left;
+      let clickY = e.clientY - canvasRect.top;
+      
+      let treeX = clickX / scale;
+      let treeY = clickY / scale;
+      
+      let scrollLeft = (treeX * this.pan.scale) - (this.minimap.viewWidth / 2);
+      let scrollTop = (treeY * this.pan.scale) - (this.minimap.viewHeight / 2);
+      
+      if (this.$refs.treeContainer) {
+        this.$refs.treeContainer.scrollTo({
+          left: scrollLeft,
+          top: scrollTop,
+          behavior: 'instant'
+        });
+      }
+    },
+    minimapClick(e) {
+      if (!this.minimap.isDragging) {
+        this.setMinimapScroll(e);
+      }
+    },
+    startMinimapDrag(e) {
+      this.minimap.isDragging = true;
+      document.body.style.userSelect = 'none';
+      this.keepMinimapVisible();
+      this.setMinimapScroll(e);
+    },
+    doMinimapDrag(e) {
+      if (!this.minimap.isDragging) return;
+      let canvas = this.$el.querySelector('.minimap-canvas');
+      if (canvas) {
+        let fakeEvent = {
+          clientX: e.clientX,
+          clientY: e.clientY,
+          currentTarget: { closest: () => canvas }
+        };
+        this.setMinimapScroll(fakeEvent);
+      }
+    },
+    endMinimapDrag() {
+      this.minimap.isDragging = false;
+      document.body.style.userSelect = 'auto';
+      this.hideMinimapDelayed();
     },
     doZoom(e) {
-      if (!this.pan.enabled) return;
+      if (!e.ctrlKey && !e.metaKey) return; // Only zoom on ctrl+scroll or pinch
       e.preventDefault();
-      const zoomSensitivity = 0.001;
+      const zoomSensitivity = 0.005;
       const delta = -e.deltaY * zoomSensitivity;
       const oldScale = this.pan.scale;
       let newScale = oldScale + delta;
       
-      // Limit zoom min/max
       if (newScale < 0.2) newScale = 0.2;
       if (newScale > 4) newScale = 4;
       
-      // Calculate cursor position relative to the container
-      const container = e.currentTarget.getBoundingClientRect();
-      const mouseX = e.clientX - container.left;
-      const mouseY = e.clientY - container.top;
-      
-      // Adjust x and y so the point under the mouse stays under the mouse
-      this.pan.x = mouseX - (mouseX - this.pan.x) * (newScale / oldScale);
-      this.pan.y = mouseY - (mouseY - this.pan.y) * (newScale / oldScale);
-      
-      this.pan.scale = newScale;
+      this.applyZoom(newScale, e.clientX, e.clientY);
     },
     zoomIn() {
       let newScale = this.pan.scale + 0.2;
       if (newScale > 4) newScale = 4;
-      this.zoomToCenter(newScale);
+      this.applyZoomToCenter(newScale);
     },
     zoomOut() {
       let newScale = this.pan.scale - 0.2;
       if (newScale < 0.2) newScale = 0.2;
-      this.zoomToCenter(newScale);
+      this.applyZoomToCenter(newScale);
     },
-    zoomToCenter(newScale) {
-      const container = this.$el.querySelector('.tree-pan-zoom-container').getBoundingClientRect();
-      const mouseX = container.width / 2;
-      const mouseY = container.height / 2;
+    applyZoomToCenter(newScale) {
+      const container = this.$refs.treeContainer;
+      if (!container) {
+        this.pan.scale = newScale;
+        return;
+      }
+      const rect = container.getBoundingClientRect();
+      this.applyZoom(newScale, rect.left + rect.width / 2, rect.top + rect.height / 2);
+    },
+    applyZoom(newScale, clientX, clientY) {
+      const container = this.$refs.treeContainer;
+      if (!container) return;
       
-      this.pan.x = mouseX - (mouseX - this.pan.x) * (newScale / this.pan.scale);
-      this.pan.y = mouseY - (mouseY - this.pan.y) * (newScale / this.pan.scale);
+      const oldScale = this.pan.scale;
+      const rect = container.getBoundingClientRect();
+      
+      const mouseX = clientX - rect.left;
+      const mouseY = clientY - rect.top;
+      
+      const treeX = (container.scrollLeft + mouseX) / oldScale;
+      const treeY = (container.scrollTop + mouseY) / oldScale;
+      
       this.pan.scale = newScale;
+      
+      this.$nextTick(() => {
+        container.scrollLeft = (treeX * newScale) - mouseX;
+        container.scrollTop = (treeY * newScale) - mouseY;
+        this.updateMinimapDimensions();
+      });
     },
     handleKeyDown(e) {
       // Ignore if user is typing in an input or textarea
@@ -683,7 +829,7 @@ export default {
   font-size: 53px;
 }
 .on-board {
-  margin-top: -40px;
+  margin-top: -140px;
   line-height: 36px;
   position: relative;
 }
@@ -794,27 +940,53 @@ h2 {
 .tree-pan-zoom-container {
   width: 100vw;
   height: calc(100vh - 120px);
-  overflow: hidden;
-  cursor: grab;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-.tree-pan-zoom-container.pan-disabled {
   overflow: auto;
-  display: block;
+  position: relative;
   text-align: center;
-  cursor: default;
 }
-.tree-pan-zoom-container:active {
-  cursor: grabbing;
+.tree-wrapper {
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
 }
 .tree-canvas {
-  transform-origin: top center;
+  transform-origin: 0 0;
   will-change: transform;
   display: inline-block;
   min-width: max-content;
-  transition: transform 0.1s ease-out; /* Smooth snapping for mousewheel */
+}
+.minimap-container {
+  position: fixed;
+  bottom: 80px;
+  right: 90px;
+  width: 170px;
+  height: 170px;
+  background: rgba(15, 17, 35, 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease-in-out;
+}
+.minimap-container.minimap-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (max-width: 768px) {
+  .minimap-container {
+    width: 100px;
+    height: 100px;
+    right: 80px; /* Keeps it slightly to the left of the view controls */
+  }
+}
+.minimap-viewport:active {
+  cursor: grabbing !important;
 }
 .table-data {
   color: white;
@@ -841,7 +1013,8 @@ h2 {
   background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
   color: white !important;
   bottom: 80px;
-  right: 24px;
+  left: 24px;
+  right: auto !important;
   height: 60px;
   width: 60px;
   border-radius: 60px;
