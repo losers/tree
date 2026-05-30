@@ -1,32 +1,30 @@
 <template>
-  <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
+  <div>
+    <Drawer @close="toggle" align="right" :closeable="true" :maskClosable="true">
     <div v-if="open">
       <section v-if="errored">
         err
         <p>{{ errored }}</p>
       </section>
       <section v-else>
-        <div v-if="loading" class="container_image mx-auto">
-          <center style="padding-top: 240px">
-            <img src="@/assets/dna.gif" alt="Bloodline Loader" />
-          </center>
+        <div v-if="loading" class="loading-wrapper">
+          <div class="modern-loader"></div>
         </div>
         <div v-else>
-          <div class="container_image mx-auto">
-            <div v-if="imageExists">
+          <div class="container_image mx-auto" style="margin-top: 30px; margin-bottom: 20px;">
+            <div class="animated-halo"></div>
+            <div v-if="imageExists" style="position: relative; z-index: 1;">
               <img
                 :src="previewImage"
                 alt="Avatar"
-                class="image mx-auto"
-                style="border-radius: 50%; width: 150px"
+                class="image mx-auto modern-avatar"
               />
             </div>
-            <div v-else>
+            <div v-else style="position: relative; z-index: 1;">
               <img
                 src="../../assets/profile.png"
                 alt="Family Tree Loading"
-                class="image mx-auto"
-                style="border-radius: 50%; width: 150px"
+                class="image mx-auto modern-avatar"
               />
             </div>
 
@@ -43,7 +41,7 @@
           <button
             @click="uploadImage"
             v-show="showUpload"
-            class="btn btn-success mt-3"
+            class="my-btn mt-3"
             :disabled="loadingUpload"
           >
             <span v-if="!doneUpload">
@@ -57,56 +55,44 @@
             </span>
           </button>
 
-          <my-upload
-            :class="{ 'img-picker-mob': $device.mobile }"
-            field="img"
-            @crop-success="cropSuccess"
-            :width="200"
-            :height="200"
-            url
-            lang-type="en"
-            v-model="show"
-            img-format="jpg"
-          ></my-upload>
           <!-- <KProgress :percent="(count/8)*100" :line-height="4" color="green" class="mx-auto mt-4 col-10"></KProgress> -->
-          <table class="table table-borderless table-hover mt-3 table-data">
-            <tbody class="text-left" style="color: black">
-              <tr class="text-center">
-                <td>
-                  {{ data.short_name }}
-                  <i
-                    class="icofont-edit float-right"
-                    @click="addMember(2, data)"
-                    style="font-size: 20px"
-                    v-show="cookeyStatus && !view_only"
-                  ></i>
-                </td>
-              </tr>
-              <tr>
-                <td style="border-left: 3px solid red">
-                  <i class="icofont-business-man"></i>
-                  {{ data.name }}
-                </td>
-              </tr>
-              <tr v-if="data.gender">
-                <td style="border-left: 3px solid orange">
-                  <span v-if="data.gender == 1">
-                    <i class="icofont-male"></i>
-                  </span>
-                  <span v-else>
-                    <i class="icofont-female"></i>
-                  </span>
-                  {{ data.gender == "1" ? "Male" : "Female" }}
-                </td>
-              </tr>
-              <tr v-if="data.xtra_parent_name">
-                <td style="border-left: 3px solid blue">
-                  <span v-if="data.gender == 1">S/O :</span>
-                  <span v-else>D/O :</span>
-                  {{ data.xtra_parent_name }}
-                </td>
-              </tr>
-            </tbody>
+          <!-- Modern Info Cards -->
+          <div class="info-cards-container mt-4">
+            <div class="info-card title-card" style="justify-content: center; background: transparent; border: none; box-shadow: none;">
+              <span class="info-text font-weight-bold" style="font-size: 22px; letter-spacing: 0.5px;">
+                {{ data.short_name }}
+              </span>
+              <i
+                class="icofont-edit edit-icon ml-2 cursor"
+                @click="addMember(2, data)"
+                v-show="cookeyStatus && !view_only"
+              ></i>
+            </div>
+            
+            <div class="info-card">
+              <div class="icon-wrapper" style="background: rgba(255, 71, 87, 0.15); color: #ff4757;">
+                <i class="icofont-business-man"></i>
+              </div>
+              <span class="info-text">{{ data.name }}</span>
+            </div>
+
+            <div class="info-card" v-if="data.gender">
+              <div class="icon-wrapper" style="background: rgba(255, 165, 2, 0.15); color: #ffa502;">
+                <i :class="data.gender == 1 ? 'icofont-male' : 'icofont-female'"></i>
+              </div>
+              <span class="info-text">{{ data.gender == "1" ? "Male" : "Female" }}</span>
+            </div>
+
+            <div class="info-card" v-if="data.xtra_parent_name">
+              <div class="icon-wrapper" style="background: rgba(79, 142, 247, 0.15); color: #4f8ef7;">
+                <i class="icofont-users-alt-4"></i>
+              </div>
+              <span class="info-text">
+                <span style="opacity: 0.6; margin-right: 6px;">{{ data.gender == 1 ? "S/O:" : "D/O:" }}</span>
+                {{ data.xtra_parent_name }}
+              </span>
+            </div>
+          </div>
 
             <!-- Accordian for Mobile -->
             <div v-if="$device.mobile && cookeyStatus" class="mt-3">
@@ -116,7 +102,7 @@
                   <!-- Actions Heading -->
                   <button
                     class="btn p-0"
-                    style="color: #007bff; width: 100%"
+                    style="color: #a78bfa; width: 100%; font-weight: bold;"
                     data-toggle="collapse"
                     data-target="#collapseOne"
                     aria-expanded="true"
@@ -153,7 +139,7 @@
                   <!-- INfo HEading -->
                   <button
                     class="btn p-0 collapsed"
-                    style="color: #007bff; width: 100%"
+                    style="color: #a78bfa; width: 100%; font-weight: bold;"
                     data-toggle="collapse"
                     data-target="#collapseTwo"
                     aria-expanded="false"
@@ -207,7 +193,6 @@
                 <MoreInfo :id="id" :data="data"></MoreInfo>
               </tab>
             </tabs>
-          </table>
         </div>
       </section>
     </div>
@@ -219,7 +204,18 @@
       v-on:closed="addMemberCancel"
     ></DualPage>
   </Drawer>
-  <!-- </div> -->
+  <my-upload
+    :class="{ 'img-picker-mob': $device.mobile }"
+    field="img"
+    @crop-success="cropSuccess"
+    :width="200"
+    :height="200"
+    url
+    lang-type="en"
+    v-model="show"
+    img-format="jpg"
+  ></my-upload>
+  </div>
 </template>
 
 <script>
@@ -498,9 +494,10 @@ input[type="number"] {
 
 .vue-simple-drawer {
   position: absolute;
-  background: white !important;
-  box-shadow: 20px black;
-  color: black;
+  background: rgba(15, 17, 35, 0.75) !important;
+  backdrop-filter: blur(40px) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #fff;
   -webkit-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
   box-shadow: -18px -1px 26px -17px rgba(0, 0, 0, 0.75);
@@ -525,6 +522,7 @@ input[type="number"] {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   text-align: center;
+  z-index: 2;
 }
 .container_image:hover .image {
   opacity: 0.3;
@@ -542,9 +540,10 @@ input[type="number"] {
 }
 
 .tabs-component-tabs {
-  border: solid 1px #ddd;
-  border-radius: 6px;
-  margin-bottom: 5px;
+  border: 0;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin-bottom: 10px;
 }
 
 @media (min-width: 700px) {
@@ -552,7 +551,7 @@ input[type="number"] {
     border: 0;
     align-items: stretch;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     margin-bottom: -1px;
     padding-left: 0 !important;
   }
@@ -571,7 +570,8 @@ input[type="number"] {
 }
 
 .tabs-component-tab:hover {
-  color: #666;
+  color: #4f8ef7;
+  text-shadow: 0 0 8px rgba(79,142,247,0.5);
 }
 
 .tabs-component-tab.is-active {
@@ -585,18 +585,17 @@ input[type="number"] {
 
 @media (min-width: 700px) {
   .tabs-component-tab {
-    background-color: #fff;
-    border: solid 1px #ddd;
-    border-radius: 3px 3px 0 0;
+    background-color: transparent;
+    border: none !important;
+    border-radius: 12px;
     margin-right: 0.5em;
-    transform: translateY(2px);
     transition: transform 0.3s ease;
   }
 
   .tabs-component-tab.is-active {
-    border-bottom: solid 1px #fff;
-    z-index: 2;
-    transform: translateY(0);
+    background-color: rgba(79, 142, 247, 0.15) !important;
+    color: #4f8ef7 !important;
+    border-bottom: 2px solid #4f8ef7 !important;
   }
 }
 
@@ -612,7 +611,7 @@ input[type="number"] {
 .tabs-component-panels {
   padding-top: 20px;
   height: 200px;
-  color: black;
+  color: #fff;
 }
 
 .mobile-member-drawer {
@@ -623,7 +622,7 @@ input[type="number"] {
 }
 
 .mask {
-  z-index: 10 !important;
+  z-index: 100 !important;
 }
 .vue-simple-drawer {
   z-index: 101 !important;
@@ -639,13 +638,137 @@ input[type="number"] {
 
 @media (min-width: 720px) {
   .vue-simple-drawer {
-    left: 70% !important;
+    left: 60% !important;
     position: fixed;
   }
   .tabs-component-panels {
     border-top-left-radius: 0;
-    background-color: #fff;
-    border-top: solid 1px #ddd;
+    background-color: transparent;
+    border-top: none;
   }
 }
+.my-btn {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa) !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+.my-btn:hover {
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 16px 40px rgba(79, 142, 247, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Modern MemberData Styles */
+.animated-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff007f, #7928ca, #4f8ef7, #00d2ff);
+  background-size: 400% 400%;
+  animation: glowingHalo 8s ease infinite;
+  z-index: 0;
+  filter: blur(14px);
+  opacity: 0.8;
+}
+
+@keyframes glowingHalo {
+  0% { background-position: 0% 50%; transform: translate(-50%, -50%) rotate(0deg); }
+  50% { background-position: 100% 50%; transform: translate(-50%, -50%) rotate(180deg); }
+  100% { background-position: 0% 50%; transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.modern-avatar {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.info-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 10px;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px 16px;
+  transition: transform 0.3s ease, background 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  margin-right: 16px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.info-text {
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.3px;
+}
+
+/* Modern Molecular Loader */
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+.modern-loader {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  animation: loader-spin 2s linear infinite;
+}
+.modern-loader::before,
+.modern-loader::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #4f8ef7;
+  box-shadow: 0 0 15px rgba(79, 142, 247, 0.6);
+  animation: loader-bounce 1s ease-in-out infinite alternate;
+}
+.modern-loader::after {
+  bottom: 0;
+  top: auto;
+  background: #a78bfa;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+  animation-delay: -1s;
+}
+@keyframes loader-spin { 100% { transform: rotate(360deg); } }
+@keyframes loader-bounce { 0% { transform: scale(0.6); } 100% { transform: scale(1.2); } }
 </style>

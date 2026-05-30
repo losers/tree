@@ -1,277 +1,172 @@
 <template>
-  <div class="FormData p-5">
-    <h3 class="mb-3" style="color: black">
+  <div class="FormData p-4 glass-card-form">
+    <h3 class="mb-4 text-center" style="color: #4f8ef7; font-weight: bold;">
       {{ payload.memData ? "Edit" : "Add" }} Member
     </h3>
-    <form v-on:submit.prevent="sendData">
-      <div class="row">
-        <label class="d-none d-sm-block col-md-4">
-          <span class="text-warning mr-1">*</span>Name :
-        </label>
-        <input
-          type="text"
-          class="form-control col-md-7 col-sm-12"
-          v-model="data.name"
-          placeholder="Enter Full Name"
-          required
-        />
-      </div>
-
-      <!-- payload.gender Selection -->
-      <div v-if="type_data == 'gender'"></div>
-      <div class="row" v-else>
-        <div class="form-check col-3 ml-3">
-          <input
-            class="form-check-input col-3 mt-2"
-            type="radio"
-            name="gender"
-            v-model="data.gender"
-            value="1"
-            checked
-            id="male"
-            required
-          />
-          <label for="male" class="form-check-label ml-2" style="color: black"
-            >Male</label
-          >
+    <form v-on:submit.prevent="sendData" class="modern-form">
+      
+      <!-- ALWAYS VISIBLE: BASIC INFO -->
+      <div class="form-section-card mb-4">
+        <h5 class="section-title"><i class="icofont-id-card text-primary"></i> Basic Info</h5>
+        
+        <div class="input-group-modern mb-3">
+          <span class="modern-addon"><i class="icofont-user-alt-3"></i></span>
+          <div class="modern-input-wrapper">
+            <input type="text" class="modern-input" v-model="data.name" placeholder="Full Name *" required />
+          </div>
         </div>
-        <div class="form-check">
-          <input
-            class="form-check-input col-3 mt-2"
-            type="radio"
-            name="gender"
-            id="female"
-            v-model="data.gender"
-            value="0"
-          />
-          <label for="female" class="form-check-label ml-2" style="color: black"
-            >Female</label
-          >
+
+        <div v-if="type_data != 'gender'" class="gender-segmented-control mb-3">
+          <label class="modern-label d-block pl-1">Gender <span class="text-warning">*</span></label>
+          <div class="segmented-wrapper">
+            <label class="segment-btn" :class="{ 'active': data.gender == '1' }">
+              <input type="radio" name="gender" v-model="data.gender" value="1" required class="d-none" />
+              <i class="icofont-business-man"></i> Male
+            </label>
+            <label class="segment-btn" :class="{ 'active': data.gender == '0' }">
+              <input type="radio" name="gender" v-model="data.gender" value="0" class="d-none" />
+              <i class="icofont-girl"></i> Female
+            </label>
+          </div>
+        </div>
+
+        <div class="input-group-modern mb-2">
+          <span class="modern-addon"><i class="icofont-tag"></i></span>
+          <div class="modern-input-wrapper">
+            <input type="text" class="modern-input" v-model="data.short_name" placeholder="Short Name (shown in tree)" />
+          </div>
         </div>
       </div>
 
-      <!-- Optional Params -->
-      <div
-        @click="show_optional_data = !show_optional_data"
-        class="mt-3 d-flex justify-content-end"
-        v-if="$device.mobile"
-      >
-        <a href="#"> {{ show_optional_data ? "-" : "+" }} Extra Details</a>
-      </div>
-
-      <!-- Extra Details -->
-      <div
-        :style="{ display: show_optional_data ? 'block' : 'none' }"
-        style="margin-top: 30px"
-      >
-        <hr class="mt-5" style="background-color: white" />
-        <center style="margin-top: -29px">
-          <span class="optional-heading"> Optional Details </span>
-        </center>
-        <div class="row mt-4">
-          <label class="d-none d-sm-block col-md-4">Short Name:</label>
-          <input
-            type="text"
-            class="form-control col-md-7 col-sm-12"
-            placeholder="Enter Short Name"
-            v-model="data.short_name"
-          />
-        </div>
-        <p class="info">Short Name will be shown in Family Tree</p>
-
-        <div class="row" v-if="xtraParent.show">
-          <label class="d-none d-sm-flex col-md-4">
-            <span v-if="data.gender == 0">D/O :</span>
-            <span v-else>S/O :</span>
-          </label>
-          <vSelect
-            :options="xtraParent.options"
-            v-model="xtraParent.selected"
-            :placeholder="$device.mobile ? 'Select Parent' : ''"
-            class="col-md-7 col-sm-12 myselect"
-          ></vSelect>
-        </div>
-        <div class="row">
-          <label class="col-md-4 d-none d-sm-flex flexy">DOB :</label>
-          <md-datepicker
-            class="col-md-7 col-xs-12 cus"
-            v-model="data.dob"
-            :md-model-type="String"
-          >
-            <label>Date of Birth</label>
-          </md-datepicker>
-        </div>
-
-        <div class="row mb-2">
-          <label class="col-4 flexy" style="color: black">Is Alive :</label>
-          <toggle-button
-            v-model="is_alive"
-            :value="is_alive"
-            :sync="true"
-            style="height: 40px"
-            class="flexy col-xs-2"
-          />
-          <div class="form-inline col-md-6 col-xs-12" v-show="!is_alive">
-            <md-datepicker
-              v-model="data.died_on"
-              required="true"
-              class="cus"
-              id="demise"
-              :md-model-type="String"
-            >
-              <label>Date of Demise</label>
-            </md-datepicker>
+      <div class="modern-accordion">
+        <!-- SINGLE ACCORDION: OPTIONAL FIELDS -->
+        <div class="accordion-item" :class="{ 'is-open': showOptional }">
+          <div class="accordion-header" @click="showOptional = !showOptional">
+            <div class="header-title"><i class="icofont-list text-info"></i> Optional Fields</div>
+            <i class="icofont-rounded-down toggle-icon"></i>
           </div>
-        </div>
+          
+          <div class="accordion-body" v-show="showOptional">
+            
+            <h6 class="mt-3 mb-3 text-success text-uppercase" style="font-size: 11px; font-weight: bold; letter-spacing: 1px;"><i class="icofont-history"></i> Origin & Dates</h6>
+            
+            <div class="input-group-modern mb-3" v-if="xtraParent.show">
+              <span class="modern-addon"><i class="icofont-users-alt-2"></i></span>
+              <div class="modern-input-wrapper">
+                <vSelect :options="xtraParent.options" v-model="xtraParent.selected" :placeholder="data.gender == 0 ? 'Daughter Of (Select Parent)' : 'Son Of (Select Parent)'" class="modern-vselect"></vSelect>
+              </div>
+            </div>
 
-        <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Mobile :</label>
-          <input
-            type="tel"
-            class="form-control col-md-7 col-sm-12"
-            v-model="data.mobile"
-            placeholder="Mobile Number"
-          />
-        </div>
-        <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Email :</label>
-          <input
-            type="email"
-            class="form-control col-md-7 col-sm-12"
-            v-model="data.email"
-            placeholder="Email Id"
-          />
-        </div>
-        <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Address :</label>
-          <input
-            type="text"
-            class="form-control col-md-7 col-sm-12"
-            v-model="data.address"
-            placeholder="Address"
-          />
-        </div>
-        <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Country :</label>
-          <vSelect
-            :options="countries"
-            placeholder="Select Country"
-            v-model="data.country"
-            class="mb-3 col-md-7 col-sm-12 p-0"
-          ></vSelect>
-        </div>
+            <div class="input-group-modern mb-3">
+              <span class="modern-addon"><i class="icofont-ui-calendar"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="modern-input" v-model="data.dob" placeholder="Date of Birth" />
+              </div>
+            </div>
 
-        <!-- Description -->
-        <div class="row">
-          <label class="d-none d-sm-flex col-md-4">Description :</label>
-          <textarea
-            class="form-control col-md-7 col-sm-12"
-            rows="3"
-            v-model="data.description"
-            :placeholder="`What do you think of ${
-              data.gender ? (data.gender == 1 ? 'him' : 'her') : 'him / her'
-            }`"
-          ></textarea>
-        </div>
+            <div class="life-status-wrapper mb-3">
+              <label class="modern-label d-flex align-items-center mb-0 mr-3">Is Alive?</label>
+              <toggle-button v-model="is_alive" :value="is_alive" :sync="true" :width="60" :height="30" :color="{checked: '#2ed573', unchecked: '#ff4757'}" />
+            </div>
 
-        <hr class="mt-5 mb-3" style="background-color: white" />
-        <p style="margin-top: -29px">
-          <center>
-            <span style="background-color: white; padding: 20px; color: #969696"
-              >Social Media</span
-            >
-          </center>
-        </p>
+            <div class="input-group-modern mb-4" v-show="!is_alive">
+              <span class="modern-addon"><i class="icofont-tombstone"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="modern-input" v-model="data.died_on" placeholder="Date of Demise" />
+              </div>
+            </div>
 
-        <div class="md-form input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text md-addon">
-              <i class="icofont-facebook"></i>
-            </span>
+            <h6 class="mb-3 text-warning text-uppercase" style="font-size: 11px; font-weight: bold; letter-spacing: 1px;"><i class="icofont-address-book"></i> Contact Details</h6>
+
+            <div class="input-group-modern mb-3">
+              <span class="modern-addon"><i class="icofont-smart-phone"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="tel" class="modern-input" v-model="data.mobile" placeholder="Mobile Number" />
+              </div>
+            </div>
+
+            <div class="input-group-modern mb-3">
+              <span class="modern-addon"><i class="icofont-email"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="email" class="modern-input" v-model="data.email" placeholder="Email Address" />
+              </div>
+            </div>
+
+            <div class="input-group-modern mb-3">
+              <span class="modern-addon"><i class="icofont-location-pin"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="text" class="modern-input" v-model="data.address" placeholder="Full Address" />
+              </div>
+            </div>
+
+            <div class="input-group-modern mb-3">
+              <span class="modern-addon"><i class="icofont-globe"></i></span>
+              <div class="modern-input-wrapper">
+                <vSelect :options="countries" placeholder="Select Country" v-model="data.country" class="modern-vselect"></vSelect>
+              </div>
+            </div>
+
+            <div class="input-group-modern mb-4">
+              <span class="modern-addon" style="align-items: flex-start; padding-top: 15px;"><i class="icofont-file-document"></i></span>
+              <div class="modern-input-wrapper">
+                <textarea class="modern-input" rows="3" v-model="data.description" :placeholder="`Description: What do you think of ${data.gender ? (data.gender == 1 ? 'him' : 'her') : 'him/her'}?`"></textarea>
+              </div>
+            </div>
+
+            <h6 class="mb-3 text-info text-uppercase" style="font-size: 11px; font-weight: bold; letter-spacing: 1px;"><i class="icofont-share-alt"></i> Social Links</h6>
+
+            <div class="input-group-modern social-input mb-3 fb">
+              <span class="modern-addon"><i class="icofont-facebook"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="url" class="modern-input" v-model="data.fb" placeholder="Facebook Profile URL" />
+              </div>
+            </div>
+            
+            <div class="input-group-modern social-input mb-3 insta">
+              <span class="modern-addon"><i class="icofont-instagram"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="url" class="modern-input" v-model="data.insta" placeholder="Instagram Profile URL" />
+              </div>
+            </div>
+            
+            <div class="input-group-modern social-input mb-3 twitter">
+              <span class="modern-addon"><i class="icofont-twitter"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="url" class="modern-input" v-model="data.twitter" placeholder="Twitter Profile URL" />
+              </div>
+            </div>
+            
+            <div class="input-group-modern social-input mb-2 site">
+              <span class="modern-addon"><i class="icofont-web"></i></span>
+              <div class="modern-input-wrapper">
+                <input type="url" class="modern-input" v-model="data.site" placeholder="Personal Website URL" />
+              </div>
+            </div>
+
           </div>
-          <input
-            type="url"
-            class="form-control rounded-0"
-            v-model="data.fb"
-            placeholder="https://www.facebook.com/elonmusk"
-          />
-        </div>
-        <div class="md-form input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text md-addon">
-              <i class="icofont-instagram"></i>
-            </span>
-          </div>
-          <input
-            type="url"
-            class="form-control rounded-0"
-            v-model="data.insta"
-            placeholder="https://www.instagram.com/elonmusk"
-          />
-        </div>
-        <div class="md-form input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text md-addon">
-              <i class="icofont-twitter"></i>
-            </span>
-          </div>
-          <input
-            type="url"
-            class="form-control rounded-0"
-            v-model="data.twitter"
-            placeholder="https://www.twitter.com/elonmusk"
-          />
-        </div>
-        <div class="md-form input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text md-addon">
-              <i class="icofont-web"></i>
-            </span>
-          </div>
-          <input
-            type="url"
-            class="form-control rounded-0"
-            v-model="data.site"
-            placeholder="http://www.usainbolt.com/"
-          />
         </div>
       </div>
 
-      <div
-        class="d-flex justify-content-between mt-5"
-        :class="{ 'bottom-bar': $device.mobile }"
-      >
-        <button type="submit" class="btn btn-primary" :disabled="loading">
-          <span
-            class="spinner-border spinner-border-sm"
-            v-show="loading"
-          ></span>
-          Submit
-        </button>
-        <button type="button" @click="goBack" class="btn btn-danger">
-          Cancel
+      <div class="modern-actions mt-4" :class="{ 'bottom-bar': $device.mobile }">
+        <button type="button" @click="goBack" class="btn modern-btn-cancel">Cancel</button>
+        <button type="submit" class="btn modern-btn-submit" :disabled="loading">
+          <span class="spinner-border spinner-border-sm mr-2" v-show="loading"></span>
+          Save Member
         </button>
       </div>
-      <div v-show="is_error" class="mt-3">{{ is_error }}</div>
+      <div v-show="is_error" class="alert alert-danger mt-3">{{ is_error }}</div>
     </form>
   </div>
 </template>
 
 <script>
 import vSelect from "vue-select";
-
 import { ToggleButton } from "vue-js-toggle-button";
 import Axios from "axios";
 import ProdData from "../data.js";
-import Vue from "vue";
-import VueMaterial from "vue-material";
-import "@/assets/css/vue-material.min.css";
 import Store from "@/store/index";
 import Algos from "@/algos/analytics/relation-finder";
 
-// var emitData;
-
-Vue.use(VueMaterial);
 export default {
   components: {
     ToggleButton,
@@ -285,12 +180,12 @@ export default {
       loading: false,
       is_error: false,
       is_alive: true,
+      showOptional: true,
       xtraParent: {
         show: false,
         selected: {},
         options: [],
       },
-      show_optional_data: !this.$device.mobile || this.payload.memData,
       countries: ProdData.countries,
     };
   },
@@ -304,19 +199,12 @@ export default {
     let isChild = false;
     let parentId;
     let xtra_parent_id;
-    this.$material.locale.startYear = 1000;
-    document
-      .querySelector(".md-datepicker")
-      .querySelector(".md-input")
-      .setAttribute("onfocus", "blur()");
-    document
-      .querySelector("#demise")
-      .querySelector(".md-input")
-      .setAttribute("onfocus", "blur()");
 
     //Editing
     if (this.payload.memData) {
-      this.data = this.payload.memData;
+      // Re-assigning to avoid mutating prop directly if deep nested, but for simple assignment:
+      this.data = JSON.parse(JSON.stringify(this.payload.memData));
+      
       isChild = this.data.is_mate ? false : true;
       parentId = this.data.parent_id;
       xtra_parent_id = this.data.xtra_parent_id;
@@ -329,8 +217,6 @@ export default {
       }
     } else {
       //Adding Member
-
-      //Direct Child - Not Mate
       isChild = this.payload.type != "gender" ? true : false;
       parentId = this.payload.parent_id;
       xtra_parent_id = this.payload.xtra_parent_id;
@@ -412,56 +298,289 @@ export default {
 };
 </script>
 
-<style scoped>
-/* .cus.md-field{
-  min-height: auto;
-  padding-top: 0px;
+<style>
+/* --- Accordion Form UI --- */
+.glass-card-form {
+  background: rgba(15, 17, 35, 0.95);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  color: white;
 }
-.cus.md-field label{
-  top: 5px;
-  margin-bottom: 0px;
-} */
-.optional-heading {
-  background-color: white;
-  padding: 5px 20px;
-  color: rgb(150, 150, 150);
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
 }
-/* .bottom-bar {
-  position: absolute;
-  bottom: 110px;
-  padding: 10px 40px;
-  width: 100%;
-  background-color: white;
-  margin: 0 !important;
-  z-index: 10;
-  left: 0;
-  box-shadow: 0px -1px 4px 0px rgba(222, 222, 222, 1);
-} */
-.md-field {
-  margin: 0px;
+
+/* Accordion Styles */
+.modern-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.flexy {
+
+.accordion-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.accordion-item.is-open {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  overflow: visible;
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.3s ease;
+}
+
+.accordion-header:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.header-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
   display: flex;
   align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-.info {
-  margin-top: -10px;
-  font-size: 12px;
-  color: rgb(160, 160, 160);
+
+.toggle-icon {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s ease;
 }
-.form-btns {
-  margin-left: -20px;
+
+.accordion-item.is-open .toggle-icon {
+  transform: rotate(180deg);
+  color: #4f8ef7;
 }
-label {
-  size: 22px;
-  font-weight: bold;
-  margin-top: 8px;
+
+.accordion-body {
+  padding: 0 20px 20px 20px;
+  animation: slideDown 0.3s ease-out;
 }
-input {
-  margin-bottom: 15px;
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-input[type="radio"] {
+
+/* Input Styles */
+.input-group-modern {
+  display: flex;
+  background: rgba(15, 17, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+.input-group-modern:focus-within {
+  border-color: #4f8ef7;
+  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.2);
+}
+
+.modern-addon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-top-left-radius: 11px;
+  border-bottom-left-radius: 11px;
+  transition: all 0.3s ease;
+}
+
+.input-group-modern:focus-within .modern-addon {
+  color: #4f8ef7;
+  background: rgba(79, 142, 247, 0.1);
+}
+
+.modern-input-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+}
+
+.modern-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #a78bfa;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.modern-input {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 15px;
+  padding: 4px 0;
+  outline: none;
   width: 100%;
-  height: 1.2em;
+}
+
+.modern-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Native Date Input fixes */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.6;
+  cursor: pointer;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Segmented Control */
+.segmented-wrapper {
+  display: flex;
+  background: rgba(15, 17, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 4px;
+  gap: 4px;
+}
+
+.segment-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.segment-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.segment-btn.active {
+  background: #4f8ef7;
+  color: white;
+  box-shadow: 0 4px 10px rgba(79, 142, 247, 0.4);
+}
+
+/* Specific Social Colors */
+.social-input.fb:focus-within .modern-addon { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
+.social-input.fb:focus-within { border-color: #1877F2; box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2); }
+
+.social-input.insta:focus-within .modern-addon { color: #E4405F; background: rgba(228, 64, 95, 0.1); }
+.social-input.insta:focus-within { border-color: #E4405F; box-shadow: 0 0 0 3px rgba(228, 64, 95, 0.2); }
+
+.social-input.twitter:focus-within .modern-addon { color: #1DA1F2; background: rgba(29, 161, 242, 0.1); }
+.social-input.twitter:focus-within { border-color: #1DA1F2; box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.2); }
+
+.social-input.site:focus-within .modern-addon { color: #00b894; background: rgba(0, 184, 148, 0.1); }
+.social-input.site:focus-within { border-color: #00b894; box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.2); }
+
+/* VSelect Overrides */
+.modern-vselect {
+  width: 100%;
+}
+.modern-vselect .vs__dropdown-toggle {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.modern-vselect .vs__search,
+.modern-vselect .vs__search:focus,
+.modern-vselect .vs__selected {
+  color: white !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 15px;
+}
+.modern-vselect .vs__actions { padding: 0 !important; }
+.modern-vselect .vs__dropdown-menu {
+  background: #1a1c2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: white;
+  margin-top: 5px;
+  padding: 5px 0;
+}
+.modern-vselect .vs__dropdown-option {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 10px 15px;
+}
+.modern-vselect .vs__dropdown-option--highlight {
+  background: rgba(79, 142, 247, 0.2);
+  color: #4f8ef7;
+}
+
+/* Actions */
+.modern-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modern-btn-cancel, .modern-btn-submit {
+  flex: 1;
+  border-radius: 12px;
+  padding: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.modern-btn-cancel {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+  border: 1px solid rgba(255, 71, 87, 0.2);
+}
+.modern-btn-cancel:hover {
+  background: rgba(255, 71, 87, 0.2);
+  transform: translateY(-2px);
+}
+
+.modern-btn-submit {
+  background: linear-gradient(135deg, #4f8ef7, #00a8ff);
+  color: white;
+  border: none;
+  box-shadow: 0 8px 20px rgba(79, 142, 247, 0.3);
+}
+.modern-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(79, 142, 247, 0.5);
+}
+
+.life-status-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(15, 17, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 15px;
 }
 </style>

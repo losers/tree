@@ -211,13 +211,15 @@ td {
   height: 100%;
   box-sizing: border-box;
   border: 2px solid;
-  border-color: #ccc #ccc transparent transparent;
+  border-color: rgba(79, 142, 247, 0.6) rgba(79, 142, 247, 0.6) transparent transparent;
   transform: rotateZ(135deg);
   transform-origin: 50% 50% 0;
-  transition: transform ease 300ms;
+  transition: all ease 300ms;
+  filter: drop-shadow(0 0 4px rgba(79, 142, 247, 0.8));
 }
 .extend_handle:hover:before {
-  border-color: #333 #333 transparent transparent;
+  border-color: #a78bfa #a78bfa transparent transparent;
+  filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.9));
 }
 .extend .extend_handle:before {
   transform: rotateZ(-45deg);
@@ -229,8 +231,9 @@ td {
   left: 50%;
   bottom: 15px;
   height: 15px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid rgba(79, 142, 247, 0.6);
   transform: translate3d(-1px, 0, 0);
+  filter: drop-shadow(0 0 4px rgba(79, 142, 247, 0.8));
 }
 
 .childLevel::before {
@@ -239,8 +242,9 @@ td {
   left: 50%;
   bottom: 100%;
   height: 15px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid rgba(79, 142, 247, 0.6);
   transform: translate3d(-1px, 0, 0);
+  filter: drop-shadow(0 0 4px rgba(79, 142, 247, 0.8));
 }
 .childLevel::after {
   content: "";
@@ -248,7 +252,8 @@ td {
   left: 0;
   right: 0;
   top: -15px;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid rgba(79, 142, 247, 0.6);
+  filter: drop-shadow(0 0 4px rgba(79, 142, 247, 0.8));
 }
 .childLevel:first-child:before,
 .childLevel:last-child:before {
@@ -258,22 +263,22 @@ td {
   left: 50%;
   height: 15px;
   border: 2px solid;
-  border-color: #ccc transparent transparent #ccc;
-  border-radius: 6px 0 0 0;
+  border-color: rgba(79, 142, 247, 0.6) transparent transparent rgba(79, 142, 247, 0.6);
+  border-radius: 12px 0 0 0;
   transform: translate3d(1px, 0, 0);
 }
 .childLevel:last-child:after {
   right: 50%;
   height: 15px;
   border: 2px solid;
-  border-color: #ccc #ccc transparent transparent;
-  border-radius: 0 6px 0 0;
+  border-color: rgba(79, 142, 247, 0.6) rgba(79, 142, 247, 0.6) transparent transparent;
+  border-radius: 0 12px 0 0;
   transform: translate3d(-1px, 0, 0);
 }
 .childLevel:first-child.childLevel:last-child::after {
   left: auto;
   border-radius: 0;
-  border-color: transparent #ccc transparent transparent;
+  border-color: transparent rgba(79, 142, 247, 0.6) transparent transparent;
   transform: translate3d(1px, 0, 0);
 }
 
@@ -289,7 +294,12 @@ td {
   display: inline-block;
   z-index: 2;
   width: 6em;
-  /* overflow: hidden; */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+.node .person:hover {
+  transform: translateY(-10px) scale(1.05);
+  z-index: 10;
 }
 .node .mate .avat {
   border-radius: 50%;
@@ -301,23 +311,30 @@ td {
   height: 4em;
   margin: auto;
   overflow: hidden;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: rgba(15, 17, 35, 0.8);
+  border: 2px solid #a78bfa;
   box-sizing: border-box;
   border-radius: 50%;
-  -webkit-box-shadow: 3px 3px 20px -9px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 3px 3px 20px -9px rgba(0, 0, 0, 0.75);
-  box-shadow: 3px 3px 20px -9px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+  transition: all 0.4s ease;
+}
+.node .person:hover .avat {
+  border-color: #4f8ef7;
+  box-shadow: 0 0 30px rgba(79, 142, 247, 0.8), inset 0 0 10px rgba(79, 142, 247, 0.5);
 }
 .node .person .avat img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 .node .person .name {
   height: 2em;
   line-height: 2em;
   overflow: hidden;
   width: 100%;
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 .node.hasMate::after {
   content: "";
@@ -325,8 +342,9 @@ td {
   left: 2em;
   right: 2em;
   top: 2em;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid rgba(79, 142, 247, 0.6);
   z-index: 1;
+  filter: drop-shadow(0 0 4px rgba(79, 142, 247, 0.8));
 }
 .node.hasMate .person {
   margin-left: 1em;

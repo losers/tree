@@ -584,5 +584,5 @@
     }
   
     return this || {};
-  })(), module, false));
+  })(), typeof module !== 'undefined' ? module : {}, false));
   

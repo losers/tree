@@ -1,102 +1,82 @@
 <template>
-  <div class="tab-bar">
-    <nav class="tabs" :style="{ width: $device.mobile ? '90%' : '400px' }">
-      <div
-        class="selector theme-primary-bgdark"
-        :style="{
-          left: activeItem.offsetLeft + 'px',
-          width: activeItem.offsetWidth + 'px',
-        }"
-      ></div>
-      <router-link to="" class="active"
-        ><i class="icofont-people"></i>All</router-link
-      >
-      <router-link to="#demo"
-        ><i class="icofont-light-bulb"></i
-        >Demo</router-link
-      >
-      <router-link to="#super"
-        ><i class="icofont-thunder-light"></i>Super</router-link
-      >
+  <div class="tabbar-wrap">
+    <nav class="tabs-glass">
+      <router-link to="" class="tab-item" exact-active-class="tab-active">
+        <span class="tab-icon">👥</span>
+        <span class="tab-label">All</span>
+      </router-link>
+      <router-link to="#demo" class="tab-item" :class="{ 'tab-active': $route.hash === '#demo' }">
+        <span class="tab-icon">💡</span>
+        <span class="tab-label">Demo</span>
+      </router-link>
+      <router-link to="#super" class="tab-item" :class="{ 'tab-active': $route.hash === '#super' }">
+        <span class="tab-icon">⚡</span>
+        <span class="tab-label">Super</span>
+      </router-link>
     </nav>
   </div>
 </template>
+
 <script>
 export default {
-  data() {
-    return {
-      activeItem: {
-        offsetLeft: 0,
-        offsetWidth: 0,
-      },
-      activeWidth: 0,
-    };
-  },
-  methods: {
-    tabSelected() {
-      this.activeItem = document.querySelector(".router-link-exact-active");
-    },
-  },
-  mounted() {
-    this.activeItem = document.querySelector(".router-link-exact-active");
-    document
-      .querySelector(".tabs")
-      .addEventListener("click", this.tabSelected, false);
-  },
+  name: "TabBar",
 };
 </script>
+
 <style scoped>
-.icofont-light-bulb {
-  font-size: 18px;
-}
-.tab-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.tabs {
+.tabbar-wrap {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  padding: 24px 0 0;
+}
+
+.tabs-glass {
+  display: inline-flex;
   align-items: center;
-  margin-top: -65px;
-  font-size: 15px;
-  padding: 0px;
-  list-style: none;
-  background: #fff;
-  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 50px;
-  position: relative;
+  padding: 6px;
+  backdrop-filter: blur(20px);
 }
 
-.tabs .router-link-active {
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 24px;
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
-  display: inline-block;
-  position: relative;
-  z-index: 1;
-  transition-duration: 0.6s;
-}
-a {
-  padding: 10px 20px;
-  color: #777;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.2px;
+  user-select: none;
 }
 
-.tabs .router-link-exact-active {
-  color: white;
+.tab-item:hover {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+  text-decoration: none;
 }
 
-.tabs .router-link-active i {
-  margin-right: 5px;
+.tab-active {
+  background: linear-gradient(135deg, rgba(79, 142, 247, 0.3) 0%, rgba(138, 79, 247, 0.25) 100%);
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  color: #fff !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 20px rgba(79, 142, 247, 0.2);
 }
 
-.tabs .selector {
-  height: 100%;
-  display: inline-block;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  z-index: 1;
-  border-radius: 50px;
-  transition-duration: 0.6s;
-  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+.tab-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.tab-label {
+  letter-spacing: 0.3px;
 }
 </style>

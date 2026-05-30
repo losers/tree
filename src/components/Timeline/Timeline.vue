@@ -1,10 +1,10 @@
 <template>
   <section class="timeline">
     <div v-if="hasItems" class="wrapper-timeline">
-      <!-- <transition-group name="list" tag="p"> -->
+      <transition-group name="list-anim" tag="div">
       <div
         v-for="(timelineContent, timelineIndex) in dataTimeline"
-        :key="timelineIndex"
+        :key="timelineContent.id || timelineIndex"
         :class="wrapperItemClass(timelineIndex)"
       >
         <div class="section-year">
@@ -20,7 +20,7 @@
           :namesMap="namesMap"
         />
       </div>
-      <!-- </transition-group> -->
+      </transition-group>
     </div>
     <p v-else>{{ messageWhenNoItems }}</p>
   </section>
@@ -143,7 +143,7 @@ export default {
 <style scoped>
 .timeline {
   text-align: left;
-  max-width: 500px;
+  max-width: 100%;
 }
 .timeline .wrapper-timeline {
   position: relative;
@@ -169,15 +169,18 @@ export default {
   margin-bottom: 0;
 }
 
-/* .list-item {
+.list-anim-item {
   display: inline-block;
   margin-right: 10px;
 }
-.list-enter-active, .list-leave-active {
-  transition: all 1s;
+.list-anim-enter-active, .list-anim-leave-active {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.list-enter, .list-leave-to {
+.list-anim-enter, .list-anim-leave-to {
   opacity: 0;
-  transform: translate(0px);
-} */
+  transform: translateY(30px);
+}
+.list-anim-move {
+  transition: transform 0.5s;
+}
 </style>

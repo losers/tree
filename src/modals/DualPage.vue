@@ -98,6 +98,7 @@ export default {
           draggable: this.reference == 9 ? false : true,
           clickToClose: true,
           scrollable: true,
+          classes: ['v--modal', 'glass-modal']
         },
         {
           "before-close": this.beforeClose,
