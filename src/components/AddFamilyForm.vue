@@ -76,11 +76,32 @@
                 v-model="surname"
                 type="text"
                 class="modern-input"
+                :class="{ 'input-error-shake': errored }"
                 :disabled="payload"
                 placeholder="e.g. Windsor"
                 @input="makeSmall"
                 required
               />
+              <!-- Warning + chips -->
+              <transition name="chips-in">
+                <div v-if="errored" class="surname-error-zone">
+                  <span class="surname-warn">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    "{{ originalSurname }}" is already taken
+                  </span>
+                  <div v-if="suggestionChips.length" class="chips-row">
+                    <span class="chips-label">Try:</span>
+                    <button
+                      v-for="(chip, i) in suggestionChips"
+                      :key="chip"
+                      type="button"
+                      class="suggestion-chip"
+                      :style="{ animationDelay: (i * 60) + 'ms' }"
+                      @click="applyChip(chip)"
+                    >{{ chip }}</button>
+                  </div>
+                </div>
+              </transition>
             </div>
 
             <div class="form-group half-width">
@@ -160,11 +181,7 @@
             </div>
           </div>
 
-          <transition name="fade">
-            <div v-if="errored" class="error-box shake-anim mt-3">
-              <span class="error-icon">🛑</span> Surname '{{ surname }}' already exists. Try another.
-            </div>
-          </transition>
+
 
           <!-- Actions -->
           <div class="modal-actions mt-4">
@@ -217,6 +234,8 @@ export default {
       errSurname: null,
       editFormLoading: null,
       editFormErrored: null,
+      originalSurname: null,
+      failCount: 0,
       contact: {
         name: null,
         email: null,
@@ -227,7 +246,30 @@ export default {
     isWeakPin() {
       const p = this.pin;
       return p === '1234' || p === '0000' || p === '1111' || p === '1212' || p === '4321';
-    }
+    },
+    suggestionChips() {
+      if (!this.originalSurname || !this.errored) return [];
+      const base = this.originalSurname;
+      // Pull meaningful words from the display title
+      const stop = new Set(['the','a','an','of','and','my','our','family','tree','dynasty','clan']);
+      const titleWords = (this.title || '')
+        .toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/)
+        .filter(w => w && !stop.has(w) && w !== base);
+      const extras = ['family','legacy','clan','home','roots','heritage','origin'];
+      // First failure: show 1 title-derived chip
+      // Second+ failure: show up to 5 more variety chips
+      if (this.failCount === 1) {
+        const word = titleWords[0] || extras[0];
+        return [`${base}-${word}`];
+      }
+      // Build a richer set on repeat failures
+      const pool = [
+        ...titleWords.map(w => `${base}-${w}`),
+        ...extras.map(w => `${base}-${w}`),
+      ];
+      // Deduplicate and limit to 5
+      return [...new Set(pool)].slice(0, 5);
+    },
   },
   mounted() {
     this.pin_placeholder = `Create 4 Digit ${this.payload ? "Admin" : ""} PIN`;
@@ -277,6 +319,8 @@ export default {
           })
           .catch((err) => {
             this.errored = err;
+            this.originalSurname = this.surname;
+            this.failCount++;
           })
           .finally(() => (this.loading = false));
       }
@@ -300,6 +344,18 @@ export default {
         /[\\~`!@#$%^&*()+=/{}[\];:'"<>.?]/g,
         ""
       );
+      // Clear error when user edits manually
+      if (this.errored) {
+        this.errored = null;
+        this.originalSurname = null;
+        this.failCount = 0;
+      }
+    },
+    applyChip(chip) {
+      this.surname = chip;
+      this.errored = null;
+      this.originalSurname = null;
+      this.failCount = 0;
     },
   },
 };
@@ -505,6 +561,82 @@ export default {
   align-items: center;
   gap: 10px;
 }
+
+/* ━━ SURNAME TAKEN — inline chip suggestions ━━ */
+.input-error-shake {
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  animation: err-shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes err-shake {
+  10%,90%  { transform: translateX(-2px); }
+  30%,70%  { transform: translateX( 3px); }
+  50%      { transform: translateX(-3px); }
+}
+
+.surname-error-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.surname-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #fca5a5;
+  opacity: 0.9;
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.chips-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  flex-shrink: 0;
+}
+
+.suggestion-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(99,102,241,0.4);
+  background: rgba(99,102,241,0.1);
+  color: #a5b4fc;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+  animation: chip-pop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.suggestion-chip:hover {
+  background: rgba(99,102,241,0.22);
+  border-color: rgba(99,102,241,0.7);
+  transform: translateY(-1px);
+}
+.suggestion-chip:active {
+  transform: scale(0.95);
+}
+@keyframes chip-pop {
+  from { opacity: 0; transform: scale(0.8) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* chips-in transition (wrapping div) */
+.chips-in-enter-active { transition: opacity 0.2s, transform 0.2s; }
+.chips-in-leave-active { transition: opacity 0.15s; }
+.chips-in-enter        { opacity: 0; transform: translateY(-4px); }
+.chips-in-leave-to     { opacity: 0; }
 
 /* Divider */
 .modern-divider {

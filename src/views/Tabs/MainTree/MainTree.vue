@@ -142,97 +142,93 @@
           </div>
         </div>
 
-        <!-- Displays Origial Tree Map -->
-        <div v-else>
-          <center>
-            <div>
-              <!-- Download Tree -->
-              <button
-                class="btn download-tree-btn"
-                @click="puppyDownload"
-                id="download-pic"
-                :disabled="puppyData.loader"
-                v-if="!puppyData.downloaded && numOfMembers > 1"
-              >
-                <i class="icofont-download" v-if="!puppyData.loader"></i>
-                <div
-                  class="spinner-border"
-                  style="height: 22px; width: 22px; color: white"
-                  role="status"
-                  v-else
-                ></div>
-              </button>
-
-              <!-- Downloaded Successfully -->
-              <div
-                v-else-if="numOfMembers > 1"
-                class="download-tree-pic-body"
-                style="position: absolute; top: 85px; z-index: 10; right: 10px"
-              >
-                <!-- Message -->
-                <div
-                  class="download-msg"
-                  :style="{
-                    width: puppyData.hide ? '0px' : '260px',
-                    'font-size': puppyData.hide ? '0px' : '18px',
-                    color: puppyData.hide ? '#7ac142' : 'white',
-                  }"
-                >
-                  Downloaded Sucessfully
-                </div>
-                <!-- Ticker -->
-                <tick></tick>
-              </div>
-            </div>
-
-            <!-- View Controls -->
-            <div class="view-controls">
-              <button class="my-btn view-control-btn" @click="zoomIn" title="Zoom In">
-                <i class="icofont-plus"></i>
-              </button>
-              <button class="my-btn view-control-btn" @click="zoomOut" title="Zoom Out">
-                <i class="icofont-minus"></i>
-              </button>
-            </div>
-
-            <!-- Minimap -->
-            <div class="minimap-container" :class="{ 'minimap-visible': minimap.visible }" v-if="minimap.treeWidth > 0" @click="minimapClick" @mousedown="startMinimapDrag" @mouseenter="keepMinimapVisible" @mouseleave="hideMinimapDelayed">
-              <div class="minimap-canvas" :style="minimapCanvasStyle">
-                <div class="minimap-viewport" :style="minimapViewportStyle"></div>
-              </div>
-            </div>
-
-            <!-- Tree with Zoom -->
-            <div 
-              class="tree-pan-zoom-container"
-              @wheel="doZoom"
-              @scroll="updateMinimap"
-              ref="treeContainer"
+        <!-- Displays Original Tree Map -->
+        <div v-else class="tree-view-root">
+          <div>
+            <!-- Download Tree -->
+            <button
+              class="btn download-tree-btn"
+              @click="puppyDownload"
+              id="download-pic"
+              :disabled="puppyData.loader"
+              v-if="!puppyData.downloaded && numOfMembers > 1"
             >
-              <div class="tree-wrapper" :style="wrapperStyle">
-                <div class="tree-canvas" ref="treeCanvas" :style="{ transform: `scale(${pan.scale})` }">
-                  <TreeChart
-                    :json="tempData"
-                    :images="images"
-                    :class="{ landscape: landscape.length }"
-                    @click-node="clickNode"
-                    style="padding-top: 80px;"
-                  />
-                </div>
+              <i class="icofont-download" v-if="!puppyData.loader"></i>
+              <div
+                class="spinner-border"
+                style="height: 22px; width: 22px; color: white"
+                role="status"
+                v-else
+              ></div>
+            </button>
+
+            <!-- Downloaded Successfully -->
+            <div
+              v-else-if="numOfMembers > 1"
+              class="download-tree-pic-body"
+              style="position: absolute; top: 85px; z-index: 10; right: 10px"
+            >
+              <!-- Message -->
+              <div
+                class="download-msg"
+                :style="{
+                  width: puppyData.hide ? '0px' : '260px',
+                  'font-size': puppyData.hide ? '0px' : '18px',
+                  color: puppyData.hide ? '#7ac142' : 'white',
+                }"
+              >
+                Downloaded Sucessfully
               </div>
+              <!-- Ticker -->
+              <tick></tick>
             </div>
-            <div v-if="!tempData.children && !tempData.mate" class="on-board">
-              <center>
-                <i
-                  class="icofont-long-arrow-up object"
-                  style="font-size: 25px"
-                ></i>
-              </center>
-              <h4 style="color: #848181">
-                Click on you to add your Parents / Children etc.,
-              </h4>
+          </div>
+
+          <!-- View Controls -->
+          <div class="view-controls">
+            <button class="my-btn view-control-btn" @click="zoomIn" title="Zoom In">
+              <i class="icofont-plus"></i>
+            </button>
+            <button class="my-btn view-control-btn" @click="zoomOut" title="Zoom Out">
+              <i class="icofont-minus"></i>
+            </button>
+          </div>
+
+          <!-- Minimap -->
+          <div class="minimap-container" :class="{ 'minimap-visible': minimap.visible }" v-if="minimap.treeWidth > 0" @click="minimapClick" @mousedown="startMinimapDrag" @mouseenter="keepMinimapVisible" @mouseleave="hideMinimapDelayed">
+            <div class="minimap-canvas" :style="minimapCanvasStyle">
+              <div class="minimap-viewport" :style="minimapViewportStyle"></div>
             </div>
-          </center>
+          </div>
+
+          <!-- Tree with Zoom -->
+          <div 
+            class="tree-pan-zoom-container"
+            @wheel="doZoom"
+            @scroll="updateMinimap"
+            ref="treeContainer"
+          >
+            <div class="tree-canvas" ref="treeCanvas" :style="{ transform: `scale(${pan.scale})`, margin: 'auto' }">
+              <TreeChart
+                :json="tempData"
+                :images="images"
+                :class="{ landscape: landscape.length }"
+                @click-node="clickNode"
+                style="padding-top: 80px;"
+              />
+            </div>
+          </div>
+          <div v-if="!tempData.children && !tempData.mate" class="on-board">
+            <center>
+              <i
+                class="icofont-long-arrow-up object"
+                style="font-size: 25px"
+              ></i>
+            </center>
+            <h4 style="color: #848181">
+              Click on you to add your Parents / Children etc.,
+            </h4>
+          </div>
 
           <!-- Share Button For Mobile -->
           <button
@@ -388,12 +384,6 @@ export default {
     minimapBaseSize() {
       return this.$device && this.$device.mobile ? 80 : 150;
     },
-    wrapperStyle() {
-      return {
-        width: `${this.minimap.treeWidth * this.pan.scale}px`,
-        height: `${this.minimap.treeHeight * this.pan.scale}px`
-      };
-    },
     minimapCanvasStyle() {
       let maxDim = Math.max(this.minimap.treeWidth, this.minimap.treeHeight, 1);
       let scale = this.minimapBaseSize / maxDim;
@@ -461,8 +451,11 @@ export default {
     window.addEventListener("mousemove", this.doMinimapDrag);
     window.addEventListener("mouseup", this.endMinimapDrag);
     
-    // Initial update
-    setTimeout(() => { this.updateMinimapDimensions(); }, 500);
+    // Initial update + center tree
+    setTimeout(() => {
+      this.updateMinimapDimensions();
+      this.centerTree();
+    }, 500);
   },
   beforeDestroy() {
     window.removeEventListener("keydown", this.handleKeyDown);
@@ -536,6 +529,16 @@ export default {
       } catch (error) {
         navigator.share(shareData);
       }
+    },
+    centerTree() {
+      const container = this.$refs.treeContainer;
+      const canvas = this.$refs.treeCanvas;
+      if (!container || !canvas) return;
+      // Scroll so the canvas is horizontally centered; keep vertical at top
+      const scrollX = (canvas.scrollWidth * this.pan.scale - container.clientWidth) / 2;
+      const scrollY = 0;
+      container.scrollLeft = scrollX > 0 ? scrollX : 0;
+      container.scrollTop = scrollY;
     },
     updateMinimapDimensions() {
       if (this.$refs.treeCanvas && this.$refs.treeContainer) {
@@ -646,10 +649,12 @@ export default {
       const container = this.$refs.treeContainer;
       if (!container) {
         this.pan.scale = newScale;
+        this.$nextTick(() => this.centerTree());
         return;
       }
       const rect = container.getBoundingClientRect();
       this.applyZoom(newScale, rect.left + rect.width / 2, rect.top + rect.height / 2);
+      this.$nextTick(() => this.centerTree());
     },
     applyZoom(newScale, clientX, clientY) {
       const container = this.$refs.treeContainer;
@@ -937,23 +942,26 @@ h2 {
   color: #fff !important;
   margin: 0 0.5em;
 }
+.tree-view-root {
+  width: 100%;
+  position: relative;
+}
 .tree-pan-zoom-container {
-  width: 100vw;
+  width: 100%;
   height: calc(100vh - 120px);
   overflow: auto;
   position: relative;
-  text-align: center;
-}
-.tree-wrapper {
-  display: inline-block;
-  text-align: left;
-  vertical-align: top;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 .tree-canvas {
-  transform-origin: 0 0;
+  transform-origin: center top;
   will-change: transform;
   display: inline-block;
   min-width: max-content;
+  flex-shrink: 0;
+  margin: 0 auto;
 }
 .minimap-container {
   position: fixed;

@@ -161,9 +161,9 @@ export default {
 }
 
 .contents {
-  overflow-y: scroll;
-  max-height: 100%;
-  padding-bottom: calc(100vh * 0.2);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  height: calc(100% - 42px);
   box-sizing: border-box;
 }
 </style>

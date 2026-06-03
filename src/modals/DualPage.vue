@@ -95,6 +95,7 @@ export default {
         },
         {
           height: "auto",
+          maxHeight: window.innerHeight * 0.88,
           draggable: this.reference == 9 ? false : true,
           clickToClose: true,
           scrollable: true,
