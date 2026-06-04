@@ -9,8 +9,6 @@
 
         <!-- ALWAYS VISIBLE: BASIC INFO -->
         <div class="form-section-card mb-4">
-          <h5 class="section-title"><i class="icofont-id-card text-primary"></i> Basic Info</h5>
-
           <div class="input-group-modern mb-3">
             <span class="modern-addon"><i class="icofont-user-alt-3"></i></span>
             <div class="modern-input-wrapper">
@@ -36,7 +34,7 @@
                 <input type="radio" name="gender" v-model="data.gender" value="1" required class="d-none" />
                 <i class="icofont-business-man"></i> Male
               </label>
-              <label class="segment-btn" :class="{ 'active': data.gender == '0' }">
+              <label class="segment-btn" :class="{ 'active-female': data.gender == '0' }">
                 <input type="radio" name="gender" v-model="data.gender" value="0" class="d-none" />
                 <i class="icofont-girl"></i> Female
               </label>
@@ -550,6 +548,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: #4f8ef7;
   color: white;
   box-shadow: 0 4px 10px rgba(79, 142, 247, 0.4);
+}
+
+.segment-btn.active-female {
+  background: #f965ec;
+  color: white;
+  box-shadow: 0 4px 10px rgba(253, 164, 175, 0.4);
 }
 
 /* Specific Social Colors */

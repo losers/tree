@@ -196,6 +196,7 @@
         </div>
       </section>
     </div>
+    </Drawer>
     <DualPage
       :reference="dualPage.ref"
       :payload="payload"
@@ -203,7 +204,6 @@
       v-if="dualPage.callForm"
       v-on:closed="addMemberCancel"
     ></DualPage>
-  </Drawer>
   <my-upload
     :class="{ 'img-picker-mob': $device.mobile }"
     field="img"

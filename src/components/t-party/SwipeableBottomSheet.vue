@@ -43,7 +43,9 @@ export default {
   },
   mounted() {
     window.onresize = () => {
-      this.rect = this.$refs.card.getBoundingClientRect();
+      if(this.$refs.card) {
+        this.rect = this.$refs.card.getBoundingClientRect();
+      }
     };
     this.rect = this.$refs.card.getBoundingClientRect();
 
@@ -58,21 +60,21 @@ export default {
 
     this.mc.on("panmove panup pandown", (evt) => {
       let newY = this.startTop + evt.deltaY;
-      // Optionally prevent dragging too high
-      if (newY < 50) newY = 50; 
+      // Prevent dragging it above its maximum open height
+      if (newY < 0) newY = 0; 
       this.y = newY;
     });
 
     this.mc.on("panend", (evt) => {
       this.isMove = false;
-      // evt.deltaY gives the total distance moved
-      if (evt.deltaY > 100) {
+      // If dragged down by more than 80px, close it
+      if (evt.deltaY > 80) {
         this.state = "close";
         setTimeout(() => {
           this.$emit("close");
         }, 300);
       } else {
-        // Snap back to open if they didn't drag far enough down
+        // Snap back to open
         this.state = "open";
       }
     });
@@ -85,9 +87,11 @@ export default {
     calcY() {
       switch (this.state) {
         case "close":
-          return this.rect.height;
+          // Move down by its full height plus some padding to hide it completely
+          return (this.rect.height || 1000) + 100;
         case "open":
-          return this.rect.height * this.openY + 50;
+          // Open completely sits at bottom: 0, so translate is 0
+          return 0;
         default:
           return this.y;
       }
@@ -110,7 +114,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 200;
+  z-index: 9999 !important;
 }
 
 .wrapper[data-open="1"] .bg {
@@ -127,15 +131,19 @@ export default {
 
 .card {
   width: 100%;
-  height: 100vh;
+  height: auto;
+  max-height: 85vh;
   position: fixed;
-  top: 0;
+  bottom: 0;
+  top: auto;
   background: #0a0b18;
   border-radius: 24px 24px 0 0;
   border-top: 1px solid rgba(255,255,255,0.08);
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
   left: 0;
   will-change: transform;
+  display: flex;
+  flex-direction: column;
 }
 
 .card[data-state="open"],
@@ -158,13 +166,13 @@ export default {
 
 .pan-area {
   padding: 12px 0;
+  flex-shrink: 0;
 }
 
 .contents {
   overflow-y: auto;
   overscroll-behavior: none;
-  height: calc(100vh - var(--translate-y, 0px) - 42px);
+  flex: 1;
   box-sizing: border-box;
-  padding-bottom: 20px; /* give some breathing room at the absolute bottom */
 }
 </style>
