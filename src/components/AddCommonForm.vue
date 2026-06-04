@@ -20,9 +20,18 @@
             </div>
           </div>
 
-          <div v-if="type_data != 'gender'" class="gender-segmented-control mb-3">
-            <label class="modern-label d-block pl-1">Gender <span class="text-warning">*</span></label>
-            <div class="segmented-wrapper">
+          <div class="input-group-modern mb-3">
+            <span class="modern-addon"><i class="icofont-tag"></i></span>
+            <div class="modern-input-wrapper">
+              <input type="text" class="modern-input" v-model="data.short_name"
+                @input="shortNameEdited = true"
+                placeholder="Short Name (shown in tree)" />
+            </div>
+          </div>
+
+          <div v-if="type_data != 'gender'" class="gender-segmented-control mb-3 d-flex align-items-center">
+            <label class="modern-label mb-0 mr-3 pl-1" style="min-width: 65px; font-size: 14px; text-transform: capitalize;">Gender <span class="text-warning">*</span></label>
+            <div class="segmented-wrapper flex-grow-1">
               <label class="segment-btn" :class="{ 'active': data.gender == '1' }">
                 <input type="radio" name="gender" v-model="data.gender" value="1" required class="d-none" />
                 <i class="icofont-business-man"></i> Male
@@ -31,15 +40,6 @@
                 <input type="radio" name="gender" v-model="data.gender" value="0" class="d-none" />
                 <i class="icofont-girl"></i> Female
               </label>
-            </div>
-          </div>
-
-          <div class="input-group-modern mb-2">
-            <span class="modern-addon"><i class="icofont-tag"></i></span>
-            <div class="modern-input-wrapper">
-              <input type="text" class="modern-input" v-model="data.short_name"
-                @input="shortNameEdited = true"
-                placeholder="Short Name (shown in tree)" />
             </div>
           </div>
         </div>

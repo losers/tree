@@ -208,7 +208,7 @@
             @scroll="updateMinimap"
             ref="treeContainer"
           >
-            <div class="tree-canvas" ref="treeCanvas" :style="{ transform: `scale(${pan.scale})`, margin: 'auto' }">
+            <div class="tree-canvas" ref="treeCanvas" :style="{ transform: `scale(${pan.scale})` }">
               <TreeChart
                 :json="tempData"
                 :images="images"
@@ -951,16 +951,12 @@ h2 {
   height: calc(100vh - 120px);
   overflow: auto;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 .tree-canvas {
   transform-origin: center top;
   will-change: transform;
-  display: inline-block;
-  min-width: max-content;
-  flex-shrink: 0;
+  display: block;
+  width: max-content;
   margin: 0 auto;
 }
 .minimap-container {

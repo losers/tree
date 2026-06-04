@@ -5,7 +5,7 @@
       ref="card"
       class="card"
       :data-state="isMove ? 'move' : state"
-      :style="{ transform: `translateY(${isMove ? y : calcY()}px)` }"
+      :style="{ transform: `translateY(${isMove ? y : calcY()}px)`, '--translate-y': `${isMove ? y : calcY()}px` }"
     >
       <div class="pan-area" ref="pan">
         <div class="bar" ref="bar"></div>
@@ -162,8 +162,9 @@ export default {
 
 .contents {
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  height: calc(100% - 42px);
+  overscroll-behavior: none;
+  height: calc(100vh - var(--translate-y, 0px) - 42px);
   box-sizing: border-box;
+  padding-bottom: 20px; /* give some breathing room at the absolute bottom */
 }
 </style>
