@@ -2,8 +2,8 @@
   "name": "tree",
   "version": "0.1.1",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -49,7 +49,7 @@
     "@vue/cli-plugin-vuex": "^4.3.1",
     "@vue/cli-service": "~4.3.0",
     "babel-eslint": "^10.1.0",
-    "cross-env": "^10.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^7.20.0",
     "vue-particles": "^1.0.9",
