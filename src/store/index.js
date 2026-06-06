@@ -22,7 +22,7 @@ export default new Vuex.Store({
     promos: {
       "RelationFinder": true, //Relation Finder
       "Website": true,  // Website
-      "Donation": true  //Donation Promo
+      "Donation": false  //Donation Promo (disabled - donations module commented out)
     },
     subtree:{},
     sub_member_data: {},

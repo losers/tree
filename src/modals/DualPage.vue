@@ -48,7 +48,7 @@ import Helper from "../components/Helper"; //6
 import RelationFinderPromo from "../components/promotional/Pages/RelationFinder"; //7
 import WebsitePromo from "../components/promotional/Pages/Website.vue"; //8
 import ReArrageMembers from "../components/ReArrange"; //9
-import DonationPromo from "../components/promotional/Pages/Donation"; //10
+// import DonationPromo from "../components/promotional/Pages/Donation"; //10 (Donations module disabled)
 
 import Vue from "vue";
 // import BottomModal from "./BottomModal.vue";
@@ -72,7 +72,7 @@ export default {
         RelationFinderPromo,
         WebsitePromo,
         ReArrageMembers,
-        DonationPromo
+        // DonationPromo  // Donations module disabled
       ],
       selectedComponent: "",
     };

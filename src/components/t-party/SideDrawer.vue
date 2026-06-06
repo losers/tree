@@ -51,12 +51,12 @@
               ><li><i class="icofont-sand-clock"></i>Timeline</li></router-link
             > -->
 
-            <router-link :to="{ name: 'Donations' }"
+            <!-- <router-link :to="{ name: 'Donations' }"
               ><li>
                 <i class="icofont-ui-love text-danger drawer-icons"></i
                 >Donations
               </li></router-link
-            >
+            > -->
 
             <router-link :to="{ name: 'Settings' }" v-if="isEditable"
               ><li>

@@ -86,11 +86,11 @@ const myrouter = new VueRouter({
                     name: "Records",
                     component: () => import('./views/Tabs/Records.vue'),
                 },
-                {
-                    path: "donations",
-                    name: "Donations",
-                    component: () => import('./views/Tabs/Donations.vue'),
-                },
+                // {
+                //     path: "donations",
+                //     name: "Donations",
+                //     component: () => import('./views/Tabs/Donations.vue'),
+                // },
                 {
                     path: 'settings',
                     name: "Settings",

@@ -19,11 +19,11 @@
           </div>
           <div class="royal-banner-text">
             <h4 class="royal-banner-title">Super Families</h4>
-            <p class="royal-banner-sub">Families who support &amp; donate to Bloodline earn this elite status.</p>
+            <p class="royal-banner-sub">Families who actively use Bloodline automatically earn this elite Super Family status.</p>
           </div>
         </div>
-        <a href="mailto:hello@bloodline.app" class="royal-cta-btn">
-          <span>✦</span> Get Status
+        <a href="mailto:bloodline.helpline@gmail.com" class="royal-cta-btn">
+          <span>✦</span> Learn More
         </a>
       </div>
     </div>
