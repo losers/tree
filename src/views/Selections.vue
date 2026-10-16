@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%" class="selections-wrapper bloodline-app">
+  <div style="height: 100%" class="selections-wrapper bloodline-app" :class="isDark ? 'theme-dark' : 'theme-light'">
     <!-- Top Navigation Bar -->
     <div class="navbar" :class="[{ 'updating-navbar': title.isClkd }, { 'navbar-hidden': isModalActive }]">
       <div class="navbar-animated-border"></div>
@@ -61,11 +61,15 @@
     <div v-if="!$device.mobile" class="h-100">
       <SidebarMenu
         :menu="menu"
-        :theme="'black-theme'"
+        :theme="isDark ? 'black-theme' : 'white-theme'"
         @toggle-collapse="onToggleCollapse"
         :width="'300px'"
+        :widthCollapsed="'75px'"
         style="box-shadow: 2px 0px 10px 0px rgba(135, 135, 135, 1)"
       >
+        <div slot="footer">
+          <theme-toggle :is-collapsed="isCollapsed" @theme-changed="onThemeChanged" />
+        </div>
         <span slot="toggle-icon"
           ><i class="icofont-arrow-left"></i><i class="icofont-arrow-right"></i
         ></span>
@@ -91,12 +95,36 @@ import Store from "@/store/index";
 import { SidebarMenu } from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 import SideDrawer from "@/components/t-party/SideDrawer";
+import ThemeToggle from "@/components/ThemeToggle";
 import Axios from "axios";
 import ProdData from "../data";
 
 export default {
   mounted() {
-    Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
+    const savedTheme = localStorage.getItem("bloodline-theme") || "dark";
+    Store.commit("setTheme", savedTheme);
+
+    const shareToken = this.$route.query.share || this.$route.query.share_token;
+    if (shareToken) {
+      Axios.get(ProdData.getHostURL() + "/share/access/" + shareToken)
+        .then((res) => {
+          if (res.data && res.data.success) {
+            Store.commit("setSession", {
+              status: true,
+              surname: res.data.surname,
+              view_only: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error("Invalid share token query:", err);
+        })
+        .finally(() => {
+          Store.dispatch("treeSetup", this.$route.params.id);
+        });
+    } else {
+      Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
+    }
     window.onscroll = function () {
       try {
         if (
@@ -116,6 +144,12 @@ export default {
     };
   },
   computed: {
+    currentTheme() {
+      return Store.state.theme || "dark";
+    },
+    isDark() {
+      return this.currentTheme === "dark";
+    },
     storeTitle: {
       get() {
         if (!this.$route.params.subtree_id) {
@@ -145,6 +179,7 @@ export default {
   components: {
     SidebarMenu,
     SideDrawer,
+    ThemeToggle,
   },
   data() {
     return {
@@ -190,16 +225,11 @@ export default {
           title: "Events",
           icon: "icofont-ui-calendar",
         },
-        // {
-        //   href: `/${this.$route.params.id}/subtree`,
-        //   title: "Subtree",
-        //   icon: "icofont-site-map",
-        // },
-        // {
-        //   href: `/${this.$route.params.id}/timeline`,
-        //   title: "Timeline",
-        //   icon: "icofont-sand-clock",
-        // },
+        {
+          href: `/${this.$route.params.id}/timeline`,
+          title: "Family Timeline",
+          icon: "icofont-sand-clock",
+        },
         // {
         //   href: `/${this.$route.params.id}/records`,
         //   title: "Records",
@@ -259,6 +289,9 @@ export default {
         this.title.isClkd = true;
         this.title.input = `${this.storeTitle}`;
       }
+    },
+    onThemeChanged(theme) {
+      Store.commit("setTheme", theme);
     },
   },
 };
@@ -390,33 +423,73 @@ a:hover {
   width: 75px !important;
   max-width: 75px !important;
 }
-::v-deep .v-sidebar-menu .vsm--mobile-bg {
-  background: rgba(15, 17, 35, 0.95) !important;
-  backdrop-filter: blur(24px) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+
+/* Reset focus outlines on all links */
+::v-deep .v-sidebar-menu .vsm--link:focus,
+::v-deep .v-sidebar-menu .vsm--link:focus-visible {
+  outline: none !important;
 }
-::v-deep .v-sidebar-menu .vsm--mobile-item {
-  background: transparent !important;
-}
-::v-deep .v-sidebar-menu .vsm--link {
+
+/* List item links */
+::v-deep .v-sidebar-menu .vsm--list .vsm--link {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
   margin: 4px 12px !important;
   border-radius: 12px !important;
   overflow: hidden;
 }
-::v-deep .v-sidebar-menu .vsm--link_hover {
+::v-deep .v-sidebar-menu .vsm--list .vsm--link_active {
+  background: linear-gradient(90deg, rgba(79, 142, 247, 0.25), transparent) !important;
+  border-left: 3px solid #4f8ef7 !important;
+  box-shadow: inset 20px 0 40px -20px rgba(79, 142, 247, 0.4) !important;
+}
+
+/* Hover transitions: slide on expanded, stay centered on collapsed */
+::v-deep .v-sidebar-menu.vsm_expanded .vsm--list .vsm--link_hover {
   background: linear-gradient(90deg, rgba(79, 142, 247, 0.15), transparent) !important;
   transform: translateX(6px);
+}
+::v-deep .v-sidebar-menu.vsm_collapsed .vsm--list .vsm--link_hover {
+  background: linear-gradient(90deg, rgba(79, 142, 247, 0.15), transparent) !important;
+  transform: none !important;
+}
+
+/* Icon centering and sizing in collapsed state */
+::v-deep .v-sidebar-menu.vsm_collapsed .vsm--list .vsm--link {
+  padding: 10px 0 !important;
+  justify-content: center !important;
+}
+::v-deep .v-sidebar-menu.vsm_collapsed .vsm--list .vsm--icon {
+  margin-right: 0 !important;
 }
 ::v-deep .v-sidebar-menu .vsm--link_hover .vsm--icon {
   transform: scale(1.15) rotate(5deg) !important;
   color: #4f8ef7 !important;
 }
-::v-deep .v-sidebar-menu .vsm--link_active {
-  background: linear-gradient(90deg, rgba(79, 142, 247, 0.25), transparent) !important;
-  border-left: 3px solid #4f8ef7 !important;
-  box-shadow: inset 20px 0 40px -20px rgba(79, 142, 247, 0.4) !important;
+
+/* Mobile hover flyout item & background reset */
+::v-deep .v-sidebar-menu .vsm--mobile-item {
+  background: transparent !important;
+  pointer-events: auto !important;
+}
+::v-deep .v-sidebar-menu .vsm--mobile-item > .vsm--item > .vsm--link {
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  padding: 0 16px !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  outline: none !important;
+}
+::v-deep .v-sidebar-menu .vsm--mobile-bg {
+  background: rgba(15, 17, 35, 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
 }
 ::v-deep .v-sidebar-menu .vsm--icon {
   background-color: transparent !important;
@@ -496,5 +569,94 @@ a:hover {
 @keyframes rotateBorder {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Light Theme Overrides
+   ========================================================================== */
+.theme-light.selections-wrapper {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.theme-light .navbar {
+  background: rgba(255, 255, 255, 0.82);
+  color: #0f172a;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.theme-light .add-border {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .titleInput {
+  color: #0f172a;
+}
+
+.theme-light ::v-deep .v-sidebar-menu {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--list .vsm--link {
+  color: #334155 !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--title {
+  color: #1e293b !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--header {
+  color: #6366f1 !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--icon {
+  color: #6366f1 !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--list .vsm--link_active {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), transparent) !important;
+  border-left: 3px solid #6366f1 !important;
+  box-shadow: inset 20px 0 40px -20px rgba(99, 102, 241, 0.25) !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--list .vsm--link_active .vsm--icon {
+  color: #6366f1 !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu.vsm_expanded .vsm--list .vsm--link_hover {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.08), transparent) !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu.vsm_collapsed .vsm--list .vsm--link_hover {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.08), transparent) !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--link_hover .vsm--icon {
+  color: #4f46e5 !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--toggle-btn {
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+  color: #64748b !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--toggle-btn:hover {
+  background: rgba(99, 102, 241, 0.06) !important;
+  color: #4f46e5 !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--mobile-bg {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+.theme-light ::v-deep .v-sidebar-menu .vsm--mobile-item .vsm--title {
+  color: #0f172a !important;
 }
 </style>

@@ -309,4 +309,54 @@ p {
 .dark-vselect .vs__open-indicator {
   fill: rgba(255,255,255,0.5) !important;
 }
+
+/* Light theme overrides for Finder */
+[data-theme="light"] .glass-card,
+.theme-light .glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+[data-theme="light"] .lang-pill span,
+.theme-light .lang-pill span {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #334155;
+}
+[data-theme="light"] .lang-pill input:checked + span,
+.theme-light .lang-pill input:checked + span {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #4f46e5;
+}
+[data-theme="light"] .dark-vselect .vs__dropdown-toggle,
+.theme-light .dark-vselect .vs__dropdown-toggle {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+[data-theme="light"] .dark-vselect .vs__selected,
+.theme-light .dark-vselect .vs__selected {
+  color: #0f172a !important;
+}
+[data-theme="light"] .dark-vselect .vs__search::placeholder,
+.theme-light .dark-vselect .vs__search::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+[data-theme="light"] .dark-vselect .vs__dropdown-menu,
+.theme-light .dark-vselect .vs__dropdown-menu {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+[data-theme="light"] .dark-vselect .vs__dropdown-option,
+.theme-light .dark-vselect .vs__dropdown-option {
+  color: #334155 !important;
+}
+[data-theme="light"] .dark-vselect .vs__clear,
+.theme-light .dark-vselect .vs__clear,
+[data-theme="light"] .dark-vselect .vs__open-indicator,
+.theme-light .dark-vselect .vs__open-indicator {
+  fill: rgba(0, 0, 0, 0.5) !important;
+}
 </style>

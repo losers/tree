@@ -27,8 +27,18 @@ export default new Vuex.Store({
     subtree:{},
     sub_member_data: {},
     subtree_meta: {},
+    theme: (typeof window !== "undefined" && localStorage.getItem("bloodline-theme")) || "dark",
   },
   mutations: {
+    setTheme(state, theme) {
+      state.theme = theme;
+      try {
+        localStorage.setItem("bloodline-theme", theme);
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        console.error(e);
+      }
+    },
     setImages(state, imagesData) {
       state.images = imagesData.data[0];
     },
@@ -159,6 +169,9 @@ export default new Vuex.Store({
     },
     images: (state) => {
       return state.images;
+    },
+    getTheme: (state) => {
+      return state.theme || "dark";
     }
   },
   modules: {

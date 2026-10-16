@@ -161,6 +161,103 @@
             >
               <div class="mb-2">Admin PIN and View-Only PIN cannot be same</div>
             </div>
+
+            <!-- Family Share Link (View-Only) -->
+            <div class="mt-4 pt-3 border-top-dark">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <label class="form-label m-0" style="font-weight: 600; color: #4f8ef7; font-size: 16px;">
+                  <i class="icofont-share mr-1"></i> Family Share Link
+                </label>
+                <button
+                  v-if="share.token && !share.showConfirmDelete"
+                  type="button"
+                  class="btn-revoke-text"
+                  @click="share.showConfirmDelete = true"
+                >
+                  <i class="icofont-trash mr-1"></i> Revoke Link
+                </button>
+              </div>
+
+              <p class="text-muted mb-3" style="font-size: 13.5px;">
+                Anyone with this link gets instant view-only access without a PIN.
+              </p>
+
+              <!-- Loading Indicator -->
+              <div v-if="share.loading" class="text-center py-2">
+                <div class="spinner-border spinner-border-sm" style="color: #4f8ef7;"></div>
+              </div>
+
+              <!-- Active Share Link -->
+              <div v-else-if="share.token">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control dark-input"
+                    style="font-family: monospace; font-size: 13.5px;"
+                    :value="shareUrl"
+                    readonly
+                    @click="$event.target.select()"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      type="button"
+                      class="btn copy-share-btn"
+                      @click="copyShareLink"
+                    >
+                      <i :class="share.copied ? 'icofont-check text-success' : 'icofont-ui-copy'"></i>
+                      <span class="ml-1">{{ share.copied ? 'Copied' : 'Copy' }}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Revoke Confirmation (Inline, Minimal) -->
+                <div v-if="share.showConfirmDelete" class="revoke-inline-bar mt-2 d-flex align-items-center justify-content-between p-2 flex-wrap gap-2">
+                  <span class="text-danger" style="font-size: 13px;">
+                    Revoke this link immediately?
+                  </span>
+                  <div>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm py-1 px-3 mr-2"
+                      :disabled="share.isDeleting"
+                      @click="deleteShareLink"
+                      style="border-radius: 8px; font-size: 12px;"
+                    >
+                      <span v-if="share.isDeleting" class="spinner-border spinner-border-sm mr-1"></span>
+                      Yes, Revoke
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary btn-sm py-1 px-2"
+                      :disabled="share.isDeleting"
+                      @click="share.showConfirmDelete = false"
+                      style="border-radius: 8px; font-size: 12px;"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State: One-click button -->
+              <div v-else>
+                <button
+                  type="button"
+                  class="btn-generate-simple"
+                  @click="generateShareLink"
+                  :disabled="share.isGenerating"
+                >
+                  <span v-if="share.isGenerating" class="spinner-border spinner-border-sm mr-2"></span>
+                  <i v-else class="icofont-link mr-2"></i> Create Share Link
+                </button>
+              </div>
+
+              <!-- Error Alert -->
+              <div v-if="share.error" class="text-danger mt-2" style="font-size: 13px;">
+                <i class="icofont-warning mr-1"></i> {{ share.error }}
+              </div>
+            </div>
+
             <h4 class="contact-details" style="color: #4f8ef7; font-weight: 600;">
               Contact Details
               <span>(optional)</span>
@@ -292,7 +389,25 @@ export default {
       },
       deletingFamily: false,
       deleteSurname: "",
+      share: {
+        token: null,
+        createdAt: null,
+        loading: false,
+        isGenerating: false,
+        isDeleting: false,
+        copied: false,
+        error: null,
+        showConfirmDelete: false,
+      },
     };
+  },
+  computed: {
+    shareUrl() {
+      if (!this.share.token) return "";
+      const origin = window.location.origin;
+      const surname = this.$route.params.id || this.data.surname;
+      return `${origin}/app/share/${surname}/${this.share.token}`;
+    },
   },
   mounted() {
     Axios.get(ProdData.getHostURL() + "/meta/get/" + this.$route.params.id)
@@ -304,8 +419,104 @@ export default {
       })
       .catch((err) => (this.form.error = err))
       .finally(() => (this.form.loading = false));
+
+    this.fetchShareInfo();
   },
   methods: {
+    fetchShareInfo() {
+      this.share.loading = true;
+      Axios.get(ProdData.getHostURL() + "/share/" + this.$route.params.id + "/info")
+        .then((res) => {
+          if (res.data) {
+            this.share.token = res.data.share_token || null;
+            this.share.createdAt = res.data.share_created_at || null;
+          }
+        })
+        .catch((err) => {
+          console.log("Could not load share info:", err);
+        })
+        .finally(() => {
+          this.share.loading = false;
+        });
+    },
+    generateShareLink() {
+      this.share.isGenerating = true;
+      this.share.error = null;
+      Axios.post(ProdData.getHostURL() + "/share/" + this.$route.params.id + "/generate")
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.share.token = res.data.share_token;
+            this.share.createdAt = res.data.share_created_at;
+            this.share.showConfirmDelete = false;
+          }
+        })
+        .catch((err) => {
+          this.share.error =
+            (err.response && err.response.data && err.response.data.message) ||
+            "Failed to generate share link";
+        })
+        .finally(() => {
+          this.share.isGenerating = false;
+        });
+    },
+    deleteShareLink() {
+      this.share.isDeleting = true;
+      this.share.error = null;
+      Axios.delete(ProdData.getHostURL() + "/share/" + this.$route.params.id)
+        .then((res) => {
+          if (res.data && res.data.success) {
+            this.share.token = null;
+            this.share.createdAt = null;
+            this.share.showConfirmDelete = false;
+          }
+        })
+        .catch((err) => {
+          this.share.error =
+            (err.response && err.response.data && err.response.data.message) ||
+            "Failed to revoke share link";
+        })
+        .finally(() => {
+          this.share.isDeleting = false;
+        });
+    },
+    copyShareLink() {
+      if (!this.shareUrl) return;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(this.shareUrl).then(() => {
+          this.share.copied = true;
+          setTimeout(() => (this.share.copied = false), 2500);
+        });
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = this.shareUrl;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          this.share.copied = true;
+          setTimeout(() => (this.share.copied = false), 2500);
+        } catch (e) {
+          console.error(e);
+        }
+        document.body.removeChild(textArea);
+      }
+    },
+    formatShareDate(val) {
+      if (!val) return "";
+      try {
+        const d = new Date(val);
+        return d.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      } catch (e) {
+        return val;
+      }
+    },
     updateSettings() {
       this.form.isUpdating = true;
       Axios.put(ProdData.getHostURL() + "/meta/update", {
@@ -464,5 +675,62 @@ export default {
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
+}
+
+/* Family Share Link Styling */
+.border-top-dark {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.btn-revoke-text {
+  background: none;
+  border: none;
+  color: #ff4757;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+.btn-revoke-text:hover {
+  color: #ff6b81;
+  text-decoration: underline;
+}
+.copy-share-btn {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  padding: 0 18px;
+  border-radius: 0 12px 12px 0;
+  transition: all 0.25s ease;
+}
+.copy-share-btn:hover {
+  opacity: 0.9;
+  color: #fff;
+}
+.revoke-inline-bar {
+  background: rgba(255, 71, 87, 0.08);
+  border: 1px solid rgba(255, 71, 87, 0.25);
+  border-radius: 10px;
+}
+.btn-generate-simple {
+  background: rgba(79, 142, 247, 0.15);
+  color: #4f8ef7;
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.btn-generate-simple:hover:not(:disabled) {
+  background: rgba(79, 142, 247, 0.25);
+  color: #fff;
+  border-color: #4f8ef7;
+}
+.btn-generate-simple:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
