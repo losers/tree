@@ -240,6 +240,16 @@ Vue.use(VModal, {
 
 export default {
   name: "MemberData",
+  props: {
+    memberId: {
+      type: String,
+      default: null
+    },
+    surnameProp: {
+      type: String,
+      default: null
+    }
+  },
   components: {
     Drawer,
     "my-upload": myUpload,
@@ -255,8 +265,8 @@ export default {
       data: null,
       errored: false,
       open: null,
-      surname: this.$route.params.id,
-      id: this.$route.params.member,
+      surname: this.surnameProp || (this.$route && this.$route.params ? this.$route.params.id : ""),
+      id: this.memberId || (this.$route && this.$route.params ? this.$route.params.member : ""),
       type: "",
       previewImage: null,
       imageData: "",
@@ -297,7 +307,7 @@ export default {
   },
   mounted() {
     this.open = true;
-    this.hasMate = this.$route.query.hasMate;
+    this.hasMate = (this.$route && this.$route.query && this.$route.query.hasMate) || false;
     this.cookeyStatus = false; //Check version
     if (this.$device.mobile) {
       this.toggleBodyClass("addClass", "mem-spec");
@@ -400,6 +410,10 @@ export default {
     },
     toggle() {
       this.open = false;
+      this.$emit("close");
+      if (this.memberId) {
+        return;
+      }
       let routerLink = {};
       if (this.$route.params.subtree_id) {
         routerLink = {

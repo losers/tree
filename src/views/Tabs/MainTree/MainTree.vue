@@ -1118,4 +1118,67 @@ h2 {
   margin-right: -10px;
   color: white;
 }
+
+/* ==========================================================================
+   MainTree Light Theme Overrides
+   ========================================================================== */
+[data-theme="light"] #app,
+.theme-light #app {
+  color: #0f172a !important;
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .tree-bg-glow,
+.theme-light .tree-bg-glow {
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .tree-bg-glow::before,
+.theme-light .tree-bg-glow::before {
+  background: radial-gradient(circle, rgba(79, 142, 247, 0.15), transparent 70%);
+}
+
+[data-theme="light"] .tree-bg-glow::after,
+.theme-light .tree-bg-glow::after {
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.12), transparent 70%);
+}
+
+[data-theme="light"] .minimap-container,
+.theme-light .minimap-container {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .minimap-title,
+.theme-light .minimap-title {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .view-control-btn,
+.theme-light .view-control-btn {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #334155 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .view-control-btn:hover,
+.theme-light .view-control-btn:hover {
+  background: #ffffff !important;
+  color: #4f8ef7 !important;
+  border-color: rgba(79, 142, 247, 0.3) !important;
+}
+
+[data-theme="light"] .foot,
+.theme-light .foot {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #64748b !important;
+}
+
+[data-theme="light"] .foot a,
+.theme-light .foot a {
+  color: #3b82f6 !important;
+}
 </style>

@@ -43,13 +43,9 @@
               </li></router-link
             >
 
-            <!-- <router-link :to="{ name: 'Subtree' }">
-              <li><i class="icofont-site-map"></i>Subtrees</li></router-link
-            > -->
-
-            <!-- <router-link :to="{ name: 'Timeline' }"
-              ><li><i class="icofont-sand-clock"></i>Timeline</li></router-link
-            > -->
+            <router-link :to="{ name: 'FamilyTimeline' }"
+              ><li><i class="icofont-sand-clock drawer-icons"></i>Family Timeline</li></router-link
+            >
 
             <router-link :to="{ name: 'Donations' }"
               ><li>

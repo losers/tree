@@ -276,4 +276,62 @@
   width: 16px;
   height: 16px;
 }
+
+/* ==========================================================================
+   Global Light Theme Support
+   ========================================================================== */
+[data-theme="light"] body,
+body.theme-light {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="light"] .my-action-btn,
+body.theme-light .my-action-btn {
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .glass-card-form,
+body.theme-light .glass-card-form {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dark-input,
+body.theme-light .dark-input,
+[data-theme="light"] .dark-addon,
+body.theme-light .dark-addon {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dark-vselect .vs__dropdown-toggle,
+body.theme-light .dark-vselect .vs__dropdown-toggle {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dark-vselect .vs__dropdown-menu,
+body.theme-light .dark-vselect .vs__dropdown-menu {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .dark-vselect .vs__dropdown-option,
+body.theme-light .dark-vselect .vs__dropdown-option {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .dark-vselect .vs__search,
+body.theme-light .dark-vselect .vs__search {
+  color: #0f172a !important;
+}
 </style>
