@@ -27,6 +27,16 @@ const myrouter = new VueRouter({
             component: () => import("./views/Error.vue")
         },
         {
+            path: "/share/:surname/:token",
+            name: "ShareAccessFamily",
+            component: () => import("./views/ShareAccess.vue")
+        },
+        {
+            path: "/share/:token",
+            name: "ShareAccess",
+            component: () => import("./views/ShareAccess.vue")
+        },
+        {
             path: "/:id",
             name: "MainTree",
             redirect: "/:id/",

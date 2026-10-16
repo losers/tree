@@ -103,7 +103,28 @@ export default {
   mounted() {
     const savedTheme = localStorage.getItem("bloodline-theme") || "dark";
     Store.commit("setTheme", savedTheme);
-    Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
+
+    const shareToken = this.$route.query.share || this.$route.query.share_token;
+    if (shareToken) {
+      Axios.get(ProdData.getHostURL() + "/share/access/" + shareToken)
+        .then((res) => {
+          if (res.data && res.data.success) {
+            Store.commit("setSession", {
+              status: true,
+              surname: res.data.surname,
+              view_only: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error("Invalid share token query:", err);
+        })
+        .finally(() => {
+          Store.dispatch("treeSetup", this.$route.params.id);
+        });
+    } else {
+      Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
+    }
     window.onscroll = function () {
       try {
         if (
