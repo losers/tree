@@ -81,6 +81,25 @@
                 @input="makeSmall"
                 required
               />
+
+              <!-- Suggestions Capsules -->
+              <transition name="fade">
+                <div class="surname-suggestions-box mt-2" v-if="suggestions && suggestions.length > 0 && errored">
+                  <span class="suggestion-tag-label"><i class="icofont-light-bulb mr-1"></i> Suggestions:</span>
+                  <div class="suggestion-capsules-wrap">
+                    <button
+                      type="button"
+                      v-for="sug in suggestions"
+                      :key="sug"
+                      class="capsule-pill-btn"
+                      @click="selectSuggestion(sug)"
+                      title="Select this surname"
+                    >
+                      {{ sug }}
+                    </button>
+                  </div>
+                </div>
+              </transition>
             </div>
 
             <div class="form-group half-width">
@@ -162,24 +181,21 @@
 
           <transition name="fade">
             <div v-if="errored" class="error-box shake-anim mt-3">
-              <span class="error-icon">🛑</span> Surname '{{ surname }}' already exists. Try another.
+              <span class="error-icon">🛑</span> Surname '{{ failedSurname || surname }}' already exists. Try another.
             </div>
           </transition>
 
           <!-- Actions -->
           <div class="modal-actions mt-4">
-            <div class="left-actions">
-              <button type="button" class="btn-ghost" @click="goBack">Cancel</button>
-              <button
-                v-show="payload"
-                type="button"
-                class="btn-danger-outline"
-                @click="isDelete = true; created = false;"
-              >
-                Delete
-              </button>
-            </div>
-
+            <button type="button" class="btn-ghost" @click="goBack">Cancel</button>
+            <button
+              v-show="payload"
+              type="button"
+              class="btn-danger-outline"
+              @click="isDelete = true; created = false;"
+            >
+              Delete
+            </button>
             <button
               type="submit"
               class="btn-primary-filled"
@@ -205,6 +221,9 @@ export default {
   data() {
     return {
       surname: null,
+      failedSurname: null,
+      suggestions: [],
+      rejectedSurnames: new Set(),
       title: null,
       created: false,
       errored: null,
@@ -249,7 +268,6 @@ export default {
   methods: {
     sendData() {
       this.loading = true;
-      this.errored = null;
       if (this.payload) {
         Axios.put(ProdData.getHostURL() + "/meta/update", {
           title: this.title,
@@ -277,9 +295,77 @@ export default {
           })
           .catch((err) => {
             this.errored = err;
+            this.failedSurname = this.surname;
+            this.rejectedSurnames.add(this.failedSurname);
+            this.updateSuggestions();
           })
           .finally(() => (this.loading = false));
       }
+    },
+    updateSuggestions() {
+      const titleWords = (this.title || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .split(/[\s-]+/)
+        .filter(w => w && w.length > 0);
+
+      const base = (this.failedSurname || this.surname || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+      let list = [];
+
+      // 1. Direct combinations of words from title (e.g. "the-windsor", "windsor-dynasty")
+      if (titleWords.length >= 2) {
+        list.push(titleWords.join("-"));
+        for (let i = 0; i < titleWords.length - 1; i++) {
+          list.push(`${titleWords[i]}-${titleWords[i + 1]}`);
+        }
+        if (titleWords.length >= 3) {
+          list.push(`${titleWords[0]}-${titleWords[titleWords.length - 1]}`);
+        }
+      }
+
+      // 2. Combinations with the surname that was entered
+      if (base) {
+        titleWords.forEach(word => {
+          if (word !== base) {
+            list.push(`${base}-${word}`);
+            list.push(`${word}-${base}`);
+          }
+        });
+      }
+
+      // 3. Fallback suffixes if fewer suggestions
+      const familyTags = ["family", "clan", "roots", "tree", "lineage", "heritage"];
+      for (let tag of familyTags) {
+        if (base && !titleWords.includes(tag)) {
+          list.push(`${base}-${tag}`);
+        } else if (titleWords.length > 0 && titleWords[0] !== tag) {
+          list.push(`${titleWords[0]}-${tag}`);
+        }
+      }
+
+      // Filter out rejected, duplicates, and current failed
+      const result = [];
+      for (let s of list) {
+        if (
+          s !== base &&
+          !this.rejectedSurnames.has(s) &&
+          !result.includes(s)
+        ) {
+          result.push(s);
+        }
+        if (result.length >= 5) break;
+      }
+
+      this.suggestions = result;
+    },
+    selectSuggestion(sug) {
+      this.surname = sug;
+      this.errored = null;
+      this.failedSurname = null;
+      this.suggestions = this.suggestions.filter(s => s !== sug);
     },
     deleteFamily() {
       // Mock delete functionality if exists in original
@@ -537,74 +623,86 @@ export default {
 /* Buttons */
 .modal-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
-}
-
-.left-actions {
-  display: flex;
   gap: 12px;
+  margin-top: 24px;
+  width: 100%;
 }
 
 .btn-ghost {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.5);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 20px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 20px;
+  min-height: 48px;
   cursor: pointer;
   border-radius: 12px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-ghost:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary-filled {
+  flex: 1.5;
   background: linear-gradient(135deg, #4f8ef7 0%, #a78bfa 100%);
   border: none;
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 24px;
+  min-height: 48px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 14px rgba(79, 142, 247, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(79, 142, 247, 0.35);
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .btn-primary-filled:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(79, 142, 247, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 142, 247, 0.5);
 }
 
 .btn-primary-filled:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
 .btn-danger-outline {
-  background: transparent;
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  flex: 1;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   color: #f87171;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 20px;
+  min-height: 48px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-danger-outline:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.8);
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fff;
 }
 
 .btn-danger-filled {
@@ -680,6 +778,57 @@ export default {
   40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
+/* Surname Suggestions Capsules */
+.surname-suggestions-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.suggestion-tag-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-capsules-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.capsule-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(79, 142, 247, 0.15);
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  color: #93c5fd;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.capsule-pill-btn:hover {
+  background: linear-gradient(135deg, rgba(79, 142, 247, 0.3), rgba(167, 139, 250, 0.3));
+  border-color: #818cf8;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 142, 247, 0.3);
+}
+
+.capsule-pill-btn:active {
+  transform: translateY(0);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 640px) {
   .add-family-container {
@@ -692,16 +841,13 @@ export default {
   }
   
   .modal-actions {
-    flex-direction: column-reverse;
-    gap: 16px;
-    align-items: stretch;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
   }
   
-  .left-actions {
-    justify-content: space-between;
-  }
-  
-  .btn-primary-filled, .btn-danger-filled {
+  .btn-ghost, .btn-primary-filled, .btn-danger-outline {
+    min-height: 48px;
     justify-content: center;
   }
 }

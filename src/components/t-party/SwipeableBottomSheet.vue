@@ -48,7 +48,7 @@ export default {
     this.rect = this.$refs.card.getBoundingClientRect();
 
     this.mc = new Hammer(this.$refs.pan);
-    this.mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
+    this.mc.get("pan").set({ direction: Hammer.DIRECTION_VERTICAL });
 
     this.mc.on("panstart", (evt) => {
       this.isMove = true;
@@ -110,19 +110,19 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 200;
+  z-index: 1000 !important;
 }
 
 .wrapper[data-open="1"] .bg {
   display: block;
-  transition: all 0.3s;
+  transition: opacity 0.25s ease;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.65);
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1000 !important;
 }
 
 .card {
@@ -130,17 +130,18 @@ export default {
   height: 100vh;
   position: fixed;
   top: 0;
-  background: #0a0b18;
+  background: #0f1424;
   border-radius: 24px 24px 0 0;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
   left: 0;
   will-change: transform;
+  z-index: 1001 !important;
 }
 
 .card[data-state="open"],
 .card[data-state="close"] {
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .card[data-state="close"] {
@@ -148,22 +149,26 @@ export default {
 }
 
 .bar {
-  width: 48px;
-  height: 6px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.2);
+  width: 44px;
+  height: 5px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.25);
   margin: 0 auto;
   cursor: pointer;
 }
 
 .pan-area {
-  padding: 12px 0;
+  padding: 10px 0 6px 0;
 }
 
 .contents {
-  overflow-y: scroll;
-  max-height: 100%;
-  padding-bottom: calc(100vh * 0.2);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+  touch-action: pan-y;
+  max-height: calc(90vh - 75px);
+  padding-bottom: 0;
   box-sizing: border-box;
 }
 </style>

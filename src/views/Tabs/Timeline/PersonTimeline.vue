@@ -1,53 +1,77 @@
 <template>
-  <div id="app">
-    <section v-if="error">
-      <h3>Something went wrong {{ error }}</h3>
+  <div class="person-timeline-page">
+    <section v-if="error" class="p-5 text-center">
+      <div class="timeline-error-box">
+        <i class="icofont-warning-alt text-warning" style="font-size: 36px;"></i>
+        <h3 class="mt-3 text-white">Something went wrong</h3>
+        <p class="text-white-50">{{ error }}</p>
+      </div>
     </section>
-    <section v-else style="margin-top: -35px">
-      <section v-if="payload.loading.main">
-        <center style="padding-top: 240px">
-          <img src="@/assets/dna.gif" alt="Bloodline Loader" />
-        </center>
-      </section>
-      <section v-else>
-        <!-- Titlebar -->
-        <!-- <div class="timeline-titlebar">
-          <router-link
-            :to="{ name: 'MainTree', params: { id: $route.params.id } }"
-            class="float-left ml-1"
-          >
-            <i class="icofont-arrow-left"></i>
-            Back
-          </router-link>
-          <b class="timeline-title">{{ user.name }}'s Timeline</b>
-        </div> -->
 
-        <!-- Alert Modals -->
-        <transition name="fade">
+    <section v-else>
+      <!-- Loading State -->
+      <section v-if="payload.loading.main" class="timeline-loading-wrapper">
+        <div class="modern-timeline-loader"></div>
+        <span class="mt-3 text-white-50 font-weight-500">Loading family timeline...</span>
+      </section>
+
+      <section v-else class="timeline-content-wrapper">
+        <!-- Floating Toast Alert -->
+        <transition name="toast-slide">
           <div
             v-show="show_alert"
-            style="right: 10px; position: fixed; margin-top: 10px; z-index: 10"
-            class="alert float-right"
-            :class="success_alert ? 'alert-success' : 'alert-danger'"
+            class="floating-timeline-toast"
+            :class="success_alert ? 'toast-success' : 'toast-error'"
           >
-            <p v-if="success_alert">
-              <strong>Success!</strong>
-              {{ modal_msg }}.
-            </p>
-            <p v-else>
-              <strong>Error!</strong>
-              Something went wrong {{ modal_msg }}.
-            </p>
+            <div class="toast-icon">
+              <i :class="success_alert ? 'icofont-check-circled' : 'icofont-close-circled'"></i>
+            </div>
+            <div class="toast-body">
+              <strong>{{ success_alert ? 'Success' : 'Notice' }}</strong>
+              <span>{{ modal_msg }}</span>
+            </div>
           </div>
         </transition>
 
-        <div class="row pt-5 justify-content-center" style="margin: 0; display: flex; gap: 40px;">
-          <div class="col-md-7 col-sm-12" style="max-width: 650px;">
-            <b class="timeline-title">{{ user.name }}'s Timeline</b>
+        <!-- Timeline Hero Header -->
+        <div class="timeline-hero-header mb-4">
+          <div class="hero-header-inner">
+            <router-link
+              :to="{ name: 'MainTree', params: { id: $route.params.id } }"
+              class="hero-back-pill"
+              title="Return to Tree"
+            >
+              <i class="icofont-arrow-left"></i>
+              <span>Back to Tree</span>
+            </router-link>
 
-            <div v-if="dataTimeline.length != 0">
+            <div class="hero-identity-card mt-3">
+              <div class="hero-avatar-circle">
+                <span>{{ user.name ? user.name.charAt(0) : 'T' }}</span>
+              </div>
+              <div class="hero-identity-text">
+                <div class="hero-title-row">
+                  <h1 class="ptimeline-hero-title">{{ user.name }}'s Life Timeline</h1>
+                  <span class="hero-counter-badge">
+                    <i class="icofont-sand-clock mr-1"></i>
+                    {{ dataTimeline.length }} {{ dataTimeline.length === 1 ? 'Event' : 'Events' }}
+                  </span>
+                </div>
+                <p class="ptimeline-hero-fullname" v-if="user.fullname && user.fullname !== user.name">
+                  {{ user.fullname }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Layout: Timeline Stream (Left) & Sticky Event Box (Right) -->
+        <div class="timeline-layout-container">
+          <!-- Left: Timeline Stream -->
+          <div class="timeline-stream-col">
+            <div v-if="dataTimeline.length !== 0" class="timeline-container-box">
               <Timeline
-                class="mt-4 pb-5 mb-5"
+                class="timeline-stream-view"
                 :timeline-items="dataTimeline"
                 :unique-year="false"
                 :show-day-and-month="true"
@@ -56,27 +80,37 @@
               />
             </div>
 
-            <!-- No Timeline found -->
-            <div v-else class="timeline-intro col-md-10 glass-card-form p-5 text-left">
-              <h4 style="color: #a78bfa; font-weight: bold; margin-bottom: 25px; font-family: 'Comfortaa', sans-serif;">
-                <i class="icofont-info-circle"></i> Timeline is Empty
-              </h4>
-              <div class="intro-item">
-                <span class="intro-icon"><i class="icofont-heart-alt"></i></span>
-                <p>Add special life events like Birthdays, Anniversaries, and milestones to build your story.</p>
+            <!-- Empty State -->
+            <div v-else class="empty-timeline-card">
+              <div class="empty-icon-circle">
+                <i class="icofont-sand-clock"></i>
               </div>
-              <div class="intro-item mt-4">
-                <span class="intro-icon"><i class="icofont-share-alt"></i></span>
-                <p>Events like family trips, marriages, and reunions can be added and shared with other family members, instantly appearing on their timelines too!</p>
-              </div>
-              <div class="intro-item mt-4">
-                <span class="intro-icon"><i class="icofont-notification"></i></span>
-                <p>Smart notifications will keep everyone in the loop when special anniversaries roll around.</p>
+              <h3 class="empty-title">Timeline is Quiet</h3>
+              <p class="empty-subtitle">
+                No events recorded yet. Start building {{ user.name }}'s life story by adding memorable moments!
+              </p>
+
+              <div class="empty-guide-grid mt-4">
+                <div class="guide-item">
+                  <div class="guide-icon icon-heart"><i class="icofont-heart-alt"></i></div>
+                  <div class="guide-text">
+                    <strong>Milestones & Anniversaries</strong>
+                    <span>Record birthdays, marriages, and memorable personal milestones.</span>
+                  </div>
+                </div>
+
+                <div class="guide-item">
+                  <div class="guide-icon icon-share"><i class="icofont-share-alt"></i></div>
+                  <div class="guide-text">
+                    <strong>Shared Family Memories</strong>
+                    <span>Tag family members to have the event appear on their timelines too.</span>
+                  </div>
+                </div>
               </div>
             </div>
 
+            <!-- Mobile DualPage Swiper Modal -->
             <div v-if="$device.mobile">
-              <!-- Swiper and modal -->
               <DualPage
                 v-if="showDualPage"
                 :onlySwiper="true"
@@ -87,32 +121,28 @@
                 v-on:closed="swiperDown"
               ></DualPage>
 
-              <!-- Add Event Button for Mobile -->
-              <div
-                v-if="!view_only"
-                class="mobile-action-bar"
-              >
-                <button
-                  @click="wrapperUp"
-                  class="btn my-action-btn glass-success w-100"
-                >
-                  <i class="icofont-plus-circle mr-2" style="font-size: 20px;"></i> Add Event
+              <!-- Mobile Floating Add Event Button -->
+              <div v-if="!view_only" class="mobile-action-bar">
+                <button @click="wrapperUp" class="mobile-add-btn">
+                  <i class="icofont-plus-circle mr-2"></i>
+                  <span>Add Life Event</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <div
-            class="col-md-5 d-none d-md-block"
-            v-if="!payload.loading.main && !view_only"
+          <!-- Right: Sticky Create/Edit Event Form Panel (Non-mobile screens) -->
+          <aside
+            class="timeline-form-col"
+            v-if="!payload.loading.main && !view_only && !$device.mobile"
           >
-            <div class="timeline_add_box">
-            <TimelineForm
-              :payload="payload"
-              v-on:crudops="formEmit"
-            ></TimelineForm>
+            <div class="timeline-form-sticky-wrap">
+              <TimelineForm
+                :payload="payload"
+                v-on:crudops="formEmit"
+              ></TimelineForm>
             </div>
-          </div>
+          </aside>
         </div>
       </section>
     </section>
@@ -128,224 +158,11 @@ import ProData from "@/data.js";
 import TimelineForm from "@/components/TimelineForm";
 
 export default {
-  name: "App",
+  name: "PersonTimeline",
   components: {
     Timeline,
     DualPage,
     TimelineForm,
-  },
-  watch: {
-    names() {
-      if (this.names != null) {
-        this.getTimelineData();
-      }
-    },
-  },
-  mounted() {
-    if (this.names != null) {
-      this.getTimelineData();
-    }
-
-    //Emit for listening edit timeline
-    this.$root.$on("edit-timeline", (data, shared) => {
-      if (this.$device.mobile) {
-        this.showDualPage = true;
-      }
-      this.payload.formData = Object.assign({}, data); //for creating a new object eliminating a reference
-      this.payload.formData.shared_with = shared;
-      this.payload.formData.isEdit = true;
-    });
-  },
-  methods: {
-    getTimelineData() {
-      this.payload.names = this.names;
-      Axios.get(
-        ProData.getHostURL() +
-          "/timeline/" +
-          this.$route.params.id +
-          "/" +
-          this.$route.params.member
-      )
-        .then((data) => {
-          //Timeline Meta Data
-          this.user.fullname = data.data[0].name;
-          this.user.name = data.data[0].short_name;
-          if (!data.data[0].timeline) {
-            data.data[0].timeline = [];
-          }
-          this.dataTimeline = data.data[0].timeline;
-
-          //Adding Birhday to Timeline
-          if (data.data[0].dob) {
-            let udob = {
-              content: `[ Automatically created from ${this.user.fullname} data. ]`,
-              date: new Date(data.data[0].dob),
-              fixed: true,
-              title: "Birthday",
-            };
-            this.dataTimeline.push(udob);
-          }
-
-          //Adding Death date to Timline if exists
-          if (data.data[0].died_on) {
-            let udob = {
-              content: `[ Automatically created from ${this.user.fullname} data. ]`,
-              date: new Date(data.data[0].died_on),
-              fixed: true,
-              title: "Date of Demise",
-            };
-            this.dataTimeline.push(udob);
-          }
-          for (let i = 0; i < this.names.length; i++) {
-            this.namesMap[this.names[i].value] = this.names[i].label;
-          }
-          this.payload.loading.main = false;
-        })
-        .catch((err) => {
-          this.error = err;
-        });
-    },
-    sendData() {
-      if (this.payload.formData.date != null) {
-        this.payload.loading.change = true;
-        //eve is the final obj
-        let eve = {
-          date: this.payload.formData.date,
-          title: this.payload.formData.title,
-          content: this.payload.formData.content,
-        };
-        eve.shared_with = [];
-        if (
-          this.payload.formData.shared_with &&
-          this.payload.formData.shared_with.length > 0
-        ) {
-          for (var i = 0; i < this.payload.formData.shared_with.length; i++) {
-            eve.shared_with.push(this.payload.formData.shared_with[i].value);
-          }
-        }
-        if (this.payload.formData.isEdit) {
-          //Updating an event
-          eve.id = this.payload.formData.id;
-          Axios.put(
-            ProData.getHostURL() +
-              "/timeline/" +
-              this.$route.params.id +
-              "/" +
-              this.$route.params.member,
-            eve
-          )
-            .then(() => {
-              for (let i = 0; i < this.dataTimeline.length; i++) {
-                if (this.dataTimeline[i]["id"] == this.payload.formData.id) {
-                  this.$set(this.dataTimeline, i, eve);
-                }
-              }
-              this.cancelclk();
-              this.alertStatus(true, "Updated an event");
-            })
-            .catch((err) => {
-              this.alertStatus(false, err);
-            })
-            .finally(() => (this.payload.loading.change = false));
-        } else {
-          //creating an event and pushing event to array locally
-          Axios.post(
-            ProData.getHostURL() +
-              "/timeline/" +
-              this.$route.params.id +
-              "/" +
-              this.$route.params.member,
-            eve
-          )
-            .then((data) => {
-              eve.id = data.data;
-              this.alertStatus(true, "Created a Event");
-              this.dataTimeline.push(eve);
-              this.cancelclk();
-            })
-            .catch((err) => {
-              this.alertStatus(false, err);
-            })
-            .finally(() => (this.payload.loading.change = false));
-        }
-      } else {
-        this.alertStatus(false, "Please select a date");
-      }
-    },
-
-    //Called when the TImeline form Emits Callback
-    formEmit(type) {
-      console.log(type);
-      switch (type) {
-        case 0:
-          this.sendData();
-          break;
-        case 1:
-          this.cancelclk();
-          break;
-        case 2:
-          this.deleteItem();
-          break;
-        default:
-          break;
-      }
-    },
-
-    //Alert Model showing function
-    alertStatus(status, msg) {
-      this.modal_msg = msg;
-      this.show_alert = true;
-      this.success_alert = status;
-      setTimeout(() => {
-        this.show_alert = false;
-      }, 2000);
-    },
-
-    //Cancel btn function
-    cancelclk() {
-      if (this.$device.mobile) {
-        this.$refs.dualPageRef.swiperClose();
-      }
-      this.payload.formData.shared_with = [];
-      this.payload.formData = {};
-      this.payload.formData.isEdit = false;
-    },
-
-    //Listens for Swiper to Down
-    swiperDown() {
-      this.showDualPage = false;
-    },
-
-    //Delete Btn Function
-    deleteItem() {
-      this.payload.loading.delete = true;
-      Axios.delete(
-        ProData.getHostURL() +
-          "/timeline/" +
-          this.$route.params.id +
-          "/" +
-          this.$route.params.member,
-        {
-          data: { id: this.payload.formData.id },
-        }
-      )
-        .then(() => {
-          this.alertStatus(true, "Deleted a Event");
-          let temparr = this.dataTimeline;
-          temparr = temparr.filter((x) => x.id !== this.payload.formData.id);
-          this.dataTimeline = temparr;
-          this.cancelclk();
-        })
-        .catch((err) => {
-          this.alertStatus(false, err);
-        })
-        .finally(() => (this.payload.loading.delete = false));
-    },
-
-    wrapperUp() {
-      this.payload.names = this.names;
-      this.showDualPage = true;
-    },
   },
   data: () => ({
     user: {},
@@ -368,11 +185,10 @@ export default {
     names: {
       get() {
         var name = Store.getters.getAllMembers;
-        if (name.length == 0) return null;
+        if (!name || name.length === 0) return null;
         name = name.filter((obj) => {
           return obj.value !== this.$route.params.member;
         });
-
         return name;
       },
     },
@@ -382,117 +198,576 @@ export default {
       },
     },
   },
+  watch: {
+    names() {
+      if (this.names != null) {
+        this.getTimelineData();
+      }
+    },
+  },
+  mounted() {
+    if (this.names != null) {
+      this.getTimelineData();
+    }
+
+    // Emit listener for editing timeline
+    this.$root.$on("edit-timeline", (data, shared) => {
+      if (this.$device.mobile) {
+        this.showDualPage = true;
+      }
+      this.payload.formData = Object.assign({}, data);
+      this.payload.formData.shared_with = shared;
+      this.payload.formData.isEdit = true;
+    });
+  },
+  methods: {
+    getTimelineData() {
+      this.payload.names = this.names;
+      Axios.get(
+        ProData.getHostURL() +
+          "/timeline/" +
+          this.$route.params.id +
+          "/" +
+          this.$route.params.member
+      )
+        .then((data) => {
+          if (data.data && data.data[0]) {
+            this.user.fullname = data.data[0].name;
+            this.user.name = data.data[0].short_name;
+            if (!data.data[0].timeline) {
+              data.data[0].timeline = [];
+            }
+            this.dataTimeline = data.data[0].timeline;
+
+            // Birthday to Timeline
+            if (data.data[0].dob) {
+              let udob = {
+                content: `[ Automatically created from ${this.user.fullname} data. ]`,
+                date: new Date(data.data[0].dob),
+                fixed: true,
+                title: "Birthday",
+              };
+              this.dataTimeline.push(udob);
+            }
+
+            // Death date to Timeline
+            if (data.data[0].died_on) {
+              let udob = {
+                content: `[ Automatically created from ${this.user.fullname} data. ]`,
+                date: new Date(data.data[0].died_on),
+                fixed: true,
+                title: "Date of Demise",
+              };
+              this.dataTimeline.push(udob);
+            }
+
+            if (this.names) {
+              for (let i = 0; i < this.names.length; i++) {
+                this.namesMap[this.names[i].value] = this.names[i].label;
+              }
+            }
+          }
+          this.payload.loading.main = false;
+        })
+        .catch((err) => {
+          this.error = err;
+        });
+    },
+    sendData() {
+      if (this.payload.formData.date != null) {
+        this.payload.loading.change = true;
+        let eve = {
+          date: this.payload.formData.date,
+          title: this.payload.formData.title,
+          content: this.payload.formData.content,
+        };
+        eve.shared_with = [];
+        if (
+          this.payload.formData.shared_with &&
+          this.payload.formData.shared_with.length > 0
+        ) {
+          for (var i = 0; i < this.payload.formData.shared_with.length; i++) {
+            eve.shared_with.push(this.payload.formData.shared_with[i].value);
+          }
+        }
+        if (this.payload.formData.isEdit) {
+          // Updating event
+          eve.id = this.payload.formData.id;
+          Axios.put(
+            ProData.getHostURL() +
+              "/timeline/" +
+              this.$route.params.id +
+              "/" +
+              this.$route.params.member,
+            eve
+          )
+            .then(() => {
+              for (let i = 0; i < this.dataTimeline.length; i++) {
+                if (this.dataTimeline[i]["id"] === this.payload.formData.id) {
+                  this.$set(this.dataTimeline, i, eve);
+                }
+              }
+              this.cancelclk();
+              this.alertStatus(true, "Updated event successfully");
+            })
+            .catch((err) => {
+              this.alertStatus(false, err);
+            })
+            .finally(() => (this.payload.loading.change = false));
+        } else {
+          // Creating event
+          Axios.post(
+            ProData.getHostURL() +
+              "/timeline/" +
+              this.$route.params.id +
+              "/" +
+              this.$route.params.member,
+            eve
+          )
+            .then((data) => {
+              eve.id = data.data;
+              this.alertStatus(true, "Created event successfully");
+              this.dataTimeline.push(eve);
+              this.cancelclk();
+            })
+            .catch((err) => {
+              this.alertStatus(false, err);
+            })
+            .finally(() => (this.payload.loading.change = false));
+        }
+      } else {
+        this.alertStatus(false, "Please select an event date");
+      }
+    },
+    formEmit(type) {
+      switch (type) {
+        case 0:
+          this.sendData();
+          break;
+        case 1:
+          this.cancelclk();
+          break;
+        case 2:
+          this.deleteItem();
+          break;
+        default:
+          break;
+      }
+    },
+    alertStatus(status, msg) {
+      this.modal_msg = msg;
+      this.show_alert = true;
+      this.success_alert = status;
+      setTimeout(() => {
+        this.show_alert = false;
+      }, 3000);
+    },
+    cancelclk() {
+      if (this.$device.mobile && this.$refs.dualPageRef) {
+        this.$refs.dualPageRef.swiperClose();
+      }
+      this.payload.formData.shared_with = [];
+      this.payload.formData = {};
+      this.payload.formData.isEdit = false;
+    },
+    swiperDown() {
+      this.showDualPage = false;
+    },
+    deleteItem() {
+      this.payload.loading.delete = true;
+      Axios.delete(
+        ProData.getHostURL() +
+          "/timeline/" +
+          this.$route.params.id +
+          "/" +
+          this.$route.params.member,
+        {
+          data: { id: this.payload.formData.id },
+        }
+      )
+        .then(() => {
+          this.alertStatus(true, "Event deleted");
+          let temparr = this.dataTimeline;
+          temparr = temparr.filter((x) => x.id !== this.payload.formData.id);
+          this.dataTimeline = temparr;
+          this.cancelclk();
+        })
+        .catch((err) => {
+          this.alertStatus(false, err);
+        })
+        .finally(() => (this.payload.loading.delete = false));
+    },
+    wrapperUp() {
+      this.payload.names = this.names;
+      this.showDualPage = true;
+    },
+  },
 };
 </script>
 
 <style>
-.timeline-intro .icofont-arrow-right {
-  color: indianred;
+.person-timeline-page {
+  min-height: 100vh;
+  padding: 0 16px 80px 16px;
+  position: relative;
+  text-align: left;
 }
-.timeline-intro {
-  margin-top: 50px !important;
+
+.timeline-content-wrapper {
+  max-width: 1240px;
+  margin: 0 auto;
+  text-align: left;
 }
-.intro-item {
+
+/* Hero Header */
+.timeline-hero-header {
+  padding-top: 20px;
+  text-align: left;
+}
+
+.hero-header-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-back-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8 !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  width: fit-content;
+  transition: all 0.2s ease;
+}
+.hero-back-pill:hover {
+  background: rgba(79, 142, 247, 0.15);
+  border-color: rgba(79, 142, 247, 0.35);
+  color: #fff !important;
+  transform: translateX(-3px);
+}
+
+.hero-identity-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 16px;
+}
+
+.hero-avatar-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+  flex-shrink: 0;
+}
+
+.hero-identity-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.ptimeline-hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+  margin: 0;
+  text-align: left;
+}
+
+.hero-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(79, 142, 247, 0.15);
+  border: 1px solid rgba(79, 142, 247, 0.3);
+  color: #60a5fa;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ptimeline-hero-fullname {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+
+/* Two-Column Layout: Stream on Left, Sticky Event Form on Right */
+.timeline-layout-container {
   display: flex;
   align-items: flex-start;
-  gap: 15px;
-}
-.intro-icon {
-  background: rgba(167, 139, 250, 0.15);
-  color: #a78bfa;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 18px;
-}
-.intro-item p {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 15px;
-  line-height: 1.5;
-  margin: 0;
-}
-.card {
-  z-index: 10;
-}
-.btn-cancel {
-  border: 1px solid black;
-}
-.input-con {
-  display: flex;
-  align-items: center;
-  margin: 0px;
-  margin-bottom: 30px !important;
-}
-.input-con .label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0px;
-}
-.input-con .md-field {
-  padding: 0px;
-  margin: 0px;
-}
-.input-con .v-select {
-  padding: 0px;
-}
-.timeline-titlebar {
-  height: 50px;
-  position: fixed;
+  gap: 32px;
   width: 100%;
-  z-index: 1;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  padding: 5px;
-  background-color: rgba(15, 17, 35, 0.8);
-  backdrop-filter: blur(20px);
-  display: flex;
-  align-items: center;
+  position: relative;
 }
-.timeline-title {
-  font-size: 32px;
-  color: white !important;
-  font-family: 'Comfortaa', sans-serif;
-  font-weight: 700;
-  margin: 10px 0 30px 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  white-space: nowrap;
+
+.timeline-stream-col {
+  flex: 1 1 0;
+  min-width: 0;
 }
-.mobile-action-bar {
-  position: fixed;
-  bottom: 0px;
-  left: 0;
-  width: 100%;
-  padding: 16px 24px;
-  background: rgba(15, 17, 35, 0.85);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  z-index: 99;
-}
-.timeline_add_box {
+
+.timeline-form-col {
+  width: 420px;
+  max-width: 420px;
+  flex: 0 0 420px;
   position: sticky;
   top: 100px;
-  border-radius: 20px;
-  max-height: calc(100vh - 120px);
+  z-index: 20;
+}
+
+.timeline-form-sticky-wrap {
+  width: 100%;
+  max-height: calc(100vh - 130px);
   overflow-y: auto;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-  background: rgba(15, 17, 35, 0.6);
-  backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: hidden;
+  border-radius: 24px;
 }
-.timeline_add_box::-webkit-scrollbar {
-  display: none;
+
+.timeline-form-sticky-wrap::-webkit-scrollbar {
+  width: 4px;
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
+.timeline-form-sticky-wrap::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+@media (max-width: 900px) {
+  .timeline-layout-container {
+    flex-direction: column;
+    gap: 0;
+  }
+  .timeline-form-col {
+    display: none !important;
+  }
+}
+
+/* Floating Toast */
+.floating-timeline-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  animation: toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-success {
+  background: rgba(16, 185, 129, 0.9);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toast-error {
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toast-icon {
+  font-size: 22px;
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  font-size: 13.5px;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.3s ease;
+}
+.toast-slide-enter,
+.toast-slide-leave-to {
   opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Empty State Card */
+.empty-timeline-card {
+  background: rgba(15, 20, 36, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.empty-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  max-width: 440px;
+  margin: 8px 0 0 0;
+  line-height: 1.5;
+}
+
+.empty-guide-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 480px;
+  text-align: left;
+}
+
+.guide-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.guide-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.icon-heart {
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+}
+
+.icon-share {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.guide-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #94a3b8;
+}
+.guide-text strong {
+  color: #e2e8f0;
+  font-size: 13.5px;
+  margin-bottom: 2px;
+}
+
+/* Mobile Action Bar */
+.mobile-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px;
+  background: rgba(10, 13, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 99;
+}
+
+.mobile-add-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+  cursor: pointer;
+}
+
+/* Modern Timeline Loader */
+.timeline-loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.modern-timeline-loader {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(79, 142, 247, 0.2);
+  border-top-color: #4f8ef7;
+  border-radius: 50%;
+  animation: loader-spin 1s linear infinite;
+}
+
+@keyframes loader-spin {
+  100% { transform: rotate(360deg); }
 }
 </style>
