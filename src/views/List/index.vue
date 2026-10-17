@@ -12,7 +12,8 @@
           <span class="brand-name">Bloodline</span>
         </div>
         <button class="btn-create-nav" @click="addFamilyBtn">
-          <span class="btn-plus">+</span> Create Your Family
+          <span class="btn-plus-icon"><i class="icofont-plus"></i></span>
+          <span class="btn-create-text">Create Your Family</span>
         </button>
       </nav>
 
@@ -325,31 +326,79 @@ export default {
 }
 
 .btn-create-nav {
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  background: rgba(79, 142, 247, 0.15);
-  border: 1px solid rgba(79, 142, 247, 0.4);
-  border-radius: 50px;
-  color: #7eb3ff;
+  gap: 10px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  background-size: 200% 200%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 99px;
+  color: #ffffff !important;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.2px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  box-shadow: 0 4px 18px rgba(79, 142, 247, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Light Sheen Sweep Effect on Hover */
+.btn-create-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.btn-create-nav:hover::before {
+  left: 140%;
 }
 
 .btn-create-nav:hover {
-  background: rgba(79, 142, 247, 0.3);
-  border-color: rgba(79, 142, 247, 0.7);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(79, 142, 247, 0.2);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.65), 0 0 18px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+  background-position: 100% 0%;
 }
 
-.btn-plus {
-  font-size: 16px;
+.btn-create-nav:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-plus-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+}
+
+.btn-create-nav:hover .btn-plus-icon {
+  transform: rotate(90deg) scale(1.15);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.btn-create-text {
+  position: relative;
+  z-index: 1;
 }
 
 /* ===== HERO ===== */
@@ -404,9 +453,13 @@ export default {
 .hero-content {
   position: relative;
   z-index: 2;
-  text-align: center;
+  text-align: center !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 60px 24px 80px;
   max-width: 700px;
+  margin: 0 auto;
   animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
@@ -445,11 +498,13 @@ export default {
 }
 
 .hero-title {
-  font-size: clamp(40px, 7vw, 72px);
+  font-size: clamp(40px, 7vw, 72px) !important;
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: -2px;
   margin: 0 0 20px;
+  text-align: center !important;
+  width: 100%;
 }
 
 .title-white {
@@ -474,10 +529,13 @@ export default {
   color: rgba(255,255,255,0.55);
   line-height: 1.7;
   margin-bottom: 36px;
+  text-align: center !important;
+  width: 100%;
 }
 
 /* ===== HERO SEARCH ===== */
 .hero-search-wrap {
+  width: 100%;
   max-width: 520px;
   margin: 0 auto;
 }

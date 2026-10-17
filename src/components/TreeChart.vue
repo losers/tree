@@ -185,6 +185,8 @@ export default {
 table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
+  margin: 0 auto !important;
+  width: auto !important;
 }
 td {
   position: relative;

@@ -1,80 +1,149 @@
 <template>
-  <center>
-    <div class="mx-auto col-12" v-if="hasCookie && !viewOnly">
-      <button
-        @click="addMember(0)"
-        class="col-10 btn mb-3 my-action-btn glass-warning"
-        v-show="!data.parent_id || (data.is_mate && !data.linked_tree)"
-      >
-        + Add Parent
-      </button>
+  <div class="actions-wrapper">
+    <div v-if="hasCookie && !viewOnly" class="actions-list">
+      <!-- Add Child -->
+      <div class="action-card action-child" @click="addMember(1)">
+        <div class="action-icon icon-child">
+          <i class="icofont-baby"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title">+ Add Child</div>
+          <div class="action-sub">Add son or daughter</div>
+        </div>
+        <i class="icofont-rounded-right action-arrow"></i>
+      </div>
 
-      <button @click="addMember(1)" class="col-10 btn mb-3 my-action-btn glass-success">
-        + Add Child
-      </button>
-
-      <button
-        @click="goToSubTree()"
-        class="col-10 btn mb-3 my-action-btn glass-info"
-        v-show="data.linked_tree"
-      >
-        <i class="icofont-tree p2" style="font-size: 15px"></i>
-        View Parent Tree
-      </button>
-
-      <button
-        v-show="!data.is_mate"
+      <!-- Add Spouse (Wife / Husband) -->
+      <div
+        v-if="!data.is_mate"
+        class="action-card action-spouse"
         @click="addMember('gender')"
-        class="col-10 btn mb-3 my-action-btn glass-primary"
       >
-        + Add {{ data.gender == "1" ? "Wife" : "Husband" }}
-      </button>
+        <div class="action-icon icon-spouse">
+          <i class="icofont-heart-alt"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title">+ Add {{ data.gender == '1' ? 'Wife' : 'Husband' }}</div>
+          <div class="action-sub">Link partner / spouse</div>
+        </div>
+        <i class="icofont-rounded-right action-arrow"></i>
+      </div>
 
-      <button
-        @click="reArrange"
+      <!-- Add Parent -->
+      <div
+        v-if="!data.parent_id || (data.is_mate && !data.linked_tree)"
+        class="action-card action-parent"
+        @click="addMember(0)"
+      >
+        <div class="action-icon icon-parent">
+          <i class="icofont-users-alt-2"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title">+ Add Parent</div>
+          <div class="action-sub">Link father or mother branch</div>
+        </div>
+        <i class="icofont-rounded-right action-arrow"></i>
+      </div>
+
+      <!-- View Parent Tree (Subtree) -->
+      <div
+        v-if="data.linked_tree"
+        class="action-card action-subtree"
+        @click="goToSubTree()"
+      >
+        <div class="action-icon icon-subtree">
+          <i class="icofont-tree"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title">View Parent Tree</div>
+          <div class="action-sub">Explore connected lineage tree</div>
+        </div>
+        <i class="icofont-external-link action-arrow"></i>
+      </div>
+
+      <!-- Swap Siblings -->
+      <div
         v-if="!data.is_mate && data.parent_id"
-        class="col-10 btn mb-3 my-action-btn glass-warning"
+        class="action-card action-swap"
+        @click="reArrange"
       >
-        <i class="icofont-exchange"></i> Swap Siblings
-      </button>
+        <div class="action-icon icon-swap">
+          <i class="icofont-exchange"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title">Swap Siblings</div>
+          <div class="action-sub">Reorder sibling display sequence</div>
+        </div>
+        <i class="icofont-rounded-right action-arrow"></i>
+      </div>
 
-      <button @click="deleteSwipe" class="btn col-10 mb-3 my-action-btn glass-danger">
-        <i class="icofont-ui-delete"></i> Delete
-      </button>
+      <!-- Delete Member (Danger Zone) -->
+      <div class="action-card action-delete" @click="deleteSwipe">
+        <div class="action-icon icon-delete">
+          <i class="icofont-ui-delete"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title text-danger">Delete Member</div>
+          <div class="action-sub text-muted">Remove {{ data.short_name }} from the tree</div>
+        </div>
+        <i class="icofont-trash action-arrow text-danger"></i>
+      </div>
     </div>
-    <div v-else>
-      <span class="col-4">
-        <button
-          @click="goToSubTree()"
-          class="col-10 btn mb-3 my-action-btn glass-info"
-          v-show="data.linked_tree"
-        >
-          <i class="icofont-tree p2" style="font-size: 15px"></i>
-          View Parent Tree
-        </button>
-        <input
-          class="form-control input-sm dark-input"
-          placeholder="Enter Admin Key to Edit"
-          v-model="key"
-          onkeypress="if(this.value.length==4) return false;"
-          type="number"
-        />
+
+    <!-- Unlock Admin PIN (when not authenticated as admin) -->
+    <div v-else class="admin-unlock-card">
+      <!-- Subtree button if available -->
+      <div
+        v-if="data.linked_tree"
+        class="action-card action-subtree mb-3"
+        @click="goToSubTree()"
+      >
+        <div class="action-icon icon-subtree">
+          <i class="icofont-tree"></i>
+        </div>
+        <div class="action-details">
+          <div class="action-title">View Parent Tree</div>
+          <div class="action-sub">Explore connected lineage tree</div>
+        </div>
+        <i class="icofont-external-link action-arrow"></i>
+      </div>
+
+      <div class="unlock-inner p-4 text-center">
+        <div class="lock-icon-circle mb-3">
+          <i class="icofont-lock"></i>
+        </div>
+        <h5 class="font-weight-bold mb-1" style="color: #fff; font-size: 16px;">Admin Authentication</h5>
+        <p class="text-muted mb-3" style="font-size: 13px;">
+          Enter 4-digit Admin PIN to edit members and family relations.
+        </p>
+
+        <div class="pin-input-group mb-3">
+          <input
+            class="form-control text-center admin-pin-input"
+            placeholder="• • • •"
+            v-model="key"
+            onkeypress="if(this.value.length==4) return false;"
+            type="password"
+            maxlength="4"
+          />
+        </div>
+
         <button
           v-show="key.length == 4"
           @click="validate"
-          class="btn mt-3 my-action-btn"
-          :class="{ 'glass-success': !retry, 'glass-warning': retry }"
+          class="my-btn w-100"
           :disabled="vloading"
         >
-          <span
-            class="spinner-border spinner-border-sm"
-            v-show="vloading"
-          ></span>
-          {{ retry ? "Retry" : "Validate" }}
+          <span class="spinner-border spinner-border-sm mr-1" v-show="vloading"></span>
+          {{ retry ? "Retry PIN" : "Unlock Admin Actions" }}
         </button>
-      </span>
+
+        <div v-if="retry" class="text-danger mt-2" style="font-size: 12.5px;">
+          <i class="icofont-warning-alt mr-1"></i> Incorrect Admin PIN. Please try again.
+        </div>
+      </div>
     </div>
-  </center>
+  </div>
 </template>
 
 <script>
@@ -119,7 +188,6 @@ export default {
         .post(sessionUrl, params)
         .then((data) => {
           data = data.data;
-          console.log(data);
           this.hasCookie = true;
           this.vloading = false;
           let sessData = {};
@@ -146,64 +214,175 @@ export default {
 </script>
 
 <style scoped>
-.my-action-btn {
-  position: relative;
-  background: rgba(255, 255, 255, 0.05) !important;
-  color: white !important;
-  border-radius: 14px !important;
-  padding: 12px 20px !important;
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.5px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+.actions-wrapper {
+  padding: 0 4px;
+}
+
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  overflow: hidden;
-  z-index: 1;
+  user-select: none;
 }
 
-.my-action-btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%; width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: all 0.5s ease;
-  z-index: -1;
+.action-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(79, 142, 247, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-.my-action-btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  letter-spacing: 1px;
+.action-card:active {
+  transform: scale(0.98);
 }
 
-.my-action-btn:hover::before {
-  left: 100%;
+.action-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
 }
 
-.glass-primary { border-left: 4px solid #4f8ef7 !important; }
-.glass-primary:hover { background: rgba(79, 142, 247, 0.15) !important; box-shadow: 0 8px 20px rgba(79, 142, 247, 0.4) !important; border-color: rgba(79, 142, 247, 0.8) !important; }
+.action-card:hover .action-icon {
+  transform: scale(1.08);
+}
 
-.glass-success { border-left: 4px solid #2ed573 !important; }
-.glass-success:hover { background: rgba(46, 213, 115, 0.15) !important; box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4) !important; border-color: rgba(46, 213, 115, 0.8) !important; }
+.icon-child {
+  background: rgba(46, 213, 115, 0.15);
+  color: #2ed573;
+  border: 1px solid rgba(46, 213, 115, 0.3);
+}
 
-.glass-warning { border-left: 4px solid #ffa502 !important; }
-.glass-warning:hover { background: rgba(255, 165, 2, 0.15) !important; box-shadow: 0 8px 20px rgba(255, 165, 2, 0.4) !important; border-color: rgba(255, 165, 2, 0.8) !important; }
+.icon-spouse {
+  background: rgba(255, 75, 120, 0.15);
+  color: #ff4b78;
+  border: 1px solid rgba(255, 75, 120, 0.3);
+}
 
-.glass-danger { border-left: 4px solid #ff4757 !important; }
-.glass-danger:hover { background: rgba(255, 71, 87, 0.15) !important; box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4) !important; border-color: rgba(255, 71, 87, 0.8) !important; }
+.icon-parent {
+  background: rgba(255, 171, 0, 0.15);
+  color: #ffab00;
+  border: 1px solid rgba(255, 171, 0, 0.3);
+}
 
-.glass-info { border-left: 4px solid #00a8ff !important; }
-.glass-info:hover { background: rgba(0, 168, 255, 0.15) !important; box-shadow: 0 8px 20px rgba(0, 168, 255, 0.4) !important; border-color: rgba(0, 168, 255, 0.8) !important; }
+.icon-subtree {
+  background: rgba(0, 194, 255, 0.15);
+  color: #00c2ff;
+  border: 1px solid rgba(0, 194, 255, 0.3);
+}
 
-.dark-input {
-  background: rgba(15, 17, 35, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
+.icon-swap {
+  background: rgba(120, 119, 253, 0.15);
+  color: #7877fd;
+  border: 1px solid rgba(120, 119, 253, 0.3);
+}
+
+.icon-delete {
+  background: rgba(255, 71, 87, 0.12);
+  color: #ff4757;
+  border: 1px solid rgba(255, 71, 87, 0.3);
+}
+
+.action-details {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.action-title {
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.action-sub {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.action-arrow {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 16px;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.action-card:hover .action-arrow {
+  transform: translateX(3px);
+  color: #ffffff;
+}
+
+/* Admin Unlock Card */
+.admin-unlock-card {
+  width: 100%;
+}
+
+.unlock-inner {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+
+.lock-icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(79, 142, 247, 0.15);
+  color: #4f8ef7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto;
+}
+
+.admin-pin-input {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(79, 142, 247, 0.3) !important;
+  color: #fff !important;
+  font-size: 20px;
+  letter-spacing: 6px;
   border-radius: 12px;
   padding: 10px;
+  max-width: 200px;
+  margin: 0 auto;
 }
-.dark-input:focus {
+
+.admin-pin-input:focus {
   border-color: #4f8ef7 !important;
   box-shadow: 0 0 15px rgba(79, 142, 247, 0.4) !important;
+}
+
+.my-btn {
+  background: linear-gradient(135deg, #4f8ef7, #a78bfa);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 10px 20px;
+  transition: all 0.25s ease;
+}
+
+.my-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 142, 247, 0.4);
 }
 </style>

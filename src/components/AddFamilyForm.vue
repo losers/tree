@@ -76,29 +76,27 @@
                 v-model="surname"
                 type="text"
                 class="modern-input"
-                :class="{ 'input-error-shake': errored }"
                 :disabled="payload"
                 placeholder="e.g. Windsor"
                 @input="makeSmall"
                 required
               />
-              <!-- Warning + chips -->
-              <transition name="chips-in">
-                <div v-if="errored" class="surname-error-zone">
-                  <span class="surname-warn">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    "{{ originalSurname }}" is already taken
-                  </span>
-                  <div v-if="suggestionChips.length" class="chips-row">
-                    <span class="chips-label">Try:</span>
+
+              <!-- Suggestions Capsules -->
+              <transition name="fade">
+                <div class="surname-suggestions-box mt-2" v-if="suggestions && suggestions.length > 0 && errored">
+                  <span class="suggestion-tag-label"><i class="icofont-light-bulb mr-1"></i> Suggestions:</span>
+                  <div class="suggestion-capsules-wrap">
                     <button
-                      v-for="(chip, i) in suggestionChips"
-                      :key="chip"
                       type="button"
-                      class="suggestion-chip"
-                      :style="{ animationDelay: (i * 60) + 'ms' }"
-                      @click="applyChip(chip)"
-                    >{{ chip }}</button>
+                      v-for="sug in suggestions"
+                      :key="sug"
+                      class="capsule-pill-btn"
+                      @click="selectSuggestion(sug)"
+                      title="Select this surname"
+                    >
+                      {{ sug }}
+                    </button>
                   </div>
                 </div>
               </transition>
@@ -181,22 +179,23 @@
             </div>
           </div>
 
-
+          <transition name="fade">
+            <div v-if="errored" class="error-box shake-anim mt-3">
+              <span class="error-icon">🛑</span> Surname '{{ failedSurname || surname }}' already exists. Try another.
+            </div>
+          </transition>
 
           <!-- Actions -->
           <div class="modal-actions mt-4">
-            <div class="left-actions">
-              <button type="button" class="btn-ghost" @click="goBack">Cancel</button>
-              <button
-                v-show="payload"
-                type="button"
-                class="btn-danger-outline"
-                @click="isDelete = true; created = false;"
-              >
-                Delete
-              </button>
-            </div>
-
+            <button type="button" class="btn-ghost" @click="goBack">Cancel</button>
+            <button
+              v-show="payload"
+              type="button"
+              class="btn-danger-outline"
+              @click="isDelete = true; created = false;"
+            >
+              Delete
+            </button>
             <button
               type="submit"
               class="btn-primary-filled"
@@ -222,6 +221,9 @@ export default {
   data() {
     return {
       surname: null,
+      failedSurname: null,
+      suggestions: [],
+      rejectedSurnames: new Set(),
       title: null,
       created: false,
       errored: null,
@@ -234,8 +236,6 @@ export default {
       errSurname: null,
       editFormLoading: null,
       editFormErrored: null,
-      originalSurname: null,
-      failCount: 0,
       contact: {
         name: null,
         email: null,
@@ -246,30 +246,7 @@ export default {
     isWeakPin() {
       const p = this.pin;
       return p === '1234' || p === '0000' || p === '1111' || p === '1212' || p === '4321';
-    },
-    suggestionChips() {
-      if (!this.originalSurname || !this.errored) return [];
-      const base = this.originalSurname;
-      // Pull meaningful words from the display title
-      const stop = new Set(['the','a','an','of','and','my','our','family','tree','dynasty','clan']);
-      const titleWords = (this.title || '')
-        .toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/)
-        .filter(w => w && !stop.has(w) && w !== base);
-      const extras = ['family','legacy','clan','home','roots','heritage','origin'];
-      // First failure: show 1 title-derived chip
-      // Second+ failure: show up to 5 more variety chips
-      if (this.failCount === 1) {
-        const word = titleWords[0] || extras[0];
-        return [`${base}-${word}`];
-      }
-      // Build a richer set on repeat failures
-      const pool = [
-        ...titleWords.map(w => `${base}-${w}`),
-        ...extras.map(w => `${base}-${w}`),
-      ];
-      // Deduplicate and limit to 5
-      return [...new Set(pool)].slice(0, 5);
-    },
+    }
   },
   mounted() {
     this.pin_placeholder = `Create 4 Digit ${this.payload ? "Admin" : ""} PIN`;
@@ -291,7 +268,6 @@ export default {
   methods: {
     sendData() {
       this.loading = true;
-      this.errored = null;
       if (this.payload) {
         Axios.put(ProdData.getHostURL() + "/meta/update", {
           title: this.title,
@@ -319,11 +295,77 @@ export default {
           })
           .catch((err) => {
             this.errored = err;
-            this.originalSurname = this.surname;
-            this.failCount++;
+            this.failedSurname = this.surname;
+            this.rejectedSurnames.add(this.failedSurname);
+            this.updateSuggestions();
           })
           .finally(() => (this.loading = false));
       }
+    },
+    updateSuggestions() {
+      const titleWords = (this.title || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .split(/[\s-]+/)
+        .filter(w => w && w.length > 0);
+
+      const base = (this.failedSurname || this.surname || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+      let list = [];
+
+      // 1. Direct combinations of words from title (e.g. "the-windsor", "windsor-dynasty")
+      if (titleWords.length >= 2) {
+        list.push(titleWords.join("-"));
+        for (let i = 0; i < titleWords.length - 1; i++) {
+          list.push(`${titleWords[i]}-${titleWords[i + 1]}`);
+        }
+        if (titleWords.length >= 3) {
+          list.push(`${titleWords[0]}-${titleWords[titleWords.length - 1]}`);
+        }
+      }
+
+      // 2. Combinations with the surname that was entered
+      if (base) {
+        titleWords.forEach(word => {
+          if (word !== base) {
+            list.push(`${base}-${word}`);
+            list.push(`${word}-${base}`);
+          }
+        });
+      }
+
+      // 3. Fallback suffixes if fewer suggestions
+      const familyTags = ["family", "clan", "roots", "tree", "lineage", "heritage"];
+      for (let tag of familyTags) {
+        if (base && !titleWords.includes(tag)) {
+          list.push(`${base}-${tag}`);
+        } else if (titleWords.length > 0 && titleWords[0] !== tag) {
+          list.push(`${titleWords[0]}-${tag}`);
+        }
+      }
+
+      // Filter out rejected, duplicates, and current failed
+      const result = [];
+      for (let s of list) {
+        if (
+          s !== base &&
+          !this.rejectedSurnames.has(s) &&
+          !result.includes(s)
+        ) {
+          result.push(s);
+        }
+        if (result.length >= 5) break;
+      }
+
+      this.suggestions = result;
+    },
+    selectSuggestion(sug) {
+      this.surname = sug;
+      this.errored = null;
+      this.failedSurname = null;
+      this.suggestions = this.suggestions.filter(s => s !== sug);
     },
     deleteFamily() {
       // Mock delete functionality if exists in original
@@ -344,18 +386,6 @@ export default {
         /[\\~`!@#$%^&*()+=/{}[\];:'"<>.?]/g,
         ""
       );
-      // Clear error when user edits manually
-      if (this.errored) {
-        this.errored = null;
-        this.originalSurname = null;
-        this.failCount = 0;
-      }
-    },
-    applyChip(chip) {
-      this.surname = chip;
-      this.errored = null;
-      this.originalSurname = null;
-      this.failCount = 0;
     },
   },
 };
@@ -562,82 +592,6 @@ export default {
   gap: 10px;
 }
 
-/* ━━ SURNAME TAKEN — inline chip suggestions ━━ */
-.input-error-shake {
-  border-color: rgba(239, 68, 68, 0.45) !important;
-  animation: err-shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-}
-@keyframes err-shake {
-  10%,90%  { transform: translateX(-2px); }
-  30%,70%  { transform: translateX( 3px); }
-  50%      { transform: translateX(-3px); }
-}
-
-.surname-error-zone {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.surname-warn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  color: #fca5a5;
-  opacity: 0.9;
-}
-
-.chips-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 7px;
-}
-
-.chips-label {
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  flex-shrink: 0;
-}
-
-.suggestion-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 100px;
-  border: 1px solid rgba(99,102,241,0.4);
-  background: rgba(99,102,241,0.1);
-  color: #a5b4fc;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.18s, border-color 0.18s, transform 0.18s;
-  animation: chip-pop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
-}
-.suggestion-chip:hover {
-  background: rgba(99,102,241,0.22);
-  border-color: rgba(99,102,241,0.7);
-  transform: translateY(-1px);
-}
-.suggestion-chip:active {
-  transform: scale(0.95);
-}
-@keyframes chip-pop {
-  from { opacity: 0; transform: scale(0.8) translateY(4px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* chips-in transition (wrapping div) */
-.chips-in-enter-active { transition: opacity 0.2s, transform 0.2s; }
-.chips-in-leave-active { transition: opacity 0.15s; }
-.chips-in-enter        { opacity: 0; transform: translateY(-4px); }
-.chips-in-leave-to     { opacity: 0; }
-
 /* Divider */
 .modern-divider {
   display: flex;
@@ -669,74 +623,86 @@ export default {
 /* Buttons */
 .modal-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
-}
-
-.left-actions {
-  display: flex;
   gap: 12px;
+  margin-top: 24px;
+  width: 100%;
 }
 
 .btn-ghost {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.5);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 20px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 20px;
+  min-height: 48px;
   cursor: pointer;
   border-radius: 12px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-ghost:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary-filled {
+  flex: 1.5;
   background: linear-gradient(135deg, #4f8ef7 0%, #a78bfa 100%);
   border: none;
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 24px;
+  min-height: 48px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 14px rgba(79, 142, 247, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(79, 142, 247, 0.35);
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .btn-primary-filled:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(79, 142, 247, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 142, 247, 0.5);
 }
 
 .btn-primary-filled:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
 .btn-danger-outline {
-  background: transparent;
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  flex: 1;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   color: #f87171;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 20px;
+  min-height: 48px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-danger-outline:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.8);
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fff;
 }
 
 .btn-danger-filled {
@@ -812,6 +778,57 @@ export default {
   40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
+/* Surname Suggestions Capsules */
+.surname-suggestions-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.suggestion-tag-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-capsules-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.capsule-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(79, 142, 247, 0.15);
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  color: #93c5fd;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.capsule-pill-btn:hover {
+  background: linear-gradient(135deg, rgba(79, 142, 247, 0.3), rgba(167, 139, 250, 0.3));
+  border-color: #818cf8;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 142, 247, 0.3);
+}
+
+.capsule-pill-btn:active {
+  transform: translateY(0);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 640px) {
   .add-family-container {
@@ -824,16 +841,13 @@ export default {
   }
   
   .modal-actions {
-    flex-direction: column-reverse;
-    gap: 16px;
-    align-items: stretch;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
   }
   
-  .left-actions {
-    justify-content: space-between;
-  }
-  
-  .btn-primary-filled, .btn-danger-filled {
+  .btn-ghost, .btn-primary-filled, .btn-danger-outline {
+    min-height: 48px;
     justify-content: center;
   }
 }

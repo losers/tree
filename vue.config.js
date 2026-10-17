@@ -1,9 +1,19 @@
 module.exports = {
     lintOnSave: false,
     devServer: {
+        before(app) {
+            app.get('/app/*', (req, res, next) => {
+                req.url = '/app.html';
+                next();
+            });
+            app.get('/app', (req, res, next) => {
+                req.url = '/app.html';
+                next();
+            });
+        },
         proxy: {
             "/api": {
-                target: 'https://blineapi.vercel.app',
+                target: 'http://localhost:5000',
                 secure : false,
                 pathRewrite: {
                     '^/api': ''

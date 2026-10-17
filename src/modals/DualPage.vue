@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="dual-page-container">
     <swipeable-bottom-sheet
       v-if="$device.mobile"
       ref="swipeableBottomSheet"
-      style="z-index: 100"
+      style="z-index: 1000 !important;"
       v-on:close="beforeClose"
     >
       <component
@@ -124,3 +124,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.dual-page-container {
+  position: relative;
+  z-index: 1000;
+}
+</style>
