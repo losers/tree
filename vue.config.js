@@ -1,3 +1,9 @@
+const crypto = require("crypto");
+const crypto_orig_createHash = crypto.createHash;
+crypto.createHash = function (algorithm, options) {
+    return crypto_orig_createHash(algorithm === "md4" ? "sha256" : algorithm, options);
+};
+
 module.exports = {
     lintOnSave: false,
     devServer: {
