@@ -50,6 +50,10 @@
               ><li><i class="icofont-sand-clock drawer-icons"></i>Family Timeline</li></router-link
             >
 
+            <router-link :to="{ name: 'Quiz' }" class="menu-item-link"
+              ><li><i class="icofont-brain drawer-icons"></i>Family Quiz</li></router-link
+            >
+
             <router-link :to="{ name: 'Donations' }" class="menu-item-link"
               ><li>
                 <i class="icofont-ui-love text-danger drawer-icons"></i

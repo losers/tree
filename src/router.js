@@ -96,6 +96,11 @@ const myrouter = new VueRouter({
                     name: "Records",
                     component: () => import('./views/Tabs/Records.vue'),
                 },
+                {
+                    path: "quiz",
+                    name: "Quiz",
+                    component: () => import('./views/Tabs/Quiz.vue'),
+                },
                 // {
                 //     path: "donations",
                 //     name: "Donations",

@@ -8,9 +8,11 @@ import device from "vue-device-detector"
 import VModal from "vue-js-modal";
 import store from '../../store'
 import '../../..//node_modules/timeline-vuejs/dist/timeline-vuejs.css'
+import VueConfetti from 'vue-confetti';
 import linkify from "vue-linkify";
 
 Vue.directive("linkified", linkify);
+Vue.use(VueConfetti);
 Vue.use(VueParticles)
 Vue.use(device)
 Vue.use(VModal, {

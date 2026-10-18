@@ -235,6 +235,11 @@ export default {
           title: "Family Timeline",
           icon: "icofont-sand-clock",
         },
+        {
+          href: `/${this.$route.params.id}/quiz`,
+          title: "Family Quiz",
+          icon: "icofont-brain",
+        },
         // {
         //   href: `/${this.$route.params.id}/records`,
         //   title: "Records",
