@@ -4,6 +4,7 @@ import axios from 'axios';
 import ProdData from "@/data.js";
 import Algos from "../algos/analytics/relation-finder";
 import { setExitNodeInfo } from "@/util/helper";
+import { loadSavedCustomization, saveCustomizationToStorage, DEFAULT_CUSTOMIZATION } from "@/util/treeThemes";
 
 Vue.use(Vuex);
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     sub_member_data: {},
     subtree_meta: {},
     theme: (typeof window !== "undefined" && localStorage.getItem("bloodline-theme")) || "dark",
+    treeCustomization: loadSavedCustomization(),
   },
   mutations: {
     setTheme(state, theme) {
@@ -91,8 +93,32 @@ export default new Vuex.Store({
     setSubtreeMeta(state,  subtree_data) {
       state.subtree_meta = subtree_data;
     },
+    setTreeCustomization(state, customization) {
+      Vue.set(state, 'treeCustomization', { ...state.treeCustomization, ...customization });
+      saveCustomizationToStorage(state.treeCustomization);
+    },
+    updateCustomizationProperty(state, { key, value }) {
+      Vue.set(state, 'treeCustomization', { ...state.treeCustomization, [key]: value });
+      saveCustomizationToStorage(state.treeCustomization);
+    },
+    resetTreeCustomization(state) {
+      Vue.set(state, 'treeCustomization', { ...DEFAULT_CUSTOMIZATION });
+      saveCustomizationToStorage(state.treeCustomization);
+    },
   },
   actions: {
+    setTreeCustomization({ commit }, payload) {
+      commit('setTreeCustomization', payload);
+    },
+    updateTreeCustomization({ commit }, payload) {
+      commit('setTreeCustomization', payload);
+    },
+    updateCustomizationProperty({ commit }, payload) {
+      commit('updateCustomizationProperty', payload);
+    },
+    resetTreeCustomization({ commit }) {
+      commit('resetTreeCustomization');
+    },
     async treeSetup(state, surname) {
       try {
         state.commit('setLoading', true);

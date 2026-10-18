@@ -6,7 +6,7 @@
         style="margin-right: 8px"
       ></span>
     </div>
-    <center v-if="!loader" style="overflow: auto;" class="h100">
+    <center v-if="!loader" style="overflow: auto;" class="h100" :style="subtreeStyle">
       <TreeChart
         :json="tree"
         :images="images"
@@ -24,6 +24,7 @@ import Axios from "axios";
 import ProdData from "@/data.js";
 import TreeChart from "@/components/TreeChart";
 import Store from "@/store/index";
+import { generateTreeCssVars } from "@/util/treeThemes";
 
 export default {
   data() {
@@ -36,6 +37,14 @@ export default {
     TreeChart,
   },
   computed: {
+    customization() {
+      return this.$store.state.treeCustomization;
+    },
+    subtreeStyle() {
+      return {
+        ...generateTreeCssVars(this.customization),
+      };
+    },
     images: {
       get() {
         return Store.state.images;

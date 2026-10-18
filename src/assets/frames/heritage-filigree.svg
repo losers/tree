@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="filigreeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fae8ff" />
+      <stop offset="30%" stop-color="#c084fc" />
+      <stop offset="60%" stop-color="#7e22ce" />
+      <stop offset="100%" stop-color="#3b0764" />
+    </linearGradient>
+    <linearGradient id="filigreeGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#fef08a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Double Border Lines -->
+  <rect x="6" y="6" width="148" height="148" rx="10" fill="none" stroke="url(#filigreeGold)" stroke-width="2" />
+  <rect x="14" y="14" width="132" height="132" rx="6" fill="none" stroke="url(#filigreeGold)" stroke-width="1.2" stroke-dasharray="4,2" />
+
+  <!-- Top-Left Filigree Scroll -->
+  <g stroke="url(#filigreeGold)" fill="none" stroke-width="1.5">
+    <path d="M 4,40 C 4,14 14,4 40,4" />
+    <path d="M 10,40 C 10,20 20,10 40,10" />
+    <circle cx="24" cy="24" r="8" fill="#ca8a04" fill-opacity="0.25" stroke-width="2" />
+    <circle cx="24" cy="24" r="3" fill="#fef08a" />
+    <path d="M 24,12 C 24,18 20,24 12,24" />
+    <path d="M 24,36 C 24,30 28,24 36,24" />
+  </g>
+
+  <!-- Top-Right Filigree Scroll -->
+  <g stroke="url(#filigreeGold)" fill="none" stroke-width="1.5">
+    <path d="M 156,40 C 156,14 146,4 120,4" />
+    <path d="M 150,40 C 150,20 140,10 120,10" />
+    <circle cx="136" cy="24" r="8" fill="#ca8a04" fill-opacity="0.25" stroke-width="2" />
+    <circle cx="136" cy="24" r="3" fill="#fef08a" />
+    <path d="M 136,12 C 136,18 140,24 148,24" />
+    <path d="M 136,36 C 136,30 132,24 124,24" />
+  </g>
+
+  <!-- Bottom-Left Filigree Scroll -->
+  <g stroke="url(#filigreeGold)" fill="none" stroke-width="1.5">
+    <path d="M 4,120 C 4,146 14,156 40,156" />
+    <path d="M 10,120 C 10,140 20,150 40,150" />
+    <circle cx="24" cy="136" r="8" fill="#ca8a04" fill-opacity="0.25" stroke-width="2" />
+    <circle cx="24" cy="136" r="3" fill="#fef08a" />
+    <path d="M 24,148 C 24,142 20,136 12,136" />
+    <path d="M 24,124 C 24,130 28,136 36,136" />
+  </g>
+
+  <!-- Bottom-Right Filigree Scroll -->
+  <g stroke="url(#filigreeGold)" fill="none" stroke-width="1.5">
+    <path d="M 156,120 C 156,146 146,156 120,156" />
+    <path d="M 150,120 C 150,140 140,150 120,150" />
+    <circle cx="136" cy="136" r="8" fill="#ca8a04" fill-opacity="0.25" stroke-width="2" />
+    <circle cx="136" cy="136" r="3" fill="#fef08a" />
+    <path d="M 136,148 C 136,142 140,136 148,136" />
+    <path d="M 136,124 C 136,130 132,136 124,136" />
+  </g>
+</svg>

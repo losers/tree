@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="woodOuter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#451a03" />
+      <stop offset="50%" stop-color="#290e02" />
+      <stop offset="100%" stop-color="#1c0701" />
+    </linearGradient>
+    <linearGradient id="woodGoldInlay" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#fef08a" />
+    </linearGradient>
+    <linearGradient id="woodTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="50%" stop-color="#451a03" />
+      <stop offset="100%" stop-color="#1c0701" />
+    </linearGradient>
+    <linearGradient id="woodBottom" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="50%" stop-color="#451a03" />
+      <stop offset="100%" stop-color="#1c0701" />
+    </linearGradient>
+    <linearGradient id="woodLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="50%" stop-color="#451a03" />
+      <stop offset="100%" stop-color="#1c0701" />
+    </linearGradient>
+    <linearGradient id="woodRight" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="50%" stop-color="#451a03" />
+      <stop offset="100%" stop-color="#1c0701" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Mahogany Border -->
+  <rect x="0" y="0" width="160" height="22" fill="url(#woodTop)" />
+  <rect x="0" y="138" width="160" height="22" fill="url(#woodBottom)" />
+  <rect x="0" y="0" width="22" height="160" fill="url(#woodLeft)" />
+  <rect x="138" y="0" width="22" height="160" fill="url(#woodRight)" />
+
+  <!-- Subtle wood grain lines -->
+  <line x1="0" y1="4" x2="160" y2="4" stroke="#92400e" stroke-width="0.8" opacity="0.6"/>
+  <line x1="0" y1="156" x2="160" y2="156" stroke="#92400e" stroke-width="0.8" opacity="0.6"/>
+  <line x1="4" y1="0" x2="4" y2="160" stroke="#92400e" stroke-width="0.8" opacity="0.6"/>
+  <line x1="156" y1="0" x2="156" y2="160" stroke="#92400e" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- Mitered Corner Lines -->
+  <line x1="0" y1="0" x2="22" y2="22" stroke="#1c0701" stroke-width="2"/>
+  <line x1="160" y1="0" x2="138" y2="22" stroke="#1c0701" stroke-width="2"/>
+  <line x1="0" y1="160" x2="22" y2="138" stroke="#1c0701" stroke-width="2"/>
+  <line x1="160" y1="160" x2="138" y2="138" stroke="#1c0701" stroke-width="2"/>
+
+  <!-- Inner Gold Leaf Inlay Trim -->
+  <rect x="22" y="22" width="116" height="116" fill="none" stroke="url(#woodGoldInlay)" stroke-width="3" />
+  <rect x="26" y="26" width="108" height="108" fill="none" stroke="#78350f" stroke-width="1.2" />
+
+  <!-- Corner Gold Accents -->
+  <polygon points="22,22 30,22 22,30" fill="#fef08a"/>
+  <polygon points="138,22 130,22 138,30" fill="#fef08a"/>
+  <polygon points="22,138 30,138 22,130" fill="#fef08a"/>
+  <polygon points="138,138 130,138 138,130" fill="#fef08a"/>
+</svg>

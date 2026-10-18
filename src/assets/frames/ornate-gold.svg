@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="goldGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="25%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#b45309" />
+      <stop offset="75%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="goldTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+    <linearGradient id="goldBottom" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+    <linearGradient id="goldLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+    <linearGradient id="goldRight" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#b45309" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Top Outer Bar -->
+  <rect x="0" y="0" width="160" height="24" fill="url(#goldTop)" />
+  <rect x="0" y="4" width="160" height="4" fill="#fef08a" opacity="0.8" />
+  <rect x="0" y="18" width="160" height="2" fill="#78350f" opacity="0.9" />
+
+  <!-- Bottom Outer Bar -->
+  <rect x="0" y="136" width="160" height="24" fill="url(#goldBottom)" />
+  <rect x="0" y="152" width="160" height="4" fill="#fef08a" opacity="0.8" />
+  <rect x="0" y="140" width="160" height="2" fill="#78350f" opacity="0.9" />
+
+  <!-- Left Outer Bar -->
+  <rect x="0" y="0" width="24" height="160" fill="url(#goldLeft)" />
+  <rect x="4" y="0" width="4" height="160" fill="#fef08a" opacity="0.8" />
+  <rect x="18" y="0" width="2" height="160" fill="#78350f" opacity="0.9" />
+
+  <!-- Right Outer Bar -->
+  <rect x="136" y="0" width="24" height="160" fill="url(#goldRight)" />
+  <rect x="152" y="0" width="4" height="160" fill="#fef08a" opacity="0.8" />
+  <rect x="140" y="0" width="2" height="160" fill="#78350f" opacity="0.9" />
+
+  <!-- Inner Gold Bevel Line -->
+  <rect x="28" y="28" width="104" height="104" fill="none" stroke="url(#goldGrad1)" stroke-width="2.5" />
+
+  <!-- CORNER 1: Top-Left Ornate Flourish -->
+  <g filter="url(#goldGlow)">
+    <path d="M 0,0 L 48,0 C 44,14 36,22 28,28 C 22,36 14,44 0,48 Z" fill="url(#goldGrad1)" />
+    <circle cx="16" cy="16" r="6" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+    <circle cx="16" cy="16" r="2.5" fill="#ef4444" />
+    <path d="M 4,4 Q 24,12 34,34 Q 12,24 4,4" fill="#fbbf24" opacity="0.7"/>
+    <circle cx="34" cy="12" r="3" fill="#fef08a" />
+    <circle cx="12" cy="34" r="3" fill="#fef08a" />
+  </g>
+
+  <!-- CORNER 2: Top-Right Ornate Flourish -->
+  <g filter="url(#goldGlow)">
+    <path d="M 160,0 L 112,0 C 116,14 124,22 132,28 C 138,36 146,44 160,48 Z" fill="url(#goldGrad1)" />
+    <circle cx="144" cy="16" r="6" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+    <circle cx="144" cy="16" r="2.5" fill="#ef4444" />
+    <path d="M 156,4 Q 136,12 126,34 Q 148,24 156,4" fill="#fbbf24" opacity="0.7"/>
+    <circle cx="126" cy="12" r="3" fill="#fef08a" />
+    <circle cx="148" cy="34" r="3" fill="#fef08a" />
+  </g>
+
+  <!-- CORNER 3: Bottom-Left Ornate Flourish -->
+  <g filter="url(#goldGlow)">
+    <path d="M 0,160 L 48,160 C 44,146 36,138 28,132 C 22,124 14,116 0,112 Z" fill="url(#goldGrad1)" />
+    <circle cx="16" cy="144" r="6" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+    <circle cx="16" cy="144" r="2.5" fill="#ef4444" />
+    <path d="M 4,156 Q 24,148 34,126 Q 12,136 4,156" fill="#fbbf24" opacity="0.7"/>
+    <circle cx="34" cy="148" r="3" fill="#fef08a" />
+    <circle cx="12" cy="126" r="3" fill="#fef08a" />
+  </g>
+
+  <!-- CORNER 4: Bottom-Right Ornate Flourish -->
+  <g filter="url(#goldGlow)">
+    <path d="M 160,160 L 112,160 C 116,146 124,138 132,132 C 138,124 146,116 160,112 Z" fill="url(#goldGrad1)" />
+    <circle cx="144" cy="144" r="6" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+    <circle cx="144" cy="144" r="2.5" fill="#ef4444" />
+    <path d="M 156,156 Q 136,148 126,126 Q 148,136 156,156" fill="#fbbf24" opacity="0.7"/>
+    <circle cx="126" cy="148" r="3" fill="#fef08a" />
+    <circle cx="148" cy="126" r="3" fill="#fef08a" />
+  </g>
+
+  <!-- Center transparent cut -->
+  <rect x="32" y="32" width="96" height="96" fill="none" />
+</svg>

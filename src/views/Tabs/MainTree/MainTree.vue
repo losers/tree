@@ -1,6 +1,6 @@
 <template>
   <div id="app" style="height: 100%" :class="[{ 'o-auto': $device.mobile }, 'fade-in-up']">
-    <div class="tree-bg-glow"></div>
+    <div :class="['tree-bg-glow', { 'anim-paused': customization && !customization.bgAnimation }]"></div>
     <!-- All errors are handeled here -->
     <section v-if="errored" class="h100">
       <error
@@ -248,6 +248,7 @@
                 id="download-pic"
                 :disabled="puppyData.loader"
                 v-if="!puppyData.downloaded && numOfMembers > 1"
+                title="Download Tree Image"
               >
                 <i class="icofont-download" v-if="!puppyData.loader"></i>
                 <div
@@ -278,6 +279,16 @@
                 <!-- Ticker -->
                 <tick></tick>
               </div>
+
+              <!-- Customize Tree Button -->
+              <button
+                class="btn customize-tree-btn"
+                @click="isCustomizerOpen = true"
+                id="customize-tree-btn"
+                title="Customize Tree"
+              >
+                <i class="icofont-paint"></i>
+              </button>
             </div>
 
             <!-- View Controls -->
@@ -306,21 +317,49 @@
             >
               <div class="tree-wrapper" :style="wrapperStyle">
                 <div class="tree-canvas" ref="treeCanvas" :style="{ transform: `scale(${pan.scale})` }">
-                  <TreeChart
-                    :json="tempData"
-                    :images="images"
-                    :class="{ landscape: landscape.length }"
-                    @click-node="clickNode"
-                    style="padding-top: 80px;"
-                  />
-
-                  <!-- First Member Onboarding Guide: Displayed directly below the person -->
-                  <div v-if="tempData && !tempData.children && !tempData.mate" class="first-member-guide">
-                    <div class="guide-arrow-box">
-                      <i class="icofont-long-arrow-up guide-arrow-icon"></i>
+                  <div
+                    id="tree-export-surface"
+                    class="tree-export-surface"
+                    :class="treeCanvasClasses"
+                    :style="treeCustomCssVars"
+                  >
+                    <!-- Decorative Canvas Frame Overlay -->
+                    <div
+                      v-if="customization && customization.canvasFrame && customization.canvasFrame !== 'none'"
+                      class="canvas-frame-overlay"
+                      :class="`frame-type-${customization.canvasFrame}`"
+                    >
+                      <div class="frame-corner frame-tl">
+                        <svg viewBox="0 0 40 40" class="corner-svg"><path class="corner-path" d="M 0,0 L 40,0 C 35,12 28,18 22,22 C 18,28 12,35 0,40 Z" /><circle cx="12" cy="12" r="3.5" class="corner-dot" /></svg>
+                      </div>
+                      <div class="frame-corner frame-tr">
+                        <svg viewBox="0 0 40 40" class="corner-svg"><path class="corner-path" d="M 40,0 L 0,0 C 5,12 12,18 18,22 C 22,28 28,35 40,40 Z" /><circle cx="28" cy="12" r="3.5" class="corner-dot" /></svg>
+                      </div>
+                      <div class="frame-corner frame-bl">
+                        <svg viewBox="0 0 40 40" class="corner-svg"><path class="corner-path" d="M 0,40 L 40,40 C 35,28 28,22 22,18 C 18,12 12,5 0,0 Z" /><circle cx="12" cy="28" r="3.5" class="corner-dot" /></svg>
+                      </div>
+                      <div class="frame-corner frame-br">
+                        <svg viewBox="0 0 40 40" class="corner-svg"><path class="corner-path" d="M 40,40 L 0,40 C 5,28 12,22 18,18 C 22,12 28,5 40,0 Z" /><circle cx="28" cy="28" r="3.5" class="corner-dot" /></svg>
+                      </div>
                     </div>
-                    <div class="guide-prompt-pill">
-                      Click on you to add your Parents / Children etc.,
+
+                    <TreeChart
+                      :key="treeRenderKey"
+                      :json="tempData"
+                      :images="images"
+                      :class="{ landscape: landscape.length }"
+                      @click-node="clickNode"
+                      style="padding-top: 80px;"
+                    />
+
+                    <!-- First Member Onboarding Guide: Displayed directly below the person -->
+                    <div v-if="tempData && !tempData.children && !tempData.mate" class="first-member-guide no-export">
+                      <div class="guide-arrow-box">
+                        <i class="icofont-long-arrow-up guide-arrow-icon"></i>
+                      </div>
+                      <div class="guide-prompt-pill">
+                        Click on you to add your Parents / Children etc.,
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -348,11 +387,16 @@
         </div>
       </div>
     </section>
+
+    <!-- Tree Customizer Studio Modal / Drawer -->
+    <TreeCustomizer :isOpen="isCustomizerOpen" @close="isCustomizerOpen = false" />
   </div>
 </template>
 
 <script>
 import TreeChart from "@/components/TreeChart";
+import TreeCustomizer from "@/components/TreeCustomizer";
+import { generateTreeCssVars } from "@/util/treeThemes";
 import axios from "axios";
 import Error from "@/views/Error";
 import Store from "@/store/index";
@@ -369,6 +413,7 @@ export default {
   name: "MainTree",
   components: {
     TreeChart,
+    TreeCustomizer,
     Error,
     DualPage,
     touchRipple,
@@ -377,6 +422,7 @@ export default {
   },
   data() {
     return {
+      isCustomizerOpen: false,
       puppyData: {
         loader: false,
         hide: false,
@@ -421,6 +467,23 @@ export default {
     };
   },
   computed: {
+    customization() {
+      return this.$store.state.treeCustomization;
+    },
+    treeCustomCssVars() {
+      return generateTreeCssVars(this.customization);
+    },
+    treeCanvasClasses() {
+      const c = this.customization || {};
+      return [
+        `bg-detailing-${c.bgDetailing || 'none'}`,
+        `canvas-frame-${c.canvasFrame || 'none'}`
+      ];
+    },
+    treeRenderKey() {
+      const c = this.customization || {};
+      return `${c.hasBox}_${c.boxOrientation}_${c.imageBorderStyle}_${c.boxBorderStyle}_${c.photoRadius}_${c.boxRadius}`;
+    },
     
     metadata: {
       get() {
@@ -587,12 +650,39 @@ export default {
       //   .finally(() => {
       //     this.puppyData.loader = false
       //   });
-      let puppyTree = document.querySelector(".puppy-tree");
-      htmlToImage
-        .toPng(puppyTree, {
-          backgroundColor: "white",
-          pixelRatio: 1,
-        })
+      const exportSurface = document.getElementById("tree-export-surface") || document.querySelector(".puppy-tree");
+      if (!exportSurface) {
+        this.puppyData.loader = false;
+        return;
+      }
+      const capturePromise = htmlToImage.toPng(exportSurface, {
+        backgroundColor: "#05060f",
+        pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+        skipFonts: true,
+        cacheBust: false,
+        style: {
+          margin: "0 auto",
+          transform: "none",
+        },
+        filter: (node) => {
+          if (
+            node.classList &&
+            (node.classList.contains("no-export") ||
+             node.classList.contains("first-member-guide") ||
+             node.classList.contains("view-controls") ||
+             node.classList.contains("minimap-container"))
+          ) {
+            return false;
+          }
+          return true;
+        },
+      });
+
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Export timed out")), 12000);
+      });
+
+      Promise.race([capturePromise, timeoutPromise])
         .then((dataUrl) => {
           try {
             print.postMessage(
@@ -600,7 +690,7 @@ export default {
             );
           } catch (error) {
             var link = document.createElement("a");
-            link.download = `${this.surname} - ${Date.now()}.png`;
+            link.download = `${this.surname || 'FamilyTree'}.png`;
             link.href = dataUrl;
             link.click();
           }
@@ -614,7 +704,7 @@ export default {
           }, 6000);
         })
         .catch((err) => {
-          console.log(err);
+          console.error("Tree download error:", err);
         })
         .finally(() => {
           this.puppyData.loader = false;
@@ -643,11 +733,15 @@ export default {
       }
     },
     updateMinimap() {
-      if (this.$refs.treeContainer) {
-        this.minimap.scrollLeft = this.$refs.treeContainer.scrollLeft;
-        this.minimap.scrollTop = this.$refs.treeContainer.scrollTop;
-        this.showMinimap();
-      }
+      if (this._minimapRaf) return;
+      this._minimapRaf = requestAnimationFrame(() => {
+        if (this.$refs.treeContainer) {
+          this.minimap.scrollLeft = this.$refs.treeContainer.scrollLeft;
+          this.minimap.scrollTop = this.$refs.treeContainer.scrollTop;
+          this.showMinimap();
+        }
+        this._minimapRaf = null;
+      });
     },
     showMinimap() {
       this.minimap.visible = true;
@@ -1317,12 +1411,12 @@ a:hover {
   animation: floatBG 20s infinite alternate;
 }
 .tree-bg-glow::before {
-  background: radial-gradient(circle, rgba(79, 142, 247, 0.4), transparent 70%);
+  background: radial-gradient(circle, var(--theme-glow-1, rgba(79, 142, 247, 0.4)), transparent 70%);
   top: -200px;
   left: -200px;
 }
 .tree-bg-glow::after {
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.3), transparent 70%);
+  background: radial-gradient(circle, var(--theme-glow-2, rgba(167, 139, 250, 0.3)), transparent 70%);
   bottom: -200px;
   right: -200px;
   animation-delay: -10s;
@@ -1378,6 +1472,9 @@ h2 {
   overflow: auto;
   position: relative;
   text-align: center;
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 .tree-wrapper {
   display: inline-block;
@@ -1391,6 +1488,7 @@ h2 {
   display: inline-block;
   min-width: max-content;
   margin: 0 auto;
+  contain: layout style;
 }
 .minimap-container {
   position: fixed;
@@ -1491,6 +1589,247 @@ h2 {
 .download-tree-btn:hover {
   transform: scale(1.15) translateY(-5px) !important;
   box-shadow: 0 15px 40px rgba(79, 142, 247, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -4px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.customize-tree-btn {
+  position: fixed;
+  right: 24px;
+  top: 176px;
+  font-size: 26px;
+  cursor: pointer;
+  z-index: 11;
+  background: linear-gradient(135deg, #f43f5e 0%, #ec4899 22%, #a855f7 48%, #3b82f6 74%, #10b981 100%) !important;
+  color: #ffffff !important;
+  border-radius: 60px;
+  height: 64px;
+  width: 64px;
+  border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 10px 30px rgba(236, 72, 153, 0.45), 0 0 20px rgba(59, 130, 246, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.6), inset 0 -3px 0 rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.customize-tree-btn i {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
+}
+.customize-tree-btn:hover {
+  transform: scale(1.15) translateY(-5px) !important;
+  background: linear-gradient(135deg, #ff007a 0%, #9333ea 35%, #2563eb 70%, #10b981 100%) !important;
+  box-shadow: 0 16px 40px rgba(236, 72, 153, 0.65), 0 0 30px rgba(59, 130, 246, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.8) !important;
+}
+.customizer-btn-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  font-size: 14px;
+  background: rgba(15, 17, 35, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.tree-export-surface {
+  display: inline-block;
+  min-width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  box-shadow: none !important;
+  border: none;
+  position: relative;
+  padding: 10px 40px 60px;
+}
+
+/* Canvas Detailing Styles (Small, Subtle & Classy) */
+.tree-export-surface.bg-detailing-none {
+  background-image: none;
+}
+.tree-export-surface.bg-detailing-dots,
+.tree-export-surface.bg-detailing-subtle-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+.tree-export-surface.bg-detailing-stars,
+.tree-export-surface.bg-detailing-constellation {
+  background-image: 
+    radial-gradient(1px 1px at 25px 35px, rgba(255, 255, 255, 0.28), transparent),
+    radial-gradient(1.5px 1.5px at 75px 85px, rgba(167, 139, 250, 0.32), transparent),
+    radial-gradient(1px 1px at 140px 45px, rgba(79, 142, 247, 0.32), transparent),
+    radial-gradient(1.5px 1.5px at 195px 105px, rgba(255, 255, 255, 0.22), transparent);
+  background-size: 240px 160px;
+}
+.tree-export-surface.bg-detailing-grid,
+.tree-export-surface.bg-detailing-blueprint-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Canvas Frame Styles (Fast, Native DOM Overlays with SVG Corner Motifs) */
+.canvas-frame-overlay {
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  z-index: 1;
+  box-sizing: border-box;
+}
+.frame-corner {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  pointer-events: none;
+}
+.frame-corner .corner-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.frame-tl { top: -2px; left: -2px; }
+.frame-tr { top: -2px; right: -2px; }
+.frame-bl { bottom: -2px; left: -2px; }
+.frame-br { bottom: -2px; right: -2px; }
+
+/* 1. Royal Gold */
+.frame-type-ornate-gold {
+  border: 4px solid #f59e0b;
+  outline: 6px solid #78350f;
+  outline-offset: -10px;
+  box-shadow: inset 0 0 28px rgba(245, 158, 11, 0.3), 0 0 35px rgba(245, 158, 11, 0.25) !important;
+}
+.frame-type-ornate-gold .corner-path {
+  fill: #f59e0b;
+}
+.frame-type-ornate-gold .corner-dot {
+  fill: #fef08a;
+}
+
+/* 2. Vintage Filigree */
+.frame-type-heritage-filigree {
+  border: 3px double #fde047;
+  outline: 4px solid #581c87;
+  outline-offset: -8px;
+  box-shadow: inset 0 0 28px rgba(192, 132, 252, 0.25), 0 0 30px rgba(192, 132, 252, 0.2) !important;
+}
+.frame-type-heritage-filigree .corner-path {
+  fill: #ca8a04;
+}
+.frame-type-heritage-filigree .corner-dot {
+  fill: #fde047;
+}
+
+/* 3. Art Deco */
+.frame-type-art-deco {
+  border: 3px solid #eab308;
+  outline: 2px dashed rgba(234, 179, 8, 0.65);
+  outline-offset: -9px;
+  box-shadow: inset 0 0 25px rgba(234, 179, 8, 0.22), 0 0 25px rgba(234, 179, 8, 0.18) !important;
+}
+.frame-type-art-deco .corner-path {
+  fill: #ca8a04;
+}
+.frame-type-art-deco .corner-dot {
+  fill: #fef08a;
+}
+
+/* 4. Classic Wood */
+.frame-type-mahogany-wood {
+  border: 12px solid #290e02;
+  outline: 2.5px solid #ca8a04;
+  outline-offset: -12px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+}
+.frame-type-mahogany-wood .corner-path {
+  fill: #ca8a04;
+}
+.frame-type-mahogany-wood .corner-dot {
+  fill: #fef08a;
+}
+
+.tree-bg-glow.anim-paused::before,
+.tree-bg-glow.anim-paused::after {
+  animation: none !important;
+}
+.tree-export-title-banner {
+  padding-top: 10px;
+  padding-bottom: 25px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.tree-export-family-crest {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--tree-accent-color, #4f8ef7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  margin-bottom: 8px;
+}
+.tree-export-family-crest .crest-icon {
+  font-size: 22px;
+}
+.tree-export-family-title {
+  font-family: "Comfortaa", cursive, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--tree-text-color, #ffffff);
+  text-shadow: var(--tree-text-shadow, 0 2px 10px rgba(0, 0, 0, 0.8));
+  margin: 0 0 8px;
+}
+.tree-export-decor-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.decor-line-left, .decor-line-right {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tree-connector-color, #4f8ef7));
+}
+.decor-line-right {
+  background: linear-gradient(90deg, var(--tree-connector-color, #4f8ef7), transparent);
+}
+.decor-diamond {
+  color: var(--tree-connector-color, #4f8ef7);
+  font-size: 12px;
+  filter: var(--tree-connector-glow);
+}
+
+@media (max-width: 768px) {
+  .download-tree-btn {
+    top: 80px;
+    right: 16px;
+    height: 52px;
+    width: 52px;
+    font-size: 20px;
+  }
+  .customize-tree-btn {
+    top: 142px;
+    right: 16px;
+    height: 52px;
+    width: 52px;
+    font-size: 20px;
+  }
+  .tree-export-surface {
+    padding: 20px 20px 60px !important;
+  }
+  .tree-export-family-title {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
 }
 
 .my-btn {
@@ -1617,5 +1956,23 @@ h2 {
 [data-theme="light"] .foot a,
 .theme-light .foot a {
   color: #3b82f6 !important;
+}
+
+[data-theme="light"] .tree-export-surface.bg-detailing-dots,
+.theme-light .tree-export-surface.bg-detailing-dots,
+[data-theme="light"] .tree-export-surface.bg-detailing-subtle-dots,
+.theme-light .tree-export-surface.bg-detailing-subtle-dots {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.12) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+[data-theme="light"] .tree-export-surface.bg-detailing-grid,
+.theme-light .tree-export-surface.bg-detailing-grid,
+[data-theme="light"] .tree-export-surface.bg-detailing-blueprint-grid,
+.theme-light .tree-export-surface.bg-detailing-blueprint-grid {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 </style>
