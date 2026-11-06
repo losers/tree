@@ -74,8 +74,7 @@
                     </span>
                     <i v-else-if="selectedDifficulty === mode.id" class="icofont-check-circled text-primary"></i>
                   </div>
-                  <h6 class="font-weight-bold mt-2 mb-1">{{ mode.name }}</h6>
-                  <p class="text-muted small mb-0">{{ mode.desc }}</p>
+                  <h6 class="font-weight-bold mt-2 mb-0">{{ mode.name }}</h6>
                 </div>
               </div>
             </div>
@@ -93,7 +92,7 @@
                 :class="['btn', 'count-btn', { active: selectedCount === c }]"
                 @click="selectedCount = c"
               >
-                {{ c }} Questions
+                {{ c }}
               </button>
             </div>
           </div>
@@ -162,7 +161,6 @@
             :class="getOptionClass(idx)"
             @click="onSelectOption(idx)"
           >
-            <div class="option-prefix">{{ getOptionLetter(idx) }}</div>
             <div class="option-label">{{ optionText }}</div>
             <div class="option-icon">
               <i v-if="isAnswered && idx === currentQuestion.correctIndex" class="icofont-check-circled text-success"></i>
@@ -200,14 +198,10 @@
     <!-- ==================== 3. DETAILED REPORT STATE ==================== -->
     <div v-else-if="gameState === 'report'" class="report-wrapper">
       <div class="report-container" @click="handleReportClick($event)">
-        <!-- Top Action Buttons -->
-        <div class="d-flex justify-content-between mb-3">
-          <button class="btn btn-primary flex-grow-1 mr-2 action-btn shadow-sm" :disabled="downloading" @click="downloadReport">
-            <i :class="downloading ? 'icofont-spinner icofont-spin' : 'icofont-file-pdf'" class="mr-1"></i>
-            {{ downloading ? 'Generating PDF...' : 'Download Report (PDF)' }}
-          </button>
-          <button class="btn btn-outline-primary flex-grow-1 ml-2 action-btn shadow-sm" @click="restartSetup">
-            <i class="icofont-refresh mr-1"></i> Play Again
+        <!-- Top Action: Challenge Relatives -->
+        <div class="mb-3">
+          <button class="btn btn-primary btn-block action-btn challenge-btn shadow-sm" @click="challengeRelatives">
+            <i class="icofont-trophy mr-2"></i> Challenge Relatives
           </button>
         </div>
 
@@ -339,6 +333,61 @@
       :member-id="selectedMemberId"
       @close="selectedMemberId = null"
     />
+
+    <!-- Challenge Relatives Modal -->
+    <div v-if="showChallengeModal" class="challenge-modal-backdrop" @click.self="showChallengeModal = false">
+      <div class="glass-card challenge-modal-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="d-flex align-items-center">
+            <span class="mr-2 challenge-modal-icon">🏆</span>
+            <h5 class="font-weight-bold mb-0">Challenge Relatives</h5>
+          </div>
+          <button class="btn btn-sm btn-link text-muted p-0" @click="showChallengeModal = false">
+            <i class="icofont-close-line font-weight-bold" style="font-size: 22px;"></i>
+          </button>
+        </div>
+
+        <p class="text-muted small mb-3">
+          Share this link with your family & relatives! When they open it, the quiz starts playing directly.
+        </p>
+
+        <!-- Challenge Link Copy Box -->
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control challenge-input"
+            readonly
+            :value="challengeShareUrl"
+            ref="challengeInput"
+            @click="copyChallengeLink"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" @click="copyChallengeLink">
+              <i :class="copiedChallenge ? 'icofont-check' : 'icofont-ui-copy'" class="mr-1"></i>
+              {{ copiedChallenge ? 'Copied!' : 'Copy' }}
+            </button>
+          </div>
+        </div>
+
+        <div v-if="copiedChallenge" class="alert alert-success py-2 px-3 small mb-3">
+          <i class="icofont-check-circled mr-1"></i> Link copied to clipboard! Ready to share with relatives.
+        </div>
+
+        <!-- Quick Share Buttons -->
+        <div class="d-flex mt-2">
+          <button class="btn btn-success flex-grow-1 mr-2 action-btn shadow-sm" @click="shareWhatsApp">
+            <i class="icofont-brand-whatsapp mr-1"></i> WhatsApp
+          </button>
+          <a
+            :href="challengeShareUrl"
+            target="_blank"
+            class="btn btn-outline-primary flex-grow-1 ml-2 action-btn shadow-sm d-flex align-items-center justify-content-center"
+          >
+            <i class="icofont-external-link mr-1"></i> Open Directly
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -391,12 +440,24 @@ export default {
 
       // Report state
       downloading: false,
-      selectedMemberId: null
+      selectedMemberId: null,
+
+      // Challenge state
+      showChallengeModal: false,
+      copiedChallenge: false,
+      shareToken: null
     };
   },
   computed: {
     isDark() {
       return Store.getters.getTheme === 'dark';
+    },
+    challengeShareUrl() {
+      const familyId = this.$route.params.id || 'family';
+      const origin = window.location.origin;
+      const isDemo = this.useDemo ? '&demo=true' : '';
+      const tokenParam = this.shareToken ? `&token=${this.shareToken}&share=${this.shareToken}` : '';
+      return `${origin}/app/${familyId}/quiz?play=true&mode=${this.selectedDifficulty}&count=${this.selectedCount}${tokenParam}${isDemo}`;
     },
     canPlay() {
       return this.memberCount >= 10;
@@ -425,6 +486,15 @@ export default {
       return { emoji: '🐣', title: 'Kinship Learner' };
     }
   },
+  watch: {
+    '$route.query.play': {
+      handler(val) {
+        if (val === 'true' && !this.loading && this.gameState !== 'play') {
+          this.checkDirectPlay();
+        }
+      }
+    }
+  },
   mounted() {
     this.initTreeData();
   },
@@ -438,6 +508,31 @@ export default {
       this.loading = true;
       const surname = this.$route.params.id;
 
+      // 1. If share token is in query params, redeem access to bypass PIN seamlessly!
+      const tokenInQuery = this.$route.query.token || this.$route.query.share || this.$route.query.share_token || this.$route.query.unique_id;
+      if (tokenInQuery && !this.useDemo) {
+        try {
+          const accessRes = await Axios.get(ProdData.getHostURL() + `/share/access/${tokenInQuery}`);
+          if (accessRes.data && accessRes.data.success) {
+            this.shareToken = tokenInQuery;
+            Store.commit('setSession', {
+              status: true,
+              surname: accessRes.data.surname || surname,
+              view_only: true
+            });
+            try {
+              const cached = JSON.parse(localStorage.getItem('bl_pin_cache') || '[]');
+              if (!cached.includes(surname)) {
+                cached.push(surname);
+                localStorage.setItem('bl_pin_cache', JSON.stringify(cached));
+              }
+            } catch { /* ignore */ }
+          }
+        } catch (tokenErr) {
+          console.warn('Share access validation warning:', tokenErr);
+        }
+      }
+
       try {
         const res = await Axios.get(ProdData.getHostURL() + `/tree/${surname}/quiz-data`);
         if (res.data && res.data.tree) {
@@ -445,6 +540,9 @@ export default {
           const membersList = res.data.members || [];
           const images = res.data.images || Store.state.images || {};
           this.activeTreeTitle = (res.data.meta && res.data.meta.title) || Store.state.title || `${surname} Family`;
+          if (res.data.share_token || res.data.meta?.share_token) {
+            this.shareToken = res.data.share_token || res.data.meta?.share_token;
+          }
 
           this.graph = new KinshipGraph(treeData, membersList, images);
           this.memberCount = this.graph.members.length;
@@ -457,6 +555,7 @@ export default {
       } finally {
         this.autoAdjustMode();
         this.loading = false;
+        this.checkDirectPlay();
       }
     },
 
@@ -588,6 +687,9 @@ export default {
     confirmQuit() {
       if (confirm('Are you sure you want to exit the quiz? Current progress will be lost.')) {
         this.gameState = 'setup';
+        if (this.$route.query && (this.$route.query.play || this.$route.query.challenge)) {
+          this.$router.replace({ query: {} }).catch(() => {});
+        }
       }
     },
 
@@ -792,6 +894,102 @@ export default {
       this.selectedIndex = null;
       this.isAnswered = false;
       this.reviews = [];
+      if (this.$route.query && (this.$route.query.play || this.$route.query.challenge)) {
+        this.$router.replace({ query: {} }).catch(() => {});
+      }
+    },
+
+    async ensureShareToken() {
+      if (this.useDemo) return null;
+      if (this.shareToken) return this.shareToken;
+
+      const surname = this.$route.params.id;
+      if (!surname) return null;
+
+      try {
+        const res = await Axios.get(ProdData.getHostURL() + `/share/${surname}/token`);
+        if (res.data && res.data.share_token) {
+          this.shareToken = res.data.share_token;
+          return this.shareToken;
+        }
+      } catch (err) {
+        console.warn('Could not auto-generate share token:', err);
+      }
+      return null;
+    },
+
+    async challengeRelatives() {
+      // Ensure unique share token exists on the fly to bypass pin
+      if (!this.shareToken && !this.useDemo) {
+        await this.ensureShareToken();
+      }
+
+      const url = this.challengeShareUrl;
+      const shareText = `I scored ${this.correctCount}/${this.questions.length} (${this.accuracyPercent}%) on the ${this.activeTreeTitle} Family Quiz! Can you beat my score? Tap to play directly:`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `${this.activeTreeTitle} Family Quiz Challenge`,
+            text: `${shareText}\n${url}`,
+            url: url
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      await this.copyChallengeLink();
+      this.showChallengeModal = true;
+    },
+
+    async copyChallengeLink() {
+      if (!this.shareToken && !this.useDemo) {
+        await this.ensureShareToken();
+      }
+      const url = this.challengeShareUrl;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).catch(() => {});
+      } else if (this.$refs.challengeInput) {
+        this.$refs.challengeInput.select();
+        document.execCommand('copy');
+      }
+      this.copiedChallenge = true;
+      setTimeout(() => {
+        this.copiedChallenge = false;
+      }, 3000);
+    },
+
+    async shareWhatsApp() {
+      if (!this.shareToken && !this.useDemo) {
+        await this.ensureShareToken();
+      }
+      const text = encodeURIComponent(`I scored ${this.correctCount}/${this.questions.length} (${this.accuracyPercent}%) on the ${this.activeTreeTitle} Family Quiz! Can you beat my score? Tap to play directly:\n${this.challengeShareUrl}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    },
+
+    checkDirectPlay() {
+      const q = this.$route.query;
+      if (q && (q.play === 'true' || q.play === '1' || q.challenge === 'true')) {
+        if (q.demo === 'true') {
+          this.enableDemoFamily();
+        }
+        if (q.mode && ['easy', 'medium', 'hard'].includes(q.mode)) {
+          this.selectedDifficulty = q.mode;
+        }
+        if (q.count) {
+          const c = parseInt(q.count, 10);
+          if ([5, 10, 15, 20].includes(c)) {
+            this.selectedCount = c;
+          }
+        }
+        if (!this.canPlay) {
+          this.enableDemoFamily();
+        }
+        this.autoAdjustMode();
+        this.startQuiz();
+      }
     }
   }
 };
@@ -1320,6 +1518,61 @@ export default {
 }
 .person-chip-btn:hover i {
   color: white !important;
+}
+
+/* Challenge Relatives */
+.challenge-btn {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px 20px;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.challenge-btn:hover {
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+.challenge-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.challenge-modal-card {
+  max-width: 520px;
+  width: 100%;
+  padding: 28px;
+  position: relative;
+}
+.challenge-modal-icon {
+  font-size: 24px;
+}
+.challenge-input {
+  font-size: 13px;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+.theme-dark .challenge-input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
 }
 
 /* ==================== MOBILE RESPONSIVE OPTIMIZATIONS ==================== */

@@ -259,8 +259,8 @@ export class QuizGenerator {
       }
       if (distractorAges.size < 3) continue;
 
-      const options = shuffle([`${actualAge} years old`, ...Array.from(distractorAges).map(a => `${a} years old`)]);
-      const correctIdx = options.indexOf(`${actualAge} years old`);
+      const options = shuffle([`${actualAge}`, ...Array.from(distractorAges).map(a => `${a}`)]);
+      const correctIdx = options.indexOf(`${actualAge}`);
       const mName = this.graph.getName(m);
 
       list.push({
@@ -513,12 +513,12 @@ export class QuizGenerator {
       const countNum = sibs.length;
 
       let correctLabel = '';
-      if (countNum === 0) correctLabel = 'None (Only child)';
-      else if (countNum === 1) correctLabel = '1 sibling';
-      else if (countNum === 2) correctLabel = '2 siblings';
-      else correctLabel = `${countNum} siblings`;
+      if (countNum === 0) correctLabel = 'None';
+      else if (countNum === 1) correctLabel = '1';
+      else if (countNum === 2) correctLabel = '2';
+      else correctLabel = `${countNum}`;
 
-      const pool = shuffle(['None (Only child)', '1 sibling', '2 siblings', '3 siblings', '4 siblings'].filter(x => x !== correctLabel));
+      const pool = shuffle(['None', '1', '2', '3', '4'].filter(x => x !== correctLabel));
       const options = shuffle([correctLabel, ...pool.slice(0, 3)]);
       const correctIdx = options.indexOf(correctLabel);
       const mName = this.graph.getName(m);
@@ -534,7 +534,7 @@ export class QuizGenerator {
           personA: mName,
           personAId: m.id,
           siblingCount: countNum,
-          kinshipExplanation: `${mName} has ${correctLabel}.`,
+          kinshipExplanation: `${mName} has ${countNum === 0 ? 'no siblings' : (countNum === 1 ? '1 sibling' : `${countNum} siblings`)}.`,
         }
       });
     }

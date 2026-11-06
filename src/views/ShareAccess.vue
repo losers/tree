@@ -108,6 +108,15 @@ export default {
           this.familyTitle = res.data.title || res.data.surname;
 
           // Commit view-only session to Vuex store
+          // Cache surname to bl_pin_cache so PIN is bypassed
+          try {
+            const cached = JSON.parse(localStorage.getItem("bl_pin_cache") || "[]");
+            if (!cached.includes(res.data.surname)) {
+              cached.push(res.data.surname);
+              localStorage.setItem("bl_pin_cache", JSON.stringify(cached));
+            }
+          } catch { /* ignore */ }
+
           Store.commit("setSession", {
             status: true,
             surname: res.data.surname,
@@ -117,7 +126,8 @@ export default {
           // Redirect to tree view smoothly after quick feedback
           setTimeout(() => {
             this.$router.replace({
-              name: "Tree",
+              name: (this.$route.query && (this.$route.query.play === "true" || this.$route.query.play === "1" || this.$route.query.challenge === "true")) ? "Quiz" : "Tree",
+              query: this.$route.query,
               params: { id: res.data.surname }
             });
           }, 600);

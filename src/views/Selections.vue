@@ -104,7 +104,7 @@ export default {
     const savedTheme = localStorage.getItem("bloodline-theme") || "dark";
     Store.commit("setTheme", savedTheme);
 
-    const shareToken = this.$route.query.share || this.$route.query.share_token;
+    const shareToken = this.$route.query.share || this.$route.query.share_token || this.$route.query.token || this.$route.query.unique_id;
     if (shareToken) {
       Axios.get(ProdData.getHostURL() + "/share/access/" + shareToken)
         .then((res) => {
@@ -112,8 +112,17 @@ export default {
             Store.commit("setSession", {
               status: true,
               surname: res.data.surname,
-              view_only: true,
+              view_only: true
             });
+
+            try {
+              const cached = JSON.parse(localStorage.getItem("bl_pin_cache") || "[]");
+              if (!cached.includes(res.data.surname)) {
+                cached.push(res.data.surname);
+                localStorage.setItem("bl_pin_cache", JSON.stringify(cached));
+              }
+            } catch { /* ignore */ }
+
           }
         })
         .catch((err) => {
