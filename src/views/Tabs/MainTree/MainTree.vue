@@ -535,6 +535,13 @@ export default {
       get() {
         if (Store.state.error.response) {
           if (Store.state.error.response.status === 403) {
+            const surname = this.surname || (Store.state.error.response.data && Store.state.error.response.data[0] && Store.state.error.response.data[0].surname);
+            const storedPin = surname ? localStorage.getItem("bl_view_pin_" + surname) : null;
+            if (storedPin) {
+              this.cookey = storedPin;
+              this.validate();
+              return null;
+            }
             this.openAuthBox();
             Store.dispatch("setMetaData", Store.state.error.response.data[0]);
           }
@@ -942,11 +949,14 @@ export default {
       params.surname = this.surname;
       axios
         .post(sessionUrl, params)
-        .then(() => {
+        .then((res) => {
           let sessData = {};
           sessData.status = true;
           sessData.surname = params.surname;
+          sessData.view_only = res.data && res.data.view_only;
           Store.commit("setSession", sessData);
+          this.authModal.show = false;
+          Store.dispatch("treeSetup", params.surname);
           this.vloading = false;
         })
         .catch((err) => {

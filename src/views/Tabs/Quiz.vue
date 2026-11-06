@@ -513,21 +513,50 @@ export default {
           const accessRes = await Axios.get(ProdData.getHostURL() + `/share/access/${tokenInQuery}`);
           if (accessRes.data && accessRes.data.success) {
             this.shareToken = tokenInQuery;
+            const treeSurname = accessRes.data.surname || surname;
+            if (accessRes.data.view_pin) {
+              try {
+                localStorage.setItem(`bl_view_pin_${treeSurname}`, accessRes.data.view_pin);
+                await Axios.post(ProdData.getHostURL() + "/sessions/", {
+                  surname: treeSurname,
+                  pin: accessRes.data.view_pin
+                });
+              } catch (sessionErr) {
+                console.warn("Session creation error in Quiz:", sessionErr);
+              }
+            }
             Store.commit('setSession', {
               status: true,
-              surname: accessRes.data.surname || surname,
+              surname: treeSurname,
               view_only: true
             });
             try {
               const cached = JSON.parse(localStorage.getItem('bl_pin_cache') || '[]');
-              if (!cached.includes(surname)) {
-                cached.push(surname);
+              if (!cached.includes(treeSurname)) {
+                cached.push(treeSurname);
                 localStorage.setItem('bl_pin_cache', JSON.stringify(cached));
               }
             } catch { /* ignore */ }
           }
         } catch (tokenErr) {
           console.warn('Share access validation warning:', tokenErr);
+        }
+      } else if (surname && !this.useDemo) {
+        const storedPin = localStorage.getItem(`bl_view_pin_${surname}`);
+        if (storedPin && !Store.state.is_session) {
+          try {
+            await Axios.post(ProdData.getHostURL() + "/sessions/", {
+              surname: surname,
+              pin: storedPin
+            });
+            Store.commit('setSession', {
+              status: true,
+              surname: surname,
+              view_only: true
+            });
+          } catch (sessionErr) {
+            console.warn("Session restore error in Quiz:", sessionErr);
+          }
         }
       }
 
@@ -908,6 +937,9 @@ export default {
         const res = await Axios.get(ProdData.getHostURL() + `/share/${surname}/token`);
         if (res.data && res.data.share_token) {
           this.shareToken = res.data.share_token;
+          if (res.data.view_pin) {
+            localStorage.setItem(`bl_view_pin_${surname}`, res.data.view_pin);
+          }
           return this.shareToken;
         }
       } catch (err) {
@@ -929,7 +961,7 @@ export default {
         try {
           await navigator.share({
             title: `${this.activeTreeTitle} Family Quiz Challenge`,
-            text: `${shareText}\n${url}`,
+            text: shareText,
             url: url
           });
           return;

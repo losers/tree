@@ -100,39 +100,66 @@ import Axios from "axios";
 import ProdData from "../data";
 
 export default {
-  mounted() {
+  async mounted() {
     const savedTheme = localStorage.getItem("bloodline-theme") || "dark";
     Store.commit("setTheme", savedTheme);
 
+    const surname = this.$route.params.id;
     const shareToken = this.$route.query.share || this.$route.query.share_token || this.$route.query.token || this.$route.query.unique_id;
     if (shareToken) {
-      Axios.get(ProdData.getHostURL() + "/share/access/" + shareToken)
-        .then((res) => {
-          if (res.data && res.data.success) {
-            Store.commit("setSession", {
-              status: true,
-              surname: res.data.surname,
-              view_only: true
-            });
-
+      try {
+        const res = await Axios.get(ProdData.getHostURL() + "/share/access/" + shareToken);
+        if (res.data && res.data.success) {
+          const treeSurname = res.data.surname || surname;
+          if (res.data.view_pin) {
+            localStorage.setItem("bl_view_pin_" + treeSurname, res.data.view_pin);
             try {
-              const cached = JSON.parse(localStorage.getItem("bl_pin_cache") || "[]");
-              if (!cached.includes(res.data.surname)) {
-                cached.push(res.data.surname);
-                localStorage.setItem("bl_pin_cache", JSON.stringify(cached));
-              }
-            } catch { /* ignore */ }
-
+              await Axios.post(ProdData.getHostURL() + "/sessions/", {
+                surname: treeSurname,
+                pin: res.data.view_pin
+              });
+            } catch (sessErr) {
+              console.warn("Session authentication error with view_pin:", sessErr);
+            }
           }
-        })
-        .catch((err) => {
-          console.error("Invalid share token query:", err);
-        })
-        .finally(() => {
-          Store.dispatch("treeSetup", this.$route.params.id);
-        });
+
+          Store.commit("setSession", {
+            status: true,
+            surname: treeSurname,
+            view_only: true
+          });
+
+          try {
+            const cached = JSON.parse(localStorage.getItem("bl_pin_cache") || "[]");
+            if (!cached.includes(treeSurname)) {
+              cached.push(treeSurname);
+              localStorage.setItem("bl_pin_cache", JSON.stringify(cached));
+            }
+          } catch { /* ignore */ }
+        }
+      } catch (err) {
+        console.error("Invalid share token query:", err);
+      } finally {
+        Store.dispatch("treeSetup", surname);
+      }
     } else {
-      Store.dispatch("treeSetup", this.$route.params.id).then(function () {});
+      const storedViewPin = surname ? localStorage.getItem("bl_view_pin_" + surname) : null;
+      if (storedViewPin && !Store.state.is_session) {
+        try {
+          await Axios.post(ProdData.getHostURL() + "/sessions/", {
+            surname: surname,
+            pin: storedViewPin
+          });
+          Store.commit("setSession", {
+            status: true,
+            surname: surname,
+            view_only: true
+          });
+        } catch (sessErr) {
+          console.warn("Auto view session restore error:", sessErr);
+        }
+      }
+      Store.dispatch("treeSetup", surname).then(function () {});
     }
     this.handleScroll = () => {
       try {

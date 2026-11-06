@@ -122,6 +122,7 @@ export default new Vuex.Store({
     async treeSetup(state, surname) {
       try {
         state.commit('setLoading', true);
+        state.commit('error', false);
         let imagesData = await axios.get(ProdData.getHostURL() + "/tree/" + surname + "/person/" + this.id + "/images");
         state.commit('setImages', imagesData);
         let treeData = await axios.get(ProdData.getHostURL() + "/tree/" + surname);

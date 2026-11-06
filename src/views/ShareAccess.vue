@@ -107,6 +107,18 @@ export default {
           this.targetSurname = res.data.surname;
           this.familyTitle = res.data.title || res.data.surname;
 
+          if (res.data.view_pin) {
+            localStorage.setItem("bl_view_pin_" + res.data.surname, res.data.view_pin);
+            try {
+              await Axios.post(ProdData.getHostURL() + "/sessions/", {
+                surname: res.data.surname,
+                pin: res.data.view_pin
+              });
+            } catch (sessErr) {
+              console.warn("Session authentication error with view_pin:", sessErr);
+            }
+          }
+
           // Commit view-only session to Vuex store
           // Cache surname to bl_pin_cache so PIN is bypassed
           try {
