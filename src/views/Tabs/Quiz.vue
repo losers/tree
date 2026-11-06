@@ -198,13 +198,6 @@
     <!-- ==================== 3. DETAILED REPORT STATE ==================== -->
     <div v-else-if="gameState === 'report'" class="report-wrapper">
       <div class="report-container" @click="handleReportClick($event)">
-        <!-- Top Action: Challenge Relatives -->
-        <div class="mb-3">
-          <button class="btn btn-primary btn-block action-btn challenge-btn shadow-sm" @click="challengeRelatives">
-            <i class="icofont-trophy mr-2"></i> Challenge Relatives
-          </button>
-        </div>
-
         <!-- Visible Scorecard & Breakdown Container for PDF Export -->
         <div id="quiz-full-report" class="quiz-export-container">
           <!-- Branding Header -->
@@ -313,15 +306,20 @@
           </div>
         </div>
 
-        <!-- Bottom Action Buttons for mobile convenience -->
-        <div class="d-flex justify-content-between mt-4">
-          <button class="btn btn-primary flex-grow-1 mr-2 action-btn shadow-sm" :disabled="downloading" @click="downloadReport">
-            <i :class="downloading ? 'icofont-spinner icofont-spin' : 'icofont-file-pdf'" class="mr-1"></i>
-            {{ downloading ? 'Generating PDF...' : 'Download Report (PDF)' }}
-          </button>
-          <button class="btn btn-outline-primary flex-grow-1 ml-2 action-btn shadow-sm" @click="restartSetup">
-            <i class="icofont-refresh mr-1"></i> Play Again
-          </button>
+        <!-- Bottom Action Buttons in Report -->
+        <div class="report-bottom-bar mt-4">
+          <div class="report-actions-grid">
+            <button class="btn btn-primary action-btn challenge-btn shadow-sm" @click="challengeRelatives">
+              <i class="icofont-trophy mr-1"></i> Challenge Relatives
+            </button>
+            <button class="btn btn-primary action-btn shadow-sm" :disabled="downloading" @click="downloadReport">
+              <i :class="downloading ? 'icofont-spinner icofont-spin' : 'icofont-file-pdf'" class="mr-1"></i>
+              {{ downloading ? 'Generating PDF...' : 'Download Report (PDF)' }}
+            </button>
+            <button class="btn btn-outline-primary action-btn shadow-sm" @click="restartSetup">
+              <i class="icofont-refresh mr-1"></i> Play Again
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1520,15 +1518,38 @@ export default {
   color: white !important;
 }
 
-/* Challenge Relatives */
+/* Challenge Relatives & Report Bottom Actions */
+.report-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .report-actions-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .report-actions-grid .challenge-btn {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 420px) {
+  .report-actions-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .report-actions-grid .challenge-btn {
+    grid-column: span 1;
+  }
+}
 .challenge-btn {
   background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: #ffffff;
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   font-weight: 700;
-  font-size: 15px;
-  padding: 13px 20px;
+  font-size: 14px;
+  padding: 12px 14px;
   box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
   transition: all 0.2s ease;
   display: flex;
